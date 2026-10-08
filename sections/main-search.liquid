@@ -1,0 +1,89 @@
+{%- paginate search.results by section.settings.results_per_page -%}
+  <div class="hi-container hi-page">
+    <header class="hi-collection-head">
+      <p class="t-label t-muted">
+        {%- if search.performed -%}
+          {{ 'search.results_count' | t: count: search.results_count, terms: search.terms }}
+        {%- else -%}
+          {{ 'search.prompt' | t }}
+        {%- endif -%}
+      </p>
+      <h1 class="t-display-l">{{ 'search.title' | t }}</h1>
+      <form action="{{ routes.search_url }}" method="get" role="search" class="hi-search-form hi-inline-form">
+        <div class="hi-field">
+          <label for="SearchPageInput" class="visually-hidden">{{ 'search.title' | t }}</label>
+          <input
+            id="SearchPageInput"
+            type="search"
+            name="q"
+            value="{{ search.terms | escape }}"
+            placeholder="{{ 'search.placeholder' | t }}"
+            autocomplete="off"
+          >
+        </div>
+        <input type="hidden" name="options[prefix]" value="last">
+        <button type="submit" class="hi-btn hi-btn-primary">{{ 'search.submit' | t }}</button>
+      </form>
+    </header>
+
+    {%- if search.performed -%}
+      {%- if search.filters.size > 0 -%}
+        {% render 'facets', results: search, section_id: section.id, count: search.results_count %}
+      {%- endif -%}
+
+      {%- if search.results_count > 0 -%}
+        {%- liquid
+          assign result_products = search.results | where: 'object_type', 'product'
+          assign result_others = search.results | where: 'object_type', 'page'
+          assign result_articles = search.results | where: 'object_type', 'article'
+          assign result_others = result_others | concat: result_articles
+        -%}
+        {%- if result_products.size > 0 -%}
+          <ul class="hi-grid-products">
+            {%- for result in result_products -%}
+              <li>{% render 'product-card', product: result %}</li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+        {%- if result_others.size > 0 -%}
+          <ul class="hi-results-list">
+            {%- for result in result_others -%}
+              <li>
+                <a href="{{ result.url }}">
+                  <span class="t-h3">{{ result.title | escape }}</span>
+                  <span class="t-label t-muted">{{ result.object_type | upcase }}</span>
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+        {% render 'pagination', paginate: paginate %}
+      {%- else -%}
+        <div class="hi-empty">
+          {% render 'icon', name: 'search', size: 32 %}
+          <p class="hi-empty-body">{{ 'search.no_results' | t: terms: search.terms }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="hi-btn hi-btn-secondary">{{ 'general.continue_shopping' | t }}</a>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Resultados de búsqueda",
+  "tag": "section",
+  "class": "hi-main-search-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "results_per_page",
+      "label": "Resultados por página",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    }
+  ]
+}
+{% endschema %}

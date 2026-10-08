@@ -1,0 +1,30 @@
+{%- doc -%}
+  Aviso de envío gratis del carrito: dice en pesos cuánto falta ("Te faltan $53.000 para
+  envío gratis.") con una barra de progreso hairline. Se oculta si el umbral es 0.
+{%- enddoc -%}
+{%- liquid
+  assign free_shipping_threshold = settings.free_shipping_threshold | default: 0 | times: 100
+  assign free_shipping_remaining = free_shipping_threshold | minus: cart.total_price
+  assign free_shipping_progress = 100
+  if free_shipping_remaining > 0
+    assign free_shipping_progress = cart.total_price | times: 100 | divided_by: free_shipping_threshold
+  endif
+-%}
+{%- if free_shipping_threshold > 0 and cart.item_count > 0 -%}
+  <div class="hi-drawer-ship">
+    <p class="hi-drawer-ship-text">
+      {% render 'icon', name: 'local_shipping', size: 20 %}
+      <span>
+        {%- if free_shipping_remaining > 0 -%}
+          {%- assign free_shipping_amount = free_shipping_remaining | money_without_trailing_zeros -%}
+          {{ 'cart.free_shipping_remaining' | t: amount: free_shipping_amount }}
+        {%- else -%}
+          {{ 'cart.free_shipping_reached' | t }}
+        {%- endif -%}
+      </span>
+    </p>
+    <span class="hi-drawer-ship-bar" aria-hidden="true">
+      <span style="width: {{ free_shipping_progress }}%;"></span>
+    </span>
+  </div>
+{%- endif -%}

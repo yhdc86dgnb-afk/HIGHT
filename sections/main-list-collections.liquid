@@ -1,0 +1,81 @@
+<div class="hi-container hi-page">
+  <header class="hi-collection-head">
+    <p class="t-label t-muted">({{ collections.size }})</p>
+    <h1 class="t-display-l">{{ section.settings.heading | default: page_title | escape }}</h1>
+  </header>
+
+  {%- if section.settings.layout == 'grid' -%}
+    <ul class="hi-grid-products">
+      {%- for list_collection in collections -%}
+        <li>
+          <a href="{{ list_collection.url }}" class="hi-card">
+            <div class="hi-card-media">
+              {%- if list_collection.featured_image -%}
+                {{
+                  list_collection.featured_image
+                  | image_url: width: 900
+                  | image_tag:
+                    widths: '360, 540, 720, 900',
+                    sizes: '(min-width: 1024px) 25vw, 50vw',
+                    loading: 'lazy',
+                    alt: list_collection.title
+                }}
+              {%- else -%}
+                <span class="hi-card-ph" aria-hidden="true">{{ 'products.photo_placeholder' | t }}</span>
+              {%- endif -%}
+            </div>
+            <div class="hi-card-body">
+              <h2 class="hi-card-name">{{ list_collection.title | escape }}</h2>
+              <span class="hi-card-meta">{{ 'collections.products_count' | t: count: list_collection.products_count }}</span>
+            </div>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- else -%}
+    <ol class="hi-index">
+      {%- for list_collection in collections -%}
+        <li>
+          <a href="{{ list_collection.url }}" class="hi-index-row">
+            <span class="hi-index-n">(N{{ forloop.index }})</span>
+            <span class="hi-index-title">{{ list_collection.title | escape }}</span>
+            <span class="hi-index-cat">{{ 'collections.products_count' | t: count: list_collection.products_count }}</span>
+            <span class="hi-index-year">{{ list_collection.published_at | date: '%Y' }}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ol>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Lista de colecciones",
+  "tag": "section",
+  "class": "hi-list-collections-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titular",
+      "default": "Archivo"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Diseño",
+      "options": [
+        {
+          "value": "index",
+          "label": "Índice numerado (archivo)"
+        },
+        {
+          "value": "grid",
+          "label": "Retícula con fotos"
+        }
+      ],
+      "default": "index"
+    }
+  ]
+}
+{% endschema %}

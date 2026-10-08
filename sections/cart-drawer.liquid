@@ -1,0 +1,69 @@
+{%- comment -%}
+  CartDrawer del design system. Sección estática renderizada en layout/theme.liquid para que
+  assets/hight.js la vuelva a pedir con la Section Rendering API (sections=cart-drawer)
+  después de agregar, cambiar o quitar productos.
+{%- endcomment -%}
+{%- if settings.cart_type == 'drawer' -%}
+  <dialog
+    id="CartDrawer"
+    class="hi-dialog hi-drawer"
+    aria-label="{{ 'cart.page_title' | t }}"
+    data-cart-drawer
+    data-cart-count="{{ cart.item_count }}"
+  >
+    <div class="hi-drawer-head">
+      <p class="hi-drawer-title">{{ 'cart.title' | t: count: cart.item_count }}</p>
+      <button type="button" class="hi-iconbtn" aria-label="{{ 'cart.close' | t }}" data-close-dialog>
+        {% render 'icon', name: 'close' %}
+      </button>
+    </div>
+
+    {%- if cart.item_count > 0 -%}
+      {% render 'free-shipping' %}
+      <div class="hi-drawer-lines">
+        <ul class="hi-lines">
+          {%- for item in cart.items -%}
+            {% render 'cart-line', item: item, index: forloop.index %}
+          {%- endfor -%}
+        </ul>
+      </div>
+      <form action="{{ routes.cart_url }}" method="post" class="hi-drawer-foot" id="CartDrawerForm">
+        {%- for discount_application in cart.cart_level_discount_applications -%}
+          <div class="hi-drawer-sub">
+            <span>{{ discount_application.title | upcase | escape }}</span>
+            <span class="hi-price">&minus;{{ discount_application.total_allocated_amount | money_without_trailing_zeros }}</span>
+          </div>
+        {%- endfor -%}
+        <div class="hi-drawer-sub">
+          <span>{{ 'cart.subtotal' | t }}</span>
+          {% render 'price', amount: cart.total_price, size: 'lg' %}
+        </div>
+        <p class="hi-drawer-note">{{ 'cart.taxes_note' | t }}</p>
+        <button type="submit" name="checkout" class="hi-btn hi-btn-primary hi-btn-lg hi-btn-block">
+          {{- 'cart.checkout' | t -}}
+        </button>
+      </form>
+    {%- else -%}
+      <div class="hi-empty">
+        {% render 'icon', name: 'shopping_bag', size: 32 %}
+        <p class="hi-empty-title">{{ 'cart.empty' | t }}</p>
+        <p class="hi-empty-body">{{ 'cart.empty_body' | t }}</p>
+        <a href="{{ settings.cart_empty_link | default: routes.all_products_collection_url }}" class="hi-btn hi-btn-secondary">
+          {{- 'cart.view_drop' | t -}}
+        </a>
+      </div>
+    {%- endif -%}
+  </dialog>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Carrito lateral",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "El carrito lateral se activa en Configuración del tema > Carrito."
+    }
+  ]
+}
+{% endschema %}

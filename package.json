@@ -1,0 +1,15 @@
+{
+  "name": "hight-theme",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tema de Shopify de Hight construido con el design system HIGHT.",
+  "scripts": {
+    "dev": "shopify theme dev --store hight18.myshopify.com",
+    "push": "shopify theme push --store hight18.myshopify.com --unpublished --theme Hight",
+    "check": "shopify theme check",
+    "pull-settings": "shopify theme pull --store hight18.myshopify.com --only config/settings_data.json --only 'templates/*.json' --only 'sections/*-group.json'"
+  },
+  "devDependencies": {
+    "@shopify/cli": "4.9.0"
+  }
+}

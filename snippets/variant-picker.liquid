@@ -1,0 +1,84 @@
+{%- doc -%}
+  ColorSelector y SizeSelector del design system como radios: el color va arriba con muestras
+  circulares y su nombre en la leyenda; las tallas son botones en mono. Lo agotado se tacha,
+  nunca se esconde. assets/hight.js resuelve la variante y vuelve a pedir la sección.
+
+  @param {product} product - Producto
+  @param {string} section_id - id de la sección, para nombres únicos
+{%- enddoc -%}
+<div class="hi-variant-picker" data-variant-picker>
+  {%- for product_option in product.options_with_values -%}
+    {%- liquid
+      assign option_lower = product_option.name | downcase
+      assign is_color = false
+      if option_lower == 'color' or option_lower == 'colour' or option_lower == 'colores'
+        assign is_color = true
+      endif
+      assign option_input_name = section_id | append: '-option-' | append: product_option.position
+    -%}
+    {%- if is_color -%}
+      <fieldset class="hi-colors">
+        <legend>
+          {{- product_option.name | upcase }} &mdash; <span data-selected-value>{{ product_option.selected_value | upcase | escape }}</span>
+        </legend>
+        <div class="hi-colors-row">
+          {%- for option_value in product_option.values -%}
+            {%- liquid
+              assign input_id = option_input_name | append: '-' | append: forloop.index0
+              capture swatch_style
+                render 'swatch-style', value: option_value
+              endcapture
+            -%}
+            <input
+              type="radio"
+              class="hi-option-input{% unless option_value.available %} is-unavailable{% endunless %}"
+              id="{{ input_id }}"
+              name="{{ option_input_name }}"
+              value="{{ option_value | escape }}"
+              data-option-position="{{ product_option.position }}"
+              {% if option_value.selected %}
+                checked
+              {% endif %}
+            >
+            <label for="{{ input_id }}" class="hi-color" title="{{ option_value | escape }}">
+              <span style="{{ swatch_style | strip }}"></span>
+              <span class="visually-hidden">
+                {%- if option_value.available -%}
+                  {{ option_value | escape }}
+                {%- else -%}
+                  {{ 'products.option_sold_out' | t: value: option_value }}
+                {%- endif -%}
+              </span>
+            </label>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+    {%- else -%}
+      <fieldset class="hi-sizes">
+        <legend>{{ product_option.name | upcase | escape }}</legend>
+        <div class="hi-sizes-grid">
+          {%- for option_value in product_option.values -%}
+            {%- assign input_id = option_input_name | append: '-' | append: forloop.index0 -%}
+            <input
+              type="radio"
+              class="hi-option-input{% unless option_value.available %} is-unavailable{% endunless %}"
+              id="{{ input_id }}"
+              name="{{ option_input_name }}"
+              value="{{ option_value | escape }}"
+              data-option-position="{{ product_option.position }}"
+              {% if option_value.selected %}
+                checked
+              {% endif %}
+            >
+            <label for="{{ input_id }}" class="hi-size">
+              {{- option_value | escape -}}
+              {%- unless option_value.available -%}
+                <span class="visually-hidden">{{ 'products.option_sold_out' | t: value: '' }}</span>
+              {%- endunless -%}
+            </label>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+    {%- endif -%}
+  {%- endfor -%}
+</div>

@@ -1,0 +1,166 @@
+{
+  "general": {
+    "page": "Página {{ page }}",
+    "view_all": "VER TODO",
+    "continue_shopping": "SEGUIR COMPRANDO",
+    "read_more": "LEER MÁS"
+  },
+  "accessibility": {
+    "skip_to_content": "Saltar al contenido",
+    "close": "Cerrar",
+    "open_menu": "Abrir menú",
+    "menu": "Menú",
+    "search": "Buscar",
+    "account": "Mi cuenta",
+    "cart_count": {
+      "one": "Carrito, {{ count }} producto",
+      "other": "Carrito, {{ count }} productos"
+    },
+    "home": "{{ shop }}, inicio",
+    "main_nav": "Principal",
+    "announcement": "Anuncio",
+    "pagination": "Paginación",
+    "previous_page": "Página anterior",
+    "next_page": "Página siguiente",
+    "page_number": "Página {{ page }}"
+  },
+  "search": {
+    "title": "Buscar",
+    "placeholder": "Buscar prendas, cortes o materiales",
+    "submit": "BUSCAR",
+    "products": "Productos",
+    "view_all": "VER TODOS LOS RESULTADOS",
+    "results_count": {
+      "one": "{{ count }} resultado para “{{ terms }}”",
+      "other": "{{ count }} resultados para “{{ terms }}”"
+    },
+    "no_results": "No encontramos nada para “{{ terms }}”. Prueba con el corte o el material: boxy, wide, denim.",
+    "prompt": "Escribe el nombre de una prenda, un corte o un material."
+  },
+  "products": {
+    "add_to_cart": "AGREGAR AL CARRITO",
+    "sold_out": "AGOTADO",
+    "unavailable": "NO DISPONIBLE",
+    "from": "Desde {{ price }}",
+    "sale_price": "Precio de oferta",
+    "regular_price": "Precio anterior",
+    "quantity": "Cantidad",
+    "decrease": "Quitar uno",
+    "increase": "Agregar uno",
+    "size_guide": "VER GUÍA DE TALLAS",
+    "size_guide_title": "Guía de tallas",
+    "size_guide_note": "Medidas de la prenda en plano, en centímetros.",
+    "size_legend": "Talla",
+    "color_legend": "Color",
+    "option_sold_out": "{{ value }}, agotada",
+    "colors_count": {
+      "one": "{{ count }} color",
+      "other": "{{ count }} colores"
+    },
+    "low_stock": {
+      "one": "Queda {{ count }} unidad.",
+      "other": "Quedan {{ count }} unidades."
+    },
+    "low_stock_tag": "ÚLTIMAS {{ count }}",
+    "photo_placeholder": "FOTO 4:5",
+    "gallery_label": "Fotos del producto",
+    "gallery_count": "{{ index }} / {{ count }}",
+    "thumbnail": "Ver foto {{ index }}",
+    "recommendations": "Completa el look",
+    "taxes_included": "Impuestos incluidos.",
+    "shipping_at_checkout": "El envío se calcula al pagar.",
+    "care": {
+      "lavar_frio": "Lavar en frío",
+      "no_blanquear": "No blanquear",
+      "planchar_bajo": "Planchar a baja temperatura",
+      "no_secadora": "No usar secadora"
+    }
+  },
+  "cart": {
+    "page_title": "Carrito",
+    "title": "Carrito ({{ count }})",
+    "empty": "Tu carrito está vacío",
+    "empty_body": "El drop vigente está a un clic.",
+    "view_drop": "VER EL DROP",
+    "subtotal": "SUBTOTAL",
+    "checkout": "FINALIZAR COMPRA",
+    "taxes_note": "Envío e impuestos se calculan al pagar.",
+    "free_shipping_remaining": "Te faltan {{ amount }} para envío gratis.",
+    "free_shipping_reached": "Tu envío es gratis.",
+    "remove": "Quitar {{ title }}",
+    "quantity_for": "Cantidad de {{ title }}",
+    "size_value": "Talla {{ value }}",
+    "update": "ACTUALIZAR CARRITO",
+    "note": "Nota del pedido",
+    "added": "Agregado al carrito.",
+    "view": "VER CARRITO",
+    "close": "Cerrar carrito",
+    "error": "No pudimos actualizar el carrito. Revisa la cantidad e inténtalo de nuevo."
+  },
+  "collections": {
+    "products_count": {
+      "one": "({{ count }}) pieza",
+      "other": "({{ count }}) piezas"
+    },
+    "filter": "FILTRAR",
+    "filter_title": "Filtrar",
+    "sort": "Ordenar",
+    "apply": "VER RESULTADOS",
+    "clear": "BORRAR TODO",
+    "remove_filter": "Quitar filtro: {{ filter }}",
+    "price_from": "Desde",
+    "price_to": "Hasta",
+    "empty": "Esta colección todavía no tiene piezas.",
+    "empty_filtered": "Ninguna pieza coincide con estos filtros.",
+    "list_heading": "Colecciones"
+  },
+  "newsletter": {
+    "label": "Recibe los drops primero",
+    "placeholder": "tu@correo.com",
+    "hint": "Un correo por drop. Nada más.",
+    "submit": "SUSCRIBIRME",
+    "success": "Listo. Te escribimos cuando salga el próximo drop."
+  },
+  "contact": {
+    "name": "Nombre",
+    "email": "Correo",
+    "phone": "Teléfono",
+    "message": "Mensaje",
+    "submit": "ENVIAR",
+    "success": "Recibimos tu mensaje. Te respondemos en menos de 24 horas.",
+    "error": "Revisa los campos marcados."
+  },
+  "blogs": {
+    "by": "Por {{ author }}",
+    "back": "VOLVER",
+    "read": "LEER",
+    "empty": "Todavía no hay entradas."
+  },
+  "errors": {
+    "not_found_label": "(404)",
+    "not_found_title": "Esta página no existe.",
+    "not_found_body": "Puede que el enlace esté roto o que la prenda ya no esté en la tienda."
+  },
+  "password": {
+    "label": "Próximo drop",
+    "enter": "ENTRAR CON CONTRASEÑA",
+    "password": "Contraseña",
+    "submit": "ENTRAR",
+    "admin": "¿Administras la tienda?",
+    "admin_login": "Inicia sesión"
+  },
+  "gift_card": {
+    "title": "Tu tarjeta de regalo",
+    "balance": "Saldo",
+    "initial": "Valor inicial: {{ value }}",
+    "code": "Código",
+    "copy": "COPIAR CÓDIGO",
+    "copied": "Código copiado.",
+    "expired": "Esta tarjeta venció el {{ date }}.",
+    "disabled": "Esta tarjeta está desactivada.",
+    "expires": "Vence el {{ date }}.",
+    "use": "IR A LA TIENDA",
+    "print": "IMPRIMIR",
+    "add_to_wallet": "Agregar a Apple Wallet"
+  }
+}

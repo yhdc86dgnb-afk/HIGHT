@@ -1,0 +1,32 @@
+{%- comment -%}
+  Resultados del buscador del header. Se pide con la Section Rendering API desde
+  assets/hight.js: routes.predictive_search_url + ?q=...&section_id=predictive-search
+{%- endcomment -%}
+{%- if predictive_search.performed -%}
+  {%- assign found_products = predictive_search.resources.products -%}
+  {%- if found_products.size > 0 -%}
+    <p class="t-label t-muted">{{ 'search.products' | t }}</p>
+    <ul class="hi-predictive-list">
+      {%- for found_product in found_products limit: 6 -%}
+        <li>
+          <a href="{{ found_product.url }}" class="hi-predictive-item">
+            <span class="hi-predictive-media">
+              {%- if found_product.featured_media -%}
+                {{ found_product.featured_media | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+              {%- endif -%}
+            </span>
+            <span class="hi-card-name">{{ found_product.title | escape }}</span>
+            {% render 'price', product: found_product, show_from: true %}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+    <p>
+      <a class="hi-btn hi-btn-ghost" href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&amp;options%5Bprefix%5D=last">
+        {{- 'search.view_all' | t -}}
+      </a>
+    </p>
+  {%- else -%}
+    <p class="t-body-s t-muted">{{ 'search.no_results' | t: terms: predictive_search.terms }}</p>
+  {%- endif -%}
+{%- endif -%}

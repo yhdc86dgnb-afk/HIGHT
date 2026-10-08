@@ -1,0 +1,62 @@
+{
+  "sections": {
+    "manifiesto": {
+      "type": "manifesto",
+      "settings": {
+        "show_logo": true,
+        "label": "(Info)",
+        "quote": "<p>Hacemos ropa para repetir.</p><p>Prendas pesadas, de corte amplio y aristas limpias, que se ven igual de bien el lunes que el sábado.</p><p>Diseñamos pocas piezas, las numeramos y las soltamos por drops.</p><p>La plata es nuestra piel; el azul, la luz que se cuela de noche.</p><p>Hecho en Medellín, para quien se viste con intención.</p>",
+        "signature": "STREETWEAR DE AUTOR PARA EL USO DIARIO · MED/COL",
+        "button_label": "",
+        "background": "metal",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "indice": {
+      "type": "index-list",
+      "blocks": {
+        "drop-05": {
+          "type": "item",
+          "settings": {
+            "title": "Drop 05 — Plata",
+            "category": "Drop",
+            "year": "2026",
+            "link": ""
+          }
+        },
+        "drop-04": {
+          "type": "item",
+          "settings": {
+            "title": "Drop 04 — Concreto",
+            "category": "Drop",
+            "year": "2026",
+            "link": ""
+          }
+        }
+      },
+      "block_order": ["drop-05", "drop-04"],
+      "settings": {
+        "heading": "Trabajo seleccionado",
+        "source": "blocks",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "titular": {
+      "type": "titular",
+      "settings": {
+        "label": "(N5)",
+        "text": "PLATA NOCHE",
+        "size": "xl",
+        "hueso": false,
+        "glow": true,
+        "align": "center",
+        "body": "",
+        "button_label": "",
+        "button_style": "primary",
+        "background": "scheme",
+        "color_scheme": "scheme-2"
+      }
+    }
+  },
+  "order": ["manifiesto", "indice", "titular"]
+}

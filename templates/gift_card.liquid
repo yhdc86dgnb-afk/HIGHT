@@ -1,0 +1,77 @@
+{%- layout none -%}
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>{{ 'gift_card.title' | t }} &ndash; {{ shop.name }}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ 'favicon.svg' | asset_url }}">
+    {% render 'css-variables' %}
+    {{ 'hight.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer="defer"></script>
+    {{ content_for_header }}
+  </head>
+
+  <body>
+    <main class="hi-giftcard">
+      <a href="{{ shop.url }}" class="hi-logo" aria-label="{{ shop.name | escape }}">
+        {%- render 'logo-wordmark', height: 28 -%}
+      </a>
+      <h1 class="t-h2">{{ 'gift_card.title' | t }}</h1>
+
+      <div class="hi-giftcard__card hi-metal">
+        <div class="hi-drawer-sub">
+          <span>{{ 'gift_card.balance' | t | upcase }}</span>
+          <span class="hi-price hi-price-lg">{{ gift_card.balance | money_without_trailing_zeros }}</span>
+        </div>
+        <div>
+          <p class="t-label">{{ 'gift_card.code' | t | upcase }}</p>
+          <p class="hi-giftcard__code" data-gift-card-code>{{ gift_card.code | format_code }}</p>
+        </div>
+        <p class="t-label">
+          {%- if gift_card.enabled == false -%}
+            {{ 'gift_card.disabled' | t }}
+          {%- elsif gift_card.expired -%}
+            {{ 'gift_card.expired' | t: date: gift_card.expires_on }}
+          {%- elsif gift_card.expires_on -%}
+            {{ 'gift_card.expires' | t: date: gift_card.expires_on }}
+          {%- else -%}
+            {%- assign initial_value = gift_card.initial_value | money_without_trailing_zeros -%}
+            {{ 'gift_card.initial' | t: value: initial_value }}
+          {%- endif -%}
+        </p>
+      </div>
+
+      <div id="GiftCardQr" data-identifier="{{ gift_card.qr_identifier }}" aria-hidden="true"></div>
+
+      <div class="hi-hero-actions">
+        <button type="button" class="hi-btn hi-btn-secondary js-only" data-copy="{{ gift_card.code | escape }}" data-copied="{{ 'gift_card.copied' | t | escape }}">
+          {{- 'gift_card.copy' | t -}}
+        </button>
+        <a href="{{ shop.url }}" class="hi-btn hi-btn-primary">{{ 'gift_card.use' | t }}</a>
+        {%- if gift_card.pass_url -%}
+          <a href="{{ gift_card.pass_url }}" class="hi-btn hi-btn-ghost">{{ 'gift_card.add_to_wallet' | t }}</a>
+        {%- endif -%}
+      </div>
+    </main>
+
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      window.addEventListener('load', function () {
+        var qr = document.getElementById('GiftCardQr');
+        if (qr && window.QRCode) {
+          new QRCode(qr, { text: qr.dataset.identifier, width: 120, height: 120 });
+        }
+        var copy = document.querySelector('[data-copy]');
+        if (copy && navigator.clipboard) {
+          copy.addEventListener('click', function () {
+            navigator.clipboard.writeText(copy.dataset.copy).then(function () {
+              copy.textContent = copy.dataset.copied;
+            });
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+<div class="hi-container hi-page hi-page--center">
+  <p class="t-label t-muted">{{ 'errors.not_found_label' | t }}</p>
+  <h1 class="t-display-l">{{ 'errors.not_found_title' | t }}</h1>
+  <p class="t-body-l t-muted t-measure">{{ 'errors.not_found_body' | t }}</p>
+  <div>
+    <a href="{{ routes.all_products_collection_url }}" class="hi-btn hi-btn-primary hi-btn-lg">{{ 'general.continue_shopping' | t }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Página no encontrada",
+  "tag": "section",
+  "class": "hi-main-404-section"
+}
+{% endschema %}

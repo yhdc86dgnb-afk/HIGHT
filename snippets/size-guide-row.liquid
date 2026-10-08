@@ -1,0 +1,16 @@
+{%- doc -%}
+  Fila de la guía de tallas: nombre de la medida y un valor por talla, en mono tabular.
+
+  @param {string} label - Nombre de la medida
+  @param {string} values - Valores separados por comas, uno por talla
+  @param {object} sizes - Tallas de la tabla (array)
+  @param {string} [highlight] - Talla resaltada
+{%- enddoc -%}
+{%- assign row_values = values | split: ',' -%}
+<tr>
+  <th scope="row">{{ label | upcase }}</th>
+  {%- for row_value in row_values -%}
+    {%- assign row_size = sizes[forloop.index0] -%}
+    <td data-size="{{ row_size }}" {% if row_size == highlight %}class="is-on"{% endif %}>{{ row_value }}</td>
+  {%- endfor -%}
+</tr>

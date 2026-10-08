@@ -1,0 +1,10 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Shopify CLI
+.shopify/
+node_modules/
+
+# Paquetes del tema
+*.zip

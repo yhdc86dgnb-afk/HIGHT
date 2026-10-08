@@ -1,0 +1,433 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign form_id = 'ProductForm-' | append: section.id
+  assign size_guide_id = 'SizeGuide-' | append: section.id
+
+  assign drop_prefix = settings.drop_tag_prefix | default: 'DROP' | downcase
+  assign drop_prefix_size = drop_prefix | size
+  assign drop_tag = ''
+  for product_tag in product.tags
+    assign tag_lower = product_tag | downcase
+    assign tag_start = tag_lower | slice: 0, drop_prefix_size
+    if drop_prefix_size > 0 and tag_start == drop_prefix
+      assign drop_tag = product_tag | upcase
+      break
+    endif
+  endfor
+
+  assign size_option_position = 0
+  for product_option in product.options_with_values
+    assign option_lower = product_option.name | downcase
+    if option_lower contains 'talla' or option_lower contains 'size' or option_lower == 'tamaño'
+      assign size_option_position = product_option.position
+      assign selected_size = product_option.selected_value
+    endif
+  endfor
+
+  assign size_guide_key = product.metafields.custom.guia_tallas.value | default: ''
+  if size_guide_key == ''
+    assign product_kind = product.type | append: ' ' | append: product.title | downcase
+    if product_kind contains 'hoodie' or product_kind contains 'buzo'
+      assign size_guide_key = 'hoodie'
+    elsif product_kind contains 'camiseta' or product_kind contains 'tee' or product_kind contains 'camisa'
+      assign size_guide_key = 'camiseta'
+    elsif product_kind contains 'pantal' or product_kind contains 'jean'
+      assign size_guide_key = 'pantalon'
+    else
+      assign size_guide_key = 'all'
+    endif
+  endif
+
+  assign stock_threshold = settings.low_stock_threshold
+-%}
+
+<product-page
+  class="hi-container hi-product"
+  data-section-id="{{ section.id }}"
+  data-product-url="{{ product.url }}"
+  data-form-id="{{ form_id }}"
+>
+  <div class="hi-product-media">
+    {% render 'product-gallery', product: product, current_variant: current_variant, section_id: section.id %}
+  </div>
+
+  <div class="hi-product-info">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when '@app' -%}
+          {% render block %}
+
+        {%- when 'drop_tag' -%}
+          {%- assign block_tag = block.settings.text | default: drop_tag -%}
+          {%- if block_tag != blank -%}
+            <span class="hi-tag hi-tag-drop" {{ block.shopify_attributes }}>{{ block_tag | upcase | escape }}</span>
+          {%- endif -%}
+
+        {%- when 'title' -%}
+          <h1 class="hi-product-title" {{ block.shopify_attributes }}>{{ product.title | escape }}</h1>
+
+        {%- when 'price' -%}
+          <div class="hi-product-block--tight" {{ block.shopify_attributes }}>
+            <div data-product-price>{% render 'price', variant: current_variant, size: 'lg' %}</div>
+            {%- if block.settings.show_tax_note -%}
+              <p class="t-body-s t-muted">
+                {%- if cart.taxes_included -%}
+                  {{ 'products.taxes_included' | t }}
+                {%- endif %}
+                {{ 'products.shipping_at_checkout' | t -}}
+              </p>
+            {%- endif -%}
+          </div>
+
+        {%- when 'spec' -%}
+          {%- assign spec_text = product.metafields.custom.ficha.value | default: block.settings.text -%}
+          {%- if spec_text != blank -%}
+            <p class="t-spec t-muted" {{ block.shopify_attributes }}>{{ spec_text | escape }}</p>
+          {%- endif -%}
+
+        {%- when 'variant_picker' -%}
+          {%- unless product.has_only_default_variant -%}
+            <div class="hi-variant-block" {{ block.shopify_attributes }}>
+              {% render 'variant-picker', product: product, section_id: section.id %}
+              {%- assign fit_note = product.metafields.custom.nota_corte.value | default: block.settings.fit_note -%}
+              {%- if fit_note != blank -%}
+                <p class="hi-product-fit">{{ fit_note | escape }}</p>
+              {%- endif -%}
+              {%- if block.settings.show_size_guide and size_option_position > 0 -%}
+                <button
+                  type="button"
+                  class="hi-btn hi-btn-ghost hi-sizeguide-trigger js-only"
+                  aria-haspopup="dialog"
+                  aria-controls="{{ size_guide_id }}"
+                  data-open-dialog="{{ size_guide_id }}"
+                >
+                  {{- 'products.size_guide' | t -}}
+                </button>
+              {%- endif -%}
+            </div>
+          {%- endunless -%}
+
+        {%- when 'buy_buttons' -%}
+          <product-form class="hi-product-buy" data-section-id="{{ section.id }}" {{ block.shopify_attributes }}>
+            {%- form 'product', product, id: form_id, novalidate: 'novalidate' -%}
+              <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+              <noscript>
+                <label class="visually-hidden" for="{{ form_id }}-select">{{ 'products.size_legend' | t }}</label>
+                <select name="id" id="{{ form_id }}-select" class="hi-select">
+                  {%- for variant in product.variants -%}
+                    <option
+                      value="{{ variant.id }}"
+                      {% if variant == current_variant %}
+                        selected
+                      {% endif %}
+                      {% unless variant.available %}
+                        disabled
+                      {% endunless %}
+                    >
+                      {{ variant.title | escape }} &mdash; {{ variant.price | money_without_trailing_zeros }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+              </noscript>
+              <div class="hi-product-buy__row">
+                {%- if block.settings.show_quantity -%}
+                  {% render 'quantity-input', name: 'quantity', value: 1, min: 1, size: 'lg' %}
+                {%- endif -%}
+                <button
+                  type="submit"
+                  name="add"
+                  class="hi-btn hi-btn-primary hi-btn-lg"
+                  data-add-button
+                  {% unless current_variant.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  {%- if current_variant.available -%}
+                    {{ 'products.add_to_cart' | t }}
+                  {%- else -%}
+                    {{ 'products.sold_out' | t }}
+                  {%- endif -%}
+                </button>
+              </div>
+              <p class="hi-product-error" role="alert" data-product-error></p>
+              {%- if block.settings.show_dynamic_checkout -%}
+                <div class="hi-payment-button">{{ form | payment_button }}</div>
+              {%- endif -%}
+            {%- endform -%}
+          </product-form>
+
+        {%- when 'stock' -%}
+          {%- liquid
+            assign show_stock = false
+            if stock_threshold > 0 and current_variant.available and current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny'
+              if current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= stock_threshold
+                assign show_stock = true
+              endif
+            endif
+          -%}
+          <div data-product-stock {{ block.shopify_attributes }}>
+            {%- if show_stock -%}
+              <p class="hi-notice hi-notice-warning">
+                <span class="hi-notice-mark">{{ 'products.low_stock_tag' | t: count: current_variant.inventory_quantity }}</span>
+                <span>{{ 'products.low_stock' | t: count: current_variant.inventory_quantity }}</span>
+              </p>
+            {%- endif -%}
+          </div>
+
+        {%- when 'description' -%}
+          {%- if product.description != blank -%}
+            <div class="rte" {{ block.shopify_attributes }}>{{ product.description }}</div>
+          {%- endif -%}
+
+        {%- when 'collapsible' -%}
+          {%- liquid
+            assign panel_content = block.settings.content
+            if block.settings.page != blank
+              assign panel_content = block.settings.page.content
+            endif
+          -%}
+          <div class="hi-acc hi-acc-block" {{ block.shopify_attributes }}>
+            <details
+              class="hi-acc-item"
+              {% if block.settings.open %}
+                open
+              {% endif %}
+            >
+              <summary class="hi-acc-btn">
+                <span>{{ block.settings.heading | escape }}</span>
+                {% render 'icon', name: 'add', size: 16, class: 'hi-acc-plus' %}
+                {% render 'icon', name: 'remove', size: 16, class: 'hi-acc-minus' %}
+              </summary>
+              <div class="hi-acc-panel rte">
+                {{ panel_content }}
+                {%- if block.settings.show_care -%}
+                  <ul class="hi-care">
+                    <li>{% render 'icon', name: 'lavar_frio', size: 24 %}{{ 'products.care.lavar_frio' | t }}</li>
+                    <li>{% render 'icon', name: 'no_blanquear', size: 24 %}{{ 'products.care.no_blanquear' | t }}</li>
+                    <li>{% render 'icon', name: 'planchar_bajo', size: 24 %}{{ 'products.care.planchar_bajo' | t }}</li>
+                    <li>{% render 'icon', name: 'no_secadora', size: 24 %}{{ 'products.care.no_secadora' | t }}</li>
+                  </ul>
+                {%- endif -%}
+              </div>
+            </details>
+          </div>
+
+        {%- when 'text' -%}
+          <div class="rte t-body-s" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+
+  {%- if size_option_position > 0 -%}
+    <dialog
+      id="{{ size_guide_id }}"
+      class="hi-dialog hi-modal hi-modal-lg"
+      aria-label="{{ 'products.size_guide_title' | t }}"
+      data-size-option="{{ size_option_position }}"
+    >
+      <div class="hi-modal-head">
+        <p class="hi-modal-title">{{ 'products.size_guide_title' | t }}</p>
+        <button type="button" class="hi-iconbtn" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>
+          {% render 'icon', name: 'close' %}
+        </button>
+      </div>
+      <div class="hi-modal-body">
+        {%- assign size_guide_page = section.settings.size_guide_page -%}
+        {%- if size_guide_page != blank -%}
+          <div class="rte">{{ size_guide_page.content }}</div>
+        {%- else -%}
+          <p class="hi-sizeguide-note hi-sizeguide-intro">{{ 'products.size_guide_note' | t }}</p>
+          {% render 'size-guide', guide: size_guide_key, highlight: selected_size %}
+        {%- endif -%}
+      </div>
+    </dialog>
+  {%- endif -%}
+
+  <script type="application/json" data-product-variants>
+    [
+      {%- for variant in product.variants -%}
+        {
+          "id": {{ variant.id }},
+          "options": {{ variant.options | json }},
+          "available": {{ variant.available | json }},
+          "media_id": {{ variant.featured_media.id | json }}
+        }
+        {%- unless forloop.last %},{% endunless -%}
+      {%- endfor -%}
+    ]
+  </script>
+</product-page>
+
+{% schema %}
+{
+  "name": "Ficha de producto",
+  "tag": "section",
+  "class": "hi-main-product-section",
+  "settings": [
+    {
+      "type": "page",
+      "id": "size_guide_page",
+      "label": "Página con la guía de tallas",
+      "info": "Opcional. Sin página se muestran las tablas base del design system (camiseta boxy, hoodie boxy, pantalón wide) según el tipo de producto o el metacampo custom.guia_tallas."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "drop_tag",
+      "name": "Marquilla del drop",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Muestra la etiqueta del producto que empieza por el prefijo de drop (ej. DROP 05). Cuenta como el único aura de la vista."
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texto fijo (opcional)"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "Nombre",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Precio",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_tax_note",
+          "label": "Mostrar nota de impuestos y envío",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "spec",
+      "name": "Ficha técnica",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Usa el metacampo custom.ficha del producto. Si no existe, muestra este texto."
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texto",
+          "default": "100% ALGODÓN · 280 G/M² · CORTE BOXY"
+        }
+      ]
+    },
+    {
+      "type": "variant_picker",
+      "name": "Color y talla",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_size_guide",
+          "label": "Mostrar \"VER GUÍA DE TALLAS\"",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "fit_note",
+          "label": "Nota de corte",
+          "default": "Si dudas entre dos tallas, revisa la guía: las medidas son de la prenda en plano.",
+          "info": "El metacampo custom.nota_corte del producto tiene prioridad."
+        }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Botón de compra",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_quantity",
+          "label": "Mostrar selector de cantidad",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "label": "Mostrar botones de pago rápido",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "stock",
+      "name": "Aviso de unidades",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "\"Quedan N unidades.\" cuando el inventario de la variante baja del umbral de Configuración del tema > Productos."
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Descripción",
+      "limit": 1
+    },
+    {
+      "type": "collapsible",
+      "name": "Acordeón",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Título",
+          "default": "Composición y cuidado"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Contenido"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Contenido desde una página"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_care",
+          "label": "Mostrar íconos de cuidado",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "open",
+          "label": "Abierto al cargar",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Texto",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texto",
+          "default": "<p>Envío a toda Colombia. Cambios dentro de los 15 días.</p>"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

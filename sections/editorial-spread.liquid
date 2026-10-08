@@ -1,0 +1,278 @@
+{%- liquid
+  assign has_paper = false
+  if section.settings.show_paper and section.blocks.size > 0
+    assign has_paper = true
+  endif
+  if section.settings.show_paper and section.settings.paper_text != blank
+    assign has_paper = true
+  endif
+
+  assign paper_class = 'hi-metal'
+  if section.settings.paper_style == 'scheme'
+    assign paper_class = 'hi-scheme color-' | append: section.settings.color_scheme
+  endif
+
+  assign spread_ratio = section.settings.ratio
+  assign image_alt = section.settings.image.alt | default: section.settings.quote
+-%}
+
+<section
+  class="hi-spread-section{% if has_paper %} hi-spread-section--paper{% endif %}{% if section.settings.reverse %} hi-spread-section--reverse{% endif %}"
+  aria-label="{{ section.settings.left_label | default: section.settings.quote | escape }}"
+>
+  {%- if has_paper -%}
+    <div class="hi-spread-paper {{ paper_class }}">
+      {%- if section.settings.paper_label != blank -%}
+        <p class="t-label">{{ section.settings.paper_label | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <ol class="hi-sheet" style="--frame-w: 240px;">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign frame_n = forloop.index
+              if frame_n < 10
+                assign frame_n = '0' | append: frame_n
+              endif
+              assign frame_alt = block.settings.image.alt | default: block.settings.take
+            -%}
+            <li class="hi-frame{% if block.settings.orientation == 'portrait' %} hi-frame--portrait{% endif %}" {{ block.shopify_attributes }}>
+              <span class="hi-frame-take">({{ block.settings.take | default: 'A' | escape }})</span>
+              <span class="hi-frame-media">
+                {%- if block.settings.image != blank -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 600
+                    | image_tag: widths: '240, 360, 480, 600', sizes: '240px', loading: 'lazy', alt: frame_alt
+                  }}
+                {%- endif -%}
+              </span>
+              <span class="hi-frame-n">{{ frame_n }}</span>
+            </li>
+          {%- endfor -%}
+        </ol>
+      {%- endif -%}
+
+      {%- if section.settings.paper_text != blank or section.settings.paper_folio != blank -%}
+        <div class="hi-spread-paper__foot">
+          <div class="t-caption">{{ section.settings.paper_text }}</div>
+          <span class="t-label">{{ section.settings.paper_folio | escape }}</span>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <figure
+    class="hi-spread{% unless section.settings.cyanotype %} hi-spread--color{% endunless %}"
+    style="--spread-ratio: {{ spread_ratio }};"
+  >
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 2000
+        | image_tag:
+          widths: '600, 900, 1200, 1600, 2000',
+          sizes: '(min-width: 768px) 60vw, 100vw',
+          loading: 'lazy',
+          alt: image_alt
+      }}
+    {%- else -%}
+      <span class="hi-spread-ph" aria-hidden="true">FOTO B/N</span>
+    {%- endif -%}
+    {%- if section.settings.quote != blank -%}
+      <blockquote class="hi-spread-quote">{{ section.settings.quote | escape }}</blockquote>
+    {%- endif -%}
+    {%- if section.settings.left_label != blank -%}
+      <figcaption class="hi-spread-l">{{ section.settings.left_label | escape }}</figcaption>
+    {%- endif -%}
+    {%- if section.settings.right_label != blank -%}
+      <span class="hi-spread-r">{{ section.settings.right_label | escape }}</span>
+    {%- endif -%}
+  </figure>
+</section>
+
+{% schema %}
+{
+  "name": "Spread editorial",
+  "tag": "section",
+  "class": "hi-spread-wrapper",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Foto virada a cianotipo con una sola cita en serif itálica. Cuenta como la voz principal de la vista: no la combines con display-xl."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Foto",
+      "info": "Oscura o de fondo liso para que la cita contraste."
+    },
+    {
+      "type": "checkbox",
+      "id": "cyanotype",
+      "label": "Virar a cianotipo",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "quote",
+      "label": "Cita",
+      "default": "La prenda se siente antes de verse.",
+      "info": "Una frase sobre sensación, no sobre producto. Sin signos de exclamación."
+    },
+    {
+      "type": "text",
+      "id": "left_label",
+      "label": "Marquilla izquierda",
+      "default": "DROP 05 — PLATA"
+    },
+    {
+      "type": "text",
+      "id": "right_label",
+      "label": "Marquilla derecha",
+      "default": "MEDELLÍN, CO."
+    },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "Proporción de la foto",
+      "options": [
+        {
+          "value": "3 / 4",
+          "label": "3:4 retrato"
+        },
+        {
+          "value": "4 / 5",
+          "label": "4:5"
+        },
+        {
+          "value": "3 / 2",
+          "label": "3:2 editorial"
+        }
+      ],
+      "default": "3 / 4"
+    },
+    {
+      "type": "header",
+      "content": "Pliego con hoja de contacto"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_paper",
+      "label": "Mostrar el pliego",
+      "default": true,
+      "info": "Papel a la izquierda con las tomas numeradas, foto a la derecha."
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Pliego a la derecha",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "paper_style",
+      "label": "Fondo del pliego",
+      "options": [
+        {
+          "value": "metal",
+          "label": "Plata cepillada"
+        },
+        {
+          "value": "scheme",
+          "label": "Esquema de color"
+        }
+      ],
+      "default": "metal"
+    },
+    {
+      "type": "text",
+      "id": "paper_label",
+      "label": "Marquilla del pliego",
+      "default": "(HOJA DE CONTACTO)"
+    },
+    {
+      "type": "richtext",
+      "id": "paper_text",
+      "label": "Pie de foto",
+      "default": "<p>Drop 05 — Plata. Fotografiado de noche en Medellín.</p>"
+    },
+    {
+      "type": "text",
+      "id": "paper_folio",
+      "label": "Folio",
+      "default": "0060"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "frame",
+      "name": "Toma",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto"
+        },
+        {
+          "type": "text",
+          "id": "take",
+          "label": "Letra de toma",
+          "default": "A"
+        },
+        {
+          "type": "select",
+          "id": "orientation",
+          "label": "Orientación",
+          "options": [
+            {
+              "value": "landscape",
+              "label": "Horizontal 4:3"
+            },
+            {
+              "value": "portrait",
+              "label": "Vertical 3:4"
+            }
+          ],
+          "default": "landscape"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Spread editorial",
+      "blocks": [
+        {
+          "type": "frame",
+          "settings": {
+            "take": "A",
+            "orientation": "landscape"
+          }
+        },
+        {
+          "type": "frame",
+          "settings": {
+            "take": "B",
+            "orientation": "portrait"
+          }
+        },
+        {
+          "type": "frame",
+          "settings": {
+            "take": "C",
+            "orientation": "landscape"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,53 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "color_schemes": {
+      "scheme-1": {
+        "settings": {
+          "surface_000": "#dfe1e5",
+          "surface_100": "#f1f2f4",
+          "surface_200": "#c4c7cd",
+          "line": "#b0b4bb",
+          "line_strong": "#5d626b",
+          "ink": "#0b1222",
+          "ink_muted": "#3c4350",
+          "on_ink": "#f1f2f4",
+          "aura": "#1b48a3",
+          "on_aura": "#f1f2f4",
+          "cyan": "#125a63",
+          "haze": "#a9b8d8",
+          "success": "#175f4f",
+          "warning": "#664300",
+          "danger": "#922c16"
+        }
+      },
+      "scheme-2": {
+        "settings": {
+          "surface_000": "#070a11",
+          "surface_100": "#0e131d",
+          "surface_200": "#181f2c",
+          "line": "#262e3d",
+          "line_strong": "#646c7c",
+          "ink": "#e3e6eb",
+          "ink_muted": "#a2a8b4",
+          "on_ink": "#070a11",
+          "aura": "#6fa2ff",
+          "on_aura": "#070a11",
+          "cyan": "#7fdde3",
+          "haze": "#2a3a6b",
+          "success": "#6ccfb4",
+          "warning": "#f0c062",
+          "danger": "#ff8f80"
+        }
+      }
+    }
+  }
+}

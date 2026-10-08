@@ -1,0 +1,73 @@
+<div class="hi-container hi-page" data-cart-page data-section-id="{{ section.id }}">
+  <header class="hi-collection-head">
+    <p class="t-label t-muted">{{ 'collections.products_count' | t: count: cart.item_count }}</p>
+    <h1 class="t-display-l">{{ 'cart.page_title' | t }}</h1>
+  </header>
+
+  {%- if cart.item_count > 0 -%}
+    <div class="hi-cart">
+      <div>
+        <ul class="hi-lines" data-cart-lines>
+          {%- for item in cart.items -%}
+            {% render 'cart-line', item: item, index: forloop.index, form: 'CartPageForm' %}
+          {%- endfor -%}
+        </ul>
+        <noscript>
+          <p>
+            <button type="submit" form="CartPageForm" name="update" class="hi-btn hi-btn-secondary">{{ 'cart.update' | t }}</button>
+          </p>
+        </noscript>
+      </div>
+
+      <form action="{{ routes.cart_url }}" method="post" id="CartPageForm" class="hi-cart-summary">
+        {% render 'free-shipping' %}
+        {%- if settings.cart_show_note -%}
+          <div class="hi-field">
+            <label for="CartNote">{{ 'cart.note' | t }}</label>
+            <textarea id="CartNote" name="note">{{ cart.note }}</textarea>
+          </div>
+        {%- endif -%}
+        {%- for discount_application in cart.cart_level_discount_applications -%}
+          <div class="hi-drawer-sub">
+            <span>{{ discount_application.title | upcase | escape }}</span>
+            <span class="hi-price">&minus;{{ discount_application.total_allocated_amount | money_without_trailing_zeros }}</span>
+          </div>
+        {%- endfor -%}
+        <div class="hi-drawer-sub">
+          <span>{{ 'cart.subtotal' | t }}</span>
+          {% render 'price', amount: cart.total_price, size: 'lg' %}
+        </div>
+        <p class="hi-drawer-note">{{ 'cart.taxes_note' | t }}</p>
+        <button type="submit" name="checkout" class="hi-btn hi-btn-primary hi-btn-lg hi-btn-block">{{ 'cart.checkout' | t }}</button>
+        {%- if additional_checkout_buttons and section.settings.show_wallets -%}
+          <div class="hi-payment-button">{{ content_for_additional_checkout_buttons }}</div>
+        {%- endif -%}
+      </form>
+    </div>
+  {%- else -%}
+    <div class="hi-empty">
+      {% render 'icon', name: 'shopping_bag', size: 32 %}
+      <p class="hi-empty-title">{{ 'cart.empty' | t }}</p>
+      <p class="hi-empty-body">{{ 'cart.empty_body' | t }}</p>
+      <a href="{{ settings.cart_empty_link | default: routes.all_products_collection_url }}" class="hi-btn hi-btn-secondary">
+        {{- 'cart.view_drop' | t -}}
+      </a>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Carrito",
+  "tag": "section",
+  "class": "hi-main-cart-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_wallets",
+      "label": "Mostrar botones de pago rápido",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

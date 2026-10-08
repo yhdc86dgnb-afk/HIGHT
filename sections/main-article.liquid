@@ -1,0 +1,47 @@
+<article class="hi-container hi-page">
+  <div class="hi-article">
+    <header class="hi-collection-head">
+      <p class="t-label t-muted">
+        {{- article.published_at | date: '%d.%m.%Y' -}}
+        {%- if section.settings.show_author %} · {{ 'blogs.by' | t: author: article.author }}{% endif -%}
+      </p>
+      <h1 class="t-h1">{{ article.title | escape }}</h1>
+    </header>
+    {%- if article.image -%}
+      <div class="hi-article__media">
+        {{
+          article.image
+          | image_url: width: 1800
+          | image_tag:
+            widths: '600, 900, 1200, 1500, 1800',
+            sizes: '(min-width: 960px) 880px, calc(100vw - 32px)',
+            loading: 'eager',
+            alt: article.title
+        }}
+      </div>
+    {%- endif -%}
+    <div class="rte t-body">{{ article.content }}</div>
+    <p>
+      <a href="{{ blog.url }}" class="hi-btn hi-btn-ghost">
+        {%- render 'icon', name: 'arrow_back', size: 20 %}
+        {{ 'blogs.back' | t -}}
+      </a>
+    </p>
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Artículo",
+  "tag": "section",
+  "class": "hi-main-article-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Mostrar autor",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

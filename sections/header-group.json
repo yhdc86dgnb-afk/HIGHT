@@ -1,0 +1,23 @@
+{
+  "type": "header",
+  "name": "Encabezado",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "text": "Envío gratis en Medellín desde $250.000",
+        "link": "",
+        "link_label": "VER",
+        "tone": "ink"
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "menu": "main-menu",
+        "metal": "home"
+      }
+    }
+  },
+  "order": ["announcement-bar", "header"]
+}

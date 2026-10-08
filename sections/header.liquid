@@ -1,0 +1,220 @@
+{%- liquid
+  assign header_metal = false
+  if section.settings.metal == 'all'
+    assign header_metal = true
+  elsif section.settings.metal == 'home' and request.page_type == 'index'
+    assign header_metal = true
+  endif
+  assign main_menu = section.settings.menu
+-%}
+
+<header class="hi-header{% if header_metal %} hi-metal-soft{% endif %}">
+  <div class="hi-header-start">
+    <button
+      type="button"
+      class="hi-iconbtn hi-header-menu"
+      aria-label="{{ 'accessibility.open_menu' | t }}"
+      aria-haspopup="dialog"
+      aria-controls="MenuDrawer"
+      data-open-dialog="MenuDrawer"
+    >
+      {% render 'icon', name: 'menu' %}
+    </button>
+
+    {%- if main_menu.links.size > 0 -%}
+      <nav class="hi-header-nav" aria-label="{{ 'accessibility.main_nav' | t }}">
+        <ul>
+          {%- for link in main_menu.links limit: 5 -%}
+            <li>
+              {%- if link.links.size > 0 -%}
+                <details class="hi-nav-details" data-nav-details>
+                  <summary>
+                    {{- link.title | escape }}
+                    {% render 'icon', name: 'expand_more', size: 16 -%}
+                  </summary>
+                  <ul class="hi-nav-dropdown">
+                    {%- for child_link in link.links -%}
+                      <li>
+                        <a
+                          href="{{ child_link.url }}"
+                          {% if child_link.current %}
+                            aria-current="page"
+                          {% endif %}
+                        >
+                          {{- child_link.title | escape -}}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </details>
+              {%- else -%}
+                <a
+                  href="{{ link.url }}"
+                  {% if link.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- link.title | escape -}}
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+  </div>
+
+  <a href="{{ routes.root_url }}" class="hi-header-logo" aria-label="{{ 'accessibility.home' | t: shop: shop.name }}">
+    {%- if settings.logo != blank -%}
+      {%- assign logo_width = settings.logo_height | times: settings.logo.aspect_ratio | round -%}
+      {{
+        settings.logo
+        | image_url: width: 600
+        | image_tag: height: settings.logo_height, width: logo_width, alt: shop.name, loading: 'eager'
+      }}
+    {%- else -%}
+      {% render 'logo-wordmark', height: settings.logo_height %}
+    {%- endif -%}
+  </a>
+
+  <div class="hi-header-end">
+    <a
+      href="{{ routes.search_url }}"
+      class="hi-iconbtn"
+      aria-label="{{ 'accessibility.search' | t }}"
+      aria-haspopup="dialog"
+      data-open-dialog="SearchDialog"
+    >
+      {% render 'icon', name: 'search' %}
+    </a>
+    {%- if shop.customer_accounts_enabled -%}
+      <a href="{{ routes.account_url }}" class="hi-iconbtn hi-hide-sm" aria-label="{{ 'accessibility.account' | t }}">
+        {% render 'icon', name: 'person' %}
+      </a>
+    {%- endif -%}
+    <a
+      href="{{ routes.cart_url }}"
+      class="hi-iconbtn"
+      aria-label="{{ 'accessibility.cart_count' | t: count: cart.item_count }}"
+      data-cart-toggle
+    >
+      {% render 'icon', name: 'shopping_bag' %}
+      <span class="hi-iconbtn-badge" aria-hidden="true" data-cart-count>({{ cart.item_count }})</span>
+    </a>
+  </div>
+</header>
+
+<dialog id="MenuDrawer" class="hi-dialog hi-drawer hi-drawer--left" aria-label="{{ 'accessibility.menu' | t }}">
+  <div class="hi-drawer-head">
+    <p class="hi-drawer-title">{{ 'accessibility.menu' | t }}</p>
+    <button type="button" class="hi-iconbtn" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>
+      {% render 'icon', name: 'close' %}
+    </button>
+  </div>
+  <nav class="hi-drawer-body" aria-label="{{ 'accessibility.main_nav' | t }}">
+    <ul class="hi-menu-list">
+      {%- for link in main_menu.links -%}
+        <li>
+          {%- if link.links.size > 0 -%}
+            <details>
+              <summary>
+                {{- link.title | escape }}
+                {% render 'icon', name: 'add', size: 16 -%}
+              </summary>
+              <ul class="hi-menu-sub">
+                <li>
+                  <a href="{{ link.url }}">{{ 'general.view_all' | t }}</a>
+                </li>
+                {%- for child_link in link.links -%}
+                  <li>
+                    <a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </details>
+          {%- else -%}
+            <a href="{{ link.url }}">{{ link.title | escape }}</a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+  <div class="hi-menu-foot">
+    {%- if shop.customer_accounts_enabled -%}
+      <a href="{{ routes.account_url }}">
+        {%- render 'icon', name: 'person', size: 20 %}
+        {{ 'accessibility.account' | t -}}
+      </a>
+    {%- endif -%}
+    {% render 'social-links' %}
+  </div>
+</dialog>
+
+<dialog id="SearchDialog" class="hi-dialog hi-search-dialog" aria-label="{{ 'search.title' | t }}">
+  <predictive-search
+    data-enabled="{{ settings.predictive_search }}"
+    data-section-id="predictive-search"
+  >
+    <form action="{{ routes.search_url }}" method="get" role="search" class="hi-search-bar">
+      {% render 'icon', name: 'search' %}
+      <label class="visually-hidden" for="HeaderSearchInput">{{ 'search.title' | t }}</label>
+      <input
+        id="HeaderSearchInput"
+        type="search"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="{{ 'search.placeholder' | t }}"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        data-predictive-input
+      >
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="button" class="hi-iconbtn" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>
+        {% render 'icon', name: 'close' %}
+      </button>
+    </form>
+    <div class="hi-predictive" data-predictive-results></div>
+  </predictive-search>
+</dialog>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "hi-header-section",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menú principal",
+      "default": "main-menu",
+      "info": "Máximo 5 enlaces en escritorio. El primero es el drop vigente. Orden sugerido: Drop, Tienda, Archivo, Info."
+    },
+    {
+      "type": "select",
+      "id": "metal",
+      "label": "Fondo de plata cepillada",
+      "options": [
+        {
+          "value": "home",
+          "label": "Solo en la home"
+        },
+        {
+          "value": "all",
+          "label": "En todas las páginas"
+        },
+        {
+          "value": "none",
+          "label": "Nunca"
+        }
+      ],
+      "default": "home",
+      "info": "El design system pide metal en home y campaña; fondo normal en catálogo, ficha y checkout."
+    }
+  ]
+}
+{% endschema %}

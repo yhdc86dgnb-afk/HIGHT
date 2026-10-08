@@ -1,0 +1,48 @@
+{
+  "type": "footer",
+  "name": "Pie de página",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu-tienda": {
+          "type": "menu",
+          "settings": {
+            "title": "Tienda",
+            "menu": "main-menu"
+          }
+        },
+        "menu-ayuda": {
+          "type": "menu",
+          "settings": {
+            "title": "Ayuda",
+            "menu": "footer"
+          }
+        },
+        "social": {
+          "type": "social",
+          "settings": {
+            "title": "Hight",
+            "menu": ""
+          }
+        },
+        "legal": {
+          "type": "legal",
+          "settings": {
+            "title": "Legal",
+            "menu": "",
+            "show_policies": true
+          }
+        }
+      },
+      "block_order": ["menu-tienda", "menu-ayuda", "social", "legal"],
+      "settings": {
+        "tagline": "Streetwear de autor para el uso diario.",
+        "show_newsletter": true,
+        "origin": "MED/COL",
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": ["footer"]
+}

@@ -1,0 +1,5 @@
+# Entornos de Shopify CLI para el tema Hight.
+# Uso: shopify theme dev -e hight   |   shopify theme push -e hight --unpublished
+[environments.hight]
+store = "hight18.myshopify.com"
+path = "."

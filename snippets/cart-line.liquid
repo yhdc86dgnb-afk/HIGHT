@@ -1,0 +1,76 @@
+{%- doc -%}
+  CartLine del design system: foto 4:5, nombre, talla y color en mono, cantidad y precio de la línea.
+
+  @param {line_item} item - Línea del carrito
+  @param {number} index - Posición de la línea, empezando en 1
+  @param {string} [form] - id del formulario del carrito (página del carrito)
+{%- enddoc -%}
+{%- liquid
+  assign line_meta = ''
+  unless item.product.has_only_default_variant
+    for option in item.options_with_values
+      assign option_name = option.name | downcase
+      if option_name contains 'talla' or option_name contains 'size'
+        assign option_text = 'cart.size_value' | t: value: option.value
+      else
+        assign option_text = option.value
+      endif
+      if line_meta != ''
+        assign line_meta = line_meta | append: ' · '
+      endif
+      assign line_meta = line_meta | append: option_text
+    endfor
+  endunless
+  assign line_label = 'cart.quantity_for' | t: title: item.product.title
+-%}
+<li class="hi-line" data-cart-line="{{ index }}">
+  <a href="{{ item.url }}" class="hi-line-media" tabindex="-1" aria-hidden="true">
+    {%- if item.image -%}
+      {{
+        item.image
+        | image_url: width: 240
+        | image_tag: loading: 'lazy', widths: '120, 240', sizes: '120px', alt: ''
+      }}
+    {%- endif -%}
+  </a>
+
+  <div class="hi-line-body">
+    <a href="{{ item.url }}" class="hi-line-name">{{ item.product.title | escape }}</a>
+    {%- if line_meta != '' -%}
+      <span class="hi-line-meta">{{ line_meta | escape }}</span>
+    {%- endif -%}
+    {%- for property in item.properties -%}
+      {%- assign property_first_char = property.first | slice: 0 -%}
+      {%- if property.last != blank and property_first_char != '_' -%}
+        <span class="hi-line-meta">{{ property.first | escape }}: {{ property.last | escape }}</span>
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if item.selling_plan_allocation -%}
+      <span class="hi-line-meta">{{ item.selling_plan_allocation.selling_plan.name | escape }}</span>
+    {%- endif -%}
+    {%- for discount in item.line_level_discount_allocations -%}
+      <span class="hi-line-meta">{{ discount.discount_application.title | escape }} (&minus;{{ discount.amount | money_without_trailing_zeros }})</span>
+    {%- endfor -%}
+
+    <div class="hi-line-row">
+      {%- render 'quantity-input',
+        name: 'updates[]',
+        value: item.quantity,
+        min: 0,
+        line: index,
+        label: line_label,
+        form: form
+      -%}
+      {%- render 'price', amount: item.final_line_price, compare_at: item.original_line_price -%}
+    </div>
+  </div>
+
+  <a
+    href="{{ item.url_to_remove }}"
+    class="hi-iconbtn hi-line-remove"
+    aria-label="{{ 'cart.remove' | t: title: item.product.title }}"
+    data-cart-remove="{{ index }}"
+  >
+    {% render 'icon', name: 'close', size: 16 %}
+  </a>
+</li>

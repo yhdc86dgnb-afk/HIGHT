@@ -1,0 +1,61 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    {% render 'meta-tags' %}
+
+    {{ 'archivo-latin.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+    {{ 'ibm-plex-mono-500-latin.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+
+    {% render 'css-variables' %}
+    {{ 'hight.css' | asset_url | stylesheet_tag }}
+
+    <script src="{{ 'hight.js' | asset_url }}" defer="defer"></script>
+
+    {{ content_for_header }}
+
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+    </script>
+  </head>
+
+  <body class="template-{{ request.page_type | handle }}">
+    <a class="skip-link" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {% section 'cart-drawer' %}
+
+    <div class="hi-toast-region" data-toast-region role="status" aria-live="polite"></div>
+
+    <script type="application/json" id="HightConfig">
+      {
+        "routes": {
+          "root": {{ routes.root_url | json }},
+          "cart": {{ routes.cart_url | json }},
+          "cartAdd": {{ routes.cart_add_url | json }},
+          "cartChange": {{ routes.cart_change_url | json }},
+          "predictiveSearch": {{ routes.predictive_search_url | json }},
+          "productRecommendations": {{ routes.product_recommendations_url | json }}
+        },
+        "moneyFormat": {{ shop.money_format | json }},
+        "cartType": {{ settings.cart_type | json }},
+        "strings": {
+          "addToCart": {{ 'products.add_to_cart' | t | json }},
+          "soldOut": {{ 'products.sold_out' | t | json }},
+          "unavailable": {{ 'products.unavailable' | t | json }},
+          "added": {{ 'cart.added' | t | json }},
+          "viewCart": {{ 'cart.view' | t | json }},
+          "error": {{ 'cart.error' | t | json }},
+          "close": {{ 'accessibility.close' | t | json }},
+          "slideCount": {{ 'products.gallery_count' | t | json }}
+        }
+      }
+    </script>
+  </body>
+</html>

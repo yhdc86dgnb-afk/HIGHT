@@ -1,0 +1,89 @@
+{%- doc -%}
+  ProductGallery del design system: foto principal 4:5 con contador "01 / 05" y miniaturas debajo.
+  En móvil las fotos se deslizan; en escritorio la galería ocupa la columna izquierda.
+
+  @param {product} product - Producto
+  @param {variant} current_variant - Variante seleccionada (su foto se muestra primero)
+  @param {string} section_id - id de la sección, para ids únicos
+{%- enddoc -%}
+{%- liquid
+  assign gallery_count = product.media.size
+  assign start_index = 1
+  if current_variant.featured_media
+    for media in product.media
+      if media.id == current_variant.featured_media.id
+        assign start_index = forloop.index
+        break
+      endif
+    endfor
+  endif
+  assign count_text = gallery_count
+  if gallery_count < 10
+    assign count_text = '0' | append: gallery_count
+  endif
+  assign start_text = start_index
+  if start_index < 10
+    assign start_text = '0' | append: start_index
+  endif
+-%}
+<media-gallery class="hi-gallery" data-start="{{ start_index }}">
+  <div class="hi-gallery-main">
+    <ul class="hi-gallery-track" aria-label="{{ 'products.gallery_label' | t }}" data-gallery-track>
+      {%- for media in product.media -%}
+        {%- liquid
+          assign media_loading = 'lazy'
+          if forloop.index == start_index
+            assign media_loading = 'eager'
+          endif
+          assign media_alt = media.alt | default: product.title
+        -%}
+        <li class="hi-gallery-slide" id="Slide-{{ section_id }}-{{ media.id }}" data-media-id="{{ media.id }}">
+          {%- case media.media_type -%}
+            {%- when 'image' -%}
+              {{
+                media
+                | image_url: width: 1800
+                | image_tag:
+                  widths: '450, 600, 750, 900, 1200, 1500, 1800',
+                  sizes: '(min-width: 1440px) 780px, (min-width: 1024px) 55vw, 100vw',
+                  loading: media_loading,
+                  alt: media_alt
+              }}
+            {%- when 'video' -%}
+              {{ media | video_tag: image_size: '1080x', controls: true, muted: true, playsinline: true, loop: true }}
+            {%- when 'external_video' -%}
+              {{ media | external_video_tag }}
+            {%- else -%}
+              {{ media | media_tag }}
+          {%- endcase -%}
+        </li>
+      {%- else -%}
+        <li class="hi-gallery-slide">
+          <span class="hi-media-ph" aria-hidden="true">{{ 'products.photo_placeholder' | t }}</span>
+        </li>
+      {%- endfor -%}
+    </ul>
+    {%- if gallery_count > 1 -%}
+      <span class="hi-gallery-count" data-gallery-count aria-hidden="true">{{ start_text }} / {{ count_text }}</span>
+    {%- endif -%}
+  </div>
+
+  {%- if gallery_count > 1 -%}
+    <ul class="hi-gallery-thumbs">
+      {%- for media in product.media -%}
+        <li>
+          <button
+            type="button"
+            aria-label="{{ 'products.thumbnail' | t: index: forloop.index }}"
+            data-thumb="{{ media.id }}"
+            {% if forloop.index == start_index %}
+              aria-current="true"
+            {% endif %}
+          >
+            {{ media.preview_image | image_url: width: 176 | image_tag: loading: 'lazy', alt: '' }}
+          </button>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</media-gallery>

@@ -1,0 +1,93 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-drop",
+      "settings": {
+        "layout": "split",
+        "reverse": false,
+        "grain": true,
+        "caption_left": "DROP 05 — PLATA",
+        "caption_right": "MEDELLÍN, CO.",
+        "eyebrow": "(N5)",
+        "heading": "DROP 05",
+        "heading_style": "display",
+        "glow": false,
+        "text": "<p>Siete piezas en plata, carbón y azul noche. 300 unidades. Jueves 8 p. m.</p>",
+        "button_label": "VER EL DROP",
+        "button_link": "shopify://collections/all",
+        "button_style": "primary",
+        "link_label": "VER LOOKBOOK",
+        "link": "",
+        "panel_style": "metal",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "catalogo": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "DROP 05 — PLATA",
+        "heading": "EL DROP",
+        "text": "<p>Siete piezas. 300 unidades numeradas. Cuando se acaban, no vuelven.</p>",
+        "collection": "all",
+        "products_to_show": 8,
+        "columns_desktop": "4",
+        "view_all_label": "VER TODO",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "spread": {
+      "type": "editorial-spread",
+      "blocks": {
+        "toma-a": {
+          "type": "frame",
+          "settings": {
+            "take": "A",
+            "orientation": "landscape"
+          }
+        },
+        "toma-b": {
+          "type": "frame",
+          "settings": {
+            "take": "B",
+            "orientation": "portrait"
+          }
+        },
+        "toma-c": {
+          "type": "frame",
+          "settings": {
+            "take": "C",
+            "orientation": "landscape"
+          }
+        }
+      },
+      "block_order": ["toma-a", "toma-b", "toma-c"],
+      "settings": {
+        "cyanotype": true,
+        "quote": "La prenda se siente antes de verse.",
+        "left_label": "DROP 05 — PLATA",
+        "right_label": "MEDELLÍN, CO.",
+        "ratio": "3 / 4",
+        "show_paper": true,
+        "reverse": false,
+        "paper_style": "metal",
+        "paper_label": "(HOJA DE CONTACTO)",
+        "paper_text": "<p>Drop 05 — Plata. Fotografiado de noche en Medellín.</p>",
+        "paper_folio": "0060",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "manifiesto": {
+      "type": "manifesto",
+      "settings": {
+        "show_logo": true,
+        "label": "(Manifiesto)",
+        "quote": "<p>Hacemos ropa para repetir.</p><p>Prendas pesadas, de corte amplio y aristas limpias, que se ven igual de bien el lunes que el sábado.</p><p>Diseñamos pocas piezas, las numeramos y las soltamos por drops.</p><p>La plata es nuestra piel; el azul, la luz que se cuela de noche.</p><p>Hecho en Medellín, para quien se viste con intención.</p>",
+        "signature": "HECHO PARA REPETIR · MED/COL",
+        "button_label": "",
+        "background": "scheme",
+        "color_scheme": "scheme-2"
+      }
+    }
+  },
+  "order": ["hero", "catalogo", "spread", "manifiesto"]
+}

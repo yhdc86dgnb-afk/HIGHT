@@ -1,0 +1,29 @@
+{%- doc -%}
+  Devuelve el estilo en línea de una muestra de color. Usa la muestra de Shopify (color o imagen)
+  y, si la opción no tiene una, busca el nombre en Configuración del tema > Productos >
+  Colores de las muestras ("Plata: #c0c4ca").
+
+  @param {object} value - Valor de la opción de color (product_option_value)
+{%- enddoc -%}
+{%- liquid
+  assign swatch_css = ''
+  if value.swatch.image
+    assign swatch_url = value.swatch.image | image_url: width: 96
+    assign swatch_css = 'background-image: url(' | append: swatch_url | append: ');'
+  elsif value.swatch.color
+    assign swatch_css = '--swatch-color: ' | append: value.swatch.color | append: ';'
+  else
+    assign value_name = value.name | default: value | downcase | strip
+    assign swatch_lines = settings.swatch_colors | newline_to_br | split: '<br />'
+    for swatch_line in swatch_lines
+      assign swatch_parts = swatch_line | split: ':'
+      assign swatch_name = swatch_parts.first | downcase | strip
+      if swatch_name == value_name and swatch_parts.size > 1
+        assign swatch_hex = swatch_parts.last | strip
+        assign swatch_css = '--swatch-color: ' | append: swatch_hex | append: ';'
+        break
+      endif
+    endfor
+  endif
+  echo swatch_css
+-%}

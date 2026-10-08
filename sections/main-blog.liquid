@@ -1,0 +1,52 @@
+{%- paginate blog.articles by 9 -%}
+  <div class="hi-container hi-page">
+    <header class="hi-collection-head">
+      <p class="t-label t-muted">({{ blog.articles_count }})</p>
+      <h1 class="t-display-l">{{ blog.title | escape }}</h1>
+    </header>
+
+    {%- if blog.articles.size > 0 -%}
+      <ul class="hi-articles">
+        {%- for article in blog.articles -%}
+          <li>
+            <a href="{{ article.url }}" class="hi-article-card">
+              <div class="hi-article-card__media">
+                {%- if article.image -%}
+                  {{
+                    article.image
+                    | image_url: width: 1200
+                    | image_tag:
+                      widths: '480, 720, 960, 1200',
+                      sizes: '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw',
+                      loading: 'lazy',
+                      alt: article.title
+                  }}
+                {%- else -%}
+                  <span class="hi-media-ph" aria-hidden="true">FOTO 3:2</span>
+                {%- endif -%}
+              </div>
+              <span class="t-label t-muted">{{ article.published_at | date: '%d.%m.%Y' }}</span>
+              <h2 class="t-h3">{{ article.title | escape }}</h2>
+              {%- if article.excerpt != blank -%}
+                <p class="t-body-s t-muted">{{ article.excerpt | strip_html | truncatewords: 24 }}</p>
+              {%- endif -%}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+      {% render 'pagination', paginate: paginate %}
+    {%- else -%}
+      <div class="hi-empty">
+        <p class="hi-empty-title">{{ 'blogs.empty' | t }}</p>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Blog",
+  "tag": "section",
+  "class": "hi-main-blog-section"
+}
+{% endschema %}

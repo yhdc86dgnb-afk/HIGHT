@@ -1,0 +1,243 @@
+<footer class="hi-footer color-{{ section.settings.color_scheme }}">
+  <div class="hi-footer-inner">
+    <div class="hi-footer-top">
+      <div class="hi-footer-brand">
+        <a href="{{ routes.root_url }}" class="hi-logo" aria-label="{{ 'accessibility.home' | t: shop: shop.name }}">
+          {%- render 'logo-wordmark', height: 28 -%}
+        </a>
+        {%- if section.settings.tagline != blank -%}
+          <p>{{ section.settings.tagline | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_newsletter -%}
+        {%- form 'customer', id: 'FooterNewsletter', class: 'hi-footer-news' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="hi-field{% if form.errors %} hi-field-invalid{% endif %}">
+            <label for="FooterNewsletterEmail">{{ 'newsletter.label' | t }}</label>
+            <input
+              id="FooterNewsletterEmail"
+              type="email"
+              name="contact[email]"
+              value="{{ form.email }}"
+              placeholder="{{ 'newsletter.placeholder' | t }}"
+              autocomplete="email"
+              autocapitalize="off"
+              required
+              aria-describedby="FooterNewsletterHint"
+            >
+            {%- if form.errors -%}
+              <span class="hi-field-error" id="FooterNewsletterHint" role="alert">
+                {{- form.errors.translated_fields.email | capitalize }}
+                {{ form.errors.messages.email -}}
+              </span>
+            {%- elsif form.posted_successfully? -%}
+              <span class="hi-form-success" id="FooterNewsletterHint" role="status">{{ 'newsletter.success' | t }}</span>
+            {%- else -%}
+              <span class="hi-field-hint" id="FooterNewsletterHint">{{ 'newsletter.hint' | t }}</span>
+            {%- endif -%}
+          </div>
+          <button type="submit" class="hi-btn hi-btn-metal">{{ 'newsletter.submit' | t }}</button>
+        {%- endform -%}
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="hi-footer-cols">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'menu' -%}
+              <nav aria-label="{{ block.settings.title | escape }}" {{ block.shopify_attributes }}>
+                <p class="hi-footer-title">{{ block.settings.title | escape }}</p>
+                <ul>
+                  {%- for link in block.settings.menu.links -%}
+                    <li>
+                      <a href="{{ link.url }}">{{ link.title | escape }}</a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </nav>
+            {%- when 'social' -%}
+              {%- liquid
+                assign social_any = false
+                if settings.social_instagram != blank or settings.social_tiktok != blank or settings.social_whatsapp != blank or settings.social_youtube != blank or settings.social_spotify != blank
+                  assign social_any = true
+                endif
+                if block.settings.menu.links.size > 0
+                  assign social_any = true
+                endif
+              -%}
+              {%- if social_any -%}
+                <nav aria-label="{{ block.settings.title | escape }}" {{ block.shopify_attributes }}>
+                  <p class="hi-footer-title">{{ block.settings.title | escape }}</p>
+                  <ul>
+                    {%- render 'social-links', list: true -%}
+                    {%- for link in block.settings.menu.links -%}
+                      <li>
+                        <a href="{{ link.url }}">{{ link.title | escape }}</a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </nav>
+              {%- endif -%}
+            {%- when 'legal' -%}
+              <nav aria-label="{{ block.settings.title | escape }}" {{ block.shopify_attributes }}>
+                <p class="hi-footer-title">{{ block.settings.title | escape }}</p>
+                <ul>
+                  {%- for link in block.settings.menu.links -%}
+                    <li>
+                      <a href="{{ link.url }}">{{ link.title | escape }}</a>
+                    </li>
+                  {%- endfor -%}
+                  {%- if block.settings.show_policies -%}
+                    {%- for policy in shop.policies -%}
+                      {%- if policy.body != blank -%}
+                        <li>
+                          <a href="{{ policy.url }}">{{ policy.title | escape }}</a>
+                        </li>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- endif -%}
+                </ul>
+              </nav>
+            {%- when 'text' -%}
+              <div {{ block.shopify_attributes }}>
+                <p class="hi-footer-title">{{ block.settings.title | escape }}</p>
+                <div class="hi-footer-text">{{ block.settings.text }}</div>
+              </div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="hi-footer-bottom">
+      <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name | upcase | escape }}</span>
+      {%- if section.settings.origin != blank -%}
+        <span>{{ section.settings.origin | escape }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Lema",
+      "default": "Streetwear de autor para el uso diario."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Mostrar suscripción a drops",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "origin",
+      "label": "Sello de origen",
+      "default": "MED/COL"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "info": "El footer se pinta invertido: fondo ink y texto on-ink del esquema.",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Columna de menú",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Tienda"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menú",
+          "default": "footer"
+        }
+      ]
+    },
+    {
+      "type": "social",
+      "name": "Columna de redes",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Hight"
+        },
+        {
+          "type": "paragraph",
+          "content": "Las redes se configuran en Configuración del tema > Redes sociales."
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Enlaces extra (opcional)"
+        }
+      ]
+    },
+    {
+      "type": "legal",
+      "name": "Columna legal",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Legal"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menú",
+          "info": "En Colombia incluye siempre \"Tratamiento de datos\" (Ley 1581)."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_policies",
+          "label": "Listar las políticas de la tienda",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Columna de texto",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Taller"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texto",
+          "default": "<p>Hecho en Medellín. Escríbenos por WhatsApp y te respondemos en menos de 24 horas.</p>"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,8 @@
+# Archivos que Shopify CLI no sube a la tienda (push, pull, dev).
+design-system/**
+docs/**
+.github/**
+README.md
+package.json
+package-lock.json
+shopify.theme.toml

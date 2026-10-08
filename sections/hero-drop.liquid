@@ -1,0 +1,322 @@
+{%- liquid
+  assign heading_tag = 'h2'
+  if section.index == 1
+    assign heading_tag = 'h1'
+  endif
+
+  assign panel_class = 'hi-metal'
+  if section.settings.panel_style == 'scheme' or section.settings.layout == 'overlay'
+    assign panel_class = 'hi-scheme color-' | append: section.settings.color_scheme
+  endif
+  if section.settings.layout == 'overlay'
+    assign panel_class = ''
+  endif
+
+  assign panel_dark = false
+  if section.settings.layout == 'overlay'
+    assign panel_dark = true
+  elsif section.settings.panel_style == 'scheme'
+    assign scheme_brightness = section.settings.color_scheme.settings.surface_000 | color_brightness
+    if scheme_brightness < 128
+      assign panel_dark = true
+    endif
+  endif
+
+  assign button_class = 'hi-btn hi-btn-lg hi-btn-' | append: section.settings.button_style
+  assign image_alt = section.settings.image.alt | default: section.settings.heading
+-%}
+
+<section
+  class="hi-hero hi-hero--{{ section.settings.layout }}{% if section.settings.reverse %} hi-hero--reverse{% endif %}"
+  aria-label="{{ section.settings.heading | escape }}"
+>
+  <div class="hi-hero-panel {{ panel_class }}">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="t-label">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    {%- case section.settings.heading_style -%}
+      {%- when 'logo' -%}
+        <{{ heading_tag }} class="hi-hero-heading">
+          {%- if panel_dark -%}
+            <img
+              src="{{ 'hight-logo-plata.webp' | asset_url }}"
+              width="977"
+              height="672"
+              alt="{{ section.settings.heading | escape }}"
+              class="hi-hero-logo"
+            >
+          {%- else -%}
+            <img
+              src="{{ 'hight-logo-tinta.webp' | asset_url }}"
+              width="977"
+              height="672"
+              alt="{{ section.settings.heading | escape }}"
+              class="hi-hero-logo"
+            >
+          {%- endif -%}
+        </{{ heading_tag }}>
+      {%- when 'espina' -%}
+        <{{ heading_tag }} class="hi-espina hi-titular hi-titular-xl{% if section.settings.glow %} hi-glow{% endif %}">
+          {{- section.settings.heading | escape -}}
+        </{{ heading_tag }}>
+      {%- else -%}
+        <{{ heading_tag }} class="t-display-xl{% if section.settings.glow %} hi-glow{% endif %}">
+          {{- section.settings.heading | escape -}}
+        </{{ heading_tag }}>
+    {%- endcase -%}
+
+    {%- if section.settings.text != blank -%}
+      <div class="t-body-l">{{ section.settings.text }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank or section.settings.link_label != blank -%}
+      <div class="hi-hero-actions">
+        {%- if section.settings.button_label != blank -%}
+          <a
+            href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
+            class="{{ button_class }}"
+          >
+            {{- section.settings.button_label | escape -}}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.link_label != blank -%}
+          <a href="{{ section.settings.link | default: routes.collections_url }}" class="hi-btn hi-btn-ghost">
+            {{- section.settings.link_label | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="hi-hero-media{% if section.settings.grain %} hi-grain{% endif %}">
+    {%- if section.settings.image != blank -%}
+      <picture>
+        {%- if section.settings.image_mobile != blank -%}
+          <source
+            media="(max-width: 1023px)"
+            srcset="
+              {{ section.settings.image_mobile | image_url: width: 750 }} 750w,
+              {{ section.settings.image_mobile | image_url: width: 1100 }} 1100w,
+              {{ section.settings.image_mobile | image_url: width: 1500 }} 1500w
+            "
+            sizes="100vw"
+          >
+        {%- endif -%}
+        {{
+          section.settings.image
+          | image_url: width: 2400
+          | image_tag:
+            widths: '600, 900, 1200, 1600, 2000, 2400',
+            sizes: '(min-width: 1024px) 50vw, 100vw',
+            loading: 'eager',
+            fetchpriority: 'high',
+            alt: image_alt
+        }}
+      </picture>
+    {%- else -%}
+      <img src="{{ 'halo-aura.svg' | asset_url }}" width="1080" height="1350" alt="">
+    {%- endif -%}
+
+    {%- if section.settings.caption_left != blank or section.settings.caption_right != blank -%}
+      <div class="hi-hero-caption t-label">
+        <span>{{ section.settings.caption_left | escape }}</span>
+        <span>{{ section.settings.caption_right | escape }}</span>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero del drop",
+  "tag": "section",
+  "class": "hi-hero-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Diseño",
+      "options": [
+        {
+          "value": "split",
+          "label": "Pliego de plata + foto de campaña"
+        },
+        {
+          "value": "overlay",
+          "label": "Foto a sangre con texto encima"
+        }
+      ],
+      "default": "split"
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Foto a la izquierda",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Foto de campaña"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Foto",
+      "info": "Noche, arquitectura, una sola luz azul. Sin foto se muestra el halo aura del sistema."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Foto para móvil",
+      "info": "Opcional. Vertical 4:5 (1080 × 1350)."
+    },
+    {
+      "type": "checkbox",
+      "id": "grain",
+      "label": "Grano de película",
+      "default": true,
+      "info": "Obligatorio en campaña según el sistema."
+    },
+    {
+      "type": "text",
+      "id": "caption_left",
+      "label": "Marquilla izquierda",
+      "default": "DROP 05 — PLATA"
+    },
+    {
+      "type": "text",
+      "id": "caption_right",
+      "label": "Marquilla derecha",
+      "default": "MEDELLÍN, CO."
+    },
+    {
+      "type": "header",
+      "content": "Texto"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Índice",
+      "default": "(N5)"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titular",
+      "default": "DROP 05"
+    },
+    {
+      "type": "select",
+      "id": "heading_style",
+      "label": "Estilo del titular",
+      "options": [
+        {
+          "value": "display",
+          "label": "Archivo display-xl"
+        },
+        {
+          "value": "espina",
+          "label": "Hight Espina (gótica del logo)"
+        },
+        {
+          "value": "logo",
+          "label": "Logo principal"
+        }
+      ],
+      "default": "display",
+      "info": "Uno por vista: Espina y el logo grande no se combinan con display-xl."
+    },
+    {
+      "type": "checkbox",
+      "id": "glow",
+      "label": "Halo glow-aura en el titular",
+      "default": false,
+      "info": "Solo en campaña nocturna sobre fondo oscuro."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Texto",
+      "default": "<p>Siete piezas en plata, carbón y azul noche. 300 unidades. Jueves 8 p. m.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto del botón",
+      "default": "VER EL DROP"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Estilo del botón",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primario (ink)"
+        },
+        {
+          "value": "metal",
+          "label": "Metal (plata cepillada)"
+        },
+        {
+          "value": "drop",
+          "label": "Drop (aura, uno por vista)"
+        },
+        {
+          "value": "secondary",
+          "label": "Secundario (contorno)"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Enlace secundario",
+      "default": "VER LOOKBOOK"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "URL del enlace secundario"
+    },
+    {
+      "type": "header",
+      "content": "Pliego"
+    },
+    {
+      "type": "select",
+      "id": "panel_style",
+      "label": "Fondo del pliego",
+      "options": [
+        {
+          "value": "metal",
+          "label": "Plata cepillada"
+        },
+        {
+          "value": "scheme",
+          "label": "Esquema de color"
+        }
+      ],
+      "default": "metal"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero del drop"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,37 @@
+{%- doc -%}
+  Paginación en mono con números a dos cifras: ← 01 02 03 →
+
+  @param {object} paginate - Objeto paginate del bloque {% paginate %}
+{%- enddoc -%}
+{%- if paginate.pages > 1 -%}
+  <nav class="hi-pagination" aria-label="{{ 'accessibility.pagination' | t }}">
+    {%- if paginate.previous -%}
+      <a href="{{ paginate.previous.url }}" aria-label="{{ 'accessibility.previous_page' | t }}">
+        {%- render 'icon', name: 'arrow_back', size: 20 -%}
+      </a>
+    {%- endif -%}
+    {%- for part in paginate.parts -%}
+      {%- liquid
+        assign part_title = part.title
+        if part.is_link or part.title == paginate.current_page
+          assign part_number = part.title | plus: 0
+          if part_number < 10
+            assign part_title = '0' | append: part_number
+          endif
+        endif
+      -%}
+      {%- if part.is_link -%}
+        <a href="{{ part.url }}" aria-label="{{ 'accessibility.page_number' | t: page: part.title }}">{{ part_title }}</a>
+      {%- elsif part.title == paginate.current_page -%}
+        <span aria-current="page">{{ part_title }}</span>
+      {%- else -%}
+        <span>{{ part_title }}</span>
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if paginate.next -%}
+      <a href="{{ paginate.next.url }}" aria-label="{{ 'accessibility.next_page' | t }}">
+        {%- render 'icon', name: 'arrow_forward', size: 20 -%}
+      </a>
+    {%- endif -%}
+  </nav>
+{%- endif -%}

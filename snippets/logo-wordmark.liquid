@@ -1,0 +1,21 @@
+{%- doc -%}
+  Firma corta de Hight: la palabra HIGHT de palo seco en contornos, en currentColor.
+  Es la firma para tamaños pequeños (header, footer); el logo gótico principal vive en campaña.
+  El svg es decorativo: el enlace o el bloque que lo contiene lleva el nombre accesible.
+
+  @param {number} [height] - Alto en px; el ancho es 4 veces el alto. Por defecto 22. Mínimo 16
+
+  @example
+  {% render 'logo-wordmark', height: 28 %}
+{%- enddoc -%}
+{%- assign wordmark_height = height | default: 22 -%}
+<svg
+  class="hi-logo"
+  viewBox="0 0 400 100"
+  width="{{ wordmark_height | times: 4 }}"
+  height="{{ wordmark_height }}"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d="M0,0h26v39h32v-39h26v100h-26v-39h-32v39h-26z M92,0h26v100h-26z M126,0H216V26H152V74H190V62H172V42H216V100H126z M224,0h26v39h32v-39h26v100h-26v-39h-32v39h-26z M316,0h84v24h-29v76h-26v-76h-29z" fill="currentColor"/>
+</svg>

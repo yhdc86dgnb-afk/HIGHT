@@ -1,0 +1,27 @@
+<div class="hi-container hi-page">
+  <header class="hi-collection-head">
+    {%- if section.settings.label != blank -%}
+      <p class="t-label t-muted">{{ section.settings.label | escape }}</p>
+    {%- endif -%}
+    <h1 class="t-display-l">{{ page.title | escape }}</h1>
+  </header>
+  {%- if page.content != blank -%}
+    <div class="rte">{{ page.content }}</div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Página",
+  "tag": "section",
+  "class": "hi-main-page-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Marquilla",
+      "default": "(Info)"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,137 @@
+{%- doc -%}
+  ProductCard del design system: foto 4:5 a sangre, una sola marquilla arriba a la izquierda,
+  nombre en tipo oración, corte y material en mono, precio y muestras de color.
+  Sin producto dibuja una tarjeta de maqueta (bloque surface-200 con "FOTO 4:5").
+
+  @param {product} [product] - Producto a mostrar
+  @param {string} [sizes] - Atributo sizes de la foto
+  @param {boolean} [eager] - Carga la foto sin diferir (primeras tarjetas visibles)
+  @param {string} [placeholder_title] - Nombre de la tarjeta de maqueta
+  @param {string} [placeholder_meta] - Corte y material de la tarjeta de maqueta
+  @param {number} [placeholder_price] - Precio en centavos de la tarjeta de maqueta
+
+  @example
+  {% render 'product-card', product: product, sizes: '(min-width: 1024px) 25vw, 50vw' %}
+{%- enddoc -%}
+{%- liquid
+  assign card_sizes = sizes | default: '(min-width: 1440px) 336px, (min-width: 1024px) calc((100vw - 168px) / 4), (min-width: 768px) calc((100vw - 80px) / 3), calc((100vw - 40px) / 2)'
+  assign card_loading = 'lazy'
+  if eager
+    assign card_loading = 'eager'
+  endif
+-%}
+
+{%- if product != blank -%}
+  {%- liquid
+    assign card_tag = ''
+    assign drop_prefix = settings.drop_tag_prefix | default: 'DROP' | downcase
+    assign drop_prefix_size = drop_prefix | size
+    for product_tag in product.tags
+      assign tag_lower = product_tag | downcase
+      assign tag_start = tag_lower | slice: 0, drop_prefix_size
+      if drop_prefix_size > 0 and tag_start == drop_prefix
+        assign card_tag = product_tag | upcase
+        break
+      endif
+    endfor
+
+    if product.available
+      if settings.low_stock_threshold > 0
+        assign stock_total = 0
+        assign stock_tracked = true
+        for card_variant in product.variants
+          if card_variant.inventory_management != 'shopify' or card_variant.inventory_policy == 'continue'
+            assign stock_tracked = false
+            break
+          endif
+          if card_variant.inventory_quantity > 0
+            assign stock_total = stock_total | plus: card_variant.inventory_quantity
+          endif
+        endfor
+        if stock_tracked and stock_total > 0 and stock_total <= settings.low_stock_threshold
+          assign card_tag = 'products.low_stock_tag' | t: count: stock_total
+        endif
+      endif
+    else
+      assign card_tag = 'products.sold_out' | t
+    endif
+
+    assign card_alt = product.featured_media.alt | default: product.title
+    assign card_meta = ''
+    if settings.card_show_meta
+      assign card_meta = product.metafields.custom.corte_material.value | default: product.type
+    endif
+
+    assign color_option = nil
+    if settings.card_show_swatches
+      for product_option in product.options_with_values
+        assign option_name = product_option.name | downcase
+        if option_name == 'color' or option_name == 'colour' or option_name == 'colores'
+          assign color_option = product_option
+          break
+        endif
+      endfor
+    endif
+  -%}
+  <a href="{{ product.url }}" class="hi-card">
+    <div class="hi-card-media">
+      {%- if product.featured_media -%}
+        {{
+          product.featured_media
+          | image_url: width: 1080
+          | image_tag:
+            widths: '360, 540, 720, 900, 1080',
+            sizes: card_sizes,
+            loading: card_loading,
+            alt: card_alt
+        }}
+        {%- if settings.card_second_image and product.media[1] != blank -%}
+          {{
+            product.media[1]
+            | image_url: width: 1080
+            | image_tag:
+              widths: '360, 540, 720, 900, 1080',
+              sizes: card_sizes,
+              loading: 'lazy',
+              alt: '',
+              class: 'hi-card-img-2'
+          }}
+        {%- endif -%}
+      {%- else -%}
+        <span class="hi-card-ph" aria-hidden="true">{{ 'products.photo_placeholder' | t }}</span>
+      {%- endif -%}
+      {%- if card_tag != '' -%}
+        <span class="hi-tag hi-tag-ink hi-card-tag">{{ card_tag | escape }}</span>
+      {%- endif -%}
+    </div>
+    <div class="hi-card-body">
+      <h3 class="hi-card-name">{{ product.title | escape }}</h3>
+      {%- if card_meta != blank -%}
+        <span class="hi-card-meta">{{ card_meta | escape }}</span>
+      {%- endif -%}
+      {% render 'price', product: product, show_from: true %}
+      {%- if color_option != nil and color_option.values.size > 1 -%}
+        <span class="hi-card-swatches">
+          {%- for color_value in color_option.values limit: 6 -%}
+            {%- capture swatch_style -%}{% render 'swatch-style', value: color_value %}{%- endcapture -%}
+            <span class="hi-swatch" title="{{ color_value | escape }}" style="{{ swatch_style | strip }}"></span>
+          {%- endfor -%}
+          <span class="visually-hidden">
+            {{- 'products.colors_count' | t: count: color_option.values.size -}}
+          </span>
+        </span>
+      {%- endif -%}
+    </div>
+  </a>
+{%- else -%}
+  <div class="hi-card" aria-hidden="true">
+    <div class="hi-card-media">
+      <span class="hi-card-ph">{{ 'products.photo_placeholder' | t }}</span>
+    </div>
+    <div class="hi-card-body">
+      <p class="hi-card-name">{{ placeholder_title | default: 'Camiseta Boxy Concreto' }}</p>
+      <span class="hi-card-meta">{{ placeholder_meta | default: 'Boxy · 280 g/m²' }}</span>
+      {% render 'price', amount: placeholder_price %}
+    </div>
+  </div>
+{%- endif -%}

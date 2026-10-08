@@ -1,0 +1,23 @@
+{%- doc -%}
+  Redes sociales como enlaces de texto, sin logos de otras marcas (design system: Footer).
+  Lee las URLs de Configuración del tema > Redes sociales.
+
+  @param {string} [class] - Clase de cada enlace
+  @param {boolean} [list] - true envuelve cada enlace en un <li>
+{%- enddoc -%}
+{%- liquid
+  assign social_names = 'Instagram,TikTok,WhatsApp,YouTube,Spotify' | split: ','
+  assign social_urls = settings.social_instagram | append: '|' | append: settings.social_tiktok | append: '|' | append: settings.social_whatsapp | append: '|' | append: settings.social_youtube | append: '|' | append: settings.social_spotify | split: '|'
+-%}
+{%- for social_name in social_names -%}
+  {%- assign social_url = social_urls[forloop.index0] -%}
+  {%- if social_url != blank -%}
+    {%- if list -%}
+      <li>
+        <a href="{{ social_url }}" class="{{ class }}" target="_blank" rel="noopener">{{ social_name }}</a>
+      </li>
+    {%- else -%}
+      <a href="{{ social_url }}" class="{{ class }}" target="_blank" rel="noopener">{{ social_name }}</a>
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}

@@ -1,0 +1,60 @@
+{%- doc -%}
+  Precio en mono con cifras tabulares, sin decimales cuando el monto es entero ($189.000).
+  Con un precio anterior mayor, el actual pasa a aura y el anterior se tacha en ink-muted.
+
+  @param {product} [product] - Producto: usa su precio mínimo
+  @param {variant} [variant] - Variante: tiene prioridad sobre product
+  @param {number} [amount] - Monto en centavos (líneas y subtotales)
+  @param {number} [compare_at] - Monto anterior en centavos
+  @param {string} [size] - 'lg' en la ficha y el subtotal
+  @param {boolean} [show_from] - Antepone "Desde" si las variantes tienen precios distintos
+
+  @example
+  {% render 'price', product: product, show_from: true %}
+  {% render 'price', amount: cart.total_price, size: 'lg' %}
+{%- enddoc -%}
+{%- liquid
+  assign price_varies = false
+  if variant
+    assign price_amount = variant.price
+    assign compare_amount = variant.compare_at_price
+  elsif product
+    assign price_amount = product.price
+    assign compare_amount = product.compare_at_price
+    if show_from and product.price_varies
+      assign price_varies = true
+    endif
+  else
+    assign price_amount = amount
+    assign compare_amount = compare_at
+  endif
+
+  assign on_sale = false
+  if compare_amount > price_amount
+    assign on_sale = true
+  endif
+
+  assign price_text = price_amount | money_without_trailing_zeros
+  if price_varies
+    assign price_text = 'products.from' | t: price: price_text
+  endif
+-%}
+<span class="hi-price{% if size == 'lg' %} hi-price-lg{% endif %}" data-price>
+  {%- if on_sale -%}
+    <span class="visually-hidden">{{ 'products.sale_price' | t }}</span>
+    <span class="hi-price-sale">{{ price_text }}</span>
+    <span class="visually-hidden">{{ 'products.regular_price' | t }}</span>
+    <s class="hi-price-was">{{ compare_amount | money_without_trailing_zeros }}</s>
+  {%- else -%}
+    <span>{{ price_text }}</span>
+  {%- endif -%}
+  {%- if variant.unit_price_measurement -%}
+    <span class="hi-price-unit">
+      {{- variant.unit_price | money_without_trailing_zeros }}/
+      {%- if variant.unit_price_measurement.reference_value != 1 -%}
+        {{- variant.unit_price_measurement.reference_value -}}
+      {%- endif -%}
+      {{- variant.unit_price_measurement.reference_unit -}}
+    </span>
+  {%- endif -%}
+</span>

@@ -1,0 +1,307 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Hight",
+    "theme_version": "1.0.0",
+    "theme_author": "Hight",
+    "theme_documentation_url": "https://github.com/yhdc86dgnb-afk/HIGHT",
+    "theme_support_url": "https://github.com/yhdc86dgnb-afk/HIGHT/issues"
+  },
+  {
+    "name": "Colores",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Dos esquemas del design system: Plata (claro, por defecto: metal cepillado) y Aura (oscuro: plata clara sobre noche azul). Úsalos por esquema, nunca cambiando colores sueltos."
+      },
+      {
+        "type": "color_scheme_group",
+        "id": "color_schemes",
+        "definition": [
+          {
+            "type": "header",
+            "content": "Superficies"
+          },
+          {
+            "type": "color",
+            "id": "surface_000",
+            "label": "surface-000 · Fondo de página",
+            "default": "#dfe1e5"
+          },
+          {
+            "type": "color",
+            "id": "surface_100",
+            "label": "surface-100 · Drawers, modales y campos",
+            "default": "#f1f2f4"
+          },
+          {
+            "type": "color",
+            "id": "surface_200",
+            "label": "surface-200 · Foto cargando y hover",
+            "default": "#c4c7cd"
+          },
+          {
+            "type": "color",
+            "id": "line",
+            "label": "line · Hairline decorativa",
+            "default": "#b0b4bb"
+          },
+          {
+            "type": "color",
+            "id": "line_strong",
+            "label": "line-strong · Borde de controles",
+            "default": "#5d626b"
+          },
+          {
+            "type": "header",
+            "content": "Texto"
+          },
+          {
+            "type": "color",
+            "id": "ink",
+            "label": "ink · Texto principal y botón primario",
+            "default": "#0b1222"
+          },
+          {
+            "type": "color",
+            "id": "ink_muted",
+            "label": "ink-muted · Texto secundario",
+            "default": "#3c4350"
+          },
+          {
+            "type": "color",
+            "id": "on_ink",
+            "label": "on-ink · Texto sobre rellenos ink",
+            "default": "#f1f2f4"
+          },
+          {
+            "type": "header",
+            "content": "Acentos"
+          },
+          {
+            "type": "color",
+            "id": "aura",
+            "label": "aura · Un solo acento por vista",
+            "default": "#1b48a3"
+          },
+          {
+            "type": "color",
+            "id": "on_aura",
+            "label": "on-aura · Texto sobre aura",
+            "default": "#f1f2f4"
+          },
+          {
+            "type": "color",
+            "id": "cyan",
+            "label": "cyan · Color de colección",
+            "default": "#125a63"
+          },
+          {
+            "type": "color",
+            "id": "haze",
+            "label": "haze · Bruma, solo bloques decorativos",
+            "default": "#a9b8d8"
+          },
+          {
+            "type": "header",
+            "content": "Estados"
+          },
+          {
+            "type": "color",
+            "id": "success",
+            "label": "success",
+            "default": "#175f4f"
+          },
+          {
+            "type": "color",
+            "id": "warning",
+            "label": "warning",
+            "default": "#664300"
+          },
+          {
+            "type": "color",
+            "id": "danger",
+            "label": "danger",
+            "default": "#922c16"
+          }
+        ],
+        "role": {
+          "text": "ink",
+          "background": "surface_000",
+          "links": "ink",
+          "icons": "ink",
+          "primary_button": "ink",
+          "on_primary_button": "on_ink",
+          "primary_button_border": "ink",
+          "secondary_button": "surface_000",
+          "on_secondary_button": "ink",
+          "secondary_button_border": "line_strong"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Logo y favicon",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Por defecto el header y el footer usan la firma corta de Hight (la palabra HIGHT de palo seco). El logo gótico principal vive en las secciones de campaña."
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Reemplazar firma del header",
+        "info": "Opcional. Déjalo vacío para usar la firma HIGHT del design system."
+      },
+      {
+        "type": "range",
+        "id": "logo_height",
+        "label": "Alto de la firma en el header",
+        "min": 16,
+        "max": 40,
+        "step": 1,
+        "unit": "px",
+        "default": 22
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Opcional. 180 × 180 px. Vacío usa el monograma H con estrella."
+      }
+    ]
+  },
+  {
+    "name": "Productos",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "card_show_meta",
+        "label": "Mostrar corte y material en las tarjetas",
+        "info": "Usa el metacampo custom.corte_material (ej. Boxy · 280 g/m²) o, si no existe, el tipo de producto.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_swatches",
+        "label": "Mostrar muestras de color en las tarjetas",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_second_image",
+        "label": "Mostrar la segunda foto al pasar el cursor",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "drop_tag_prefix",
+        "label": "Prefijo de etiqueta de drop",
+        "info": "Un producto con la etiqueta \"DROP 05\" muestra esa marquilla en aura sobre la foto.",
+        "default": "DROP"
+      },
+      {
+        "type": "range",
+        "id": "low_stock_threshold",
+        "label": "Avisar \"Quedan N unidades\" desde",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 5,
+        "info": "0 desactiva el aviso. La escasez se dice con datos."
+      },
+      {
+        "type": "textarea",
+        "id": "swatch_colors",
+        "label": "Colores de las muestras",
+        "info": "Una línea por color: Nombre: #hex. Se usa cuando la opción de color no tiene muestra propia en Shopify.",
+        "default": "Plata: #c0c4ca\nCarbón: #2b2e33\nAzul noche: #121c33\nNegro: #0b0c0f\nNegro lavado: #2a2b2f\nBlanco: #f2f2ef\nNiebla: #b9bec7\nConcreto: #8d9097\nGris: #8a8d93\nAzul: #1d4f8a"
+      }
+    ]
+  },
+  {
+    "name": "Carrito",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Al agregar al carrito",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "Abrir el carrito lateral"
+          },
+          {
+            "value": "page",
+            "label": "Ir a la página del carrito"
+          }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Envío gratis desde",
+        "info": "En la moneda de la tienda, sin decimales (ej. 250000). 0 oculta el aviso.",
+        "default": 250000
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_show_note",
+        "label": "Permitir nota del pedido",
+        "default": false
+      },
+      {
+        "type": "url",
+        "id": "cart_empty_link",
+        "label": "Enlace de \"VER EL DROP\" con el carrito vacío"
+      }
+    ]
+  },
+  {
+    "name": "Redes sociales",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Se muestran como enlaces de texto, sin logos de otras marcas."
+      },
+      {
+        "type": "url",
+        "id": "social_instagram",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "social_tiktok",
+        "label": "TikTok"
+      },
+      {
+        "type": "url",
+        "id": "social_whatsapp",
+        "label": "WhatsApp",
+        "info": "Ej. https://wa.me/573001234567"
+      },
+      {
+        "type": "url",
+        "id": "social_youtube",
+        "label": "YouTube"
+      },
+      {
+        "type": "url",
+        "id": "social_spotify",
+        "label": "Spotify"
+      }
+    ]
+  },
+  {
+    "name": "Búsqueda",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "predictive_search",
+        "label": "Mostrar resultados mientras se escribe",
+        "default": true
+      }
+    ]
+  }
+]

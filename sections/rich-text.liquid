@@ -1,0 +1,193 @@
+<section class="hi-section hi-scheme color-{{ section.settings.color_scheme }}">
+  <div class="hi-container">
+    <div class="hi-richtext{% if section.settings.align == 'center' %} hi-richtext--center{% endif %}">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'label' -%}
+            <p class="t-label" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</p>
+          {%- when 'heading' -%}
+            <h2 class="{{ block.settings.style }}" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</h2>
+          {%- when 'text' -%}
+            <div class="rte {{ block.settings.size }}" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+          {%- when 'button' -%}
+            <div {{ block.shopify_attributes }}>
+              <a href="{{ block.settings.link | default: routes.root_url }}" class="hi-btn hi-btn-{{ block.settings.style }}">
+                {{- block.settings.label | escape -}}
+              </a>
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Texto",
+  "tag": "section",
+  "class": "hi-rich-text-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Alineación",
+      "options": [
+        {
+          "value": "left",
+          "label": "Izquierda"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "label",
+      "name": "Marquilla",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texto",
+          "default": "(Info)"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "Titular",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texto",
+          "default": "Hecho para repetir"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Estilo",
+          "options": [
+            {
+              "value": "t-display-l",
+              "label": "Display L (MAYÚSCULAS)"
+            },
+            {
+              "value": "t-h1",
+              "label": "Heading 1"
+            },
+            {
+              "value": "t-h2",
+              "label": "Heading 2"
+            },
+            {
+              "value": "t-editorial",
+              "label": "Editorial (serif itálica)"
+            },
+            {
+              "value": "t-editorial-xl",
+              "label": "Editorial XL (cita)"
+            }
+          ],
+          "default": "t-h1"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Párrafo",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texto",
+          "default": "<p>Algodón de 280 g/m². Cae recto desde el primer uso.</p>"
+        },
+        {
+          "type": "select",
+          "id": "size",
+          "label": "Tamaño",
+          "options": [
+            {
+              "value": "t-body",
+              "label": "body"
+            },
+            {
+              "value": "t-body-l",
+              "label": "body-l"
+            }
+          ],
+          "default": "t-body-l"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Botón",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Texto",
+          "default": "VER EL DROP"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Enlace"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Estilo",
+          "options": [
+            {
+              "value": "primary",
+              "label": "Primario (ink)"
+            },
+            {
+              "value": "secondary",
+              "label": "Secundario"
+            },
+            {
+              "value": "metal",
+              "label": "Metal"
+            },
+            {
+              "value": "ghost",
+              "label": "Enlace"
+            }
+          ],
+          "default": "primary"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Texto",
+      "blocks": [
+        {
+          "type": "label"
+        },
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

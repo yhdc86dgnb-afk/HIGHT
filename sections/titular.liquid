@@ -1,0 +1,175 @@
+{%- liquid
+  assign titular_bg = 'hi-scheme color-' | append: section.settings.color_scheme
+  if section.settings.background == 'metal'
+    assign titular_bg = 'hi-metal'
+  endif
+
+  assign titular_class = 'hi-espina hi-titular hi-titular-' | append: section.settings.size
+  if section.settings.hueso
+    assign titular_class = 'hi-hueso hi-titular hi-titular-xl'
+  endif
+  if section.settings.glow
+    assign titular_class = titular_class | append: ' hi-glow'
+  endif
+-%}
+
+<section class="{{ titular_bg }}">
+  <div class="hi-container hi-titular-section{% if section.settings.align == 'center' %} hi-titular-section--center{% endif %}">
+    {%- if section.settings.label != blank -%}
+      <p class="t-label">{{ section.settings.label | escape }}</p>
+    {%- endif -%}
+    <h2 class="{{ titular_class }}">{{ section.settings.text | escape }}</h2>
+    {%- if section.settings.body != blank -%}
+      <div class="t-body-l t-measure">{{ section.settings.body }}</div>
+    {%- endif -%}
+    {%- if section.settings.button_label != blank -%}
+      <div>
+        <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="hi-btn hi-btn-lg hi-btn-{{ section.settings.button_style }}">
+          {{- section.settings.button_label | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Titular Espina",
+  "tag": "section",
+  "class": "hi-titular-wrapper",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Hight Espina, la gótica dibujada a partir del logo. Solo mayúsculas, máximo 3 palabras, una por vista. Nunca en la interfaz de compra."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Marquilla",
+      "default": "(N5)"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Titular",
+      "default": "PLATA NOCHE"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "Tamaño",
+      "options": [
+        {
+          "value": "xl",
+          "label": "XL · 144px (campaña, portada)"
+        },
+        {
+          "value": "l",
+          "label": "L · 88px (separadores)"
+        },
+        {
+          "value": "m",
+          "label": "M · 48px (mínimo en pantalla)"
+        }
+      ],
+      "default": "xl"
+    },
+    {
+      "type": "checkbox",
+      "id": "hueso",
+      "label": "Versión Hueso (poros como el logo)",
+      "default": false,
+      "info": "Siempre a 160px, sobre plata o negro liso."
+    },
+    {
+      "type": "checkbox",
+      "id": "glow",
+      "label": "Halo glow-aura",
+      "default": false,
+      "info": "Solo en campaña nocturna sobre el esquema Aura."
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Alineación",
+      "options": [
+        {
+          "value": "left",
+          "label": "Izquierda"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Texto"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto del botón"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Estilo del botón",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primario (ink)"
+        },
+        {
+          "value": "metal",
+          "label": "Metal"
+        },
+        {
+          "value": "drop",
+          "label": "Drop (aura)"
+        },
+        {
+          "value": "secondary",
+          "label": "Secundario"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Fondo",
+      "options": [
+        {
+          "value": "metal",
+          "label": "Plata cepillada"
+        },
+        {
+          "value": "scheme",
+          "label": "Esquema de color"
+        }
+      ],
+      "default": "scheme"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Titular Espina"
+    }
+  ]
+}
+{% endschema %}

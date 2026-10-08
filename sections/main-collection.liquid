@@ -1,0 +1,110 @@
+{%- paginate collection.products by section.settings.products_per_page -%}
+  <div class="hi-container" style="--cols-desktop: {{ section.settings.columns_desktop }};">
+    <header class="hi-collection-head">
+      <p class="t-label t-muted">{{ 'collections.products_count' | t: count: collection.products_count }}</p>
+      <h1 class="t-display-l">{{ collection.title | escape }}</h1>
+      {%- if section.settings.show_description and collection.description != blank -%}
+        <div class="rte t-body-l">{{ collection.description }}</div>
+      {%- endif -%}
+    </header>
+
+    {%- if section.settings.show_image and collection.image -%}
+      <div class="hi-collection-banner">
+        {{
+          collection.image
+          | image_url: width: 2400
+          | image_tag:
+            widths: '750, 1100, 1500, 2000, 2400',
+            sizes: '(min-width: 1440px) 1344px, calc(100vw - 32px)',
+            loading: 'eager',
+            alt: collection.title
+        }}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.enable_filtering -%}
+      {% render 'facets', results: collection, section_id: section.id %}
+    {%- endif -%}
+
+    {%- if collection.products.size > 0 -%}
+      <ul class="hi-grid-products">
+        {%- for product in collection.products -%}
+          <li>
+            {%- if forloop.index <= 4 -%}
+              {% render 'product-card', product: product, eager: true %}
+            {%- else -%}
+              {% render 'product-card', product: product %}
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+      {% render 'pagination', paginate: paginate %}
+    {%- else -%}
+      <div class="hi-empty">
+        {% render 'icon', name: 'checkroom', size: 32 %}
+        <p class="hi-empty-title">
+          {%- if collection.all_products_count > 0 -%}
+            {{ 'collections.empty_filtered' | t }}
+          {%- else -%}
+            {{ 'collections.empty' | t }}
+          {%- endif -%}
+        </p>
+        <a href="{{ routes.all_products_collection_url }}" class="hi-btn hi-btn-secondary">{{ 'general.continue_shopping' | t }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Colección",
+  "tag": "section",
+  "class": "hi-main-collection-section hi-section--collection",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Productos por página",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Columnas en escritorio",
+      "options": [
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Mostrar descripción de la colección",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Mostrar imagen de la colección",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "Filtros y orden",
+      "default": true,
+      "info": "Los filtros se configuran con la app Search & Discovery de Shopify."
+    }
+  ]
+}
+{% endschema %}

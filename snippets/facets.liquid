@@ -1,0 +1,218 @@
+{%- doc -%}
+  Filtros y orden de colección y búsqueda con los filtros nativos de Shopify (Search & Discovery).
+  Botón "FILTRAR" que abre un drawer, select de orden y marquillas de filtros activos.
+
+  @param {object} results - collection o search
+  @param {string} section_id - id de la sección
+  @param {number} [count] - Total de resultados
+{%- enddoc -%}
+{%- liquid
+  assign filters_dialog_id = 'Filters-' | append: section_id
+  assign active_count = 0
+  for filter in results.filters
+    if filter.type == 'price_range'
+      if filter.min_value.value != nil or filter.max_value.value != nil
+        assign active_count = active_count | plus: 1
+      endif
+    else
+      assign active_count = active_count | plus: filter.active_values.size
+    endif
+  endfor
+  assign sort_by = results.sort_by | default: results.default_sort_by
+  assign clear_url = results.url | default: routes.search_url
+  if search.terms
+    assign encoded_terms = search.terms | url_encode
+    assign clear_url = routes.search_url | append: '?q=' | append: encoded_terms
+  endif
+-%}
+
+<div class="hi-toolbar">
+  <div class="hi-toolbar__start">
+    {%- if results.filters.size > 0 -%}
+      <button
+        type="button"
+        class="hi-btn hi-btn-secondary js-only"
+        aria-haspopup="dialog"
+        aria-controls="{{ filters_dialog_id }}"
+        data-open-dialog="{{ filters_dialog_id }}"
+      >
+        {% render 'icon', name: 'tune', size: 20 %}
+        {{ 'collections.filter' | t -}}
+        {%- if active_count > 0 %} ({{ active_count }}){% endif %}
+      </button>
+    {%- endif -%}
+    {%- if count != blank -%}
+      <span class="t-label t-muted">{{ 'collections.products_count' | t: count: count }}</span>
+    {%- endif -%}
+  </div>
+  {%- if results.sort_options.size > 0 -%}
+    <form class="hi-toolbar__end" method="get" data-autosubmit>
+      {%- if search.terms -%}
+        <input type="hidden" name="q" value="{{ search.terms | escape }}">
+        <input type="hidden" name="options[prefix]" value="last">
+      {%- endif -%}
+      {%- for filter in results.filters -%}
+        {%- if filter.type == 'price_range' -%}
+          {%- if filter.min_value.value != nil -%}
+            <input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | divided_by: 100 }}">
+          {%- endif -%}
+          {%- if filter.max_value.value != nil -%}
+            <input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | divided_by: 100 }}">
+          {%- endif -%}
+        {%- else -%}
+          {%- for filter_value in filter.active_values -%}
+            <input type="hidden" name="{{ filter_value.param_name }}" value="{{ filter_value.value | escape }}">
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
+      <div class="hi-select">
+        <label class="visually-hidden" for="SortBy-{{ section_id }}">{{ 'collections.sort' | t }}</label>
+        <div class="hi-select-wrap">
+          <select name="sort_by" id="SortBy-{{ section_id }}">
+            {%- for option in results.sort_options -%}
+              <option
+                value="{{ option.value | escape }}"
+                {% if option.value == sort_by %}
+                  selected
+                {% endif %}
+              >
+                {{ option.name | escape }}
+              </option>
+            {%- endfor -%}
+          </select>
+          {% render 'icon', name: 'expand_more', size: 16 %}
+        </div>
+      </div>
+      <noscript>
+        <button type="submit" class="hi-btn hi-btn-secondary">{{ 'collections.sort' | t }}</button>
+      </noscript>
+    </form>
+  {%- endif -%}
+</div>
+
+{%- if active_count > 0 -%}
+  <ul class="hi-active-filters">
+    {%- for filter in results.filters -%}
+      {%- if filter.type == 'price_range' -%}
+        {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+          <li>
+            <a href="{{ filter.url_to_remove }}" class="hi-tag" aria-label="{{ 'collections.remove_filter' | t: filter: filter.label }}">
+              {{- filter.min_value.value | default: 0 | money_without_trailing_zeros }}
+              &ndash;
+              {{ filter.max_value.value | default: filter.range_max | money_without_trailing_zeros }}
+              &times;
+            </a>
+          </li>
+        {%- endif -%}
+      {%- else -%}
+        {%- for filter_value in filter.active_values -%}
+          <li>
+            <a href="{{ filter_value.url_to_remove }}" class="hi-tag" aria-label="{{ 'collections.remove_filter' | t: filter: filter_value.label }}">
+              {{- filter_value.label | escape }} &times;
+            </a>
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor -%}
+    <li>
+      <a href="{{ clear_url }}{% if sort_by %}{% if search.terms %}&amp;{% else %}?{% endif %}sort_by={{ sort_by }}{% endif %}" class="hi-btn hi-btn-ghost">
+        {{- 'collections.clear' | t -}}
+      </a>
+    </li>
+  </ul>
+{%- endif -%}
+
+{%- if results.filters.size > 0 -%}
+  <dialog id="{{ filters_dialog_id }}" class="hi-dialog hi-drawer" aria-label="{{ 'collections.filter_title' | t }}">
+    <form method="get" class="hi-filters-form">
+      {%- if search.terms -%}
+        <input type="hidden" name="q" value="{{ search.terms | escape }}">
+        <input type="hidden" name="options[prefix]" value="last">
+      {%- endif -%}
+      <input type="hidden" name="sort_by" value="{{ sort_by | escape }}">
+      <div class="hi-drawer-head">
+        <p class="hi-drawer-title">{{ 'collections.filter_title' | t }}</p>
+        <button type="button" class="hi-iconbtn" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>
+          {% render 'icon', name: 'close' %}
+        </button>
+      </div>
+      <div class="hi-drawer-body hi-acc">
+        {%- for filter in results.filters -%}
+          <details
+            class="hi-acc-item hi-filter-group"
+            {% if forloop.index <= 2 or filter.active_values.size > 0 %}
+              open
+            {% endif %}
+          >
+            <summary class="hi-acc-btn">
+              <span>{{ filter.label | escape }}</span>
+              {% render 'icon', name: 'add', size: 16, class: 'hi-acc-plus' %}
+              {% render 'icon', name: 'remove', size: 16, class: 'hi-acc-minus' %}
+            </summary>
+            {%- case filter.type -%}
+              {%- when 'price_range' -%}
+                <div class="hi-filter-price">
+                  <div class="hi-field">
+                    <label for="{{ filters_dialog_id }}-{{ filter.min_value.param_name | handle }}">{{ 'collections.price_from' | t }}</label>
+                    <input
+                      type="number"
+                      inputmode="numeric"
+                      id="{{ filters_dialog_id }}-{{ filter.min_value.param_name | handle }}"
+                      name="{{ filter.min_value.param_name }}"
+                      {% if filter.min_value.value %}
+                        value="{{ filter.min_value.value | divided_by: 100 }}"
+                      {% endif %}
+                      placeholder="0"
+                      min="0"
+                    >
+                  </div>
+                  <div class="hi-field">
+                    <label for="{{ filters_dialog_id }}-{{ filter.max_value.param_name | handle }}">{{ 'collections.price_to' | t }}</label>
+                    <input
+                      type="number"
+                      inputmode="numeric"
+                      id="{{ filters_dialog_id }}-{{ filter.max_value.param_name | handle }}"
+                      name="{{ filter.max_value.param_name }}"
+                      {% if filter.max_value.value %}
+                        value="{{ filter.max_value.value | divided_by: 100 }}"
+                      {% endif %}
+                      placeholder="{{ filter.range_max | divided_by: 100 }}"
+                      min="0"
+                    >
+                  </div>
+                </div>
+              {%- else -%}
+                <ul>
+                  {%- for filter_value in filter.values -%}
+                    {%- assign filter_input_id = filters_dialog_id | append: '-' | append: filter_value.param_name | append: '-' | append: forloop.index | handle -%}
+                    <li class="hi-check">
+                      <input
+                        type="checkbox"
+                        id="{{ filter_input_id }}"
+                        name="{{ filter_value.param_name }}"
+                        value="{{ filter_value.value | escape }}"
+                        {% if filter_value.active %}
+                          checked
+                        {% endif %}
+                        {% if filter_value.count == 0 and filter_value.active == false %}
+                          disabled
+                        {% endif %}
+                      >
+                      <label for="{{ filter_input_id }}">
+                        {{- filter_value.label | escape -}}
+                        <span class="hi-check-count"> ({{ filter_value.count }})</span>
+                      </label>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+            {%- endcase -%}
+          </details>
+        {%- endfor -%}
+      </div>
+      <div class="hi-drawer-foot">
+        <button type="submit" class="hi-btn hi-btn-primary hi-btn-lg hi-btn-block">{{ 'collections.apply' | t }}</button>
+        <a href="{{ clear_url }}" class="hi-btn hi-btn-ghost">{{ 'collections.clear' | t }}</a>
+      </div>
+    </form>
+  </dialog>
+{%- endif -%}

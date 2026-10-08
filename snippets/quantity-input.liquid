@@ -1,0 +1,50 @@
+{%- doc -%}
+  QuantityStepper del design system: menos, cantidad en mono y más. Funciona sin JavaScript
+  como un input numérico; assets/hight.js agrega los botones.
+
+  @param {string} name - Nombre del input: quantity en la ficha, updates[] en el carrito
+  @param {number} value - Cantidad actual
+  @param {number} [min] - Mínimo. Por defecto 1
+  @param {number} [max] - Máximo
+  @param {number} [line] - Índice (1-based) de la línea del carrito
+  @param {string} [id] - id del input
+  @param {string} [label] - Nombre accesible del input
+  @param {string} [form] - id del formulario al que pertenece el input
+  @param {string} [size] - 'lg' para la ficha de producto
+{%- enddoc -%}
+{%- liquid
+  assign quantity_min = min | default: 1
+  assign quantity_label = label
+  if quantity_label == blank
+    assign quantity_label = 'products.quantity' | t
+  endif
+-%}
+<quantity-input class="hi-qty{% if size == 'lg' %} hi-qty-lg{% endif %}">
+  <button type="button" name="minus" class="js-only" aria-label="{{ 'products.decrease' | t }}">
+    {% render 'icon', name: 'remove', size: 16 %}
+  </button>
+  <input
+    type="number"
+    name="{{ name }}"
+    value="{{ value }}"
+    min="{{ quantity_min }}"
+    {% if max %}
+      max="{{ max }}"
+    {% endif %}
+    step="1"
+    inputmode="numeric"
+    aria-label="{{ quantity_label | escape }}"
+    {% if id %}
+      id="{{ id }}"
+    {% endif %}
+    {% if line %}
+      data-line="{{ line }}"
+    {% endif %}
+    {% if form %}
+      form="{{ form }}"
+    {% endif %}
+  >
+  <button type="button" name="plus" class="js-only" aria-label="{{ 'products.increase' | t }}">
+    {% render 'icon', name: 'add', size: 16 %}
+  </button>
+</quantity-input>

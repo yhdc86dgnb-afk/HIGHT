@@ -1,0 +1,152 @@
+<section class="hi-section hi-scheme color-{{ section.settings.color_scheme }}">
+  <div class="hi-container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="hi-index-head">({{ section.settings.heading | escape }})</h2>
+    {%- endif -%}
+    <ol class="hi-index">
+      {%- if section.settings.source == 'collections' and section.settings.collections != blank -%}
+        {%- for index_collection in section.settings.collections -%}
+          <li>
+            <a href="{{ index_collection.url }}" class="hi-index-row">
+              <span class="hi-index-n">(N{{ forloop.index }})</span>
+              <span class="hi-index-title">{{ index_collection.title | escape }}</span>
+              <span class="hi-index-cat">{{ 'collections.products_count' | t: count: index_collection.products_count }}</span>
+              <span class="hi-index-year">{{ index_collection.published_at | date: '%Y' }}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          <li {{ block.shopify_attributes }}>
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" class="hi-index-row">
+                <span class="hi-index-n">(N{{ forloop.index }})</span>
+                <span class="hi-index-title">{{ block.settings.title | escape }}</span>
+                <span class="hi-index-cat">{{ block.settings.category | escape }}</span>
+                <span class="hi-index-year">{{ block.settings.year | escape }}</span>
+              </a>
+            {%- else -%}
+              <div class="hi-index-row">
+                <span class="hi-index-n">(N{{ forloop.index }})</span>
+                <span class="hi-index-title">{{ block.settings.title | escape }}</span>
+                <span class="hi-index-cat">{{ block.settings.category | escape }}</span>
+                <span class="hi-index-year">{{ block.settings.year | escape }}</span>
+              </div>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ol>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Índice de drops",
+  "tag": "section",
+  "class": "hi-index-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Lista numerada al estilo de un archivo: (N1), título en serif itálica, categoría y año. Para Archivo, Info o un lookbook; no para el catálogo."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Encabezado",
+      "default": "Trabajo seleccionado",
+      "info": "Se muestra entre paréntesis."
+    },
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Contenido",
+      "options": [
+        {
+          "value": "blocks",
+          "label": "Filas escritas a mano"
+        },
+        {
+          "value": "collections",
+          "label": "Colecciones de la tienda"
+        }
+      ],
+      "default": "blocks"
+    },
+    {
+      "type": "collection_list",
+      "id": "collections",
+      "label": "Colecciones",
+      "limit": 24
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Fila",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Drop 05 — Plata"
+        },
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Categoría",
+          "default": "Drop"
+        },
+        {
+          "type": "text",
+          "id": "year",
+          "label": "Año",
+          "default": "2026"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Enlace"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Índice de drops",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "title": "Drop 05 — Plata",
+            "category": "Drop",
+            "year": "2026"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Drop 04 — Concreto",
+            "category": "Drop",
+            "year": "2026"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Colaboración",
+            "category": "Colaboración, música",
+            "year": "2026"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
