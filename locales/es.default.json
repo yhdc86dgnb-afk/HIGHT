@@ -3,15 +3,36 @@
     "page": "Página {{ page }}",
     "view_all": "VER TODO",
     "continue_shopping": "SEGUIR COMPRANDO",
-    "read_more": "LEER MÁS"
+    "read_more": "LEER MÁS",
+    "view_piece": "VER LA PIEZA",
+    "view_pieces": "VER LAS PIEZAS",
+    "drag_hint": "ARRASTRA LAS FOTOS",
+    "shuffle": "MEZCLAR",
+    "shuffle_label": "Mezclar las fotos",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "scroll_progress": "Avance de la lista",
+    "cursor_view": "VER",
+    "cursor_drag": "ARRASTRA",
+    "cursor_zoom": "AMPLIAR",
+    "pieces_count": {
+      "one": "({{ count }}) PIEZA",
+      "other": "({{ count }}) PIEZAS"
+    },
+    "unique_badge": "PIEZA ÚNICA · NO SE REPITE · ",
+    "placeholder_video": "Sube aquí un video (por ejemplo, uno generado en Higgsfield) o una foto. Mientras no haya nada, esta sección no se muestra en la tienda."
   },
   "accessibility": {
     "skip_to_content": "Saltar al contenido",
     "close": "Cerrar",
     "open_menu": "Abrir menú",
     "menu": "Menú",
+    "menu_button": "MENÚ",
+    "close_button": "CERRAR",
     "search": "Buscar",
+    "search_button": "BUSCAR",
     "account": "Mi cuenta",
+    "cart_button": "CARRITO",
     "cart_count": {
       "one": "Carrito, {{ count }} producto",
       "other": "Carrito, {{ count }} productos"
@@ -26,7 +47,7 @@
   },
   "search": {
     "title": "Buscar",
-    "placeholder": "Buscar prendas, cortes o materiales",
+    "placeholder": "Buscar jean, patchwork, camiseta…",
     "submit": "BUSCAR",
     "products": "Productos",
     "view_all": "VER TODOS LOS RESULTADOS",
@@ -34,11 +55,14 @@
       "one": "{{ count }} resultado para “{{ terms }}”",
       "other": "{{ count }} resultados para “{{ terms }}”"
     },
-    "no_results": "No encontramos nada para “{{ terms }}”. Prueba con el corte o el material: boxy, wide, denim.",
+    "no_results": "No encontramos nada para “{{ terms }}”. Prueba con jean, patchwork o camiseta.",
     "prompt": "Escribe el nombre de una prenda, un corte o un material."
   },
   "products": {
     "add_to_cart": "AGREGAR AL CARRITO",
+    "quick_add": "AGREGAR",
+    "quick_add_label": "Agregar {{ title }} al carrito",
+    "quick_size_label": "Agregar {{ title }}, talla {{ size }}, al carrito",
     "sold_out": "AGOTADO",
     "unavailable": "NO DISPONIBLE",
     "from": "Desde {{ price }}",
@@ -64,10 +88,12 @@
     "low_stock_tag": "ÚLTIMAS {{ count }}",
     "unique_tag": "PIEZA ÚNICA",
     "unique_note": "Una sola pieza. Cuando se vende, no vuelve.",
-    "photo_placeholder": "FOTO 4:5",
+    "photo_placeholder": "FOTO",
     "gallery_label": "Fotos del producto",
     "gallery_count": "{{ index }} / {{ count }}",
     "thumbnail": "Ver foto {{ index }}",
+    "zoom": "Ampliar foto {{ index }}",
+    "zoom_title": "Fotos de {{ title }}",
     "recommendations": "Completa el look",
     "taxes_included": "Impuestos incluidos.",
     "shipping_at_checkout": "El envío se calcula al pagar.",
@@ -78,12 +104,22 @@
       "no_secadora": "No usar secadora"
     }
   },
+  "color_story": {
+    "pick": "Pintar la tienda de {{ name }}",
+    "reset": "VOLVER AL COLOR ORIGINAL",
+    "changed": "Listo: la tienda ahora es {{ name }}.",
+    "reset_done": "La tienda volvió a su color original."
+  },
+  "hotspots": {
+    "detail": "Detalle {{ number }}: {{ title }}",
+    "list_label": "Detalles de la pieza"
+  },
   "cart": {
     "page_title": "Carrito",
     "title": "Carrito ({{ count }})",
     "empty": "Tu carrito está vacío",
-    "empty_body": "El drop vigente está a un clic.",
-    "view_drop": "VER EL DROP",
+    "empty_body": "Las piezas están a un clic.",
+    "view_drop": "VER LAS PIEZAS",
     "subtotal": "SUBTOTAL",
     "checkout": "FINALIZAR COMPRA",
     "taxes_note": "Envío e impuestos se calculan al pagar.",
@@ -114,14 +150,20 @@
     "price_to": "Hasta",
     "empty": "Esta colección todavía no tiene piezas.",
     "empty_filtered": "Ninguna pieza coincide con estos filtros.",
-    "list_heading": "Colecciones"
+    "list_heading": "Colecciones",
+    "density": "Columnas",
+    "density_option": {
+      "one": "Ver {{ count }} columna",
+      "other": "Ver {{ count }} columnas"
+    }
   },
   "newsletter": {
-    "label": "Recibe los drops primero",
+    "label": "Entérate primero",
     "placeholder": "tu@correo.com",
-    "hint": "Un correo por drop. Nada más.",
+    "hint": "Te escribimos cuando entren piezas nuevas. Nada más.",
     "submit": "SUSCRIBIRME",
-    "success": "Listo. Te escribimos cuando salga el próximo drop."
+    "success": "Listo. Te escribimos cuando entren piezas nuevas.",
+    "email_label": "Tu correo"
   },
   "contact": {
     "name": "Nombre",
@@ -129,7 +171,7 @@
     "phone": "Teléfono",
     "message": "Mensaje",
     "submit": "ENVIAR",
-    "success": "Recibimos tu mensaje. Te respondemos en menos de 24 horas.",
+    "success": "Recibimos tu mensaje. Te respondemos pronto.",
     "error": "Revisa los campos marcados."
   },
   "blogs": {
@@ -140,11 +182,11 @@
   },
   "errors": {
     "not_found_label": "(404)",
-    "not_found_title": "Esta página no existe.",
-    "not_found_body": "Puede que el enlace esté roto o que la prenda ya no esté en la tienda."
+    "not_found_title": "Esta pieza no existe.",
+    "not_found_body": "Puede que el enlace esté roto o que la prenda ya se haya vendido."
   },
   "password": {
-    "label": "Próximo drop",
+    "label": "Próximamente",
     "enter": "ENTRAR CON CONTRASEÑA",
     "password": "Contraseña",
     "submit": "ENTRAR",

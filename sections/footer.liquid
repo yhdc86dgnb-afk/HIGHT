@@ -1,31 +1,31 @@
 <footer class="hi-footer color-{{ section.settings.color_scheme }}">
-  <div class="hi-footer-inner">
-    <div class="hi-footer-top">
-      <div class="hi-footer-brand">
-        <a href="{{ routes.root_url }}" class="hi-logo" aria-label="{{ 'accessibility.home' | t: shop: shop.name }}">
-          {%- render 'logo-wordmark', height: 28 -%}
-        </a>
-        {%- if section.settings.tagline != blank -%}
-          <p>{{ section.settings.tagline | escape }}</p>
-        {%- endif -%}
-      </div>
-
-      {%- if section.settings.show_newsletter -%}
-        {%- form 'customer', id: 'FooterNewsletter', class: 'hi-footer-news' -%}
+  {%- if section.settings.show_newsletter -%}
+    <div class="hi-footer-news hi-bg-accent">
+      <div class="hi-container hi-footer-news-inner">
+        <div class="hi-footer-news-copy">
+          <h2 class="t-display-l">{{ section.settings.newsletter_heading | escape }}</h2>
+          {%- if section.settings.newsletter_text != blank -%}
+            <p class="t-body-l">{{ section.settings.newsletter_text | escape }}</p>
+          {%- endif -%}
+        </div>
+        {%- form 'customer', id: 'FooterNewsletter', class: 'hi-footer-form' -%}
           <input type="hidden" name="contact[tags]" value="newsletter">
           <div class="hi-field{% if form.errors %} hi-field-invalid{% endif %}">
-            <label for="FooterNewsletterEmail">{{ 'newsletter.label' | t }}</label>
-            <input
-              id="FooterNewsletterEmail"
-              type="email"
-              name="contact[email]"
-              value="{{ form.email }}"
-              placeholder="{{ 'newsletter.placeholder' | t }}"
-              autocomplete="email"
-              autocapitalize="off"
-              required
-              aria-describedby="FooterNewsletterHint"
-            >
+            <label for="FooterNewsletterEmail">{{ 'newsletter.email_label' | t }}</label>
+            <div class="hi-field-inline">
+              <input
+                id="FooterNewsletterEmail"
+                type="email"
+                name="contact[email]"
+                value="{{ form.email }}"
+                placeholder="{{ 'newsletter.placeholder' | t }}"
+                autocomplete="email"
+                autocapitalize="off"
+                required
+                aria-describedby="FooterNewsletterHint"
+              >
+              <button type="submit" class="hi-btn hi-btn-primary">{{ 'newsletter.submit' | t }}</button>
+            </div>
             {%- if form.errors -%}
               <span class="hi-field-error" id="FooterNewsletterHint" role="alert">
                 {{- form.errors.translated_fields.email | capitalize }}
@@ -37,26 +37,29 @@
               <span class="hi-field-hint" id="FooterNewsletterHint">{{ 'newsletter.hint' | t }}</span>
             {%- endif -%}
           </div>
-          <button type="submit" class="hi-btn hi-btn-metal">{{ 'newsletter.submit' | t }}</button>
         {%- endform -%}
-      {%- endif -%}
+      </div>
     </div>
+  {%- endif -%}
 
+  <div class="hi-container hi-footer-inner">
     {%- if section.blocks.size > 0 -%}
       <div class="hi-footer-cols">
         {%- for block in section.blocks -%}
           {%- case block.type -%}
             {%- when 'menu' -%}
-              <nav aria-label="{{ block.settings.title | escape }}" {{ block.shopify_attributes }}>
-                <p class="hi-footer-title">{{ block.settings.title | escape }}</p>
-                <ul>
-                  {%- for link in block.settings.menu.links -%}
-                    <li>
-                      <a href="{{ link.url }}">{{ link.title | escape }}</a>
-                    </li>
-                  {%- endfor -%}
-                </ul>
-              </nav>
+              {%- if block.settings.menu.links.size > 0 -%}
+                <nav aria-label="{{ block.settings.title | escape }}" {{ block.shopify_attributes }}>
+                  <p class="hi-footer-title">{{ block.settings.title | escape }}</p>
+                  <ul role="list">
+                    {%- for link in block.settings.menu.links -%}
+                      <li>
+                        <a href="{{ link.url }}">{{ link.title | escape }}</a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </nav>
+              {%- endif -%}
             {%- when 'social' -%}
               {%- liquid
                 assign social_any = false
@@ -70,7 +73,7 @@
               {%- if social_any -%}
                 <nav aria-label="{{ block.settings.title | escape }}" {{ block.shopify_attributes }}>
                   <p class="hi-footer-title">{{ block.settings.title | escape }}</p>
-                  <ul>
+                  <ul role="list">
                     {%- render 'social-links', list: true -%}
                     {%- for link in block.settings.menu.links -%}
                       <li>
@@ -83,7 +86,7 @@
             {%- when 'legal' -%}
               <nav aria-label="{{ block.settings.title | escape }}" {{ block.shopify_attributes }}>
                 <p class="hi-footer-title">{{ block.settings.title | escape }}</p>
-                <ul>
+                <ul role="list">
                   {%- for link in block.settings.menu.links -%}
                     <li>
                       <a href="{{ link.url }}">{{ link.title | escape }}</a>
@@ -103,15 +106,24 @@
             {%- when 'text' -%}
               <div {{ block.shopify_attributes }}>
                 <p class="hi-footer-title">{{ block.settings.title | escape }}</p>
-                <div class="hi-footer-text">{{ block.settings.text }}</div>
+                <div class="hi-footer-text rte">{{ block.settings.text }}</div>
               </div>
           {%- endcase -%}
         {%- endfor -%}
       </div>
     {%- endif -%}
 
-    <div class="hi-footer-bottom">
+    {%- if section.settings.show_big_logo -%}
+      <a href="{{ routes.root_url }}" class="hi-footer-logo" aria-label="{{ 'accessibility.home' | t: shop: shop.name }}" data-reveal>
+        <span class="hi-logo-img" aria-hidden="true"></span>
+      </a>
+    {%- endif -%}
+
+    <div class="hi-footer-bottom t-label">
       <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name | upcase | escape }}</span>
+      {%- if section.settings.tagline != blank -%}
+        <span>{{ section.settings.tagline | escape }}</span>
+      {%- endif -%}
       {%- if section.settings.origin != blank -%}
         <span>{{ section.settings.origin | escape }}</span>
       {%- endif -%}
@@ -127,16 +139,34 @@
   },
   "settings": [
     {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Mostrar suscripción por correo",
+      "default": true
+    },
+    {
       "type": "text",
-      "id": "tagline",
-      "label": "Lema",
-      "default": "Streetwear de autor para el uso diario."
+      "id": "newsletter_heading",
+      "label": "Titular de la suscripción",
+      "default": "ENTÉRATE PRIMERO"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Texto de la suscripción",
+      "default": "Las piezas únicas se van rápido. Te avisamos cuando entren nuevas."
     },
     {
       "type": "checkbox",
-      "id": "show_newsletter",
-      "label": "Mostrar suscripción a drops",
+      "id": "show_big_logo",
+      "label": "Mostrar el logo gigante",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Lema",
+      "default": "Piezas únicas y denim intervenido."
     },
     {
       "type": "text",
@@ -148,7 +178,6 @@
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "Esquema de color",
-      "info": "El footer se pinta invertido: fondo ink y texto on-ink del esquema.",
       "default": "scheme-1"
     }
   ],
@@ -181,7 +210,7 @@
           "type": "text",
           "id": "title",
           "label": "Título",
-          "default": "Hight"
+          "default": "Redes"
         },
         {
           "type": "paragraph",
@@ -234,7 +263,7 @@
           "type": "richtext",
           "id": "text",
           "label": "Texto",
-          "default": "<p>Hecho en Medellín. Escríbenos por WhatsApp y te respondemos en menos de 24 horas.</p>"
+          "default": "<p>Escríbenos si tienes dudas sobre una pieza.</p>"
         }
       ]
     }

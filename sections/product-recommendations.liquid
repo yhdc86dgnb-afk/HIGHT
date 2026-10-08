@@ -1,23 +1,41 @@
+{%- assign rail_id = 'Rail-' | append: section.id -%}
 <product-recommendations
-  class="hi-section hi-scheme color-{{ section.settings.color_scheme }}"
+  class="hi-section hi-featured hi-featured--rail color-{{ section.settings.color_scheme }}"
   data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&amp;product_id={{ product.id }}&amp;limit={{ section.settings.products_to_show }}&amp;intent=related"
 >
   {%- if recommendations.performed? and recommendations.products_count > 0 -%}
-    <div class="hi-container" style="--cols-desktop: 4;">
-      <div class="hi-section-head">
-        <div class="hi-section-head__titles">
+    <div class="hi-container">
+      <div class="hi-featured-head">
+        <div class="hi-featured-titles">
           {%- if section.settings.eyebrow != blank -%}
             <p class="t-label">{{ section.settings.eyebrow | escape }}</p>
           {%- endif -%}
-          <h2 class="t-h2">{{ section.settings.heading | escape }}</h2>
+          <h2 class="t-display-l">{{ section.settings.heading | escape }}</h2>
+        </div>
+        <div class="hi-featured-aside">
+          <div class="hi-featured-actions">
+            <button type="button" class="hi-round-btn js-only" aria-controls="{{ rail_id }}" aria-label="{{ 'general.previous' | t }}" data-rail-prev>
+              {% render 'icon', name: 'arrow_back', size: 20 %}
+            </button>
+            <button type="button" class="hi-round-btn js-only" aria-controls="{{ rail_id }}" aria-label="{{ 'general.next' | t }}" data-rail-next>
+              {% render 'icon', name: 'arrow_forward', size: 20 %}
+            </button>
+          </div>
         </div>
       </div>
-      <ul class="hi-grid-products">
+    </div>
+    <hi-rail class="hi-rail" data-cursor="{{ 'general.cursor_drag' | t }}">
+      <ul class="hi-rail-track" id="{{ rail_id }}" role="list" tabindex="0" aria-label="{{ section.settings.heading | escape }}">
         {%- for recommendation in recommendations.products -%}
-          <li>{% render 'product-card', product: recommendation %}</li>
+          <li class="hi-featured-item" style="--i: {{ forloop.index0 }};">{% render 'product-card', product: recommendation %}</li>
         {%- endfor -%}
       </ul>
-    </div>
+      <div class="hi-container">
+        <div class="hi-rail-progress" role="progressbar" aria-label="{{ 'general.scroll_progress' | t }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span class="hi-rail-progress-bar"></span>
+        </div>
+      </div>
+    </hi-rail>
   {%- endif -%}
 </product-recommendations>
 
@@ -31,22 +49,22 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Marquilla",
-      "default": "(Del mismo drop)"
+      "default": "(TAMBIÉN TE PUEDE GUSTAR)"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Titular",
-      "default": "Completa el look"
+      "default": "COMPLETA EL LOOK"
     },
     {
       "type": "range",
       "id": "products_to_show",
       "label": "Productos",
       "min": 2,
-      "max": 8,
+      "max": 10,
       "step": 1,
-      "default": 4
+      "default": 6
     },
     {
       "type": "color_scheme",

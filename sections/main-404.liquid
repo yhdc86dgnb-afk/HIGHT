@@ -1,9 +1,14 @@
-<div class="hi-container hi-page hi-page--center">
-  <p class="t-label t-muted">{{ 'errors.not_found_label' | t }}</p>
+<div class="hi-container hi-page hi-404">
+  <p class="hi-404-n" aria-hidden="true">404</p>
+  <p class="t-label">{{ 'errors.not_found_label' | t }}</p>
   <h1 class="t-display-l">{{ 'errors.not_found_title' | t }}</h1>
   <p class="t-body-l t-muted t-measure">{{ 'errors.not_found_body' | t }}</p>
-  <div>
-    <a href="{{ routes.all_products_collection_url }}" class="hi-btn hi-btn-primary hi-btn-lg">{{ 'general.continue_shopping' | t }}</a>
+  <div class="hi-404-actions">
+    <a href="{{ routes.all_products_collection_url }}" class="hi-btn hi-btn-primary hi-btn-lg">
+      {{- 'general.view_pieces' | t }}
+      {% render 'icon', name: 'arrow_forward', size: 20 -%}
+    </a>
+    <a href="{{ routes.root_url }}" class="hi-btn hi-btn-secondary hi-btn-lg">{{ 'general.continue_shopping' | t }}</a>
   </div>
 </div>
 

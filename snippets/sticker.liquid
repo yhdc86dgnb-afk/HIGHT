@@ -1,0 +1,31 @@
+{%- doc -%}
+  Sello circular con texto en círculo que gira despacio (PIEZA ÚNICA · NO SE REPITE ·).
+  Es decorativo: el texto importante tiene que estar también en la página.
+
+  @param {string} id - Sufijo único para el id del trazo del círculo
+  @param {string} [text] - Texto del sello. Por defecto, general.unique_badge
+  @param {string} [class] - Clases extra
+
+  @example
+  {% render 'sticker', id: section.id, class: 'hi-collage-sticker' %}
+{%- enddoc -%}
+{%- liquid
+  assign sticker_text = text
+  if sticker_text == blank
+    assign sticker_text = 'general.unique_badge' | t
+  endif
+  assign sticker_path = 'StickerPath-' | append: id
+-%}
+<span class="hi-sticker {{ class }}" aria-hidden="true">
+  <svg class="hi-sticker-ring" viewBox="0 0 200 200" width="200" height="200" focusable="false">
+    <defs>
+      <path id="{{ sticker_path }}" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"></path>
+    </defs>
+    <text>
+      <textPath href="#{{ sticker_path }}" textLength="476" lengthAdjust="spacing">
+        {{- sticker_text | escape -}}
+      </textPath>
+    </text>
+  </svg>
+  <span class="hi-sticker-core">{% render 'icon', name: 'flare', size: 48 %}</span>
+</span>

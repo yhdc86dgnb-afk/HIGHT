@@ -1,0 +1,22 @@
+{%- doc -%}
+  Botones para elegir cuántas columnas ver en la retícula de productos (2, 3 o 4 en computador;
+  1 o 2 en el teléfono). assets/hight.js guarda la elección en el navegador del visitante.
+
+  @param {string} [default] - Columnas por defecto en computador: '3' o '4'
+{%- enddoc -%}
+{%- assign density_default = default | default: '4' -%}
+<div class="hi-density js-only" role="group" aria-label="{{ 'collections.density' | t }}" data-density-toggle data-default="{{ density_default }}">
+  <span class="t-label t-muted" aria-hidden="true">{{ 'collections.density' | t }}</span>
+  <button type="button" class="hi-density-btn hi-show-sm-only" data-density="1" aria-pressed="false" aria-label="{{ 'collections.density_option' | t: count: 1 }}">
+    <span aria-hidden="true">1</span>
+  </button>
+  <button type="button" class="hi-density-btn" data-density="2" aria-pressed="false" aria-label="{{ 'collections.density_option' | t: count: 2 }}">
+    <span aria-hidden="true">2</span>
+  </button>
+  <button type="button" class="hi-density-btn hi-hide-sm" data-density="3" aria-pressed="false" aria-label="{{ 'collections.density_option' | t: count: 3 }}">
+    <span aria-hidden="true">3</span>
+  </button>
+  <button type="button" class="hi-density-btn hi-hide-sm" data-density="4" aria-pressed="false" aria-label="{{ 'collections.density_option' | t: count: 4 }}">
+    <span aria-hidden="true">4</span>
+  </button>
+</div>

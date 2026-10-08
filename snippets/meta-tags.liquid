@@ -1,13 +1,13 @@
 {%- doc -%}
   Metadatos del documento: charset, viewport, título, descripción, Open Graph, Twitter,
-  favicon (monograma H con estrella) y datos estructurados del producto.
+  favicon (monograma H con estrella ácida) y datos estructurados del producto.
 {%- enddoc -%}
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 {%- for scheme in settings.color_schemes -%}
   {%- if forloop.first %}
-    <meta name="theme-color" content="{{ scheme.settings.surface_000 }}">
+    <meta name="theme-color" content="{{ scheme.settings.background }}">
   {%- endif -%}
 {%- endfor %}
 

@@ -3,10 +3,12 @@
     "main": {
       "type": "main-list-collections",
       "settings": {
-        "heading": "Archivo",
+        "heading": "ARCHIVO",
         "layout": "index"
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

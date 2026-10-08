@@ -1,0 +1,187 @@
+{%- liquid
+  assign band_class = 'hi-bg-accent'
+  if section.settings.background == 'scheme'
+    assign band_class = 'color-' | append: section.settings.color_scheme
+  endif
+-%}
+{%- if section.blocks.size > 0 -%}
+  {%- capture band_items -%}
+    {%- for block in section.blocks -%}
+      <li class="hi-band-item hi-band-item--{{ block.settings.style }}">{{ block.settings.text | escape }}</li>
+      <li class="hi-band-sep" aria-hidden="true">{% render 'icon', name: 'flare', size: 48 %}</li>
+    {%- endfor -%}
+  {%- endcapture -%}
+  <div class="hi-band-wrap" style="--tilt: {{ section.settings.tilt }}deg;">
+    <div class="hi-band {{ band_class }} hi-band--{{ section.settings.size }}">
+      <hi-marquee
+        class="hi-marquee"
+        style="--marquee-duration: {{ section.settings.speed }}s;"
+        data-speed="{{ section.settings.speed }}"
+        data-direction="{{ section.settings.direction }}"
+        data-scroll-boost="{{ section.settings.scroll_boost }}"
+      >
+        <div class="hi-marquee-track">
+          <ul class="hi-marquee-group" role="list">
+            {{ band_items }}
+            {{ band_items }}
+          </ul>
+          <ul class="hi-marquee-group" role="list" aria-hidden="true" inert>
+            {{ band_items }}
+            {{ band_items }}
+          </ul>
+        </div>
+      </hi-marquee>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Cinta de texto",
+  "tag": "section",
+  "class": "hi-band-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Texto gigante que corre de lado a lado. Al hacer scroll se acelera."
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "Tamaño",
+      "options": [
+        {
+          "value": "m",
+          "label": "Mediano"
+        },
+        {
+          "value": "l",
+          "label": "Grande"
+        },
+        {
+          "value": "xl",
+          "label": "Gigante"
+        }
+      ],
+      "default": "l"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Duración de una vuelta",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "unit": "s",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Dirección",
+      "options": [
+        {
+          "value": "left",
+          "label": "Hacia la izquierda"
+        },
+        {
+          "value": "right",
+          "label": "Hacia la derecha"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "scroll_boost",
+      "label": "Acelerar con el scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "tilt",
+      "label": "Inclinación",
+      "min": -4,
+      "max": 4,
+      "step": 1,
+      "unit": "°",
+      "default": -2
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Fondo",
+      "options": [
+        {
+          "value": "accent",
+          "label": "Color de acento"
+        },
+        {
+          "value": "scheme",
+          "label": "Esquema de color"
+        }
+      ],
+      "default": "accent"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-3",
+      "visible_if": "{{ section.settings.background == 'scheme' }}"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Texto",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texto",
+          "default": "PIEZAS ÚNICAS"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Estilo",
+          "options": [
+            {
+              "value": "fill",
+              "label": "Relleno"
+            },
+            {
+              "value": "outline",
+              "label": "Solo contorno"
+            }
+          ],
+          "default": "fill"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cinta de texto",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "text": "PIEZAS ÚNICAS",
+            "style": "fill"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "NO SE REPITEN",
+            "style": "outline"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,33 +1,135 @@
 {
   "sections": {
     "hero": {
-      "type": "hero-drop",
+      "type": "hero-collage",
+      "blocks": {
+        "pieza-dragon": {
+          "type": "piece",
+          "settings": {
+            "product": "jean-flare-dragon-acido",
+            "x": 4,
+            "y": 6,
+            "rotation": -7,
+            "size": "l"
+          }
+        },
+        "pieza-leopardo": {
+          "type": "piece",
+          "settings": {
+            "product": "jean-flare-patchwork-leopardo",
+            "x": 76,
+            "y": 4,
+            "rotation": 6,
+            "size": "l"
+          }
+        },
+        "pieza-camiseta": {
+          "type": "piece",
+          "settings": {
+            "product": "camiseta-celula-carmin",
+            "x": 12,
+            "y": 52,
+            "rotation": 5,
+            "size": "m"
+          }
+        },
+        "pieza-indigo": {
+          "type": "piece",
+          "settings": {
+            "product": "jean-wide-patchwork-indigo",
+            "x": 66,
+            "y": 46,
+            "rotation": -5,
+            "size": "l"
+          }
+        },
+        "pieza-chaqueta": {
+          "type": "piece",
+          "settings": {
+            "product": "chaqueta-blood-rose",
+            "x": 44,
+            "y": 66,
+            "rotation": -3,
+            "size": "s"
+          }
+        }
+      },
+      "block_order": [
+        "pieza-dragon",
+        "pieza-leopardo",
+        "pieza-camiseta",
+        "pieza-indigo",
+        "pieza-chaqueta"
+      ],
       "settings": {
-        "layout": "split",
-        "reverse": false,
-        "grain": true,
-        "caption_left": "DROP 05 — PLATA",
-        "caption_right": "MEDELLÍN, CO.",
-        "eyebrow": "(N5)",
-        "heading": "DROP 05",
-        "heading_style": "display",
-        "glow": false,
-        "text": "<p>Siete piezas en plata, carbón y azul noche. 300 unidades. Jueves 8 p. m.</p>",
-        "button_label": "VER EL DROP",
+        "heading": "HIGHT — piezas únicas y denim intervenido",
+        "eyebrow": "(01) DENIM INTERVENIDO — MED/COL",
+        "text": "<p>Piezas únicas y prendas de archivo. Cada una existe una sola vez.</p>",
+        "button_label": "VER LAS PIEZAS",
         "button_link": "shopify://collections/all",
-        "button_style": "primary",
-        "link_label": "VER LOOKBOOK",
-        "link": "",
-        "panel_style": "metal",
+        "show_shuffle": true,
+        "show_badge": true,
+        "badge_text": "PIEZA ÚNICA · NO SE REPITE · ",
+        "media_opacity": 45,
+        "full_height": true,
         "color_scheme": "scheme-1"
       }
     },
-    "catalogo": {
+    "cinta": {
+      "type": "marquee",
+      "blocks": {
+        "t1": {
+          "type": "item",
+          "settings": {
+            "text": "PIEZAS ÚNICAS",
+            "style": "fill"
+          }
+        },
+        "t2": {
+          "type": "item",
+          "settings": {
+            "text": "NO SE REPITEN",
+            "style": "outline"
+          }
+        },
+        "t3": {
+          "type": "item",
+          "settings": {
+            "text": "DENIM INTERVENIDO",
+            "style": "fill"
+          }
+        },
+        "t4": {
+          "type": "item",
+          "settings": {
+            "text": "PRENDAS DE ARCHIVO",
+            "style": "outline"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {
+        "size": "l",
+        "speed": 28,
+        "direction": "left",
+        "scroll_boost": true,
+        "tilt": -2,
+        "background": "accent",
+        "color_scheme": "scheme-3"
+      }
+    },
+    "disponibles": {
       "type": "featured-collection",
       "settings": {
-        "eyebrow": "DROP 05 — PLATA",
-        "heading": "EL DROP",
-        "text": "<p>Siete piezas. 300 unidades numeradas. Cuando se acaban, no vuelven.</p>",
+        "layout": "rail",
+        "eyebrow": "(DISPONIBLES)",
+        "heading": "LO QUE HAY",
+        "text": "<p>Una de cada una. Cuando se vende, se va del archivo.</p>",
         "collection": "all",
         "products_to_show": 8,
         "columns_desktop": "4",
@@ -35,59 +137,209 @@
         "color_scheme": "scheme-1"
       }
     },
-    "spread": {
-      "type": "editorial-spread",
+    "colores": {
+      "type": "color-story",
       "blocks": {
-        "toma-a": {
-          "type": "frame",
+        "acido": {
+          "type": "color",
           "settings": {
-            "take": "A",
-            "orientation": "landscape"
+            "name": "ÁCIDO",
+            "color": "#dff04a",
+            "product": "jean-flare-dragon-acido"
           }
         },
-        "toma-b": {
-          "type": "frame",
+        "carmin": {
+          "type": "color",
           "settings": {
-            "take": "B",
-            "orientation": "portrait"
+            "name": "CARMÍN",
+            "color": "#c3142d",
+            "product": "camiseta-celula-carmin"
           }
         },
-        "toma-c": {
-          "type": "frame",
+        "indigo": {
+          "type": "color",
           "settings": {
-            "take": "C",
-            "orientation": "landscape"
+            "name": "ÍNDIGO",
+            "color": "#5b7cfa",
+            "product": "jean-wide-patchwork-indigo"
+          }
+        },
+        "leopardo": {
+          "type": "color",
+          "settings": {
+            "name": "LEOPARDO",
+            "color": "#c08a4e",
+            "product": "jean-flare-patchwork-leopardo"
           }
         }
       },
-      "block_order": ["toma-a", "toma-b", "toma-c"],
+      "block_order": [
+        "acido",
+        "carmin",
+        "indigo",
+        "leopardo"
+      ],
       "settings": {
-        "cyanotype": true,
+        "eyebrow": "(ELIGE TU COLOR)",
+        "heading": "CADA PIEZA TIENE SU COLOR",
+        "text": "<p>Toca un color y la tienda se pinta con él.</p>",
+        "paint_store": true,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "campana": {
+      "type": "video-campaign",
+      "settings": {
+        "overlay": 30,
+        "height": "screen",
+        "eyebrow": "(CAMPAÑA)",
+        "heading": "EN MOVIMIENTO",
+        "button_label": "VER LAS PIEZAS",
+        "button_link": "shopify://collections/all",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "anatomia": {
+      "type": "hotspots",
+      "blocks": {
+        "llama": {
+          "type": "spot",
+          "settings": {
+            "title": "Llama de serpiente",
+            "text": "<p>Aplicación roja con textura de piel de serpiente que sube por la pierna.</p>",
+            "x": 25,
+            "y": 54
+          }
+        },
+        "mariposas": {
+          "type": "spot",
+          "settings": {
+            "title": "Mariposas bordadas",
+            "text": "<p>Tres parches de mariposa cruzan la otra pierna.</p>",
+            "x": 66,
+            "y": 44
+          }
+        },
+        "cargo": {
+          "type": "spot",
+          "settings": {
+            "title": "Cargo camuflado",
+            "text": "<p>Bolsillo cargo en camuflado con un dije de calavera.</p>",
+            "x": 80,
+            "y": 32
+          }
+        },
+        "cadenas": {
+          "type": "spot",
+          "settings": {
+            "title": "Cadenas",
+            "text": "<p>Cadenas plateadas que cuelgan del bolsillo delantero.</p>",
+            "x": 24,
+            "y": 20
+          }
+        },
+        "cordon": {
+          "type": "spot",
+          "settings": {
+            "title": "Cordón cruzado",
+            "text": "<p>Los costados se amarran con cordón cruzado.</p>",
+            "x": 92,
+            "y": 62
+          }
+        },
+        "bota": {
+          "type": "spot",
+          "settings": {
+            "title": "Bota de leopardo",
+            "text": "<p>Pelo sintético estampado leopardo y borde deshilachado que crece con el uso.</p>",
+            "x": 22,
+            "y": 85
+          }
+        }
+      },
+      "block_order": [
+        "llama",
+        "mariposas",
+        "cargo",
+        "cadenas",
+        "cordon",
+        "bota"
+      ],
+      "settings": {
+        "product": "jean-flare-patchwork-leopardo",
+        "eyebrow": "(ANATOMÍA DE UNA PIEZA)",
+        "heading": "",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "archivo": {
+      "type": "index-list",
+      "settings": {
+        "eyebrow": "(ARCHIVO)",
+        "heading": "TODAS LAS PIEZAS",
+        "source": "products",
+        "collection": "all",
+        "limit": 12,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "lookbook": {
+      "type": "editorial-spread",
+      "blocks": {
+        "foto-1": {
+          "type": "frame",
+          "settings": {
+            "caption": ""
+          }
+        },
+        "foto-2": {
+          "type": "frame",
+          "settings": {
+            "caption": ""
+          }
+        },
+        "foto-3": {
+          "type": "frame",
+          "settings": {
+            "caption": ""
+          }
+        }
+      },
+      "block_order": [
+        "foto-1",
+        "foto-2",
+        "foto-3"
+      ],
+      "settings": {
+        "label": "(LOOKBOOK)",
+        "heading": "EN LA CALLE",
         "quote": "La prenda se siente antes de verse.",
-        "left_label": "DROP 05 — PLATA",
-        "right_label": "MEDELLÍN, CO.",
-        "ratio": "3 / 4",
-        "show_paper": true,
-        "reverse": false,
-        "paper_style": "metal",
-        "paper_label": "(HOJA DE CONTACTO)",
-        "paper_text": "<p>Drop 05 — Plata. Fotografiado de noche en Medellín.</p>",
-        "paper_folio": "0060",
         "color_scheme": "scheme-1"
       }
     },
     "manifiesto": {
       "type": "manifesto",
       "settings": {
-        "show_logo": true,
-        "label": "(Manifiesto)",
-        "quote": "<p>Hacemos ropa para repetir.</p><p>Prendas pesadas, de corte amplio y aristas limpias, que se ven igual de bien el lunes que el sábado.</p><p>Diseñamos pocas piezas, las numeramos y las soltamos por drops.</p><p>La plata es nuestra piel; el azul, la luz que se cuela de noche.</p><p>Hecho en Medellín, para quien se viste con intención.</p>",
-        "signature": "HECHO PARA REPETIR · MED/COL",
+        "label": "(MANIFIESTO)",
+        "quote": "<p>Cada pieza tiene su historia: denim intervenido, parches, tintes ácidos y prendas de archivo.</p><p>La mayoría existe <strong>una sola vez</strong>. Si la ves y es tu talla, <strong>es tuya</strong>.</p>",
+        "scroll_fill": true,
+        "signature": "HIGHT — MED/COL",
         "button_label": "",
-        "background": "scheme",
-        "color_scheme": "scheme-2"
+        "button_link": "",
+        "show_logo": true,
+        "color_scheme": "scheme-1"
       }
     }
   },
-  "order": ["hero", "catalogo", "spread", "manifiesto"]
+  "order": [
+    "hero",
+    "cinta",
+    "disponibles",
+    "colores",
+    "campana",
+    "anatomia",
+    "archivo",
+    "lookbook",
+    "manifiesto"
+  ]
 }

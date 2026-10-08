@@ -1,50 +1,80 @@
 <div class="hi-container hi-page">
   <header class="hi-collection-head">
-    <p class="t-label t-muted">({{ collections.size }})</p>
-    <h1 class="t-display-l">{{ section.settings.heading | default: page_title | escape }}</h1>
+    <p class="t-label">({{ collections.size }})</p>
+    <h1 class="t-display-xxl hi-collection-title" data-reveal>{{ section.settings.heading | default: page_title | escape }}</h1>
   </header>
 
   {%- if section.settings.layout == 'grid' -%}
-    <ul class="hi-grid-products">
+    <ul class="hi-grid-products" role="list">
       {%- for list_collection in collections -%}
+        {%- assign list_ratio = list_collection.featured_image.aspect_ratio | default: 0.8 -%}
         <li>
-          <a href="{{ list_collection.url }}" class="hi-card">
-            <div class="hi-card-media">
-              {%- if list_collection.featured_image -%}
-                {{
-                  list_collection.featured_image
-                  | image_url: width: 900
-                  | image_tag:
-                    widths: '360, 540, 720, 900',
-                    sizes: '(min-width: 1024px) 25vw, 50vw',
-                    loading: 'lazy',
-                    alt: list_collection.title
-                }}
-              {%- else -%}
-                <span class="hi-card-ph" aria-hidden="true">{{ 'products.photo_placeholder' | t }}</span>
-              {%- endif -%}
-            </div>
-            <div class="hi-card-body">
-              <h2 class="hi-card-name">{{ list_collection.title | escape }}</h2>
-              <span class="hi-card-meta">{{ 'collections.products_count' | t: count: list_collection.products_count }}</span>
-            </div>
-          </a>
+          <article class="hi-card" style="--ar: {{ list_ratio }};">
+            <a href="{{ list_collection.url }}" class="hi-card-link" data-cursor="{{ 'general.cursor_view' | t }}">
+              <div class="hi-card-media hi-print">
+                <div class="hi-card-img">
+                  {%- if list_collection.featured_image -%}
+                    {{
+                      list_collection.featured_image
+                      | image_url: width: 900
+                      | image_tag:
+                        widths: '360, 540, 720, 900',
+                        sizes: '(min-width: 990px) 25vw, 50vw',
+                        loading: 'lazy',
+                        alt: list_collection.title
+                    }}
+                  {%- else -%}
+                    <span class="hi-media-ph" aria-hidden="true">{{ 'products.photo_placeholder' | t }}</span>
+                  {%- endif -%}
+                </div>
+              </div>
+              <div class="hi-card-body">
+                <h2 class="hi-card-name">{{ list_collection.title | escape }}</h2>
+                <div class="hi-card-row">
+                  <span class="hi-card-meta">{{ 'collections.products_count' | t: count: list_collection.products_count }}</span>
+                </div>
+              </div>
+            </a>
+          </article>
         </li>
       {%- endfor -%}
     </ul>
   {%- else -%}
-    <ol class="hi-index">
-      {%- for list_collection in collections -%}
-        <li>
-          <a href="{{ list_collection.url }}" class="hi-index-row">
-            <span class="hi-index-n">(N{{ forloop.index }})</span>
-            <span class="hi-index-title">{{ list_collection.title | escape }}</span>
-            <span class="hi-index-cat">{{ 'collections.products_count' | t: count: list_collection.products_count }}</span>
-            <span class="hi-index-year">{{ list_collection.published_at | date: '%Y' }}</span>
-          </a>
-        </li>
-      {%- endfor -%}
-    </ol>
+    <hi-reveal-list class="hi-archive">
+      <ol class="hi-archive-list" role="list">
+        {%- for list_collection in collections -%}
+          {%- liquid
+            assign row_number = forloop.index
+            if row_number < 10
+              assign row_number = '0' | append: row_number
+            endif
+            assign row_image = list_collection.featured_image
+          -%}
+          <li class="hi-archive-row" style="--i: {{ forloop.index0 }};">
+            <a
+              href="{{ list_collection.url }}"
+              class="hi-archive-link"
+              {% if row_image %}
+                data-reveal-src="{{ row_image | image_url: width: 700 }}"
+              {% endif %}
+              data-cursor="{{ 'general.cursor_view' | t }}"
+            >
+              <span class="hi-archive-n" aria-hidden="true">{{ row_number }}</span>
+              <span class="hi-archive-thumb" aria-hidden="true">
+                {%- if row_image -%}
+                  {{ row_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '', widths: '100, 200', sizes: '64px' }}
+                {%- endif -%}
+              </span>
+              <span class="hi-archive-title">{{ list_collection.title | escape }}</span>
+              <span class="hi-archive-meta">{{ 'collections.products_count' | t: count: list_collection.products_count }}</span>
+              <span class="hi-archive-price t-label">{{ list_collection.published_at | date: '%Y' }}</span>
+              {% render 'icon', name: 'arrow_forward', size: 24, class: 'hi-archive-arrow' %}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ol>
+      <div class="hi-archive-float hi-print" aria-hidden="true" data-reveal-float></div>
+    </hi-reveal-list>
   {%- endif -%}
 </div>
 
@@ -58,7 +88,7 @@
       "type": "text",
       "id": "heading",
       "label": "Titular",
-      "default": "Archivo"
+      "default": "ARCHIVO"
     },
     {
       "type": "select",
@@ -67,7 +97,7 @@
       "options": [
         {
           "value": "index",
-          "label": "Índice numerado (archivo)"
+          "label": "Lista con foto que sigue al cursor"
         },
         {
           "value": "grid",

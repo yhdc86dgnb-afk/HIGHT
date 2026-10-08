@@ -1,152 +1,181 @@
 {%- liquid
-  assign header_metal = false
-  if section.settings.metal == 'all'
-    assign header_metal = true
-  elsif section.settings.metal == 'home' and request.page_type == 'index'
-    assign header_metal = true
-  endif
   assign main_menu = section.settings.menu
+  assign secondary_menu = section.settings.secondary_menu
+  assign menu_products = collections.all.products
+  assign logo_height = settings.logo_height
+  assign logo_width = logo_height | times: 977 | divided_by: 672
 -%}
 
-<header class="hi-header{% if header_metal %} hi-metal-soft{% endif %}">
+<header class="hi-header" data-header>
   <div class="hi-header-start">
     <button
       type="button"
-      class="hi-iconbtn hi-header-menu"
-      aria-label="{{ 'accessibility.open_menu' | t }}"
+      class="hi-header-btn"
       aria-haspopup="dialog"
       aria-controls="MenuDrawer"
       data-open-dialog="MenuDrawer"
     >
-      {% render 'icon', name: 'menu' %}
+      {% render 'icon', name: 'menu', size: 20 %}
+      <span>{{ 'accessibility.menu_button' | t }}</span>
     </button>
-
-    {%- if main_menu.links.size > 0 -%}
-      <nav class="hi-header-nav" aria-label="{{ 'accessibility.main_nav' | t }}">
-        <ul>
-          {%- for link in main_menu.links limit: 5 -%}
-            <li>
-              {%- if link.links.size > 0 -%}
-                <details class="hi-nav-details" data-nav-details>
-                  <summary>
-                    {{- link.title | escape }}
-                    {% render 'icon', name: 'expand_more', size: 16 -%}
-                  </summary>
-                  <ul class="hi-nav-dropdown">
-                    {%- for child_link in link.links -%}
-                      <li>
-                        <a
-                          href="{{ child_link.url }}"
-                          {% if child_link.current %}
-                            aria-current="page"
-                          {% endif %}
-                        >
-                          {{- child_link.title | escape -}}
-                        </a>
-                      </li>
-                    {%- endfor -%}
-                  </ul>
-                </details>
-              {%- else -%}
-                <a
-                  href="{{ link.url }}"
-                  {% if link.current %}
-                    aria-current="page"
-                  {% endif %}
-                >
-                  {{- link.title | escape -}}
-                </a>
-              {%- endif -%}
-            </li>
-          {%- endfor -%}
-        </ul>
-      </nav>
-    {%- endif -%}
   </div>
 
   <a href="{{ routes.root_url }}" class="hi-header-logo" aria-label="{{ 'accessibility.home' | t: shop: shop.name }}">
     {%- if settings.logo != blank -%}
-      {%- assign logo_width = settings.logo_height | times: settings.logo.aspect_ratio | round -%}
+      {%- assign custom_logo_width = logo_height | times: settings.logo.aspect_ratio | round -%}
       {{
         settings.logo
         | image_url: width: 600
-        | image_tag: height: settings.logo_height, width: logo_width, alt: shop.name, loading: 'eager'
+        | image_tag: height: logo_height, width: custom_logo_width, alt: shop.name, loading: 'eager'
       }}
     {%- else -%}
-      {% render 'logo-wordmark', height: settings.logo_height %}
+      <span class="hi-logo-img" style="--logo-h: {{ logo_height }}px; --logo-w: {{ logo_width }}px;" aria-hidden="true"></span>
     {%- endif -%}
   </a>
 
   <div class="hi-header-end">
     <a
       href="{{ routes.search_url }}"
-      class="hi-iconbtn"
+      class="hi-header-btn"
       aria-label="{{ 'accessibility.search' | t }}"
       aria-haspopup="dialog"
       data-open-dialog="SearchDialog"
     >
-      {% render 'icon', name: 'search' %}
+      {% render 'icon', name: 'search', size: 20 %}
+      <span class="hi-hide-sm" aria-hidden="true">{{ 'accessibility.search_button' | t }}</span>
     </a>
     {%- if shop.customer_accounts_enabled -%}
-      <a href="{{ routes.account_url }}" class="hi-iconbtn hi-hide-sm" aria-label="{{ 'accessibility.account' | t }}">
-        {% render 'icon', name: 'person' %}
+      <a href="{{ routes.account_url }}" class="hi-header-btn hi-hide-sm" aria-label="{{ 'accessibility.account' | t }}">
+        {% render 'icon', name: 'person', size: 20 %}
       </a>
     {%- endif -%}
     <a
       href="{{ routes.cart_url }}"
-      class="hi-iconbtn"
+      class="hi-header-btn hi-header-cart"
       aria-label="{{ 'accessibility.cart_count' | t: count: cart.item_count }}"
       data-cart-toggle
     >
-      {% render 'icon', name: 'shopping_bag' %}
-      <span class="hi-iconbtn-badge" aria-hidden="true" data-cart-count>({{ cart.item_count }})</span>
+      {% render 'icon', name: 'shopping_bag', size: 20 %}
+      <span class="hi-hide-sm" aria-hidden="true">{{ 'accessibility.cart_button' | t }}</span>
+      <span class="hi-header-count" aria-hidden="true" data-cart-count>{{ cart.item_count }}</span>
     </a>
   </div>
 </header>
 
-<dialog id="MenuDrawer" class="hi-dialog hi-drawer hi-drawer--left" aria-label="{{ 'accessibility.menu' | t }}">
-  <div class="hi-drawer-head">
-    <p class="hi-drawer-title">{{ 'accessibility.menu' | t }}</p>
-    <button type="button" class="hi-iconbtn" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>
-      {% render 'icon', name: 'close' %}
+<dialog id="MenuDrawer" class="hi-dialog hi-menu" aria-label="{{ 'accessibility.menu' | t }}">
+  <div class="hi-menu-top">
+    <a href="{{ routes.root_url }}" class="hi-header-logo" aria-label="{{ 'accessibility.home' | t: shop: shop.name }}">
+      <span class="hi-logo-img" style="--logo-h: {{ logo_height }}px; --logo-w: {{ logo_width }}px;" aria-hidden="true"></span>
+    </a>
+    <button type="button" class="hi-header-btn" data-close-dialog>
+      <span>{{ 'accessibility.close_button' | t }}</span>
+      {% render 'icon', name: 'close', size: 20 %}
     </button>
   </div>
-  <nav class="hi-drawer-body" aria-label="{{ 'accessibility.main_nav' | t }}">
-    <ul class="hi-menu-list">
-      {%- for link in main_menu.links -%}
-        <li>
-          {%- if link.links.size > 0 -%}
-            <details>
-              <summary>
-                {{- link.title | escape }}
-                {% render 'icon', name: 'add', size: 16 -%}
-              </summary>
-              <ul class="hi-menu-sub">
-                <li>
-                  <a href="{{ link.url }}">{{ 'general.view_all' | t }}</a>
-                </li>
+
+  <div class="hi-menu-body">
+    <nav class="hi-menu-nav" aria-label="{{ 'accessibility.main_nav' | t }}">
+      <ol class="hi-menu-list" role="list">
+        {%- for link in main_menu.links -%}
+          {%- liquid
+            assign link_number = forloop.index
+            if link_number < 10
+              assign link_number = '0' | append: link_number
+            endif
+            assign link_image = nil
+            case link.type
+              when 'collection_link'
+                assign link_image = link.object.featured_image
+              when 'product_link'
+                assign link_image = link.object.featured_media.preview_image
+            endcase
+            if link_image == nil and section.settings.menu_images
+              assign link_product = menu_products[forloop.index0]
+              assign link_image = link_product.featured_media.preview_image
+            endif
+          -%}
+          <li class="hi-menu-item" style="--i: {{ forloop.index0 }};">
+            <a
+              href="{{ link.url }}"
+              class="hi-menu-link"
+              {% if link.current %}
+                aria-current="page"
+              {% endif %}
+              {% if link_image != nil %}
+                data-menu-preview="MenuPreview-{{ forloop.index }}"
+              {% endif %}
+            >
+              <span class="hi-menu-n" aria-hidden="true">{{ link_number }}</span>
+              <span class="hi-menu-title">{{ link.title | escape }}</span>
+            </a>
+            {%- if link.links.size > 0 -%}
+              <ul class="hi-menu-sub" role="list">
                 {%- for child_link in link.links -%}
                   <li>
-                    <a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
+                    <a
+                      href="{{ child_link.url }}"
+                      {% if child_link.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{- child_link.title | escape -}}
+                    </a>
                   </li>
                 {%- endfor -%}
               </ul>
-            </details>
-          {%- else -%}
-            <a href="{{ link.url }}">{{ link.title | escape }}</a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ol>
+    </nav>
+
+    {%- if section.settings.menu_images -%}
+      <div class="hi-menu-previews" aria-hidden="true">
+        {%- for link in main_menu.links -%}
+          {%- liquid
+            assign link_image = nil
+            case link.type
+              when 'collection_link'
+                assign link_image = link.object.featured_image
+              when 'product_link'
+                assign link_image = link.object.featured_media.preview_image
+            endcase
+            if link_image == nil
+              assign link_product = menu_products[forloop.index0]
+              assign link_image = link_product.featured_media.preview_image
+            endif
+          -%}
+          {%- if link_image != nil -%}
+            <figure class="hi-menu-preview hi-print" id="MenuPreview-{{ forloop.index }}" style="--r: {% cycle '-4deg', '3deg', '-2deg', '5deg' %};">
+              {{
+                link_image
+                | image_url: width: 900
+                | image_tag: widths: '450, 600, 900', sizes: '30vw', loading: 'lazy', alt: ''
+              }}
+            </figure>
           {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="hi-menu-foot">
+    <ul class="hi-menu-secondary" role="list">
+      {%- for link in secondary_menu.links -%}
+        <li>
+          <a href="{{ link.url }}">{{ link.title | escape }}</a>
         </li>
       {%- endfor -%}
+      {%- if shop.customer_accounts_enabled -%}
+        <li>
+          <a href="{{ routes.account_url }}">{{ 'accessibility.account' | t }}</a>
+        </li>
+      {%- endif -%}
+      {% render 'social-links', list: true %}
     </ul>
-  </nav>
-  <div class="hi-menu-foot">
-    {%- if shop.customer_accounts_enabled -%}
-      <a href="{{ routes.account_url }}">
-        {%- render 'icon', name: 'person', size: 20 %}
-        {{ 'accessibility.account' | t -}}
-      </a>
+    {%- if section.settings.menu_note != blank -%}
+      <p class="t-label t-muted">{{ section.settings.menu_note | escape }}</p>
     {%- endif -%}
-    {% render 'social-links' %}
   </div>
 </dialog>
 
@@ -156,7 +185,7 @@
     data-section-id="predictive-search"
   >
     <form action="{{ routes.search_url }}" method="get" role="search" class="hi-search-bar">
-      {% render 'icon', name: 'search' %}
+      {% render 'icon', name: 'search', size: 32 %}
       <label class="visually-hidden" for="HeaderSearchInput">{{ 'search.title' | t }}</label>
       <input
         id="HeaderSearchInput"
@@ -171,8 +200,9 @@
         data-predictive-input
       >
       <input type="hidden" name="options[prefix]" value="last">
-      <button type="button" class="hi-iconbtn" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>
-        {% render 'icon', name: 'close' %}
+      <button type="button" class="hi-header-btn" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>
+        <span class="hi-hide-sm" aria-hidden="true">{{ 'accessibility.close_button' | t }}</span>
+        {% render 'icon', name: 'close', size: 20 %}
       </button>
     </form>
     <div class="hi-predictive" data-predictive-results></div>
@@ -192,28 +222,27 @@
       "id": "menu",
       "label": "Menú principal",
       "default": "main-menu",
-      "info": "Máximo 5 enlaces en escritorio. El primero es el drop vigente. Orden sugerido: Drop, Tienda, Archivo, Info."
+      "info": "Se abre a pantalla completa con letras gigantes. Funciona mejor con 3 a 6 enlaces."
     },
     {
-      "type": "select",
-      "id": "metal",
-      "label": "Fondo de plata cepillada",
-      "options": [
-        {
-          "value": "home",
-          "label": "Solo en la home"
-        },
-        {
-          "value": "all",
-          "label": "En todas las páginas"
-        },
-        {
-          "value": "none",
-          "label": "Nunca"
-        }
-      ],
-      "default": "home",
-      "info": "El design system pide metal en home y campaña; fondo normal en catálogo, ficha y checkout."
+      "type": "link_list",
+      "id": "secondary_menu",
+      "label": "Menú secundario",
+      "default": "footer",
+      "info": "Enlaces pequeños al pie del menú: envíos, cambios, contacto."
+    },
+    {
+      "type": "checkbox",
+      "id": "menu_images",
+      "label": "Mostrar una foto al pasar por cada enlace",
+      "info": "Usa la foto de la colección o del producto enlazado; si no tiene, una prenda de la tienda.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "menu_note",
+      "label": "Nota al pie del menú",
+      "default": "HIGHT — MED/COL"
     }
   ]
 }

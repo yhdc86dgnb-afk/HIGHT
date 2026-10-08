@@ -3,7 +3,24 @@
     "main": {
       "type": "main-404",
       "settings": {}
+    },
+    "disponibles": {
+      "type": "featured-collection",
+      "settings": {
+        "layout": "rail",
+        "eyebrow": "(DISPONIBLES)",
+        "heading": "LO QUE SÍ HAY",
+        "text": "",
+        "collection": "all",
+        "products_to_show": 8,
+        "columns_desktop": "4",
+        "view_all_label": "VER TODO",
+        "color_scheme": "scheme-1"
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main",
+    "disponibles"
+  ]
 }

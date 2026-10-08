@@ -1,29 +1,28 @@
 {%- liquid
-  assign titular_bg = 'hi-scheme color-' | append: section.settings.color_scheme
-  if section.settings.background == 'metal'
-    assign titular_bg = 'hi-metal'
-  endif
-
-  assign titular_class = 'hi-espina hi-titular hi-titular-' | append: section.settings.size
-  if section.settings.hueso
-    assign titular_class = 'hi-hueso hi-titular hi-titular-xl'
-  endif
-  if section.settings.glow
-    assign titular_class = titular_class | append: ' hi-glow'
-  endif
+  assign titular_words = section.settings.text | split: ' '
 -%}
 
-<section class="{{ titular_bg }}">
-  <div class="hi-container hi-titular-section{% if section.settings.align == 'center' %} hi-titular-section--center{% endif %}">
+<section class="hi-section hi-titular color-{{ section.settings.color_scheme }} hi-titular--{{ section.settings.align }}">
+  <div class="hi-container hi-titular-inner">
     {%- if section.settings.label != blank -%}
-      <p class="t-label">{{ section.settings.label | escape }}</p>
+      <p class="t-label" data-reveal>{{ section.settings.label | escape }}</p>
     {%- endif -%}
-    <h2 class="{{ titular_class }}">{{ section.settings.text | escape }}</h2>
+    <h2 class="hi-titular-text hi-titular-text--{{ section.settings.size }}" data-reveal>
+      {%- for word in titular_words -%}
+        {%- assign word_style = 'fill' -%}
+        {%- assign word_mod = forloop.index0 | modulo: 2 -%}
+        {%- if section.settings.alternate and word_mod == 1 -%}
+          {%- assign word_style = 'outline' -%}
+        {%- endif -%}
+        <span class="hi-titular-word hi-titular-word--{{ word_style }}">{{ word | escape }}</span>
+        {%- unless forloop.last %} {% endunless -%}
+      {%- endfor -%}
+    </h2>
     {%- if section.settings.body != blank -%}
-      <div class="t-body-l t-measure">{{ section.settings.body }}</div>
+      <div class="t-body-l t-measure" data-reveal>{{ section.settings.body }}</div>
     {%- endif -%}
     {%- if section.settings.button_label != blank -%}
-      <div>
+      <div data-reveal>
         <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="hi-btn hi-btn-lg hi-btn-{{ section.settings.button_style }}">
           {{- section.settings.button_label | escape -}}
         </a>
@@ -34,25 +33,27 @@
 
 {% schema %}
 {
-  "name": "Titular Espina",
+  "name": "Titular gigante",
   "tag": "section",
-  "class": "hi-titular-wrapper",
+  "class": "hi-titular-section",
   "settings": [
-    {
-      "type": "paragraph",
-      "content": "Hight Espina, la gótica dibujada a partir del logo. Solo mayúsculas, máximo 3 palabras, una por vista. Nunca en la interfaz de compra."
-    },
     {
       "type": "text",
       "id": "label",
       "label": "Marquilla",
-      "default": "(N5)"
+      "default": "(HIGHT)"
     },
     {
       "type": "text",
       "id": "text",
       "label": "Titular",
-      "default": "PLATA NOCHE"
+      "default": "SI ES TU TALLA ES TUYA"
+    },
+    {
+      "type": "checkbox",
+      "id": "alternate",
+      "label": "Alternar palabras rellenas y en contorno",
+      "default": true
     },
     {
       "type": "select",
@@ -61,32 +62,18 @@
       "options": [
         {
           "value": "xl",
-          "label": "XL · 144px (campaña, portada)"
+          "label": "Gigante"
         },
         {
           "value": "l",
-          "label": "L · 88px (separadores)"
+          "label": "Grande"
         },
         {
           "value": "m",
-          "label": "M · 48px (mínimo en pantalla)"
+          "label": "Mediano"
         }
       ],
       "default": "xl"
-    },
-    {
-      "type": "checkbox",
-      "id": "hueso",
-      "label": "Versión Hueso (poros como el logo)",
-      "default": false,
-      "info": "Siempre a 160px, sobre plata o negro liso."
-    },
-    {
-      "type": "checkbox",
-      "id": "glow",
-      "label": "Halo glow-aura",
-      "default": false,
-      "info": "Solo en campaña nocturna sobre el esquema Aura."
     },
     {
       "type": "select",
@@ -102,7 +89,7 @@
           "label": "Centro"
         }
       ],
-      "default": "center"
+      "default": "left"
     },
     {
       "type": "richtext",
@@ -126,49 +113,25 @@
       "options": [
         {
           "value": "primary",
-          "label": "Primario (ink)"
-        },
-        {
-          "value": "metal",
-          "label": "Metal"
-        },
-        {
-          "value": "drop",
-          "label": "Drop (aura)"
+          "label": "Relleno"
         },
         {
           "value": "secondary",
-          "label": "Secundario"
+          "label": "Contorno"
         }
       ],
       "default": "primary"
     },
     {
-      "type": "select",
-      "id": "background",
-      "label": "Fondo",
-      "options": [
-        {
-          "value": "metal",
-          "label": "Plata cepillada"
-        },
-        {
-          "value": "scheme",
-          "label": "Esquema de color"
-        }
-      ],
-      "default": "scheme"
-    },
-    {
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "Esquema de color",
-      "default": "scheme-2"
+      "default": "scheme-1"
     }
   ],
   "presets": [
     {
-      "name": "Titular Espina"
+      "name": "Titular gigante"
     }
   ]
 }

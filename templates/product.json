@@ -29,7 +29,7 @@
           "type": "variant_picker",
           "settings": {
             "show_size_guide": true,
-            "fit_note": "Si dudas entre dos tallas, revisa la guía: las medidas son de la prenda en plano."
+            "fit_note": "Si dudas entre dos tallas, escríbenos y te mandamos las medidas de la prenda."
           }
         },
         "comprar": {
@@ -50,10 +50,10 @@
         "composicion": {
           "type": "collapsible",
           "settings": {
-            "heading": "Composición y cuidado",
-            "content": "<p>Lávala al revés en agua fría y te va a durar años.</p>",
-            "show_care": true,
-            "open": true
+            "heading": "Cuidado",
+            "content": "<p>Cada pieza trae sus indicaciones de cuidado en la descripción. Si tienes dudas, escríbenos antes de lavarla.</p>",
+            "show_care": false,
+            "open": false
           }
         },
         "corte": {
@@ -84,18 +84,21 @@
         "comprar",
         "unidades",
         "descripcion",
-        "composicion",
         "corte",
-        "envios"
+        "envios",
+        "composicion"
       ],
-      "settings": {}
+      "settings": {
+        "show_sticker": true,
+        "sticky_bar": true
+      }
     },
     "recomendados": {
       "type": "product-recommendations",
       "settings": {
-        "eyebrow": "(Del mismo drop)",
-        "heading": "Completa el look",
-        "products_to_show": 4,
+        "eyebrow": "(TAMBIÉN TE PUEDE GUSTAR)",
+        "heading": "COMPLETA EL LOOK",
+        "products_to_show": 6,
         "color_scheme": "scheme-1"
       }
     }

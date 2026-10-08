@@ -1,61 +1,159 @@
-<section class="hi-section hi-scheme color-{{ section.settings.color_scheme }}">
-  <div class="hi-container">
-    {%- if section.settings.heading != blank -%}
-      <h2 class="hi-index-head">({{ section.settings.heading | escape }})</h2>
-    {%- endif -%}
-    <ol class="hi-index">
-      {%- if section.settings.source == 'collections' and section.settings.collections != blank -%}
-        {%- for index_collection in section.settings.collections -%}
-          <li>
-            <a href="{{ index_collection.url }}" class="hi-index-row">
-              <span class="hi-index-n">(N{{ forloop.index }})</span>
-              <span class="hi-index-title">{{ index_collection.title | escape }}</span>
-              <span class="hi-index-cat">{{ 'collections.products_count' | t: count: index_collection.products_count }}</span>
-              <span class="hi-index-year">{{ index_collection.published_at | date: '%Y' }}</span>
-            </a>
-          </li>
-        {%- endfor -%}
-      {%- else -%}
-        {%- for block in section.blocks -%}
-          <li {{ block.shopify_attributes }}>
-            {%- if block.settings.link != blank -%}
-              <a href="{{ block.settings.link }}" class="hi-index-row">
-                <span class="hi-index-n">(N{{ forloop.index }})</span>
-                <span class="hi-index-title">{{ block.settings.title | escape }}</span>
-                <span class="hi-index-cat">{{ block.settings.category | escape }}</span>
-                <span class="hi-index-year">{{ block.settings.year | escape }}</span>
-              </a>
-            {%- else -%}
-              <div class="hi-index-row">
-                <span class="hi-index-n">(N{{ forloop.index }})</span>
-                <span class="hi-index-title">{{ block.settings.title | escape }}</span>
-                <span class="hi-index-cat">{{ block.settings.category | escape }}</span>
-                <span class="hi-index-year">{{ block.settings.year | escape }}</span>
-              </div>
-            {%- endif -%}
-          </li>
-        {%- endfor -%}
+{%- liquid
+  assign list_collection = section.settings.collection
+  if section.settings.source == 'products' and list_collection == blank
+    assign list_collection = collections.all
+  endif
+  assign list_limit = section.settings.limit
+-%}
+
+<section class="hi-section hi-archive color-{{ section.settings.color_scheme }}">
+  <hi-reveal-list class="hi-container hi-archive-inner">
+    <div class="hi-archive-head" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="t-label">{{ section.settings.eyebrow | escape }}</p>
       {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="t-display-l">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+    </div>
+
+    <ol class="hi-archive-list" role="list">
+      {%- case section.settings.source -%}
+        {%- when 'products' -%}
+          {%- for product in list_collection.products limit: list_limit -%}
+            {%- liquid
+              assign row_number = forloop.index
+              if row_number < 10
+                assign row_number = '0' | append: row_number
+              endif
+              assign row_image = product.featured_media.preview_image
+              assign row_meta = product.metafields.custom.corte_material.value | default: product.type
+            -%}
+            <li class="hi-archive-row{% unless product.available %} is-sold{% endunless %}" style="--i: {{ forloop.index0 }};">
+              <a
+                href="{{ product.url }}"
+                class="hi-archive-link"
+                {% if row_image %}
+                  data-reveal-src="{{ row_image | image_url: width: 700 }}"
+                {% endif %}
+                data-cursor="{{ 'general.cursor_view' | t }}"
+              >
+                <span class="hi-archive-n" aria-hidden="true">{{ row_number }}</span>
+                <span class="hi-archive-thumb" aria-hidden="true">
+                  {%- if row_image -%}
+                    {{ row_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '', widths: '100, 200', sizes: '64px' }}
+                  {%- endif -%}
+                </span>
+                <span class="hi-archive-title">{{ product.title | escape }}</span>
+                <span class="hi-archive-meta">{{ row_meta | escape }}</span>
+                <span class="hi-archive-price">
+                  {%- if product.available -%}
+                    {% render 'price', product: product, show_from: true %}
+                  {%- else -%}
+                    <span class="hi-tag hi-tag-ink">{{ 'products.sold_out' | t }}</span>
+                  {%- endif -%}
+                </span>
+                {% render 'icon', name: 'arrow_forward', size: 24, class: 'hi-archive-arrow' %}
+              </a>
+            </li>
+          {%- endfor -%}
+        {%- when 'collections' -%}
+          {%- for row_collection in section.settings.collections -%}
+            {%- liquid
+              assign row_number = forloop.index
+              if row_number < 10
+                assign row_number = '0' | append: row_number
+              endif
+              assign row_image = row_collection.featured_image
+            -%}
+            <li class="hi-archive-row" style="--i: {{ forloop.index0 }};">
+              <a
+                href="{{ row_collection.url }}"
+                class="hi-archive-link"
+                {% if row_image %}
+                  data-reveal-src="{{ row_image | image_url: width: 700 }}"
+                {% endif %}
+                data-cursor="{{ 'general.cursor_view' | t }}"
+              >
+                <span class="hi-archive-n" aria-hidden="true">{{ row_number }}</span>
+                <span class="hi-archive-thumb" aria-hidden="true">
+                  {%- if row_image -%}
+                    {{ row_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '', widths: '100, 200', sizes: '64px' }}
+                  {%- endif -%}
+                </span>
+                <span class="hi-archive-title">{{ row_collection.title | escape }}</span>
+                <span class="hi-archive-meta">{{ 'collections.products_count' | t: count: row_collection.products_count }}</span>
+                <span class="hi-archive-price t-label">{{ row_collection.published_at | date: '%Y' }}</span>
+                {% render 'icon', name: 'arrow_forward', size: 24, class: 'hi-archive-arrow' %}
+              </a>
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign row_number = forloop.index
+              if row_number < 10
+                assign row_number = '0' | append: row_number
+              endif
+              assign row_image = block.settings.image
+              assign row_tag = 'div'
+              if block.settings.link != blank
+                assign row_tag = 'a'
+              endif
+            -%}
+            <li class="hi-archive-row" style="--i: {{ forloop.index0 }};" {{ block.shopify_attributes }}>
+              <{{ row_tag }}
+                class="hi-archive-link"
+                {% if row_tag == 'a' %}
+                  href="{{ block.settings.link }}" data-cursor="{{ 'general.cursor_view' | t }}"
+                {% endif %}
+                {% if row_image %}
+                  data-reveal-src="{{ row_image | image_url: width: 700 }}"
+                {% endif %}
+              >
+                <span class="hi-archive-n" aria-hidden="true">{{ row_number }}</span>
+                <span class="hi-archive-thumb" aria-hidden="true">
+                  {%- if row_image -%}
+                    {{ row_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '', widths: '100, 200', sizes: '64px' }}
+                  {%- endif -%}
+                </span>
+                <span class="hi-archive-title">{{ block.settings.title | escape }}</span>
+                <span class="hi-archive-meta">{{ block.settings.category | escape }}</span>
+                <span class="hi-archive-price t-label">{{ block.settings.year | escape }}</span>
+                {%- if row_tag == 'a' -%}
+                  {% render 'icon', name: 'arrow_forward', size: 24, class: 'hi-archive-arrow' %}
+                {%- endif -%}
+              </{{ row_tag }}>
+            </li>
+          {%- endfor -%}
+      {%- endcase -%}
     </ol>
-  </div>
+
+    <div class="hi-archive-float hi-print" aria-hidden="true" data-reveal-float></div>
+  </hi-reveal-list>
 </section>
 
 {% schema %}
 {
-  "name": "Índice de drops",
+  "name": "Archivo de piezas",
   "tag": "section",
-  "class": "hi-index-section",
+  "class": "hi-archive-section",
   "settings": [
     {
       "type": "paragraph",
-      "content": "Lista numerada al estilo de un archivo: (N1), título en serif itálica, categoría y año. Para Archivo, Info o un lookbook; no para el catálogo."
+      "content": "Lista con nombres gigantes. En computador, la foto de cada pieza sigue al cursor; en el teléfono se ve una miniatura."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Marquilla",
+      "default": "(ARCHIVO)"
     },
     {
       "type": "text",
       "id": "heading",
-      "label": "Encabezado",
-      "default": "Trabajo seleccionado",
-      "info": "Se muestra entre paréntesis."
+      "label": "Titular",
+      "default": "TODAS LAS PIEZAS"
     },
     {
       "type": "select",
@@ -63,15 +161,35 @@
       "label": "Contenido",
       "options": [
         {
-          "value": "blocks",
-          "label": "Filas escritas a mano"
+          "value": "products",
+          "label": "Prendas de una colección"
         },
         {
           "value": "collections",
-          "label": "Colecciones de la tienda"
+          "label": "Colecciones"
+        },
+        {
+          "value": "blocks",
+          "label": "Filas escritas a mano"
         }
       ],
-      "default": "blocks"
+      "default": "products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Colección",
+      "info": "Vacío usa todas las prendas."
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Máximo de filas",
+      "min": 3,
+      "max": 30,
+      "step": 1,
+      "default": 12,
+      "visible_if": "{{ section.settings.source == 'products' }}"
     },
     {
       "type": "collection_list",
@@ -95,7 +213,7 @@
           "type": "text",
           "id": "title",
           "label": "Título",
-          "default": "Drop 05 — Plata"
+          "default": "Drop 06"
         },
         {
           "type": "text",
@@ -113,39 +231,18 @@
           "type": "url",
           "id": "link",
           "label": "Enlace"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Índice de drops",
-      "blocks": [
-        {
-          "type": "item",
-          "settings": {
-            "title": "Drop 05 — Plata",
-            "category": "Drop",
-            "year": "2026"
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "title": "Drop 04 — Concreto",
-            "category": "Drop",
-            "year": "2026"
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "title": "Colaboración",
-            "category": "Colaboración, música",
-            "year": "2026"
-          }
-        }
-      ]
+      "name": "Archivo de piezas"
     }
   ]
 }

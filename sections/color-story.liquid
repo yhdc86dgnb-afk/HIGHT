@@ -1,0 +1,218 @@
+{%- liquid
+  assign story_id = 'ColorStory-' | append: section.id
+  assign first_color = '#dff04a'
+  for block in section.blocks
+    if forloop.first
+      assign first_color = block.settings.color
+    endif
+  endfor
+-%}
+
+<section
+  class="hi-section hi-story color-{{ section.settings.color_scheme }}"
+  style="--story: {{ first_color }};"
+  aria-labelledby="{{ story_id }}-title"
+>
+  <hi-color-story
+    class="hi-container hi-story-grid"
+    data-global="{{ section.settings.paint_store }}"
+  >
+    <div class="hi-story-copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="t-label" data-reveal>{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="t-display-l" id="{{ story_id }}-title" data-reveal>{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.text != blank -%}
+        <div class="t-body-l hi-story-text" data-reveal>{{ section.settings.text }}</div>
+      {%- endif -%}
+
+      <ul class="hi-story-list" role="list">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign swatch_brightness = block.settings.color | color_brightness
+            assign swatch_on = '#0d0c0b'
+            if swatch_brightness < 120
+              assign swatch_on = '#ece3d0'
+            endif
+          -%}
+          <li {{ block.shopify_attributes }}>
+            <button
+              type="button"
+              class="hi-story-swatch"
+              style="--swatch: {{ block.settings.color }};"
+              aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-controls="{{ story_id }}-{{ block.id }}"
+              aria-label="{{ 'color_story.pick' | t: name: block.settings.name }}"
+              data-color="{{ block.settings.color }}"
+              data-on="{{ swatch_on }}"
+              data-name="{{ block.settings.name | escape }}"
+              data-panel="{{ story_id }}-{{ block.id }}"
+            >
+              <span class="hi-story-dot" aria-hidden="true"></span>
+              <span class="hi-story-name" aria-hidden="true">{{ block.settings.name | escape }}</span>
+              <span class="hi-story-hex t-label" aria-hidden="true">{{ block.settings.color | upcase }}</span>
+            </button>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      {%- if section.settings.paint_store -%}
+        <button type="button" class="hi-btn hi-btn-ghost js-only" data-story-reset hidden>
+          {%- render 'icon', name: 'undo', size: 20 %}
+          {{ 'color_story.reset' | t -}}
+        </button>
+      {%- endif -%}
+    </div>
+
+    <div class="hi-story-stage">
+      <span class="hi-story-blob" aria-hidden="true"></span>
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign story_product = block.settings.product
+          assign story_image = block.settings.image
+          if story_image == blank and story_product != blank
+            assign story_image = story_product.featured_media.preview_image
+          endif
+          assign story_alt = story_image.alt | default: story_product.title | default: block.settings.name
+        -%}
+        <figure
+          class="hi-story-panel"
+          id="{{ story_id }}-{{ block.id }}"
+          {% unless forloop.first %}
+            hidden
+          {% endunless %}
+        >
+          <div class="hi-story-print hi-print" style="--r: {% cycle '-3deg', '2deg', '-2deg', '3deg' %};">
+            <span class="hi-tape" aria-hidden="true"></span>
+            {%- if story_image != blank -%}
+              {{
+                story_image
+                | image_url: width: 1200
+                | image_tag:
+                  widths: '450, 600, 800, 1000, 1200',
+                  sizes: '(min-width: 990px) 40vw, 86vw',
+                  loading: 'lazy',
+                  alt: story_alt
+              }}
+            {%- else -%}
+              <span class="hi-media-ph" aria-hidden="true">{{ 'products.photo_placeholder' | t }}</span>
+            {%- endif -%}
+          </div>
+          {%- if story_product != blank -%}
+            <figcaption class="hi-story-caption">
+              <span class="hi-story-caption-name">{{ story_product.title | escape }}</span>
+              {% render 'price', product: story_product %}
+              <a href="{{ story_product.url }}" class="hi-btn hi-btn-primary">
+                {{- 'general.view_piece' | t }}
+                {% render 'icon', name: 'arrow_forward', size: 20 -%}
+              </a>
+            </figcaption>
+          {%- endif -%}
+        </figure>
+      {%- endfor -%}
+    </div>
+  </hi-color-story>
+</section>
+
+{% schema %}
+{
+  "name": "Elige tu color",
+  "tag": "section",
+  "class": "hi-story-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Cada color lleva a una prenda. Al tocarlo, la sección cambia de foto y (si lo activas) toda la tienda toma ese color de acento."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Marquilla",
+      "default": "(ELIGE TU COLOR)"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titular",
+      "default": "CADA PIEZA TIENE SU COLOR"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Texto",
+      "default": "<p>Toca un color y la tienda se pinta con él.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "paint_store",
+      "label": "Pintar toda la tienda con el color elegido",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "color",
+      "name": "Color",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nombre",
+          "default": "ÁCIDO"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Color",
+          "default": "#dff04a"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Prenda de ese color"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto distinta (opcional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Elige tu color",
+      "blocks": [
+        {
+          "type": "color",
+          "settings": {
+            "name": "ÁCIDO",
+            "color": "#dff04a"
+          }
+        },
+        {
+          "type": "color",
+          "settings": {
+            "name": "CARMÍN",
+            "color": "#c3142d"
+          }
+        },
+        {
+          "type": "color",
+          "settings": {
+            "name": "ÍNDIGO",
+            "color": "#5b7cfa"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

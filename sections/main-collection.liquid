@@ -1,10 +1,16 @@
+{%- liquid
+  assign collection_title = collection.title
+  if collection.handle == 'all' and section.settings.all_title != blank
+    assign collection_title = section.settings.all_title
+  endif
+-%}
 {%- paginate collection.products by section.settings.products_per_page -%}
-  <div class="hi-container" style="--cols-desktop: {{ section.settings.columns_desktop }};">
+  <div class="hi-container hi-collection" style="--cols-desktop: {{ section.settings.columns_desktop }};" data-density-scope>
     <header class="hi-collection-head">
-      <p class="t-label t-muted">{{ 'collections.products_count' | t: count: collection.products_count }}</p>
-      <h1 class="t-display-l">{{ collection.title | escape }}</h1>
+      <p class="t-label">{{ 'general.pieces_count' | t: count: collection.products_count }}</p>
+      <h1 class="t-display-xxl hi-collection-title" data-reveal>{{ collection_title | escape }}</h1>
       {%- if section.settings.show_description and collection.description != blank -%}
-        <div class="rte t-body-l">{{ collection.description }}</div>
+        <div class="rte t-body-l t-measure">{{ collection.description }}</div>
       {%- endif -%}
     </header>
 
@@ -23,11 +29,16 @@
     {%- endif -%}
 
     {%- if section.settings.enable_filtering -%}
-      {% render 'facets', results: collection, section_id: section.id %}
+      {% render 'facets', results: collection, section_id: section.id, density: section.settings.density_toggle %}
+    {%- elsif section.settings.density_toggle -%}
+      <div class="hi-toolbar">
+        <div class="hi-toolbar__start"></div>
+        <div class="hi-toolbar__end">{% render 'density-toggle', default: section.settings.columns_desktop %}</div>
+      </div>
     {%- endif -%}
 
     {%- if collection.products.size > 0 -%}
-      <ul class="hi-grid-products">
+      <ul class="hi-grid-products" role="list" data-density-grid>
         {%- for product in collection.products -%}
           <li>
             {%- if forloop.index <= 4 -%}
@@ -85,6 +96,18 @@
         }
       ],
       "default": "4"
+    },
+    {
+      "type": "checkbox",
+      "id": "density_toggle",
+      "label": "Dejar elegir cuántas columnas ver",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "all_title",
+      "label": "Título para \"Todos los productos\"",
+      "default": "TIENDA"
     },
     {
       "type": "checkbox",

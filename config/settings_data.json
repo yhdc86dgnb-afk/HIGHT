@@ -9,43 +9,57 @@
  */
 {
   "current": {
+    "accent": "#dff04a",
+    "free_shipping_threshold": 0,
     "color_schemes": {
       "scheme-1": {
         "settings": {
-          "surface_000": "#dfe1e5",
-          "surface_100": "#f1f2f4",
-          "surface_200": "#c4c7cd",
-          "line": "#b0b4bb",
-          "line_strong": "#5d626b",
-          "ink": "#0b1222",
-          "ink_muted": "#3c4350",
-          "on_ink": "#f1f2f4",
-          "aura": "#1b48a3",
-          "on_aura": "#f1f2f4",
-          "cyan": "#125a63",
-          "haze": "#a9b8d8",
-          "success": "#175f4f",
-          "warning": "#664300",
-          "danger": "#922c16"
+          "background": "#0d0c0b",
+          "surface": "#181614",
+          "text": "#ece3d0",
+          "muted": "#9a9184",
+          "line": "#3a3631",
+          "print": "#ece3d0"
         }
       },
       "scheme-2": {
         "settings": {
-          "surface_000": "#070a11",
-          "surface_100": "#0e131d",
-          "surface_200": "#181f2c",
-          "line": "#262e3d",
-          "line_strong": "#646c7c",
-          "ink": "#e3e6eb",
-          "ink_muted": "#a2a8b4",
-          "on_ink": "#070a11",
-          "aura": "#6fa2ff",
-          "on_aura": "#070a11",
-          "cyan": "#7fdde3",
-          "haze": "#2a3a6b",
-          "success": "#6ccfb4",
-          "warning": "#f0c062",
-          "danger": "#ff8f80"
+          "background": "#ece3d0",
+          "surface": "#e1d6c0",
+          "text": "#0d0c0b",
+          "muted": "#5e574d",
+          "line": "#b9ad97",
+          "print": "#faf6ee"
+        }
+      },
+      "scheme-3": {
+        "settings": {
+          "background": "#c3142d",
+          "surface": "#a8102a",
+          "text": "#f4ece0",
+          "muted": "#f6dcd6",
+          "line": "#e2596b",
+          "print": "#f4ece0"
+        }
+      },
+      "scheme-4": {
+        "settings": {
+          "background": "#1c2a63",
+          "surface": "#23347a",
+          "text": "#ece3d0",
+          "muted": "#aab3d6",
+          "line": "#3c4c94",
+          "print": "#ece3d0"
+        }
+      },
+      "scheme-5": {
+        "settings": {
+          "background": "#dff04a",
+          "surface": "#d2e43a",
+          "text": "#0d0c0b",
+          "muted": "#3d4214",
+          "line": "#9caa22",
+          "print": "#fbfbe9"
         }
       }
     }

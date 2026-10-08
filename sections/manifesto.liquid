@@ -1,55 +1,24 @@
-{%- liquid
-  assign manifesto_bg = 'hi-scheme color-' | append: section.settings.color_scheme
-  assign manifesto_dark = false
-  if section.settings.background == 'metal'
-    assign manifesto_bg = 'hi-metal'
-  else
-    assign scheme_brightness = section.settings.color_scheme.settings.surface_000 | color_brightness
-    if scheme_brightness < 128
-      assign manifesto_dark = true
-    endif
-  endif
--%}
-
-<section class="hi-section {{ manifesto_bg }}">
-  <div class="hi-container hi-manifesto">
+<section class="hi-section hi-manifesto color-{{ section.settings.color_scheme }}">
+  <div class="hi-container hi-manifesto-inner">
     {%- if section.settings.show_logo -%}
-      <div class="hi-manifesto__logo">
-        {%- if manifesto_dark -%}
-          <img
-            src="{{ 'hight-logo-plata.webp' | asset_url }}"
-            width="977"
-            height="672"
-            alt="{{ shop.name | escape }}"
-            loading="lazy"
-          >
-        {%- else -%}
-          <img
-            src="{{ 'hight-logo-tinta.webp' | asset_url }}"
-            width="977"
-            height="672"
-            alt="{{ shop.name | escape }}"
-            loading="lazy"
-          >
-        {%- endif -%}
-      </div>
+      <span class="hi-manifesto-logo hi-logo-img" aria-hidden="true"></span>
     {%- endif -%}
-    <div class="hi-manifesto__text">
-      {%- if section.settings.label != blank -%}
-        <p class="t-label">{{ section.settings.label | escape }}</p>
-      {%- endif -%}
-      {%- if section.settings.quote != blank -%}
-        <div class="hi-manifesto__quote">{{ section.settings.quote }}</div>
-      {%- endif -%}
+    {%- if section.settings.label != blank -%}
+      <p class="t-label" data-reveal>{{ section.settings.label | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.quote != blank -%}
+      <hi-scroll-text class="hi-manifesto-text{% if section.settings.scroll_fill %} is-fill{% endif %}">
+        {{- section.settings.quote -}}
+      </hi-scroll-text>
+    {%- endif -%}
+    <div class="hi-manifesto-foot" data-reveal>
       {%- if section.settings.signature != blank -%}
-        <p class="t-spec">{{ section.settings.signature | escape }}</p>
+        <p class="t-label t-muted">{{ section.settings.signature | escape }}</p>
       {%- endif -%}
       {%- if section.settings.button_label != blank -%}
-        <div>
-          <a href="{{ section.settings.button_link | default: routes.root_url }}" class="hi-btn hi-btn-secondary">
-            {{- section.settings.button_label | escape -}}
-          </a>
-        </div>
+        <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="hi-btn hi-btn-secondary">
+          {{- section.settings.button_label | escape -}}
+        </a>
       {%- endif -%}
     </div>
   </div>
@@ -62,29 +31,32 @@
   "class": "hi-manifesto-section",
   "settings": [
     {
-      "type": "checkbox",
-      "id": "show_logo",
-      "label": "Mostrar el logo principal",
-      "default": true,
-      "info": "Plata sobre fondos oscuros, tinta sobre plata. Mínimo 240px de ancho."
+      "type": "paragraph",
+      "content": "Texto grande que se va encendiendo palabra por palabra al hacer scroll. Lo que pongas en negrita se enciende en el color de acento."
     },
     {
       "type": "text",
       "id": "label",
       "label": "Marquilla",
-      "default": "(Manifiesto)"
+      "default": "(MANIFIESTO)"
     },
     {
       "type": "richtext",
       "id": "quote",
       "label": "Texto",
-      "default": "<p>Hacemos ropa para repetir.</p><p>Prendas pesadas, de corte amplio y aristas limpias, que se ven igual de bien el lunes que el sábado.</p><p>Diseñamos pocas piezas, las numeramos y las soltamos por drops.</p><p>La plata es nuestra piel; el azul, la luz que se cuela de noche.</p><p>Hecho en Medellín, para quien se viste con intención.</p>"
+      "default": "<p>Cada pieza tiene su historia: denim intervenido, parches, tintes ácidos y prendas de archivo.</p><p>La mayoría existe <strong>una sola vez</strong>. Si la ves y es tu talla, <strong>es tuya</strong>.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "scroll_fill",
+      "label": "Encender el texto con el scroll",
+      "default": true
     },
     {
       "type": "text",
       "id": "signature",
       "label": "Firma",
-      "default": "HECHO PARA REPETIR · MED/COL"
+      "default": "HIGHT — MED/COL"
     },
     {
       "type": "text",
@@ -97,20 +69,10 @@
       "label": "Enlace del botón"
     },
     {
-      "type": "select",
-      "id": "background",
-      "label": "Fondo",
-      "options": [
-        {
-          "value": "metal",
-          "label": "Plata cepillada"
-        },
-        {
-          "value": "scheme",
-          "label": "Esquema de color"
-        }
-      ],
-      "default": "metal"
+      "type": "checkbox",
+      "id": "show_logo",
+      "label": "Mostrar el logo de fondo",
+      "default": true
     },
     {
       "type": "color_scheme",

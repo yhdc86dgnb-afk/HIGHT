@@ -1,20 +1,24 @@
 {%- doc -%}
-  ProductCard del design system: foto 4:5 a sangre, una sola marquilla arriba a la izquierda,
-  nombre en tipo oración, corte y material en mono, precio y muestras de color.
-  Sin producto dibuja una tarjeta de maqueta (bloque surface-200 con "FOTO 4:5").
+  Tarjeta de producto: la foto como copia impresa (sin recorte, en su proporción), una marquilla
+  arriba (PIEZA ÚNICA, AGOTADO, ÚLTIMAS N o el drop), nombre en Anton, tipo y precio en mono.
+  Si la prenda tiene el metacampo custom.acento (color), la tarjeta usa ese color al pasar el cursor.
+  Con "Agregar al carrito desde la tarjeta": botón AGREGAR para piezas de una variante y botones
+  de talla para prendas con una sola opción.
+  Sin producto dibuja una tarjeta de maqueta.
 
   @param {product} [product] - Producto a mostrar
   @param {string} [sizes] - Atributo sizes de la foto
   @param {boolean} [eager] - Carga la foto sin diferir (primeras tarjetas visibles)
+  @param {boolean} [quick_add] - false oculta el agregado rápido aunque esté activo en el tema
   @param {string} [placeholder_title] - Nombre de la tarjeta de maqueta
-  @param {string} [placeholder_meta] - Corte y material de la tarjeta de maqueta
+  @param {string} [placeholder_meta] - Tipo de la tarjeta de maqueta
   @param {number} [placeholder_price] - Precio en centavos de la tarjeta de maqueta
 
   @example
   {% render 'product-card', product: product, sizes: '(min-width: 1024px) 25vw, 50vw' %}
 {%- enddoc -%}
 {%- liquid
-  assign card_sizes = sizes | default: '(min-width: 1440px) 336px, (min-width: 1024px) calc((100vw - 168px) / 4), (min-width: 768px) calc((100vw - 80px) / 3), calc((100vw - 40px) / 2)'
+  assign card_sizes = sizes | default: '(min-width: 1440px) 380px, (min-width: 990px) 26vw, (min-width: 750px) 34vw, 60vw'
   assign card_loading = 'lazy'
   if eager
     assign card_loading = 'eager'
@@ -24,6 +28,7 @@
 {%- if product != blank -%}
   {%- liquid
     assign card_tag = ''
+    assign card_tag_style = 'ink'
     assign drop_prefix = settings.drop_tag_prefix | default: 'DROP' | downcase
     assign drop_prefix_size = drop_prefix | size
     for product_tag in product.tags
@@ -49,17 +54,37 @@
       endfor
       if stock_tracked and stock_total == 1 and product.variants.size == 1
         assign card_tag = 'products.unique_tag' | t
+        assign card_tag_style = 'accent'
       elsif stock_tracked and stock_total > 0 and stock_total <= settings.low_stock_threshold
         assign card_tag = 'products.low_stock_tag' | t: count: stock_total
+        assign card_tag_style = 'accent'
       endif
     else
       assign card_tag = 'products.sold_out' | t
+      assign card_tag_style = 'ink'
     endif
 
+    assign card_image = product.featured_media.preview_image
+    assign card_ratio = card_image.aspect_ratio | default: 0.8
+    if card_ratio < 0.66
+      assign card_ratio = 0.66
+    elsif card_ratio > 1
+      assign card_ratio = 1
+    endif
     assign card_alt = product.featured_media.alt | default: product.title
+
     assign card_meta = ''
     if settings.card_show_meta
       assign card_meta = product.metafields.custom.corte_material.value | default: product.type
+    endif
+
+    assign card_accent = product.metafields.custom.acento.value
+    assign card_on_accent = '#0d0c0b'
+    if card_accent != blank
+      assign card_accent_brightness = card_accent | color_brightness
+      if card_accent_brightness < 120
+        assign card_on_accent = '#ece3d0'
+      endif
     endif
 
     assign color_option = nil
@@ -72,66 +97,133 @@
         endif
       endfor
     endif
+
+    assign card_quick = 'none'
+    if settings.card_quick_add and quick_add != false and product.available
+      if product.has_only_default_variant
+        assign card_quick = 'single'
+      elsif product.options.size == 1 and product.variants.size <= 8
+        assign card_quick = 'sizes'
+      endif
+    endif
   -%}
-  <a href="{{ product.url }}" class="hi-card">
-    <div class="hi-card-media">
-      {%- if product.featured_media -%}
-        {{
-          product.featured_media
-          | image_url: width: 1080
-          | image_tag:
-            widths: '360, 540, 720, 900, 1080',
-            sizes: card_sizes,
-            loading: card_loading,
-            alt: card_alt
-        }}
-        {%- if settings.card_second_image and product.media[1] != blank -%}
-          {{
-            product.media[1]
-            | image_url: width: 1080
-            | image_tag:
-              widths: '360, 540, 720, 900, 1080',
-              sizes: card_sizes,
-              loading: 'lazy',
-              alt: '',
-              class: 'hi-card-img-2'
-          }}
+  <article
+    class="hi-card{% unless product.available %} is-sold{% endunless %}{% if card_accent != blank %} hi-accent-scope{% endif %}"
+    style="--ar: {{ card_ratio }};{% if card_accent != blank %} --accent: {{ card_accent }}; --on-accent: {{ card_on_accent }};{% endif %}"
+  >
+    <a href="{{ product.url }}" class="hi-card-link" data-cursor="{{ 'general.cursor_view' | t }}">
+      <div
+        class="hi-card-media hi-print"
+        {% if settings.card_tilt %}
+          data-tilt
+        {% endif %}
+      >
+        <div class="hi-card-img">
+          {%- if card_image -%}
+            {{
+              card_image
+              | image_url: width: 1080
+              | image_tag:
+                widths: '360, 540, 720, 900, 1080',
+                sizes: card_sizes,
+                loading: card_loading,
+                alt: card_alt
+            }}
+            {%- if settings.card_second_image and product.media[1] != blank -%}
+              {{
+                product.media[1].preview_image
+                | image_url: width: 1080
+                | image_tag:
+                  widths: '360, 540, 720, 900, 1080',
+                  sizes: card_sizes,
+                  loading: 'lazy',
+                  alt: '',
+                  class: 'hi-card-img-2'
+              }}
+            {%- endif -%}
+          {%- else -%}
+            <span class="hi-media-ph" aria-hidden="true">{{ 'products.photo_placeholder' | t }}</span>
+          {%- endif -%}
+        </div>
+        {%- if card_tag != '' -%}
+          <span class="hi-tag hi-tag-{{ card_tag_style }} hi-card-tag">{{ card_tag | escape }}</span>
         {%- endif -%}
-      {%- else -%}
-        <span class="hi-card-ph" aria-hidden="true">{{ 'products.photo_placeholder' | t }}</span>
-      {%- endif -%}
-      {%- if card_tag != '' -%}
-        <span class="hi-tag hi-tag-ink hi-card-tag">{{ card_tag | escape }}</span>
-      {%- endif -%}
-    </div>
-    <div class="hi-card-body">
-      <h3 class="hi-card-name">{{ product.title | escape }}</h3>
-      {%- if card_meta != blank -%}
-        <span class="hi-card-meta">{{ card_meta | escape }}</span>
-      {%- endif -%}
-      {% render 'price', product: product, show_from: true %}
-      {%- if color_option != nil and color_option.values.size > 1 -%}
-        <span class="hi-card-swatches">
-          {%- for color_value in color_option.values limit: 6 -%}
-            {%- capture swatch_style -%}{% render 'swatch-style', value: color_value %}{%- endcapture -%}
-            <span class="hi-swatch" title="{{ color_value | escape }}" style="{{ swatch_style | strip }}"></span>
-          {%- endfor -%}
-          <span class="visually-hidden">
-            {{- 'products.colors_count' | t: count: color_option.values.size -}}
+      </div>
+      <div class="hi-card-body">
+        <h3 class="hi-card-name">{{ product.title | escape }}</h3>
+        <div class="hi-card-row">
+          {%- if card_meta != blank -%}
+            <span class="hi-card-meta">{{ card_meta | escape }}</span>
+          {%- endif -%}
+          {% render 'price', product: product, show_from: true %}
+        </div>
+        {%- if color_option != nil and color_option.values.size > 1 -%}
+          <span class="hi-card-swatches">
+            {%- for color_value in color_option.values limit: 6 -%}
+              {%- capture swatch_style -%}{% render 'swatch-style', value: color_value %}{%- endcapture -%}
+              <span class="hi-swatch" title="{{ color_value | escape }}" style="{{ swatch_style | strip }}"></span>
+            {%- endfor -%}
+            <span class="visually-hidden">
+              {{- 'products.colors_count' | t: count: color_option.values.size -}}
+            </span>
           </span>
-        </span>
-      {%- endif -%}
-    </div>
-  </a>
+        {%- endif -%}
+      </div>
+    </a>
+
+    {%- if card_quick != 'none' -%}
+      <product-form class="hi-card-quick hi-card-quick--{{ card_quick }}">
+        <form action="{{ routes.cart_add_url }}" method="post" accept-charset="UTF-8">
+          <input type="hidden" name="quantity" value="1">
+          {%- if card_quick == 'single' -%}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <button
+              type="submit"
+              class="hi-card-add"
+              aria-label="{{ 'products.quick_add_label' | t: title: product.title }}"
+              data-add-button
+            >
+              {% render 'icon', name: 'add', size: 16 %}
+              <span>{{ 'products.quick_add' | t }}</span>
+            </button>
+          {%- else -%}
+            <div class="hi-card-sizes" role="group" aria-label="{{ 'products.size_legend' | t }}">
+              {%- for card_variant in product.variants -%}
+                <button
+                  type="submit"
+                  name="id"
+                  value="{{ card_variant.id }}"
+                  class="hi-card-size"
+                  aria-label="{{ 'products.quick_size_label' | t: title: product.title, size: card_variant.title }}"
+                  {% unless card_variant.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  {{- card_variant.title | escape -}}
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+          <p class="hi-card-error" role="alert" data-product-error></p>
+        </form>
+      </product-form>
+    {%- endif -%}
+  </article>
 {%- else -%}
-  <div class="hi-card" aria-hidden="true">
-    <div class="hi-card-media">
-      <span class="hi-card-ph">{{ 'products.photo_placeholder' | t }}</span>
+  <article class="hi-card" aria-hidden="true" style="--ar: 0.8;">
+    <div class="hi-card-link">
+      <div class="hi-card-media hi-print">
+        <div class="hi-card-img">
+          <span class="hi-media-ph">{{ 'products.photo_placeholder' | t }}</span>
+        </div>
+      </div>
+      <div class="hi-card-body">
+        <p class="hi-card-name">{{ placeholder_title | default: 'Jean intervenido' }}</p>
+        <div class="hi-card-row">
+          <span class="hi-card-meta">{{ placeholder_meta | default: 'Jean' }}</span>
+          {% render 'price', amount: placeholder_price %}
+        </div>
+      </div>
     </div>
-    <div class="hi-card-body">
-      <p class="hi-card-name">{{ placeholder_title | default: 'Camiseta Boxy Concreto' }}</p>
-      <span class="hi-card-meta">{{ placeholder_meta | default: 'Boxy · 280 g/m²' }}</span>
-      {% render 'price', amount: placeholder_price %}
-    </div>
-  </div>
+  </article>
 {%- endif -%}

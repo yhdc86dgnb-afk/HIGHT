@@ -5,6 +5,7 @@
   @param {object} results - collection o search
   @param {string} section_id - id de la sección
   @param {number} [count] - Total de resultados
+  @param {boolean} [density] - Muestra los botones de columnas
 {%- enddoc -%}
 {%- liquid
   assign filters_dialog_id = 'Filters-' | append: section_id
@@ -87,6 +88,9 @@
         <button type="submit" class="hi-btn hi-btn-secondary">{{ 'collections.sort' | t }}</button>
       </noscript>
     </form>
+  {%- endif -%}
+  {%- if density -%}
+    {% render 'density-toggle' %}
   {%- endif -%}
 </div>
 

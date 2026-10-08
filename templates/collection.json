@@ -5,11 +5,15 @@
       "settings": {
         "products_per_page": 24,
         "columns_desktop": "4",
+        "density_toggle": true,
+        "all_title": "TIENDA",
         "show_description": true,
         "show_image": false,
         "enable_filtering": true
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

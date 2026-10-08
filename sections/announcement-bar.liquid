@@ -1,13 +1,41 @@
-{%- if section.settings.text != blank -%}
+{%- liquid
+  assign announce_class = 'hi-bg-accent'
+  if section.settings.tone == 'scheme'
+    assign announce_class = 'color-' | append: section.settings.color_scheme
+  endif
+-%}
+{%- if section.blocks.size > 0 -%}
+  {%- capture announce_items -%}
+    {%- for block in section.blocks -%}
+      <li class="hi-marquee-item">
+        {%- if block.settings.link != blank -%}
+          <a href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
+        {%- else -%}
+          <span>{{ block.settings.text | escape }}</span>
+        {%- endif -%}
+      </li>
+      <li class="hi-marquee-sep" aria-hidden="true">{% render 'icon', name: 'flare', size: 16 %}</li>
+    {%- endfor -%}
+  {%- endcapture -%}
   <div
-    class="hi-announce hi-announce-{{ section.settings.tone }}{% if section.settings.tone == 'metal' %} hi-metal{% endif %}"
+    class="hi-announce {{ announce_class }}"
     role="region"
     aria-label="{{ 'accessibility.announcement' | t }}"
   >
-    <span>{{ section.settings.text | escape }}</span>
-    {%- if section.settings.link != blank -%}
-      <a href="{{ section.settings.link }}" class="hi-announce-link">{{ section.settings.link_label | default: 'VER' | escape }} &rarr;</a>
-    {%- endif -%}
+    <hi-marquee class="hi-marquee" style="--marquee-duration: {{ section.settings.speed }}s;" data-speed="{{ section.settings.speed }}">
+      <div class="hi-marquee-track">
+        <ul class="hi-marquee-group" role="list">
+          {{ announce_items }}
+          {{ announce_items }}
+          {{ announce_items }}
+        </ul>
+        <ul class="hi-marquee-group" role="list" aria-hidden="true" inert>
+          {{ announce_items }}
+          {{ announce_items }}
+          {{ announce_items }}
+        </ul>
+      </div>
+    </hi-marquee>
   </div>
 {%- endif -%}
 
@@ -21,49 +49,85 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Un mensaje a la vez, con un dato concreto: envíos, fecha de drop o un cambio de política."
+      "content": "Mensajes cortos que corren de lado a lado. Si prometes algo (envíos, tiempos, cambios), que sea algo que la tienda cumple."
     },
     {
-      "type": "text",
-      "id": "text",
-      "label": "Mensaje",
-      "default": "Envío gratis en Medellín desde $250.000"
-    },
-    {
-      "type": "url",
-      "id": "link",
-      "label": "Enlace"
-    },
-    {
-      "type": "text",
-      "id": "link_label",
-      "label": "Texto del enlace",
-      "default": "VER"
+      "type": "range",
+      "id": "speed",
+      "label": "Duración de una vuelta",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "unit": "s",
+      "default": 36
     },
     {
       "type": "select",
       "id": "tone",
-      "label": "Tono",
+      "label": "Fondo",
       "options": [
         {
-          "value": "ink",
-          "label": "Tinta (todo el año)"
+          "value": "accent",
+          "label": "Color de acento"
         },
         {
-          "value": "metal",
-          "label": "Metal (anunciar un drop que viene)"
-        },
-        {
-          "value": "aura",
-          "label": "Aura (solo el día del lanzamiento)"
+          "value": "scheme",
+          "label": "Esquema de color"
         }
       ],
-      "default": "ink"
+      "default": "accent"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-1",
+      "visible_if": "{{ section.settings.tone == 'scheme' }}"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Mensaje",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texto",
+          "default": "PIEZAS ÚNICAS"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Enlace"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Barra de anuncio"
+      "name": "Barra de anuncio",
+      "blocks": [
+        {
+          "type": "message",
+          "settings": {
+            "text": "PIEZAS ÚNICAS"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "DENIM INTERVENIDO"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "PRENDAS DE ARCHIVO"
+          }
+        }
+      ]
     }
   ]
 }

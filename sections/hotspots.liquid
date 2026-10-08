@@ -1,0 +1,201 @@
+{%- liquid
+  assign spot_product = section.settings.product
+  assign spot_image = section.settings.image
+  if spot_image == blank and spot_product != blank
+    assign spot_image = spot_product.featured_media.preview_image
+  endif
+  assign spot_alt = spot_image.alt | default: spot_product.title
+  assign spots_id = 'Spots-' | append: section.id
+  assign spot_heading = section.settings.heading | default: spot_product.title
+-%}
+
+<section class="hi-section hi-anatomy color-{{ section.settings.color_scheme }}" aria-labelledby="{{ spots_id }}-title">
+  <hi-hotspots class="hi-container hi-anatomy-grid">
+    <div class="hi-anatomy-head" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="t-label">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="t-display-l" id="{{ spots_id }}-title">{{ spot_heading | escape }}</h2>
+      {%- if spot_product != blank -%}
+        <div class="hi-anatomy-buy">
+          {% render 'price', product: spot_product, size: 'lg' %}
+          <a href="{{ spot_product.url }}" class="hi-btn hi-btn-primary">
+            {{- 'general.view_piece' | t }}
+            {% render 'icon', name: 'arrow_forward', size: 20 -%}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="hi-anatomy-figure">
+      <div class="hi-anatomy-media hi-print">
+        {%- if spot_image != blank -%}
+          {{
+            spot_image
+            | image_url: width: 1400
+            | image_tag:
+              widths: '600, 800, 1000, 1200, 1400',
+              sizes: '(min-width: 990px) 46vw, 92vw',
+              loading: 'lazy',
+              alt: spot_alt
+          }}
+        {%- else -%}
+          <span class="hi-media-ph" aria-hidden="true">{{ 'products.photo_placeholder' | t }}</span>
+        {%- endif -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign spot_number = forloop.index
+            if spot_number < 10
+              assign spot_number = '0' | append: spot_number
+            endif
+          -%}
+          <button
+            type="button"
+            class="hi-pin"
+            style="--x: {{ block.settings.x }}%; --y: {{ block.settings.y }}%;"
+            aria-label="{{ 'hotspots.detail' | t: number: spot_number, title: block.settings.title }}"
+            aria-controls="{{ spots_id }}-{{ block.id }}"
+            aria-expanded="false"
+            data-spot="{{ block.id }}"
+          >
+            <span aria-hidden="true">{{ spot_number }}</span>
+          </button>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <ol class="hi-anatomy-list" role="list" aria-label="{{ 'hotspots.list_label' | t }}">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign spot_number = forloop.index
+          if spot_number < 10
+            assign spot_number = '0' | append: spot_number
+          endif
+        -%}
+        <li class="hi-anatomy-item" data-spot-item="{{ block.id }}" {{ block.shopify_attributes }}>
+          <button
+            type="button"
+            class="hi-anatomy-toggle"
+            aria-expanded="false"
+            aria-controls="{{ spots_id }}-{{ block.id }}"
+            data-spot-toggle="{{ block.id }}"
+          >
+            <span class="hi-anatomy-n" aria-hidden="true">{{ spot_number }}</span>
+            <span class="hi-anatomy-title">{{ block.settings.title | escape }}</span>
+            {% render 'icon', name: 'add', size: 16, class: 'hi-anatomy-plus' %}
+          </button>
+          <div class="hi-anatomy-text rte" id="{{ spots_id }}-{{ block.id }}">
+            {{ block.settings.text }}
+          </div>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </hi-hotspots>
+</section>
+
+{% schema %}
+{
+  "name": "Anatomía de una pieza",
+  "tag": "section",
+  "class": "hi-anatomy-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Puntos numerados sobre la foto de una prenda. Cada punto abre un detalle. La posición es en porcentaje de la foto: 0 % arriba a la izquierda, 100 % abajo a la derecha."
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Prenda"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Foto distinta (opcional)",
+      "info": "Si cambias la foto, revisa la posición de los puntos."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Marquilla",
+      "default": "(ANATOMÍA DE UNA PIEZA)"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titular",
+      "info": "Vacío usa el nombre de la prenda."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "spot",
+      "name": "Detalle",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Detalle"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texto",
+          "default": "<p>Describe el detalle en una frase.</p>"
+        },
+        {
+          "type": "range",
+          "id": "x",
+          "label": "Posición horizontal",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "y",
+          "label": "Posición vertical",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Anatomía de una pieza",
+      "blocks": [
+        {
+          "type": "spot",
+          "settings": {
+            "title": "Detalle 1",
+            "x": 30,
+            "y": 30
+          }
+        },
+        {
+          "type": "spot",
+          "settings": {
+            "title": "Detalle 2",
+            "x": 65,
+            "y": 55
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -22,7 +22,7 @@
         "social": {
           "type": "social",
           "settings": {
-            "title": "Hight",
+            "title": "Redes",
             "menu": ""
           }
         },
@@ -37,8 +37,11 @@
       },
       "block_order": ["menu-tienda", "menu-ayuda", "social", "legal"],
       "settings": {
-        "tagline": "Streetwear de autor para el uso diario.",
         "show_newsletter": true,
+        "newsletter_heading": "ENTÉRATE PRIMERO",
+        "newsletter_text": "Las piezas únicas se van rápido. Te avisamos cuando entren nuevas.",
+        "show_big_logo": true,
+        "tagline": "Piezas únicas y denim intervenido.",
         "origin": "MED/COL",
         "color_scheme": "scheme-1"
       }

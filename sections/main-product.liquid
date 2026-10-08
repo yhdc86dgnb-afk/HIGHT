@@ -39,16 +39,37 @@
   endif
 
   assign stock_threshold = settings.low_stock_threshold
+
+  assign product_unique = false
+  if product.variants.size == 1 and current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny' and current_variant.inventory_quantity == 1
+    assign product_unique = true
+  endif
+
+  assign product_accent = product.metafields.custom.acento.value
+  assign product_on_accent = '#0d0c0b'
+  if product_accent != blank
+    assign product_accent_brightness = product_accent | color_brightness
+    if product_accent_brightness < 120
+      assign product_on_accent = '#ece3d0'
+    endif
+  endif
+  assign zoom_id = 'Zoom-' | append: section.id
 -%}
 
 <product-page
-  class="hi-container hi-product"
+  class="hi-container hi-product{% if product_accent != blank %} hi-accent-scope{% endif %}"
   data-section-id="{{ section.id }}"
   data-product-url="{{ product.url }}"
   data-form-id="{{ form_id }}"
+  {% if product_accent != blank %}
+    style="--accent: {{ product_accent }}; --on-accent: {{ product_on_accent }};"
+  {% endif %}
 >
   <div class="hi-product-media">
-    {% render 'product-gallery', product: product, current_variant: current_variant, section_id: section.id %}
+    {% render 'product-gallery', product: product, current_variant: current_variant, section_id: section.id, zoom_id: zoom_id %}
+    {%- if product_unique and section.settings.show_sticker -%}
+      {% render 'sticker', id: section.id, class: 'hi-product-sticker' %}
+    {%- endif -%}
   </div>
 
   <div class="hi-product-info">
@@ -59,9 +80,19 @@
 
         {%- when 'drop_tag' -%}
           {%- assign block_tag = block.settings.text | default: drop_tag -%}
-          {%- if block_tag != blank -%}
-            <span class="hi-tag hi-tag-drop" {{ block.shopify_attributes }}>{{ block_tag | upcase | escape }}</span>
-          {%- endif -%}
+          <div class="hi-product-tags" {{ block.shopify_attributes }}>
+            {%- if product.type != blank -%}
+              <span class="t-label">({{ product.type | upcase | escape }})</span>
+            {%- endif -%}
+            {%- if block_tag != blank -%}
+              <span class="hi-tag hi-tag-accent">{{ block_tag | upcase | escape }}</span>
+            {%- endif -%}
+            {%- if product_unique -%}
+              <span class="hi-tag hi-tag-accent">{{ 'products.unique_tag' | t }}</span>
+            {%- elsif product.available == false -%}
+              <span class="hi-tag hi-tag-ink">{{ 'products.sold_out' | t }}</span>
+            {%- endif -%}
+          </div>
 
         {%- when 'title' -%}
           <h1 class="hi-product-title" {{ block.shopify_attributes }}>{{ product.title | escape }}</h1>
@@ -136,8 +167,9 @@
                 <button
                   type="submit"
                   name="add"
-                  class="hi-btn hi-btn-primary hi-btn-lg"
+                  class="hi-btn hi-btn-primary hi-btn-lg hi-btn-block"
                   data-add-button
+                  data-main-add
                   {% unless current_variant.available %}
                     disabled
                   {% endunless %}
@@ -170,8 +202,8 @@
           -%}
           <div data-product-stock {{ block.shopify_attributes }}>
             {%- if unique_piece -%}
-              <p class="hi-notice hi-notice-info">
-                <span class="hi-notice-mark">{{ 'products.unique_tag' | t }}</span>
+              <p class="hi-notice hi-notice-accent">
+                {% render 'icon', name: 'flare', size: 20 %}
                 <span>{{ 'products.unique_note' | t }}</span>
               </p>
             {%- elsif show_stock -%}
@@ -251,6 +283,55 @@
     </dialog>
   {%- endif -%}
 
+  <dialog id="{{ zoom_id }}" class="hi-dialog hi-zoom" aria-label="{{ 'products.zoom_title' | t: title: product.title }}">
+    <button type="button" class="hi-header-btn hi-zoom-close" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>
+      <span aria-hidden="true">{{ 'accessibility.close_button' | t }}</span>
+      {% render 'icon', name: 'close', size: 20 %}
+    </button>
+    <ul class="hi-zoom-list" role="list">
+      {%- for media in product.media -%}
+        {%- if media.media_type == 'image' -%}
+          <li id="{{ zoom_id }}-{{ media.id }}">
+            {{
+              media
+              | image_url: width: 2400
+              | image_tag:
+                widths: '900, 1400, 1800, 2400',
+                sizes: '100vw',
+                loading: 'lazy',
+                alt: media.alt
+            }}
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </dialog>
+
+  {%- if section.settings.sticky_bar -%}
+    <div class="hi-buybar" data-buybar aria-hidden="true">
+      <div class="hi-buybar-info">
+        <span class="hi-buybar-name">{{ product.title | escape }}</span>
+        <span data-product-price>{% render 'price', variant: current_variant %}</span>
+      </div>
+      <button
+        type="submit"
+        form="{{ form_id }}"
+        class="hi-btn hi-btn-primary"
+        tabindex="-1"
+        data-buybar-button
+        {% unless current_variant.available %}
+          disabled
+        {% endunless %}
+      >
+        {%- if current_variant.available -%}
+          {{ 'products.quick_add' | t }}
+        {%- else -%}
+          {{ 'products.sold_out' | t }}
+        {%- endif -%}
+      </button>
+    </div>
+  {%- endif -%}
+
   <script type="application/json" data-product-variants>
     [
       {%- for variant in product.variants -%}
@@ -273,10 +354,22 @@
   "class": "hi-main-product-section",
   "settings": [
     {
+      "type": "checkbox",
+      "id": "show_sticker",
+      "label": "Sello que gira en las piezas únicas",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_bar",
+      "label": "Barra fija para comprar en el teléfono",
+      "default": true
+    },
+    {
       "type": "page",
       "id": "size_guide_page",
       "label": "Página con la guía de tallas",
-      "info": "Opcional. Sin página se muestran las tablas base del design system (camiseta boxy, hoodie boxy, pantalón wide) según el tipo de producto o el metacampo custom.guia_tallas."
+      "info": "Opcional. Sin página se muestran las tablas base (camiseta, hoodie, pantalón) según el tipo de producto o el metacampo custom.guia_tallas."
     }
   ],
   "blocks": [
@@ -285,12 +378,12 @@
     },
     {
       "type": "drop_tag",
-      "name": "Marquilla del drop",
+      "name": "Marquillas",
       "limit": 1,
       "settings": [
         {
           "type": "paragraph",
-          "content": "Muestra la etiqueta del producto que empieza por el prefijo de drop (ej. DROP 05). Cuenta como el único aura de la vista."
+          "content": "Muestra el tipo de prenda, la etiqueta de drop (ej. DROP 06) y PIEZA ÚNICA cuando hay una sola unidad."
         },
         {
           "type": "text",
@@ -329,8 +422,7 @@
         {
           "type": "text",
           "id": "text",
-          "label": "Texto",
-          "default": "100% ALGODÓN · 280 G/M² · CORTE BOXY"
+          "label": "Texto"
         }
       ]
     },

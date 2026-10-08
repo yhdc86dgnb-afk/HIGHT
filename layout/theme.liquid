@@ -3,11 +3,31 @@
   <head>
     {% render 'meta-tags' %}
 
-    {{ 'archivo-latin.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
-    {{ 'ibm-plex-mono-500-latin.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+    {{ 'anton-latin.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+    {{ 'space-grotesk-latin.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 
     {% render 'css-variables' %}
     {{ 'hight.css' | asset_url | stylesheet_tag }}
+
+    {%- if settings.page_transitions -%}
+      <style>
+        @view-transition {
+          navigation: auto;
+        }
+      </style>
+    {%- endif -%}
+
+    {%- if settings.visitor_accent -%}
+      <script>
+        try {
+          var hightAccent = JSON.parse(localStorage.getItem('hight-accent') || 'null');
+          if (hightAccent && /^#[0-9a-f]{6}$/i.test(hightAccent.color) && /^#[0-9a-f]{6}$/i.test(hightAccent.on)) {
+            document.documentElement.style.setProperty('--accent', hightAccent.color);
+            document.documentElement.style.setProperty('--on-accent', hightAccent.on);
+          }
+        } catch (e) {}
+      </script>
+    {%- endif -%}
 
     <script src="{{ 'hight.js' | asset_url }}" defer="defer"></script>
 
@@ -18,7 +38,7 @@
     </script>
   </head>
 
-  <body class="template-{{ request.page_type | handle }}">
+  <body class="template-{{ request.page_type | handle }}{% if settings.grain %} hi-grain{% endif %}{% if settings.motion %} hi-motion{% endif %}">
     <a class="skip-link" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
 
     {% sections 'header-group' %}
@@ -45,6 +65,10 @@
         },
         "moneyFormat": {{ shop.money_format | json }},
         "cartType": {{ settings.cart_type | json }},
+        "motion": {{ settings.motion | json }},
+        "cursorLabel": {{ settings.cursor_label | json }},
+        "cardTilt": {{ settings.card_tilt | json }},
+        "visitorAccent": {{ settings.visitor_accent | json }},
         "strings": {
           "addToCart": {{ 'products.add_to_cart' | t | json }},
           "soldOut": {{ 'products.sold_out' | t | json }},
@@ -53,7 +77,9 @@
           "viewCart": {{ 'cart.view' | t | json }},
           "error": {{ 'cart.error' | t | json }},
           "close": {{ 'accessibility.close' | t | json }},
-          "slideCount": {{ 'products.gallery_count' | t | json }}
+          "slideCount": {{ 'products.gallery_count' | t | json }},
+          "accentChanged": {{ 'color_story.changed' | t: name: '[name]' | json }},
+          "accentReset": {{ 'color_story.reset_done' | t | json }}
         }
       }
     </script>

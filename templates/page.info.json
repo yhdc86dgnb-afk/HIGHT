@@ -1,62 +1,81 @@
 {
   "sections": {
-    "manifiesto": {
-      "type": "manifesto",
-      "settings": {
-        "show_logo": true,
-        "label": "(Info)",
-        "quote": "<p>Hacemos ropa para repetir.</p><p>Prendas pesadas, de corte amplio y aristas limpias, que se ven igual de bien el lunes que el sábado.</p><p>Diseñamos pocas piezas, las numeramos y las soltamos por drops.</p><p>La plata es nuestra piel; el azul, la luz que se cuela de noche.</p><p>Hecho en Medellín, para quien se viste con intención.</p>",
-        "signature": "STREETWEAR DE AUTOR PARA EL USO DIARIO · MED/COL",
-        "button_label": "",
-        "background": "metal",
-        "color_scheme": "scheme-1"
-      }
-    },
-    "indice": {
-      "type": "index-list",
-      "blocks": {
-        "drop-05": {
-          "type": "item",
-          "settings": {
-            "title": "Drop 05 — Plata",
-            "category": "Drop",
-            "year": "2026",
-            "link": ""
-          }
-        },
-        "drop-04": {
-          "type": "item",
-          "settings": {
-            "title": "Drop 04 — Concreto",
-            "category": "Drop",
-            "year": "2026",
-            "link": ""
-          }
-        }
-      },
-      "block_order": ["drop-05", "drop-04"],
-      "settings": {
-        "heading": "Trabajo seleccionado",
-        "source": "blocks",
-        "color_scheme": "scheme-1"
-      }
-    },
     "titular": {
       "type": "titular",
       "settings": {
-        "label": "(N5)",
-        "text": "PLATA NOCHE",
+        "label": "(INFO)",
+        "text": "SI ES TU TALLA ES TUYA",
+        "alternate": true,
         "size": "xl",
-        "hueso": false,
-        "glow": true,
-        "align": "center",
+        "align": "left",
         "body": "",
         "button_label": "",
+        "button_link": "",
         "button_style": "primary",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "manifiesto": {
+      "type": "manifesto",
+      "settings": {
+        "label": "(MANIFIESTO)",
+        "quote": "<p>Cada pieza tiene su historia: denim intervenido, parches, tintes ácidos y prendas de archivo.</p><p>La mayoría existe <strong>una sola vez</strong>. Si la ves y es tu talla, <strong>es tuya</strong>.</p>",
+        "scroll_fill": true,
+        "signature": "HIGHT — MED/COL",
+        "button_label": "VER LAS PIEZAS",
+        "button_link": "shopify://collections/all",
+        "show_logo": true,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "cinta": {
+      "type": "marquee",
+      "blocks": {
+        "t1": {
+          "type": "item",
+          "settings": {
+            "text": "PIEZAS ÚNICAS",
+            "style": "fill"
+          }
+        },
+        "t2": {
+          "type": "item",
+          "settings": {
+            "text": "NO SE REPITEN",
+            "style": "outline"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2"
+      ],
+      "settings": {
+        "size": "xl",
+        "speed": 30,
+        "direction": "right",
+        "scroll_boost": true,
+        "tilt": 2,
         "background": "scheme",
-        "color_scheme": "scheme-2"
+        "color_scheme": "scheme-3"
+      }
+    },
+    "archivo": {
+      "type": "index-list",
+      "settings": {
+        "eyebrow": "(ARCHIVO)",
+        "heading": "TODAS LAS PIEZAS",
+        "source": "products",
+        "collection": "all",
+        "limit": 12,
+        "color_scheme": "scheme-1"
       }
     }
   },
-  "order": ["manifiesto", "indice", "titular"]
+  "order": [
+    "titular",
+    "manifiesto",
+    "cinta",
+    "archivo"
+  ]
 }

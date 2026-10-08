@@ -1,85 +1,94 @@
 {%- doc -%}
-  Carga las tipografías de Hight (alojadas en el tema) y publica los tokens de color de cada
-  esquema del editor como variables CSS. El primer esquema (Plata) aplica a toda la página;
-  una sección con otro esquema (Aura) redefine las variables dentro de su clase .color-scheme-N.
+  Carga las tipografías del tema (Anton, Space Grotesk y Space Mono, alojadas en assets) y publica
+  cada esquema del editor como variables CSS. El primer esquema aplica a toda la página; una sección
+  con otro esquema redefine las variables dentro de su clase .color-scheme-N.
+
+  El acento es global (--accent). Los esquemas oscuros y neutros usan el acento en los botones;
+  los claros y los muy saturados (carmín, ácido) invierten el botón con su propio texto y fondo.
 {%- enddoc -%}
+{%- liquid
+  assign accent_brightness = settings.accent | color_brightness
+  assign on_accent = '#0d0c0b'
+  if accent_brightness < 120
+    assign on_accent = '#ece3d0'
+  endif
+-%}
 {%- style -%}
   @font-face {
-    font-family: 'Archivo';
-    font-style: normal;
-    font-weight: 400 800;
-    font-display: swap;
-    src: url({{ 'archivo-latin.woff2' | asset_url }}) format('woff2');
-  }
-  @font-face {
-    font-family: 'IBM Plex Mono';
+    font-family: 'Anton';
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url({{ 'ibm-plex-mono-400-latin.woff2' | asset_url }}) format('woff2');
+    src: url({{ 'anton-latin.woff2' | asset_url }}) format('woff2');
   }
   @font-face {
-    font-family: 'IBM Plex Mono';
+    font-family: 'Space Grotesk';
     font-style: normal;
-    font-weight: 500;
+    font-weight: 300 700;
     font-display: swap;
-    src: url({{ 'ibm-plex-mono-500-latin.woff2' | asset_url }}) format('woff2');
+    src: url({{ 'space-grotesk-latin.woff2' | asset_url }}) format('woff2');
   }
   @font-face {
-    font-family: 'Instrument Serif';
+    font-family: 'Space Mono';
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url({{ 'instrument-serif-latin.woff2' | asset_url }}) format('woff2');
+    src: url({{ 'space-mono-400-latin.woff2' | asset_url }}) format('woff2');
   }
   @font-face {
-    font-family: 'Instrument Serif';
-    font-style: italic;
-    font-weight: 400;
-    font-display: swap;
-    src: url({{ 'instrument-serif-italic-latin.woff2' | asset_url }}) format('woff2');
-  }
-  @font-face {
-    font-family: 'Hight Espina';
+    font-family: 'Space Mono';
     font-style: normal;
-    font-weight: 800;
+    font-weight: 700;
     font-display: swap;
-    src: url({{ 'hight-espina.woff' | asset_url }}) format('woff');
+    src: url({{ 'space-mono-700-latin.woff2' | asset_url }}) format('woff2');
   }
-  @font-face {
-    font-family: 'Hight Espina Hueso';
-    font-style: normal;
-    font-weight: 800;
-    font-display: swap;
-    src: url({{ 'hight-espina-hueso.woff' | asset_url }}) format('woff');
+
+  :root {
+    --accent: {{ settings.accent }};
+    --on-accent: {{ on_accent }};
+    --accent-default: {{ settings.accent }};
+    --on-accent-default: {{ on_accent }};
+    --grain-url: url({{ 'grano.svg' | asset_url }});
   }
 
   {% for scheme in settings.color_schemes -%}
-    {%- assign scheme_brightness = scheme.settings.surface_000 | color_brightness -%}
+    {%- liquid
+      assign scheme_brightness = scheme.settings.background | color_brightness
+      assign scheme_saturation = scheme.settings.background | color_extract: 'saturation'
+      assign scheme_inverted = false
+      if scheme_brightness > 150 or scheme_saturation > 70
+        assign scheme_inverted = true
+      endif
+    -%}
     {% if forloop.first %}:root, {% endif %}.color-{{ scheme.id }} {
-      --surface-000: {{ scheme.settings.surface_000 }};
-      --surface-100: {{ scheme.settings.surface_100 }};
-      --surface-200: {{ scheme.settings.surface_200 }};
+      --bg: {{ scheme.settings.background }};
+      --surface: {{ scheme.settings.surface }};
+      --text: {{ scheme.settings.text }};
+      --muted: {{ scheme.settings.muted }};
       --line: {{ scheme.settings.line }};
-      --line-strong: {{ scheme.settings.line_strong }};
-      --ink: {{ scheme.settings.ink }};
-      --ink-muted: {{ scheme.settings.ink_muted }};
-      --on-ink: {{ scheme.settings.on_ink }};
-      --focus: {{ scheme.settings.ink }};
-      --aura: {{ scheme.settings.aura }};
-      --on-aura: {{ scheme.settings.on_aura }};
-      --cyan: {{ scheme.settings.cyan }};
-      --haze: {{ scheme.settings.haze }};
-      --success: {{ scheme.settings.success }};
-      --warning: {{ scheme.settings.warning }};
-      --danger: {{ scheme.settings.danger }};
+      --print: {{ scheme.settings.print }};
+      {%- if scheme_inverted %}
+        --btn-bg: var(--text);
+        --btn-fg: var(--bg);
+        --hl: var(--text);
+        --on-hl: var(--bg);
+      {%- else %}
+        --btn-bg: var(--accent);
+        --btn-fg: var(--on-accent);
+        --hl: var(--accent);
+        --on-hl: var(--on-accent);
+      {%- endif %}
       {%- if scheme_brightness < 128 %}
-        --shadow-overlay: 0 24px 48px rgba(0, 0, 0, 0.65);
-        --glow-aura: 0 0 32px rgba(111, 162, 255, 0.55);
+        --logo: url({{ 'hight-logo-plata.webp' | asset_url }});
+        --shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
+        --danger: #ff8a7a;
+        --success: #a6e39a;
         color-scheme: dark;
       {%- else %}
-        --shadow-overlay: 0 24px 48px rgba(10, 21, 48, 0.18);
-        --glow-aura: 0 0 24px rgba(31, 79, 176, 0.35);
+        --logo: url({{ 'hight-logo-tinta.webp' | asset_url }});
+        --shadow: 0 30px 60px rgba(13, 12, 11, 0.22);
+        --danger: #9e1222;
+        --success: #1d6a37;
         color-scheme: light;
       {%- endif %}
     }
