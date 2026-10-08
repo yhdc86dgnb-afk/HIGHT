@@ -159,14 +159,22 @@
         {%- when 'stock' -%}
           {%- liquid
             assign show_stock = false
-            if stock_threshold > 0 and current_variant.available and current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny'
-              if current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= stock_threshold
+            assign unique_piece = false
+            if current_variant.available and current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny'
+              if current_variant.inventory_quantity == 1 and product.variants.size == 1
+                assign unique_piece = true
+              elsif stock_threshold > 0 and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= stock_threshold
                 assign show_stock = true
               endif
             endif
           -%}
           <div data-product-stock {{ block.shopify_attributes }}>
-            {%- if show_stock -%}
+            {%- if unique_piece -%}
+              <p class="hi-notice hi-notice-info">
+                <span class="hi-notice-mark">{{ 'products.unique_tag' | t }}</span>
+                <span>{{ 'products.unique_note' | t }}</span>
+              </p>
+            {%- elsif show_stock -%}
               <p class="hi-notice hi-notice-warning">
                 <span class="hi-notice-mark">{{ 'products.low_stock_tag' | t: count: current_variant.inventory_quantity }}</span>
                 <span>{{ 'products.low_stock' | t: count: current_variant.inventory_quantity }}</span>
@@ -424,7 +432,7 @@
           "type": "richtext",
           "id": "text",
           "label": "Texto",
-          "default": "<p>Envío a toda Colombia. Cambios dentro de los 15 días.</p>"
+          "default": "<p>Escríbenos si tienes dudas sobre esta prenda.</p>"
         }
       ]
     }

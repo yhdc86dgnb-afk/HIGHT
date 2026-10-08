@@ -36,21 +36,21 @@
     endfor
 
     if product.available
-      if settings.low_stock_threshold > 0
-        assign stock_total = 0
-        assign stock_tracked = true
-        for card_variant in product.variants
-          if card_variant.inventory_management != 'shopify' or card_variant.inventory_policy == 'continue'
-            assign stock_tracked = false
-            break
-          endif
-          if card_variant.inventory_quantity > 0
-            assign stock_total = stock_total | plus: card_variant.inventory_quantity
-          endif
-        endfor
-        if stock_tracked and stock_total > 0 and stock_total <= settings.low_stock_threshold
-          assign card_tag = 'products.low_stock_tag' | t: count: stock_total
+      assign stock_total = 0
+      assign stock_tracked = true
+      for card_variant in product.variants
+        if card_variant.inventory_management != 'shopify' or card_variant.inventory_policy == 'continue'
+          assign stock_tracked = false
+          break
         endif
+        if card_variant.inventory_quantity > 0
+          assign stock_total = stock_total | plus: card_variant.inventory_quantity
+        endif
+      endfor
+      if stock_tracked and stock_total == 1 and product.variants.size == 1
+        assign card_tag = 'products.unique_tag' | t
+      elsif stock_tracked and stock_total > 0 and stock_total <= settings.low_stock_threshold
+        assign card_tag = 'products.low_stock_tag' | t: count: stock_total
       endif
     else
       assign card_tag = 'products.sold_out' | t

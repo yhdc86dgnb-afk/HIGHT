@@ -22,7 +22,7 @@
         "ficha": {
           "type": "spec",
           "settings": {
-            "text": "100% ALGODÓN · 280 G/M² · CORTE BOXY"
+            "text": ""
           }
         },
         "variantes": {
@@ -60,7 +60,7 @@
           "type": "collapsible",
           "settings": {
             "heading": "Corte y talla",
-            "content": "<p>Corte boxy: hombro caído y largo corto. Si quieres más holgura, sube una talla. Medidas de la prenda en plano en la guía de tallas.</p>",
+            "content": "<p>Las medidas son de la prenda en plano. Si dudas con la talla, escríbenos antes de comprar y te mandamos las medidas exactas de la pieza.</p>",
             "show_care": false,
             "open": false
           }
@@ -69,13 +69,25 @@
           "type": "collapsible",
           "settings": {
             "heading": "Envíos y cambios",
-            "content": "<p>Envío a toda Colombia. Gratis en Medellín desde $250.000. Cambios de talla dentro de los 15 días, con la prenda sin uso y con su marquilla.</p>",
+            "content": "<p>El costo y el tiempo de envío se calculan al pagar. Si necesitas un cambio, escríbenos y lo coordinamos.</p>",
             "show_care": false,
             "open": false
           }
         }
       },
-      "block_order": ["drop", "titulo", "precio", "ficha", "variantes", "comprar", "unidades", "descripcion", "composicion", "corte", "envios"],
+      "block_order": [
+        "drop",
+        "titulo",
+        "precio",
+        "ficha",
+        "variantes",
+        "comprar",
+        "unidades",
+        "descripcion",
+        "composicion",
+        "corte",
+        "envios"
+      ],
       "settings": {}
     },
     "recomendados": {
@@ -88,5 +100,8 @@
       }
     }
   },
-  "order": ["main", "recomendados"]
+  "order": [
+    "main",
+    "recomendados"
+  ]
 }

@@ -62,6 +62,8 @@
       "other": "Quedan {{ count }} unidades."
     },
     "low_stock_tag": "ÚLTIMAS {{ count }}",
+    "unique_tag": "PIEZA ÚNICA",
+    "unique_note": "Una sola pieza. Cuando se vende, no vuelve.",
     "photo_placeholder": "FOTO 4:5",
     "gallery_label": "Fotos del producto",
     "gallery_count": "{{ index }} / {{ count }}",
