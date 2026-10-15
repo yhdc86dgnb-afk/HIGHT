@@ -12,7 +12,7 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "La paleta sale de las prendas: carbón y hueso de base; carmín, índigo y ácido como fondos de sección. El acento es uno solo para toda la tienda y el visitante lo puede cambiar con la sección Elige tu color."
+        "content": "La paleta sale de las prendas: carbón y hueso de base; carmín, índigo y ácido como fondos de sección. El acento es uno solo para toda la tienda y el visitante lo puede cambiar con la sección Elige tu color. Cada colección puede tener su propio color (campo Color de la colección): al abrirla, la tienda toma ese color."
       },
       {
         "type": "color",
@@ -25,7 +25,7 @@
         "type": "checkbox",
         "id": "visitor_accent",
         "label": "Recordar el color que elige el visitante",
-        "info": "Con la sección Elige tu color, el acento elegido se guarda en su navegador y pinta toda la tienda.",
+        "info": "El color que elige en Elige tu color, o el de la última colección de color que abrió, se guarda en su navegador y pinta toda la tienda.",
         "default": true
       },
       {

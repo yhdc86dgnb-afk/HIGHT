@@ -3,7 +3,7 @@
     "main": {
       "type": "main-list-collections",
       "settings": {
-        "heading": "ARCHIVO",
+        "heading": "COLECCIONES",
         "layout": "index"
       }
     }

@@ -3,7 +3,8 @@
 Tema Online Store 2.0 para **hight18.myshopify.com**. La versión 2.0 cambia la tienda por completo: colores,
 tipografías y orden de las secciones salen de las prendas (denim intervenido, patchwork, tintes ácidos, malla) y
 la página se volvió interactiva: las fotos se arrastran, las cintas de texto aceleran con el scroll, el visitante
-elige el color de la tienda y cada pieza tiene su anatomía explicada punto por punto.
+elige el color de la tienda y cada pieza tiene su anatomía explicada punto por punto. Los colores salen de las
+colecciones: cada color es una colección y, al abrirla, toda la tienda toma su color.
 
 ![Home en escritorio](docs/preview/home-escritorio.jpg)
 
@@ -17,7 +18,7 @@ elige el color de la tienda y cada pieza tiene su anatomía explicada punto por 
 | Colores | Plata cepillada y aura (azul) | **Carbón** y **hueso** de base; **ácido** (Jean Dragón), **carmín** (Camiseta Célula), **índigo** (Jean Wide) y **leopardo** como acentos y fondos de sección |
 | Tipografías | Archivo, IBM Plex Mono, Instrument Serif, Hight Espina | **Anton** (titulares gigantes), **Space Grotesk** (texto) y **Space Mono** (marquillas, precios, botones) |
 | Motivos | Metal, cianotipo, halo | Fotos como copias impresas con cinta, costuras punteadas, grano de fotocopia y sellos que giran |
-| Home | Hero, catálogo, spread, manifiesto | Hero collage → cinta → fila de piezas → Elige tu color → video de campaña → Anatomía de una pieza → Archivo → Lookbook → Manifiesto |
+| Home | Hero, catálogo, spread, manifiesto | Hero collage → cinta → Lo nuevo → Elige tu color → video de campaña → Anatomía de una pieza → Archivo → Lookbook → Manifiesto |
 
 El logo gótico se mantiene: es la marca. El design system original sigue en [`design-system/`](design-system/README.md) como referencia.
 
@@ -26,21 +27,48 @@ El logo gótico se mantiene: es la marca. El design system original sigue en [`d
 - **Hero collage:** el logo al centro y las prendas como fotos pegadas con cinta. En computador se arrastran y se
   mueven con el cursor; en el teléfono flotan. El botón **MEZCLAR** las reparte de nuevo.
 - **Cintas de texto:** corren de lado a lado y aceleran cuando haces scroll.
-- **Fila de piezas:** se arrastra con el mouse, tiene flechas y barra de avance. Las tarjetas se inclinan con el
-  cursor y dejan **AGREGAR** al carrito sin entrar a la ficha (o elegir talla, en la camiseta).
-- **Elige tu color:** cada color lleva a una prenda. Al tocarlo, **toda la tienda se pinta** con ese acento y el
-  navegador lo recuerda. Se puede volver al color original.
+- **Lo nuevo:** fila con las últimas piezas que entraron. Se arrastra con el mouse, tiene flechas y barra de avance.
+  Las tarjetas se inclinan con el cursor y dejan **AGREGAR** al carrito sin entrar a la ficha (o elegir talla, en la
+  camiseta).
+- **Elige tu color:** cada color es una colección (Ácido, Carmín, Índigo, Magenta, Ceniza, Leopardo). Al tocarlo,
+  **toda la tienda se pinta** con ese color, se ven sus piezas como fotos apiladas y un botón lleva a la colección. El
+  navegador lo recuerda y se puede volver al color original.
+- **Colecciones de color:** al entrar a una (desde el menú, el home o la fila de colores de cada colección), la
+  tienda toma su color: botones, cintas, marquillas y el título gigante.
 - **Anatomía de una pieza:** puntos numerados sobre el Jean Flare Patchwork Leopardo; cada uno abre su detalle.
 - **Archivo:** lista con nombres gigantes; en computador la foto de cada pieza sigue al cursor.
 - **Manifiesto:** el texto se enciende palabra por palabra con el scroll.
-- **Menú a pantalla completa** con foto al pasar por cada enlace, **zoom** de fotos en la ficha, **barra fija para
-  comprar** en el teléfono, selector de **columnas** en la tienda, etiqueta junto al cursor (VER, ARRASTRA) y
-  transición suave entre páginas.
+- **Menú a pantalla completa** con foto al pasar por cada enlace; los colores llevan su punto y tiñen el menú.
+  También: **zoom** de fotos en la ficha, **barra fija para comprar** en el teléfono, selector de **columnas** en la
+  tienda, etiqueta junto al cursor (VER, ARRASTRA) y transición suave entre páginas.
 
 Todo respeta la opción de reducir movimiento del teléfono o del computador, y se puede apagar en
 *Configuración del tema > Movimiento*.
 
 ![Elige tu color](docs/preview/elige-tu-color.jpg)
+
+## Colecciones y colores
+
+| Colección | Qué entra | Color |
+| --- | --- | --- |
+| Lo nuevo | Todas las piezas, de la más nueva a la más vieja (fila del home) | — |
+| Pantalones | Tipo de producto Jean, Pantalón o Short | — |
+| Tops | Tipo Top o Camiseta | — |
+| Buzos y tejidos | Tipo Buzo, Tejido o Chaqueta | — |
+| Ácido | Etiqueta `Color Ácido` | `#dff04a` |
+| Carmín | Etiqueta `Color Carmín` | `#c3142d` |
+| Índigo | Etiqueta `Color Índigo` | `#5b7cfa` |
+| Magenta | Etiqueta `Color Magenta` | `#e0218a` |
+| Ceniza | Etiqueta `Color Ceniza` | `#c4beb2` |
+| Leopardo | Etiqueta `Color Leopardo` | `#c08a4e` |
+
+Son colecciones automáticas: una prenda nueva entra sola si tiene el tipo o la etiqueta. El color se cambia en
+*Productos > Colecciones > (colección) > Metacampos > Color de la colección*; con ese campo lleno, la colección
+aparece con su punto en el menú, en la fila de colores y en la lista de colecciones, y pinta la tienda al abrirla.
+El menú principal queda así: Tienda, Pantalones, Tops, Buzos y tejidos, Colores (con los 6 colores adentro) y
+Contacto.
+
+![Colecciones](docs/preview/colecciones.jpg)
 
 ## Fotos y videos de Higgsfield
 
@@ -56,11 +84,13 @@ Sube el archivo en *Contenido > Archivos* o directamente en el campo de la secci
 
 1. **Color de cada prenda:** metacampo de producto `custom.acento` (tipo color). La ficha, la tarjeta y el botón
    de compra usan ese color. Sin metacampo se usa el acento del tema.
-2. **Menús:** `main-menu` (se abre a pantalla completa; de 3 a 6 enlaces) y `footer`.
-3. **Precio:** *Configuración > Tienda > Moneda > Cambiar formato*: `${{amount_no_decimals_with_comma_separator}}` → `$690.000`.
-4. **Piezas únicas:** una prenda con una sola variante e inventario de 1 unidad muestra **PIEZA ÚNICA** y el sello que gira.
-5. **Envío gratis:** el aviso del carrito está apagado (0). Actívalo en *Configuración del tema > Carrito* solo si lo ofreces.
-6. **Metacampos opcionales:** `custom.corte_material` (tipo en la tarjeta), `custom.ficha` (ficha técnica),
+2. **Menús:** `main-menu` (se abre a pantalla completa; de 3 a 6 enlaces, con submenú para los colores) y `footer`.
+3. **Color de cada colección:** metacampo de colección `custom.acento` (*Color de la colección*). Las colecciones
+   con color se usan en *Elige tu color* (bloque **Color > Colección**), en el menú y en la fila de colores.
+4. **Precio:** *Configuración > Tienda > Moneda > Cambiar formato*: `${{amount_no_decimals_with_comma_separator}}` → `$690.000`.
+5. **Piezas únicas:** una prenda con una sola variante e inventario de 1 unidad muestra **PIEZA ÚNICA** y el sello que gira.
+6. **Envío gratis:** el aviso del carrito está apagado (0). Actívalo en *Configuración del tema > Carrito* solo si lo ofreces.
+7. **Metacampos opcionales:** `custom.corte_material` (tipo en la tarjeta), `custom.ficha` (ficha técnica),
    `custom.nota_corte` y `custom.guia_tallas` (`camiseta`, `hoodie` o `pantalon`).
 
 ## Publicar con Shopify CLI

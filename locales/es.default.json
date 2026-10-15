@@ -108,7 +108,8 @@
     "pick": "Pintar la tienda de {{ name }}",
     "reset": "VOLVER AL COLOR ORIGINAL",
     "changed": "Listo: la tienda ahora es {{ name }}.",
-    "reset_done": "La tienda volvió a su color original."
+    "reset_done": "La tienda volvió a su color original.",
+    "view_collection": "VER LA COLECCIÓN"
   },
   "hotspots": {
     "detail": "Detalle {{ number }}: {{ title }}",
@@ -155,7 +156,11 @@
     "density_option": {
       "one": "Ver {{ count }} columna",
       "other": "Ver {{ count }} columnas"
-    }
+    },
+    "colors_label": "Colores de la tienda",
+    "colors_title": "(COLORES)",
+    "group_colors": "(COLORES)",
+    "group_other": "(COLECCIONES)"
   },
   "newsletter": {
     "label": "Entérate primero",

@@ -1,56 +1,93 @@
+{%- comment -%}
+  Lista de colecciones. Primero van las colecciones con color propio (campo Color de la colección,
+  metacampo custom.acento), con su punto de color; después las demás. Se ocultan las colecciones
+  sin piezas a la venta y la colección interna "frontpage".
+{%- endcomment -%}
+{%- liquid
+  assign list_count = 0
+  assign color_count = 0
+  for list_collection in collections
+    if list_collection.handle == 'frontpage' or list_collection.products_count == 0
+      continue
+    endif
+    assign list_count = list_count | plus: 1
+    if list_collection.metafields.custom.acento.value != blank
+      assign color_count = color_count | plus: 1
+    endif
+  endfor
+  assign row_index = 0
+-%}
+
 <div class="hi-container hi-page">
   <header class="hi-collection-head">
-    <p class="t-label">({{ collections.size }})</p>
+    <p class="t-label">({{ list_count }})</p>
     <h1 class="t-display-xxl hi-collection-title" data-reveal>{{ section.settings.heading | default: page_title | escape }}</h1>
   </header>
 
-  {%- if section.settings.layout == 'grid' -%}
-    <ul class="hi-grid-products" role="list">
+  {%- for pass in (1..2) -%}
+    {%- capture pass_rows -%}
       {%- for list_collection in collections -%}
-        {%- assign list_ratio = list_collection.featured_image.aspect_ratio | default: 0.8 -%}
-        <li>
-          <article class="hi-card" style="--ar: {{ list_ratio }};">
-            <a href="{{ list_collection.url }}" class="hi-card-link" data-cursor="{{ 'general.cursor_view' | t }}">
-              <div class="hi-card-media hi-print">
-                <div class="hi-card-img">
-                  {%- if list_collection.featured_image -%}
-                    {{
-                      list_collection.featured_image
-                      | image_url: width: 900
-                      | image_tag:
-                        widths: '360, 540, 720, 900',
-                        sizes: '(min-width: 990px) 25vw, 50vw',
-                        loading: 'lazy',
-                        alt: list_collection.title
-                    }}
-                  {%- else -%}
-                    <span class="hi-media-ph" aria-hidden="true">{{ 'products.photo_placeholder' | t }}</span>
-                  {%- endif -%}
+        {%- liquid
+          if list_collection.handle == 'frontpage' or list_collection.products_count == 0
+            continue
+          endif
+          assign row_color = list_collection.metafields.custom.acento.value
+          if pass == 1 and row_color == blank
+            continue
+          elsif pass == 2 and row_color != blank
+            continue
+          endif
+          assign row_index = row_index | plus: 1
+          assign row_number = row_index
+          if row_number < 10
+            assign row_number = '0' | append: row_number
+          endif
+          assign row_image = list_collection.featured_image
+        -%}
+        {%- if section.settings.layout == 'grid' -%}
+          {%- assign list_ratio = row_image.aspect_ratio | default: 0.8 -%}
+          <li>
+            <article
+              class="hi-card{% if row_color != blank %} hi-accent-scope{% endif %}"
+              style="--ar: {{ list_ratio }};{% if row_color != blank %} --swatch: {{ row_color }}; --accent: {{ row_color }};{% endif %}"
+            >
+              <a href="{{ list_collection.url }}" class="hi-card-link" data-cursor="{{ 'general.cursor_view' | t }}">
+                <div class="hi-card-media hi-print">
+                  <div class="hi-card-img">
+                    {%- if row_image -%}
+                      {{
+                        row_image
+                        | image_url: width: 900
+                        | image_tag:
+                          widths: '360, 540, 720, 900',
+                          sizes: '(min-width: 990px) 25vw, 50vw',
+                          loading: 'lazy',
+                          alt: list_collection.title
+                      }}
+                    {%- else -%}
+                      <span class="hi-media-ph" aria-hidden="true">{{ 'products.photo_placeholder' | t }}</span>
+                    {%- endif -%}
+                  </div>
                 </div>
-              </div>
-              <div class="hi-card-body">
-                <h2 class="hi-card-name">{{ list_collection.title | escape }}</h2>
-                <div class="hi-card-row">
-                  <span class="hi-card-meta">{{ 'collections.products_count' | t: count: list_collection.products_count }}</span>
+                <div class="hi-card-body">
+                  <h3 class="hi-card-name">
+                    {%- if row_color != blank -%}
+                      <span class="hi-dot" aria-hidden="true"></span>
+                    {%- endif -%}
+                    {{- list_collection.title | escape -}}
+                  </h3>
+                  <div class="hi-card-row">
+                    <span class="hi-card-meta">{{ 'collections.products_count' | t: count: list_collection.products_count }}</span>
+                  </div>
                 </div>
-              </div>
-            </a>
-          </article>
-        </li>
-      {%- endfor -%}
-    </ul>
-  {%- else -%}
-    <hi-reveal-list class="hi-archive">
-      <ol class="hi-archive-list" role="list">
-        {%- for list_collection in collections -%}
-          {%- liquid
-            assign row_number = forloop.index
-            if row_number < 10
-              assign row_number = '0' | append: row_number
-            endif
-            assign row_image = list_collection.featured_image
-          -%}
-          <li class="hi-archive-row" style="--i: {{ forloop.index0 }};">
+              </a>
+            </article>
+          </li>
+        {%- else -%}
+          <li
+            class="hi-archive-row{% if row_color != blank %} hi-archive-row--color{% endif %}"
+            style="--i: {{ row_index | minus: 1 }};{% if row_color != blank %} --swatch: {{ row_color }};{% endif %}"
+          >
             <a
               href="{{ list_collection.url }}"
               class="hi-archive-link"
@@ -65,17 +102,53 @@
                   {{ row_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '', widths: '100, 200', sizes: '64px' }}
                 {%- endif -%}
               </span>
-              <span class="hi-archive-title">{{ list_collection.title | escape }}</span>
+              <span class="hi-archive-title">
+                {%- if row_color != blank -%}
+                  <span class="hi-dot" aria-hidden="true"></span>
+                {%- endif -%}
+                {{- list_collection.title | escape -}}
+              </span>
               <span class="hi-archive-meta">{{ 'collections.products_count' | t: count: list_collection.products_count }}</span>
-              <span class="hi-archive-price t-label">{{ list_collection.published_at | date: '%Y' }}</span>
+              <span class="hi-archive-price t-label">
+                {%- if row_color != blank -%}
+                  {{ row_color | upcase }}
+                {%- else -%}
+                  {{ list_collection.published_at | date: '%Y' }}
+                {%- endif -%}
+              </span>
               {% render 'icon', name: 'arrow_forward', size: 24, class: 'hi-archive-arrow' %}
             </a>
           </li>
-        {%- endfor -%}
-      </ol>
-      <div class="hi-archive-float hi-print" aria-hidden="true" data-reveal-float></div>
-    </hi-reveal-list>
-  {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    {%- if pass_rows != blank -%}
+      <div class="hi-list-group">
+        {%- if color_count > 0 -%}
+          <h2 class="t-label hi-list-group-title">
+            {%- if pass == 1 -%}
+              {{ 'collections.group_colors' | t }}
+            {%- else -%}
+              {{ 'collections.group_other' | t }}
+            {%- endif -%}
+          </h2>
+        {%- endif -%}
+        {%- if section.settings.layout == 'grid' -%}
+          <ul class="hi-grid-products" role="list">
+            {{ pass_rows }}
+          </ul>
+        {%- else -%}
+          <hi-reveal-list class="hi-archive">
+            <ol class="hi-archive-list" role="list">
+              {{ pass_rows }}
+            </ol>
+            <div class="hi-archive-float hi-print" aria-hidden="true" data-reveal-float></div>
+          </hi-reveal-list>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
 </div>
 
 {% schema %}

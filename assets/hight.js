@@ -247,7 +247,9 @@
     );
   })();
 
-  /* ---------- Menú: foto al pasar por cada enlace ---------- */
+  /* ---------- Menú: foto y color al pasar por cada enlace ---------- */
+
+  var MENU_TARGET = '[data-menu-preview], [data-menu-color]';
 
   function activateMenuPreview(link) {
     var menu = link.closest('dialog');
@@ -256,18 +258,22 @@
     menu.querySelectorAll('.hi-menu-preview').forEach(function (figure) {
       figure.classList.toggle('is-active', figure.id === id);
     });
+    // Un enlace del submenú también marca a su enlace principal.
     menu.querySelectorAll('.hi-menu-link').forEach(function (other) {
-      other.classList.toggle('is-active', other === link);
+      other.classList.toggle('is-active', other === link || other.parentNode.contains(link));
     });
+    var tint = link.getAttribute('data-menu-color');
+    if (tint) menu.style.setProperty('--menu-tint', tint);
+    else menu.style.removeProperty('--menu-tint');
   }
 
   document.addEventListener('pointerover', function (event) {
-    var link = event.target.closest && event.target.closest('[data-menu-preview]');
+    var link = event.target.closest && event.target.closest(MENU_TARGET);
     if (link) activateMenuPreview(link);
   });
 
   document.addEventListener('focusin', function (event) {
-    var link = event.target.closest && event.target.closest('[data-menu-preview]');
+    var link = event.target.closest && event.target.closest(MENU_TARGET);
     if (link) activateMenuPreview(link);
   });
 
@@ -1333,6 +1339,15 @@
       }
     );
   }
+
+  /* ---------- Colores de la colección: el color actual a la vista en el teléfono ---------- */
+
+  document.querySelectorAll('.hi-color-nav-list').forEach(function (list) {
+    var current = list.querySelector('[aria-current]');
+    if (!current || list.scrollWidth <= list.clientWidth) return;
+    var offset = current.getBoundingClientRect().left - list.getBoundingClientRect().left;
+    list.scrollLeft += offset - (list.clientWidth - current.offsetWidth) / 2;
+  });
 
   /* ---------- Anatomía de una pieza (puntos sobre la foto) ---------- */
 

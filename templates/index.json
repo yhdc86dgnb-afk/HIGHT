@@ -3,63 +3,74 @@
     "hero": {
       "type": "hero-collage",
       "blocks": {
-        "pieza-dragon": {
+        "pieza-estrellas": {
           "type": "piece",
           "settings": {
-            "product": "jean-flare-dragon-acido",
+            "product": "jean-patchwork-estrellas-violeta",
             "x": 4,
             "y": 6,
             "rotation": -7,
             "size": "l"
           }
         },
-        "pieza-leopardo": {
+        "pieza-fleco": {
           "type": "piece",
           "settings": {
-            "product": "jean-flare-patchwork-leopardo",
+            "product": "jean-wide-fleco-indigo",
             "x": 76,
             "y": 4,
             "rotation": 6,
             "size": "l"
           }
         },
-        "pieza-camiseta": {
+        "pieza-halftone": {
           "type": "piece",
           "settings": {
-            "product": "camiseta-celula-carmin",
-            "x": 12,
+            "product": "top-halftone-carmin",
+            "x": 13,
             "y": 52,
             "rotation": 5,
             "size": "m"
           }
         },
-        "pieza-indigo": {
+        "pieza-verde": {
           "type": "piece",
           "settings": {
-            "product": "jean-wide-patchwork-indigo",
-            "x": 66,
-            "y": 46,
+            "product": "jean-flare-destroyed-verde",
+            "x": 65,
+            "y": 47,
             "rotation": -5,
             "size": "l"
           }
         },
-        "pieza-chaqueta": {
+        "pieza-buzo": {
           "type": "piece",
           "settings": {
-            "product": "chaqueta-blood-rose",
+            "product": "buzo-destroyed-ceniza",
             "x": 44,
             "y": 66,
             "rotation": -3,
             "size": "s"
           }
+        },
+        "pieza-anillos": {
+          "type": "piece",
+          "settings": {
+            "product": "tejido-anillos-indigo",
+            "x": 29,
+            "y": 3,
+            "rotation": 4,
+            "size": "s"
+          }
         }
       },
       "block_order": [
-        "pieza-dragon",
-        "pieza-leopardo",
-        "pieza-camiseta",
-        "pieza-indigo",
-        "pieza-chaqueta"
+        "pieza-estrellas",
+        "pieza-fleco",
+        "pieza-halftone",
+        "pieza-verde",
+        "pieza-buzo",
+        "pieza-anillos"
       ],
       "settings": {
         "heading": "HIGHT — piezas únicas y denim intervenido",
@@ -127,11 +138,11 @@
       "type": "featured-collection",
       "settings": {
         "layout": "rail",
-        "eyebrow": "(DISPONIBLES)",
-        "heading": "LO QUE HAY",
+        "eyebrow": "(RECIÉN LLEGADO)",
+        "heading": "LO NUEVO",
         "text": "<p>Una de cada una. Cuando se vende, se va del archivo.</p>",
-        "collection": "all",
-        "products_to_show": 8,
+        "collection": "lo-nuevo",
+        "products_to_show": 12,
         "columns_desktop": "4",
         "view_all_label": "VER TODO",
         "color_scheme": "scheme-1"
@@ -143,33 +154,49 @@
         "acido": {
           "type": "color",
           "settings": {
-            "name": "ÁCIDO",
-            "color": "#dff04a",
-            "product": "jean-flare-dragon-acido"
+            "collection": "acido",
+            "name": "",
+            "color": "#dff04a"
           }
         },
         "carmin": {
           "type": "color",
           "settings": {
-            "name": "CARMÍN",
-            "color": "#c3142d",
-            "product": "camiseta-celula-carmin"
+            "collection": "carmin",
+            "name": "",
+            "color": "#c3142d"
           }
         },
         "indigo": {
           "type": "color",
           "settings": {
-            "name": "ÍNDIGO",
-            "color": "#5b7cfa",
-            "product": "jean-wide-patchwork-indigo"
+            "collection": "indigo",
+            "name": "",
+            "color": "#5b7cfa"
+          }
+        },
+        "magenta": {
+          "type": "color",
+          "settings": {
+            "collection": "magenta",
+            "name": "",
+            "color": "#e0218a"
+          }
+        },
+        "ceniza": {
+          "type": "color",
+          "settings": {
+            "collection": "ceniza",
+            "name": "",
+            "color": "#c4beb2"
           }
         },
         "leopardo": {
           "type": "color",
           "settings": {
-            "name": "LEOPARDO",
-            "color": "#c08a4e",
-            "product": "jean-flare-patchwork-leopardo"
+            "collection": "leopardo",
+            "name": "",
+            "color": "#c08a4e"
           }
         }
       },
@@ -177,12 +204,14 @@
         "acido",
         "carmin",
         "indigo",
+        "magenta",
+        "ceniza",
         "leopardo"
       ],
       "settings": {
         "eyebrow": "(ELIGE TU COLOR)",
-        "heading": "CADA PIEZA TIENE SU COLOR",
-        "text": "<p>Toca un color y la tienda se pinta con él.</p>",
+        "heading": "CADA COLOR TIENE SUS PIEZAS",
+        "text": "<p>Cada color es una colección. Tócalo y la tienda se pinta con él.</p>",
         "paint_store": true,
         "color_scheme": "scheme-1"
       }
@@ -279,7 +308,7 @@
         "heading": "TODAS LAS PIEZAS",
         "source": "products",
         "collection": "all",
-        "limit": 12,
+        "limit": 24,
         "color_scheme": "scheme-1"
       }
     },

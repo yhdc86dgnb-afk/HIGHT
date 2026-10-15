@@ -3,16 +3,53 @@
   if collection.handle == 'all' and section.settings.all_title != blank
     assign collection_title = section.settings.all_title
   endif
+  assign collection_accent = collection.metafields.custom.acento.value
 -%}
 {%- paginate collection.products by section.settings.products_per_page -%}
   <div class="hi-container hi-collection" style="--cols-desktop: {{ section.settings.columns_desktop }};" data-density-scope>
-    <header class="hi-collection-head">
-      <p class="t-label">{{ 'general.pieces_count' | t: count: collection.products_count }}</p>
+    <header class="hi-collection-head{% if collection_accent != blank %} hi-collection-head--color{% endif %}">
+      <p class="t-label hi-collection-count">
+        {%- if collection_accent != blank -%}
+          <span class="hi-dot" style="--swatch: {{ collection_accent }};" aria-hidden="true"></span>
+        {%- endif -%}
+        {{ 'general.pieces_count' | t: count: collection.products_count }}
+      </p>
       <h1 class="t-display-xxl hi-collection-title" data-reveal>{{ collection_title | escape }}</h1>
       {%- if section.settings.show_description and collection.description != blank -%}
         <div class="rte t-body-l t-measure">{{ collection.description }}</div>
       {%- endif -%}
     </header>
+
+    {%- if section.settings.show_color_nav -%}
+      {%- capture color_links -%}
+        {%- for color_collection in collections -%}
+          {%- assign color_value = color_collection.metafields.custom.acento.value -%}
+          {%- if color_value != blank and color_collection.products_count > 0 -%}
+            <li>
+              <a
+                href="{{ color_collection.url }}"
+                class="hi-color-chip"
+                style="--swatch: {{ color_value }};"
+                {% if color_collection.handle == collection.handle %}
+                  aria-current="page"
+                {% endif %}
+              >
+                <span class="hi-dot" aria-hidden="true"></span>
+                {{- color_collection.title | escape -}}
+              </a>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- if color_links != blank -%}
+        <nav class="hi-color-nav" aria-label="{{ 'collections.colors_label' | t }}">
+          <p class="t-label">{{ 'collections.colors_title' | t }}</p>
+          <ul class="hi-color-nav-list" role="list">
+            {{ color_links }}
+          </ul>
+        </nav>
+      {%- endif -%}
+    {%- endif -%}
 
     {%- if section.settings.show_image and collection.image -%}
       <div class="hi-collection-banner">
@@ -108,6 +145,13 @@
       "id": "all_title",
       "label": "Título para \"Todos los productos\"",
       "default": "TIENDA"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_color_nav",
+      "label": "Mostrar los colores",
+      "info": "Enlaces a las colecciones con color propio (campo Color de la colección). Al entrar a una, la tienda toma su color.",
+      "default": true
     },
     {
       "type": "checkbox",

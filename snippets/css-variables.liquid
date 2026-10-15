@@ -5,12 +5,24 @@
 
   El acento es global (--accent). Los esquemas oscuros y neutros usan el acento en los botones;
   los claros y los muy saturados (carmín, ácido) invierten el botón con su propio texto y fondo.
+  En una colección con color propio (metacampo custom.acento), ese color reemplaza el acento del tema.
+
+  @param {string} [page_accent] - Color de la colección abierta
+  @param {string} [page_on_accent] - Color del texto sobre page_accent
 {%- enddoc -%}
 {%- liquid
-  assign accent_brightness = settings.accent | color_brightness
-  assign on_accent = '#0d0c0b'
-  if accent_brightness < 120
-    assign on_accent = '#ece3d0'
+  assign accent_default = settings.accent
+  assign accent_default_brightness = accent_default | color_brightness
+  assign on_accent_default = '#0d0c0b'
+  if accent_default_brightness < 120
+    assign on_accent_default = '#ece3d0'
+  endif
+
+  assign accent = accent_default
+  assign on_accent = on_accent_default
+  if page_accent != blank
+    assign accent = page_accent
+    assign on_accent = page_on_accent | default: on_accent_default
   endif
 -%}
 {%- style -%}
@@ -44,10 +56,10 @@
   }
 
   :root {
-    --accent: {{ settings.accent }};
+    --accent: {{ accent }};
     --on-accent: {{ on_accent }};
-    --accent-default: {{ settings.accent }};
-    --on-accent-default: {{ on_accent }};
+    --accent-default: {{ accent_default }};
+    --on-accent-default: {{ on_accent_default }};
     --grain-url: url({{ 'grano.svg' | asset_url }});
   }
 

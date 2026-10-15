@@ -83,9 +83,11 @@
               assign link_number = '0' | append: link_number
             endif
             assign link_image = nil
+            assign link_color = ''
             case link.type
               when 'collection_link'
                 assign link_image = link.object.featured_image
+                assign link_color = link.object.metafields.custom.acento.value
               when 'product_link'
                 assign link_image = link.object.featured_media.preview_image
             endcase
@@ -104,20 +106,47 @@
               {% if link_image != nil %}
                 data-menu-preview="MenuPreview-{{ forloop.index }}"
               {% endif %}
+              {% if link_color != blank %}
+                style="--swatch: {{ link_color }};" data-menu-color="{{ link_color }}"
+              {% endif %}
             >
               <span class="hi-menu-n" aria-hidden="true">{{ link_number }}</span>
               <span class="hi-menu-title">{{ link.title | escape }}</span>
+              {%- if link_color != blank -%}
+                <span class="hi-dot hi-menu-dot" aria-hidden="true"></span>
+              {%- endif -%}
             </a>
             {%- if link.links.size > 0 -%}
+              {%- assign parent_index = forloop.index -%}
               <ul class="hi-menu-sub" role="list">
                 {%- for child_link in link.links -%}
+                  {%- liquid
+                    assign child_image = nil
+                    assign child_color = ''
+                    case child_link.type
+                      when 'collection_link'
+                        assign child_image = child_link.object.featured_image
+                        assign child_color = child_link.object.metafields.custom.acento.value
+                      when 'product_link'
+                        assign child_image = child_link.object.featured_media.preview_image
+                    endcase
+                  -%}
                   <li>
                     <a
                       href="{{ child_link.url }}"
                       {% if child_link.current %}
                         aria-current="page"
                       {% endif %}
+                      {% if child_image != nil and section.settings.menu_images %}
+                        data-menu-preview="MenuPreview-{{ parent_index }}-{{ forloop.index }}"
+                      {% endif %}
+                      {% if child_color != blank %}
+                        class="hi-menu-sub-color" style="--swatch: {{ child_color }};" data-menu-color="{{ child_color }}"
+                      {% endif %}
                     >
+                      {%- if child_color != blank -%}
+                        <span class="hi-dot" aria-hidden="true"></span>
+                      {%- endif -%}
                       {{- child_link.title | escape -}}
                     </a>
                   </li>
@@ -144,6 +173,7 @@
               assign link_product = menu_products[forloop.index0]
               assign link_image = link_product.featured_media.preview_image
             endif
+            assign parent_index = forloop.index
           -%}
           {%- if link_image != nil -%}
             <figure class="hi-menu-preview hi-print" id="MenuPreview-{{ forloop.index }}" style="--r: {% cycle '-4deg', '3deg', '-2deg', '5deg' %};">
@@ -154,6 +184,30 @@
               }}
             </figure>
           {%- endif -%}
+          {%- for child_link in link.links -%}
+            {%- liquid
+              assign child_image = nil
+              case child_link.type
+                when 'collection_link'
+                  assign child_image = child_link.object.featured_image
+                when 'product_link'
+                  assign child_image = child_link.object.featured_media.preview_image
+              endcase
+            -%}
+            {%- if child_image != nil -%}
+              <figure
+                class="hi-menu-preview hi-print"
+                id="MenuPreview-{{ parent_index }}-{{ forloop.index }}"
+                style="--r: {% cycle 'child': '3deg', '-3deg', '4deg', '-5deg' %};"
+              >
+                {{
+                  child_image
+                  | image_url: width: 900
+                  | image_tag: widths: '450, 600, 900', sizes: '30vw', loading: 'lazy', alt: ''
+                }}
+              </figure>
+            {%- endif -%}
+          {%- endfor -%}
         {%- endfor -%}
       </div>
     {%- endif -%}
@@ -222,7 +276,7 @@
       "id": "menu",
       "label": "Menú principal",
       "default": "main-menu",
-      "info": "Se abre a pantalla completa con letras gigantes. Funciona mejor con 3 a 6 enlaces."
+      "info": "Se abre a pantalla completa con letras gigantes. Funciona mejor con 3 a 6 enlaces. Las colecciones con color propio llevan un punto de ese color y tiñen el menú al pasar por ellas."
     },
     {
       "type": "link_list",

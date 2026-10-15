@@ -6,7 +6,21 @@
     {{ 'anton-latin.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
     {{ 'space-grotesk-latin.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 
-    {% render 'css-variables' %}
+    {%- liquid
+      # Una colección con el metacampo custom.acento pinta la tienda con su color.
+      if request.page_type == 'collection'
+        assign page_accent = collection.metafields.custom.acento.value
+      endif
+      assign page_on_accent = '#0d0c0b'
+      if page_accent != blank
+        assign page_accent_brightness = page_accent | color_brightness
+        if page_accent_brightness < 120
+          assign page_on_accent = '#ece3d0'
+        endif
+      endif
+    -%}
+
+    {% render 'css-variables', page_accent: page_accent, page_on_accent: page_on_accent %}
     {{ 'hight.css' | asset_url | stylesheet_tag }}
 
     {%- if settings.page_transitions -%}
@@ -20,11 +34,18 @@
     {%- if settings.visitor_accent -%}
       <script>
         try {
-          var hightAccent = JSON.parse(localStorage.getItem('hight-accent') || 'null');
-          if (hightAccent && /^#[0-9a-f]{6}$/i.test(hightAccent.color) && /^#[0-9a-f]{6}$/i.test(hightAccent.on)) {
-            document.documentElement.style.setProperty('--accent', hightAccent.color);
-            document.documentElement.style.setProperty('--on-accent', hightAccent.on);
-          }
+          {%- if page_accent != blank %}
+            localStorage.setItem(
+              'hight-accent',
+              JSON.stringify({ color: '{{ page_accent }}', on: '{{ page_on_accent }}', name: {{ collection.title | json }} })
+            );
+          {%- else %}
+            var hightAccent = JSON.parse(localStorage.getItem('hight-accent') || 'null');
+            if (hightAccent && /^#[0-9a-f]{6}$/i.test(hightAccent.color) && /^#[0-9a-f]{6}$/i.test(hightAccent.on)) {
+              document.documentElement.style.setProperty('--accent', hightAccent.color);
+              document.documentElement.style.setProperty('--on-accent', hightAccent.on);
+            }
+          {%- endif %}
         } catch (e) {}
       </script>
     {%- endif -%}
