@@ -117,10 +117,30 @@
           {%- endif -%}
 
         {%- when 'variant_picker' -%}
-          {%- unless product.has_only_default_variant -%}
+          {%- liquid
+            assign fit_note = product.metafields.custom.nota_corte.value | default: block.settings.fit_note
+            assign piece_size = product.metafields.custom.talla.value
+            assign piece_measures = product.metafields.custom.medidas.value
+          -%}
+          {%- if product.has_only_default_variant -%}
+            {%- if piece_size != blank or piece_measures != blank -%}
+              <div class="hi-variant-block hi-piece-size" {{ block.shopify_attributes }}>
+                {%- if piece_size != blank -%}
+                  <p class="hi-piece-size-row">
+                    <span class="t-label">{{ 'products.size_legend' | t }}</span>
+                    <span class="hi-piece-size-value">{{ piece_size | escape }}</span>
+                  </p>
+                {%- endif -%}
+                {%- if piece_measures != blank -%}
+                  <p class="hi-piece-measures">{{ piece_measures | escape | newline_to_br }}</p>
+                {%- else -%}
+                  <p class="hi-product-fit">{{ 'products.size_unique_note' | t }}</p>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- else -%}
             <div class="hi-variant-block" {{ block.shopify_attributes }}>
               {% render 'variant-picker', product: product, section_id: section.id %}
-              {%- assign fit_note = product.metafields.custom.nota_corte.value | default: block.settings.fit_note -%}
               {%- if fit_note != blank -%}
                 <p class="hi-product-fit">{{ fit_note | escape }}</p>
               {%- endif -%}
@@ -136,7 +156,7 @@
                 </button>
               {%- endif -%}
             </div>
-          {%- endunless -%}
+          {%- endif -%}
 
         {%- when 'buy_buttons' -%}
           <product-form class="hi-product-buy" data-section-id="{{ section.id }}" {{ block.shopify_attributes }}>

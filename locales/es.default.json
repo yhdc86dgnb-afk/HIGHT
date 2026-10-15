@@ -102,7 +102,10 @@
       "no_blanquear": "No blanquear",
       "planchar_bajo": "Planchar a baja temperatura",
       "no_secadora": "No usar secadora"
-    }
+    },
+    "size_short": "T. {{ size }}",
+    "size_value": "Talla {{ size }}",
+    "size_unique_note": "Viene en una sola talla. Si quieres las medidas exactas, escríbenos."
   },
   "color_story": {
     "pick": "Pintar la tienda de {{ name }}",

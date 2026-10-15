@@ -90,8 +90,11 @@ Sube el archivo en *Contenido > Archivos* o directamente en el campo de la secci
 4. **Precio:** *Configuración > Tienda > Moneda > Cambiar formato*: `${{amount_no_decimals_with_comma_separator}}` → `$690.000`.
 5. **Piezas únicas:** una prenda con una sola variante e inventario de 1 unidad muestra **PIEZA ÚNICA** y el sello que gira.
 6. **Envío gratis:** el aviso del carrito está apagado (0). Actívalo en *Configuración del tema > Carrito* solo si lo ofreces.
-7. **Metacampos opcionales:** `custom.corte_material` (tipo en la tarjeta), `custom.ficha` (ficha técnica),
-   `custom.nota_corte` y `custom.guia_tallas` (`camiseta`, `hoodie` o `pantalon`).
+7. **Talla y medidas de cada pieza:** metacampos `custom.talla` (*Talla de la pieza*: S, M, 30, Única) y
+   `custom.medidas` (*Medidas de la pieza*, una por línea). La talla va en una marquilla sobre la foto de la
+   tarjeta y, con las medidas, en la ficha. Se llenan en *Productos > (prenda) > Metacampos*.
+8. **Metacampos opcionales:** `custom.corte_material` (*Corte y material*, en la tarjeta), `custom.ficha`
+   (ficha técnica), `custom.nota_corte` y `custom.guia_tallas` (`camiseta`, `hoodie` o `pantalon`).
 
 ## Publicar con Shopify CLI
 

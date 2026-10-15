@@ -4,6 +4,10 @@ jobs:
   theme-check:
     name: Theme Check
     runs-on: ubuntu-latest
+    # La acción publica el resultado como un "check" del commit: necesita permiso de escritura en checks.
+    permissions:
+      contents: read
+      checks: write
     steps:
       - uses: actions/checkout@v4
       - name: Theme Check

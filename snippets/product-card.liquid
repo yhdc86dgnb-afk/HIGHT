@@ -2,6 +2,7 @@
   Tarjeta de producto: la foto como copia impresa (sin recorte, en su proporción), una marquilla
   arriba (PIEZA ÚNICA, AGOTADO, ÚLTIMAS N o el drop), nombre en Anton, tipo y precio en mono.
   Si la prenda tiene el metacampo custom.acento (color), la tarjeta usa ese color al pasar el cursor.
+  Con el metacampo custom.talla, la talla va en una marquilla sobre la foto.
   Con "Agregar al carrito desde la tarjeta": botón AGREGAR para piezas de una variante y botones
   de talla para prendas con una sola opción.
   Sin producto dibuja una tarjeta de maqueta.
@@ -77,6 +78,7 @@
     if settings.card_show_meta
       assign card_meta = product.metafields.custom.corte_material.value | default: product.type
     endif
+    assign card_size = product.metafields.custom.talla.value
 
     assign card_accent = product.metafields.custom.acento.value
     assign card_on_accent = '#0d0c0b'
@@ -148,9 +150,15 @@
         {%- if card_tag != '' -%}
           <span class="hi-tag hi-tag-{{ card_tag_style }} hi-card-tag">{{ card_tag | escape }}</span>
         {%- endif -%}
+        {%- if card_size != blank -%}
+          <span class="hi-card-size" aria-hidden="true">{{ 'products.size_short' | t: size: card_size }}</span>
+        {%- endif -%}
       </div>
       <div class="hi-card-body">
         <h3 class="hi-card-name">{{ product.title | escape }}</h3>
+        {%- if card_size != blank -%}
+          <span class="visually-hidden">{{ 'products.size_value' | t: size: card_size }}</span>
+        {%- endif -%}
         <div class="hi-card-row">
           {%- if card_meta != blank -%}
             <span class="hi-card-meta">{{ card_meta | escape }}</span>

@@ -3,10 +3,10 @@
     "hero": {
       "type": "hero-collage",
       "blocks": {
-        "pieza-estrellas": {
+        "pieza-smiley": {
           "type": "piece",
           "settings": {
-            "product": "jean-patchwork-estrellas-violeta",
+            "product": "chaqueta-smiley-acido",
             "x": 4,
             "y": 6,
             "rotation": -7,
@@ -33,30 +33,30 @@
             "size": "m"
           }
         },
-        "pieza-verde": {
+        "pieza-neon": {
           "type": "piece",
           "settings": {
-            "product": "jean-flare-destroyed-verde",
+            "product": "jean-flare-costura-neon",
             "x": 65,
             "y": 47,
             "rotation": -5,
             "size": "l"
           }
         },
-        "pieza-buzo": {
+        "pieza-multitud": {
           "type": "piece",
           "settings": {
-            "product": "buzo-destroyed-ceniza",
+            "product": "buzo-multitud-termica",
             "x": 44,
             "y": 66,
             "rotation": -3,
             "size": "s"
           }
         },
-        "pieza-anillos": {
+        "pieza-estrellas": {
           "type": "piece",
           "settings": {
-            "product": "tejido-anillos-indigo",
+            "product": "jean-patchwork-estrellas-violeta",
             "x": 29,
             "y": 3,
             "rotation": 4,
@@ -65,12 +65,12 @@
         }
       },
       "block_order": [
-        "pieza-estrellas",
+        "pieza-smiley",
         "pieza-fleco",
         "pieza-halftone",
-        "pieza-verde",
-        "pieza-buzo",
-        "pieza-anillos"
+        "pieza-neon",
+        "pieza-multitud",
+        "pieza-estrellas"
       ],
       "settings": {
         "heading": "HIGHT — piezas únicas y denim intervenido",
