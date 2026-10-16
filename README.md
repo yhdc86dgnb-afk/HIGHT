@@ -97,6 +97,9 @@ si alguien las dejó en `custom.combina`.
 
 ![Combínala con](docs/preview/combinala-con.jpg)
 
+Las mismas respuestas están dibujadas, prenda por prenda, en los bocetos para Illustrator de
+[`bocetos/`](bocetos/README.md): boceto plano de frente y espalda, detalles numerados y la ficha completa.
+
 Los textos de las políticas de cambios y de envíos están en [`docs/politicas/`](docs/politicas/), listos para pegar
 en *Configuración > Políticas*. Mientras no estén ahí, la ficha enlaza a las páginas **Envíos** y **Cambios y
 devoluciones**.
@@ -158,6 +161,8 @@ snippets/        product-card, sticker, product-gallery, density-toggle, price, 
 templates/       plantillas JSON + gift_card.liquid
 design-system/   design system HIGHT original (referencia)
 docs/preview/    capturas de la vista previa
+docs/politicas/  políticas de envío y de cambios para pegar en Shopify
+bocetos/         fichas técnicas para Illustrator (SVG y PDF) y su generador
 ```
 
 `shopify theme check` pasa sin observaciones y el workflow `.github/workflows/theme-check.yml` lo corre en cada push.

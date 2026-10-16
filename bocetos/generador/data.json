@@ -1,0 +1,1323 @@
+[
+ {
+  "id": 15395943776455,
+  "handle": "chaqueta-blood-rose",
+  "title": "Chaqueta blood rose",
+  "type": "Chaqueta",
+  "vendor": "HIGHT",
+  "tags": [
+   "Chaqueta",
+   "Color Magenta"
+  ],
+  "price": 500000,
+  "status": "ACTIVE",
+  "accent": "#b9a2e8",
+  "corte": "",
+  "created": "2026-10-08T14:24:06Z",
+  "available": true,
+  "group": "layer",
+  "distinto": "Doble capa: una cubierta lavanda calada a mano deja ver por debajo un degradado de fuego, de rojo a negro.",
+  "nota_corte": "La cremallera va de abajo hasta la capucha: cerrada queda envolvente y abierta se usa como chaqueta. Los puños acanalados la ajustan a las muñecas.",
+  "material": "Doble capa de tela, así que abriga más que una chaqueta sencilla: va bien en las noches frescas de Medellín o como capa en clima frío.",
+  "confeccion": "Calados hechos a mano en la capa exterior, cremallera metálica continua hasta la capucha y puños acanalados en degradado.",
+  "cuidado": "Lavar a mano, al revés y en agua fría, sin retorcer, para no abrir los calados. Secar a la sombra. No usar secadora.",
+  "ocasiones": [
+   "Noche",
+   "Conciertos",
+   "Clima frío"
+  ],
+  "por_puesta": 5000,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Jean Patchwork Estrellas Violeta",
+    "role": "Abajo",
+    "price": 650000
+   },
+   {
+    "title": "Top Malla Asimétrico Rojo",
+    "role": "Arriba",
+    "price": 390000
+   },
+   {
+    "title": "Short Camuflado Leopardo Rosa",
+    "role": "Abajo",
+    "price": 260000
+   }
+  ],
+  "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
+  "unique": false
+ },
+ {
+  "id": 15396634820807,
+  "handle": "jean-flare-patchwork-leopardo",
+  "title": "Jean Flare Patchwork Leopardo",
+  "type": "Jean",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Leopardo",
+   "Jean",
+   "Patchwork",
+   "Pieza única"
+  ],
+  "price": 690000,
+  "status": "ACTIVE",
+  "accent": "#c08a4e",
+  "corte": "Flare · Patchwork",
+  "created": "2026-10-08T19:35:50Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Patchwork con flama de serpiente, mariposas bordadas, cargo camuflado y bota de leopardo: la pieza arma el outfit sola.",
+  "nota_corte": "Flare: ajustado arriba y abierto desde la rodilla, con la bota sobre el zapato. Los costados llevan cordón cruzado.",
+  "material": "Patchwork de denim en varios lavados, con pelo sintético en la bota. Pesa más que un jean liso: mejor para clima templado o frío.",
+  "confeccion": "Parches cosidos con el borde deshilachado a propósito, aplicaciones bordadas, ojales con cordón en los costados, cadenas y bolsillo cargo con dije.",
+  "cuidado": "Lavar a mano, al revés y en agua fría. No usar secadora. El fleco de los bordes crece con el uso y es parte de la pieza.",
+  "ocasiones": [
+   "Noche",
+   "Conciertos",
+   "Fin de semana"
+  ],
+  "por_puesta": 6900,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Camiseta Célula Carmín",
+    "role": "Arriba",
+    "price": 169000
+   },
+   {
+    "title": "Chaqueta Trouble Maker",
+    "role": "Encima",
+    "price": 580000
+   },
+   {
+    "title": "Top Malla Asimétrico Rojo",
+    "role": "Arriba",
+    "price": 390000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15396634853575,
+  "handle": "jean-flare-dragon-acido",
+  "title": "Jean Flare Dragón Ácido",
+  "type": "Jean",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Ácido",
+   "Destroyed",
+   "Jean",
+   "Pieza única"
+  ],
+  "price": 490000,
+  "status": "ACTIVE",
+  "accent": "#dff04a",
+  "corte": "Flare · Sobreteñido",
+  "created": "2026-10-08T19:35:52Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Denim oscuro sobreteñido en amarillo ácido, con dragones pintados a los lados.",
+  "nota_corte": "Flare: ajustado arriba y abierto desde la rodilla. Al sentarte se siente como un jean normal.",
+  "material": "Denim sobreteñido. Fresco para el día en clima templado como el de Medellín y abriga lo justo en Bogotá.",
+  "confeccion": "Los rotos van reforzados con costura en zigzag para que el destroyed aguante el uso diario; los hilos sueltos son parte del diseño.",
+  "cuidado": "Lavar al revés, en agua fría y por separado: el tinte puede soltar color en los primeros lavados. No usar secadora. Con el tiempo el amarillo se suaviza.",
+  "ocasiones": [
+   "Diario",
+   "Noche",
+   "Festivales"
+  ],
+  "por_puesta": 4900,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Top Halftone Carmín",
+    "role": "Arriba",
+    "price": 99000
+   },
+   {
+    "title": "Tejido Anillos Índigo",
+    "role": "Encima",
+    "price": 460000
+   },
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15396634886343,
+  "handle": "camiseta-celula-carmin",
+  "title": "Camiseta Célula Carmín",
+  "type": "Camiseta",
+  "vendor": "HIGHT",
+  "tags": [
+   "Camiseta",
+   "Color Carmín",
+   "Estampado total"
+  ],
+  "price": 169000,
+  "status": "ACTIVE",
+  "accent": "#c3142d",
+  "corte": "Regular · Estampado total",
+  "created": "2026-10-08T19:35:52Z",
+  "available": true,
+  "group": "top",
+  "distinto": "Estampado de pintura fluida en carmín y crema que cubre todo el cuerpo, mangas incluidas.",
+  "nota_corte": "Corte regular, manga corta y cuello redondo: se mueve contigo. Viene en S, M, L y XL; si la quieres más suelta, sube una talla.",
+  "material": "Tela de punto de camiseta, liviana: fresca para el día en Medellín o en tierra caliente.",
+  "confeccion": "Estampado total por frente, espalda y mangas.",
+  "cuidado": "Lavar al revés en agua fría. No usar secadora ni planchar sobre el estampado: así el color dura más.",
+  "ocasiones": [
+   "Diario",
+   "Fin de semana",
+   "Calor"
+  ],
+  "por_puesta": 1690,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Jean Wide Fleco Índigo",
+    "role": "Abajo",
+    "price": 620000
+   },
+   {
+    "title": "Chaqueta Trouble Maker",
+    "role": "Encima",
+    "price": 580000
+   },
+   {
+    "title": "Jean Flare Patchwork Leopardo",
+    "role": "Abajo",
+    "price": 690000
+   }
+  ],
+  "basics": "Un jean recto oscuro o un pantalón negro amplio, con tenis blancos.",
+  "unique": false
+ },
+ {
+  "id": 15396634919111,
+  "handle": "top-malla-asimetrico-rojo",
+  "title": "Top Malla Asimétrico Rojo",
+  "type": "Top",
+  "vendor": "Jenn Lee",
+  "tags": [
+   "Archivo",
+   "Color Carmín",
+   "Pieza única",
+   "Top"
+  ],
+  "price": 390000,
+  "status": "ACTIVE",
+  "accent": "#c3142d",
+  "corte": "Asimétrico · Malla",
+  "created": "2026-10-08T19:35:53Z",
+  "available": true,
+  "group": "top",
+  "distinto": "Malla negra, jersey rojo y cadena con broches en un solo top asimétrico.",
+  "nota_corte": "Ajustado al cuerpo, sin mangas y con cuello alto: los brazos quedan libres. El ruedo baja en punta hacia un lado.",
+  "material": "Malla abierta y jersey: liviano y fresco para clima cálido, o debajo de una chaqueta en la noche.",
+  "confeccion": "Malla unida en diagonal a un panel de jersey, con cadena metálica y broches que cruzan el pecho.",
+  "cuidado": "Lavar a mano en agua fría, con cuidado para que la cadena no enganche la malla. Secar en plano, a la sombra.",
+  "ocasiones": [
+   "Noche",
+   "Fiestas",
+   "Conciertos"
+  ],
+  "por_puesta": 3900,
+  "origen": "Pieza de Jenn Lee, elegida por HIGHT en Medellín.",
+  "combina": [
+   {
+    "title": "Jean Patchwork Cuadros",
+    "role": "Abajo",
+    "price": 540000
+   },
+   {
+    "title": "Chaqueta Trouble Maker",
+    "role": "Encima",
+    "price": 580000
+   },
+   {
+    "title": "Jean Wide Patchwork Índigo",
+    "role": "Abajo",
+    "price": 590000
+   }
+  ],
+  "basics": "Un jean recto oscuro o un pantalón negro amplio, con tenis blancos.",
+  "unique": true
+ },
+ {
+  "id": 15396634951879,
+  "handle": "jean-wide-patchwork-indigo",
+  "title": "Jean Wide Patchwork Índigo",
+  "type": "Jean",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Índigo",
+   "Jean",
+   "Patchwork",
+   "Pieza única"
+  ],
+  "price": 590000,
+  "status": "ACTIVE",
+  "accent": "#5b7cfa",
+  "corte": "Wide · Patchwork",
+  "created": "2026-10-08T19:35:54Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Tiras de denim índigo en lavados distintos, con efecto de cloro, cosidas en diagonal.",
+  "nota_corte": "Wide: pierna amplia que no aprieta al sentarte ni al caminar. Si prefieres el tiro más arriba, úsalo con cinturón.",
+  "material": "Denim en varias capas, más pesado que un jean liso: ideal para clima templado o frío.",
+  "confeccion": "Tiras cosidas en diagonal con el borde crudo a propósito y bragueta con cremallera metálica.",
+  "cuidado": "Lavar a mano, al revés y en agua fría. No usar secadora. El deshilachado cambia con cada uso y el índigo se aclara poco a poco.",
+  "ocasiones": [
+   "Diario",
+   "Fin de semana",
+   "Viajes"
+  ],
+  "por_puesta": 5900,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Top Halftone Carmín",
+    "role": "Arriba",
+    "price": 99000
+   },
+   {
+    "title": "Buzo Multitud Térmica",
+    "role": "Encima",
+    "price": 390000
+   },
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15413644067015,
+  "handle": "jean-wide-fleco-indigo",
+  "title": "Jean Wide Fleco Índigo",
+  "type": "Jean",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Índigo",
+   "Jean",
+   "Patchwork",
+   "Pieza única"
+  ],
+  "price": 620000,
+  "status": "ACTIVE",
+  "accent": "#5b7cfa",
+  "corte": "Wide · Patchwork",
+  "created": "2026-10-15T14:05:21Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Franjas de índigo con el borde crudo de arriba abajo: el fleco es la textura del jean.",
+  "nota_corte": "Pierna muy amplia que cae sobre el zapato y no aprieta al sentarte ni al caminar. Con cinturón queda más arriba en la cadera.",
+  "material": "Denim en franjas superpuestas, que abriga más que un jean liso: mejor para clima templado o frío.",
+  "confeccion": "Paneles cosidos en diagonal; el borde crudo de cada franja es a propósito, no un defecto.",
+  "cuidado": "Lavar a mano, al revés y en agua fría. No usar secadora. El fleco se suelta un poco con cada lavada: así envejece esta pieza.",
+  "ocasiones": [
+   "Diario",
+   "Noche",
+   "Conciertos"
+  ],
+  "por_puesta": 6200,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Top Malla Asimétrico Rojo",
+    "role": "Arriba",
+    "price": 390000
+   },
+   {
+    "title": "Tejido Anillos Índigo",
+    "role": "Encima",
+    "price": 460000
+   },
+   {
+    "title": "Top Halftone Carmín",
+    "role": "Arriba",
+    "price": 99000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15413644099783,
+  "handle": "jean-wide-ojales-ceniza",
+  "title": "Jean Wide Ojales Ceniza",
+  "type": "Jean",
+  "vendor": "SXYSU",
+  "tags": [
+   "Color Ceniza",
+   "Jean",
+   "Patchwork",
+   "Pieza única"
+  ],
+  "price": 520000,
+  "status": "DRAFT",
+  "accent": "#c4beb2",
+  "corte": "Wide · Ojales",
+  "created": "2026-10-15T14:05:22Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Paneles negros curvos, como costillas, sobre denim gris, con ojales metálicos.",
+  "nota_corte": "Wide con bota amplia: cómodo para sentarte y caminar.",
+  "material": "Denim lavado en gris: fresco en clima templado.",
+  "confeccion": "Paneles cosidos con el borde crudo y ojales metálicos en la pretina, el tiro y la bota. Etiqueta SXYSU.",
+  "cuidado": "Lavar al revés en agua fría. No usar secadora. Los bordes crudos se deshilachan un poco con el uso.",
+  "ocasiones": [
+   "Diario",
+   "Noche",
+   "Conciertos"
+  ],
+  "por_puesta": 5200,
+  "origen": "Pieza de SXYSU, elegida por HIGHT en Medellín.",
+  "combina": [
+   {
+    "title": "Camiseta Célula Carmín",
+    "role": "Arriba",
+    "price": 169000
+   },
+   {
+    "title": "Buzo Multitud Térmica",
+    "role": "Encima",
+    "price": 390000
+   },
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15413644132551,
+  "handle": "pantalon-hibrido-carmin",
+  "title": "Pantalón Híbrido Carmín",
+  "type": "Pantalón",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Carmín",
+   "Intervenido",
+   "Pantalón",
+   "Pieza única"
+  ],
+  "price": 450000,
+  "status": "DRAFT",
+  "accent": "#c3142d",
+  "corte": "Wide · Cremalleras",
+  "created": "2026-10-15T14:05:23Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Denim café abierto con cremalleras: de cada corte sale tela deportiva roja con franjas blancas.",
+  "nota_corte": "Pierna muy amplia y pretina con cordón: se ajusta a la cintura y no aprieta al sentarte.",
+  "material": "Denim con paneles de tela deportiva liviana: el denim le da cuerpo y la tela deportiva lo aligera.",
+  "confeccion": "Cremalleras que abren el denim y paneles ondulados cosidos por dentro.",
+  "cuidado": "Lavar al revés en agua fría, con las cremalleras cerradas. No usar secadora.",
+  "ocasiones": [
+   "Diario",
+   "Noche",
+   "Festivales"
+  ],
+  "por_puesta": 4500,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Top Halftone Carmín",
+    "role": "Arriba",
+    "price": 99000
+   },
+   {
+    "title": "Tejido Deshilado Ceniza",
+    "role": "Encima",
+    "price": 380000
+   },
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15413644165319,
+  "handle": "top-crop-rostros",
+  "title": "Top Crop Rostros",
+  "type": "Top",
+  "vendor": "SHEIN",
+  "tags": [
+   "Color Ceniza",
+   "Estampado",
+   "Top"
+  ],
+  "price": 89000,
+  "status": "ACTIVE",
+  "accent": "#c4beb2",
+  "corte": "Crop · Sin mangas",
+  "created": "2026-10-15T14:05:24Z",
+  "available": true,
+  "group": "top",
+  "distinto": "Un estampado de foto, no de logo: rostros, ojos y labios recortados como una hoja de contactos.",
+  "nota_corte": "Corto y ajustado al cuerpo, sin mangas: los brazos quedan libres y deja ver la cintura.",
+  "material": "Tela de punto liviana: fresca para clima cálido o para usar debajo de una camisa abierta.",
+  "confeccion": "Estampado en blanco y negro por toda la prenda. Etiqueta SHEIN.",
+  "cuidado": "Lavar al revés en agua fría. No planchar sobre el estampado.",
+  "ocasiones": [
+   "Noche",
+   "Fiestas",
+   "Calor"
+  ],
+  "por_puesta": 890,
+  "origen": "Pieza de SHEIN, elegida por HIGHT en Medellín.",
+  "combina": [
+   {
+    "title": "Jean Flare Costura Neón",
+    "role": "Abajo",
+    "price": 560000
+   },
+   {
+    "title": "Tejido Deshilado Ceniza",
+    "role": "Encima",
+    "price": 380000
+   },
+   {
+    "title": "Jean Wide Fleco Índigo",
+    "role": "Abajo",
+    "price": 620000
+   }
+  ],
+  "basics": "Un jean recto oscuro o un pantalón negro amplio, con tenis blancos.",
+  "unique": false
+ },
+ {
+  "id": 15413644198087,
+  "handle": "top-halftone-carmin",
+  "title": "Top Halftone Carmín",
+  "type": "Top",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Carmín",
+   "Estampado",
+   "Top"
+  ],
+  "price": 99000,
+  "status": "ACTIVE",
+  "accent": "#c3142d",
+  "corte": "Cuello alto · Sin mangas",
+  "created": "2026-10-15T14:05:25Z",
+  "available": true,
+  "group": "top",
+  "distinto": "Los puntos en semitono dibujan una silueta que se ve completa de lejos.",
+  "nota_corte": "Ajustado al cuerpo, sin mangas y con cuello alto: los brazos quedan libres.",
+  "material": "Tela de punto liviana; el cuello alto lo hace bueno para noches frescas debajo de una chaqueta.",
+  "confeccion": "Estampado en semitono por el frente y cuello alto.",
+  "cuidado": "Lavar al revés en agua fría. No planchar sobre el estampado.",
+  "ocasiones": [
+   "Noche",
+   "Conciertos",
+   "Fiestas"
+  ],
+  "por_puesta": 990,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Jean Wide Patchwork Índigo",
+    "role": "Abajo",
+    "price": 590000
+   },
+   {
+    "title": "Tejido Deshilado Ceniza",
+    "role": "Encima",
+    "price": 380000
+   },
+   {
+    "title": "Jean Wide Fleco Índigo",
+    "role": "Abajo",
+    "price": 620000
+   }
+  ],
+  "basics": "Un jean recto oscuro o un pantalón negro amplio, con tenis blancos.",
+  "unique": false
+ },
+ {
+  "id": 15413644230855,
+  "handle": "tejido-deshilado-ceniza",
+  "title": "Tejido Deshilado Ceniza",
+  "type": "Tejido",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Ceniza",
+   "Deconstruido",
+   "Pieza única",
+   "Tejido"
+  ],
+  "price": 380000,
+  "status": "ACTIVE",
+  "accent": "#c4beb2",
+  "corte": "Oversize · Tejido abierto",
+  "created": "2026-10-15T14:05:25Z",
+  "available": true,
+  "group": "layer",
+  "distinto": "Una capa tejida y calada para ponerse encima: cambia cualquier camiseta básica.",
+  "nota_corte": "Oversize y abierto al frente, con mangas anchas: se pone encima de todo y deja mover los brazos sin tirar.",
+  "material": "Tejido abierto que deja pasar el aire: abriga sin sofocar en las noches de Medellín.",
+  "confeccion": "Calados irregulares y tiras tejidas que cuelgan sueltas, a propósito: cada hueco es parte del diseño.",
+  "cuidado": "Lavar a mano en agua fría y secar en plano, a la sombra. Guárdalo doblado, no colgado, para que no se estire.",
+  "ocasiones": [
+   "Diario",
+   "Noches frescas",
+   "Viajes"
+  ],
+  "por_puesta": 3800,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Jean Wide Patchwork Índigo",
+    "role": "Abajo",
+    "price": 590000
+   },
+   {
+    "title": "Top Halftone Carmín",
+    "role": "Arriba",
+    "price": 99000
+   },
+   {
+    "title": "Jean Flare Patchwork Leopardo",
+    "role": "Abajo",
+    "price": 690000
+   }
+  ],
+  "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
+  "unique": true
+ },
+ {
+  "id": 15413644263623,
+  "handle": "buzo-destroyed-ceniza",
+  "title": "Buzo Destroyed Ceniza",
+  "type": "Buzo",
+  "vendor": "HIGHT",
+  "tags": [
+   "Buzo",
+   "Color Ceniza",
+   "Destroyed",
+   "Pieza única"
+  ],
+  "price": 520000,
+  "status": "ACTIVE",
+  "accent": "#c4beb2",
+  "corte": "Crop · Capucha",
+  "created": "2026-10-15T14:05:26Z",
+  "available": true,
+  "group": "layer",
+  "distinto": "Roto por capas y con un gráfico gótico dentro de la capucha: no es un buzo gris común.",
+  "nota_corte": "Corto y holgado, con capucha: se mueve con libertad y al levantar los brazos deja ver la cintura.",
+  "material": "Felpa lavada; los calados la hacen más fresca que un buzo normal. Va bien en las noches de Medellín.",
+  "confeccion": "Calados por capas en la capucha, las mangas y el pecho, y bordes crudos en las mangas.",
+  "cuidado": "Lavar a mano, al revés y en agua fría. No usar secadora. Los bordes crudos se deshilachan un poco más con el uso.",
+  "ocasiones": [
+   "Diario",
+   "Noche",
+   "Viajes"
+  ],
+  "por_puesta": 5200,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Short Camuflado Leopardo Rosa",
+    "role": "Abajo",
+    "price": 260000
+   },
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   },
+   {
+    "title": "Jean Wide Fleco Índigo",
+    "role": "Abajo",
+    "price": 620000
+   }
+  ],
+  "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
+  "unique": true
+ },
+ {
+  "id": 15413644329159,
+  "handle": "pantalon-hojas-carbon",
+  "title": "Pantalón Hojas Carbón",
+  "type": "Pantalón",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Ceniza",
+   "Intervenido",
+   "Pantalón",
+   "Pieza única"
+  ],
+  "price": 890000,
+  "status": "DRAFT",
+  "accent": "#c4beb2",
+  "corte": "Baggy · Aplicaciones",
+  "created": "2026-10-15T14:05:27Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Cubierto de hojas de tela arrugada que se mueven al caminar.",
+  "nota_corte": "Baggy: amplio en todo el largo, con la bota que cae en punta.",
+  "material": "Pantalón negro con capas de tela encima: abriga, mejor para clima templado o frío.",
+  "confeccion": "Hojas de tela cosidas por capas desde la cadera hasta la bota.",
+  "cuidado": "Lavar a mano en agua fría, sin retorcer. Secar colgado, a la sombra.",
+  "ocasiones": [
+   "Noche",
+   "Conciertos",
+   "Eventos"
+  ],
+  "por_puesta": 8900,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   },
+   {
+    "title": "Buzo Multitud Térmica",
+    "role": "Encima",
+    "price": 390000
+   },
+   {
+    "title": "Camiseta Célula Carmín",
+    "role": "Arriba",
+    "price": 169000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15413645050055,
+  "handle": "tejido-anillos-indigo",
+  "title": "Tejido Anillos Índigo",
+  "type": "Tejido",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Índigo",
+   "Pieza única",
+   "Tejido"
+  ],
+  "price": 460000,
+  "status": "ACTIVE",
+  "accent": "#5b7cfa",
+  "corte": "Crop · Tejido grueso",
+  "created": "2026-10-15T14:06:22Z",
+  "available": true,
+  "group": "layer",
+  "distinto": "Tiras tubulares unidas con argollas metálicas sobre un tejido grueso: un suéter que no se parece a otro.",
+  "nota_corte": "Corto, a la altura de la cintura, con cuello alto y mangas abombadas. Queda mejor con pantalones de tiro alto.",
+  "material": "Tejido grueso que abriga: para noches frescas o clima frío como el de Bogotá.",
+  "confeccion": "Tiras tubulares que recorren el pecho y las mangas, unidas con argollas metálicas.",
+  "cuidado": "Lavar a mano en agua fría, con cuidado para que las argollas no enganchen el tejido. Secar en plano.",
+  "ocasiones": [
+   "Noche",
+   "Clima frío",
+   "Viajes"
+  ],
+  "por_puesta": 4600,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Jean Flare Dragón Ácido",
+    "role": "Abajo",
+    "price": 490000
+   },
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   },
+   {
+    "title": "Jean Wide Fleco Índigo",
+    "role": "Abajo",
+    "price": 620000
+   }
+  ],
+  "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
+  "unique": true
+ },
+ {
+  "id": 15413645082823,
+  "handle": "jean-patchwork-cuadros",
+  "title": "Jean Patchwork Cuadros",
+  "type": "Jean",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Leopardo",
+   "Jean",
+   "Patchwork",
+   "Pieza única"
+  ],
+  "price": 540000,
+  "status": "ACTIVE",
+  "accent": "#c08a4e",
+  "corte": "Recto · Patchwork",
+  "created": "2026-10-15T14:06:23Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Franela a cuadros sobre denim claro y un vaquero estampado: un aire western que un jean liso no tiene.",
+  "nota_corte": "Corte recto, ni ajustado ni ancho: cómodo para sentarte y moverte todo el día.",
+  "material": "Denim claro con parches de franela que suman abrigo: va en clima templado o frío.",
+  "confeccion": "Parches de franela cosidos con el borde crudo a propósito y bragueta de botones.",
+  "cuidado": "Lavar al revés en agua fría. No usar secadora. Los bordes de los parches se deshilachan un poco con el uso.",
+  "ocasiones": [
+   "Diario",
+   "Fin de semana",
+   "Viajes"
+  ],
+  "por_puesta": 5400,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Camiseta Célula Carmín",
+    "role": "Arriba",
+    "price": 169000
+   },
+   {
+    "title": "Buzo Destroyed Ceniza",
+    "role": "Encima",
+    "price": 520000
+   },
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15413645115591,
+  "handle": "short-camuflado-leopardo-rosa",
+  "title": "Short Camuflado Leopardo Rosa",
+  "type": "Short",
+  "vendor": "EZTACLY",
+  "tags": [
+   "Color Magenta",
+   "Patchwork",
+   "Pieza única",
+   "Short"
+  ],
+  "price": 260000,
+  "status": "ACTIVE",
+  "accent": "#e0218a",
+  "corte": "Bermuda · Doble pretina",
+  "created": "2026-10-15T14:06:24Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Camuflado, leopardo y doble pretina en una sola bermuda, con letras rosadas aplicadas.",
+  "nota_corte": "Bermuda amplia con pretina de cordón: se ajusta a la cintura y no aprieta al sentarte.",
+  "material": "Tela tipo sudadera estampada: cómoda y fresca para clima cálido.",
+  "confeccion": "Doble pretina, una gris con cordón y otra rosada con taches, letras aplicadas y costuras expuestas a propósito.",
+  "cuidado": "Lavar al revés en agua fría. No usar secadora.",
+  "ocasiones": [
+   "Diario",
+   "Calor",
+   "Fin de semana"
+  ],
+  "por_puesta": 2600,
+  "origen": "Pieza de EZTACLY, elegida por HIGHT en Medellín.",
+  "combina": [
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   },
+   {
+    "title": "Buzo Destroyed Ceniza",
+    "role": "Encima",
+    "price": 520000
+   },
+   {
+    "title": "Top Malla Asimétrico Rojo",
+    "role": "Arriba",
+    "price": 390000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15413645148359,
+  "handle": "buzo-sakura-rosa",
+  "title": "Buzo Sakura Rosa",
+  "type": "Buzo",
+  "vendor": "HIGHT",
+  "tags": [
+   "Buzo",
+   "Color Magenta",
+   "Estampado"
+  ],
+  "price": 290000,
+  "status": "DRAFT",
+  "accent": "#e0218a",
+  "corte": "Cremallera · Capucha",
+  "created": "2026-10-15T14:06:25Z",
+  "available": true,
+  "group": "layer",
+  "distinto": "Ramas de cerezo estampadas sobre rosa, con bordes grises en contraste.",
+  "nota_corte": "Amplio, con cremallera y capucha: se usa abierto o cerrado.",
+  "material": "Buzo de felpa: abriga en las noches frescas.",
+  "confeccion": "Estampado de ramas, texto en cursiva y bolsillos con borde en contraste.",
+  "cuidado": "Lavar al revés en agua fría. No planchar sobre el estampado.",
+  "ocasiones": [
+   "Diario",
+   "Noches frescas",
+   "Viajes"
+  ],
+  "por_puesta": 2900,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Jean Wide Patchwork Índigo",
+    "role": "Abajo",
+    "price": 590000
+   },
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   },
+   {
+    "title": "Jean Patchwork Estrellas Violeta",
+    "role": "Abajo",
+    "price": 650000
+   }
+  ],
+  "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
+  "unique": false
+ },
+ {
+  "id": 15413645213895,
+  "handle": "jean-pintado-fucsia",
+  "title": "Jean Pintado Fucsia",
+  "type": "Jean",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Magenta",
+   "Jean",
+   "Pieza única",
+   "Pintado"
+  ],
+  "price": 480000,
+  "status": "DRAFT",
+  "accent": "#e0218a",
+  "corte": "Wide · Pintado",
+  "created": "2026-10-15T14:06:26Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Teñido en fucsia y pintado a mano con cruces, estrellas y calaveras.",
+  "nota_corte": "Wide: holgado de la cadera a la bota.",
+  "material": "Denim teñido: fresco en clima templado.",
+  "confeccion": "Pintado a mano, con parches de denim en X y rotos en las rodillas.",
+  "cuidado": "Lavar a mano, al revés y en agua fría, para cuidar la pintura. No usar secadora.",
+  "ocasiones": [
+   "Noche",
+   "Conciertos",
+   "Festivales"
+  ],
+  "por_puesta": 4800,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   },
+   {
+    "title": "Buzo Destroyed Ceniza",
+    "role": "Encima",
+    "price": 520000
+   },
+   {
+    "title": "Top Malla Asimétrico Rojo",
+    "role": "Arriba",
+    "price": 390000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15413645246663,
+  "handle": "jean-patchwork-estrellas-violeta",
+  "title": "Jean Patchwork Estrellas Violeta",
+  "type": "Jean",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Magenta",
+   "Jean",
+   "Patchwork",
+   "Pieza única"
+  ],
+  "price": 650000,
+  "status": "ACTIVE",
+  "accent": "#b06cff",
+  "corte": "Wide · Patchwork",
+  "created": "2026-10-15T14:06:27Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Dos jeans en uno, con estrellas en espiral, cremalleras y cadenas encima.",
+  "nota_corte": "Wide: pierna amplia que no aprieta al sentarte. La pretina negra marca la cintura.",
+  "material": "Denim con parches encima, más pesado que un jean liso: mejor en clima templado o frío.",
+  "confeccion": "La pretina de un jean unida al cuerpo de otro, con parches, cremalleras y cadenas cosidos encima y trazos pintados a mano.",
+  "cuidado": "Lavar a mano, al revés y en agua fría, con las cremalleras cerradas. No usar secadora.",
+  "ocasiones": [
+   "Noche",
+   "Conciertos",
+   "Festivales"
+  ],
+  "por_puesta": 6500,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Top Halftone Carmín",
+    "role": "Arriba",
+    "price": 99000
+   },
+   {
+    "title": "Chaqueta blood rose",
+    "role": "Encima",
+    "price": 500000
+   },
+   {
+    "title": "Camiseta Célula Carmín",
+    "role": "Arriba",
+    "price": 169000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15413645279431,
+  "handle": "jean-musgo",
+  "title": "Jean Musgo",
+  "type": "Jean",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Ácido",
+   "Intervenido",
+   "Jean",
+   "Pieza única"
+  ],
+  "price": 560000,
+  "status": "DRAFT",
+  "accent": "#dff04a",
+  "corte": "Flare · Aplicaciones",
+  "created": "2026-10-15T14:06:29Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Aplicaciones de fibra verde que imitan musgo creciendo sobre la tela.",
+  "nota_corte": "Flare: ajustado arriba y abierto desde la rodilla.",
+  "material": "Denim teñido en verde pálido: fresco en clima templado.",
+  "confeccion": "Aplicaciones de fibra cosidas sobre el denim y bota deshilachada.",
+  "cuidado": "Lavar a mano en agua fría, sin frotar las aplicaciones. Secar colgado.",
+  "ocasiones": [
+   "Noche",
+   "Eventos",
+   "Festivales"
+  ],
+  "por_puesta": 5600,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Top Halftone Carmín",
+    "role": "Arriba",
+    "price": 99000
+   },
+   {
+    "title": "Tejido Anillos Índigo",
+    "role": "Encima",
+    "price": 460000
+   },
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15413645312199,
+  "handle": "jean-flare-destroyed-verde",
+  "title": "Jean Flare Destroyed Verde",
+  "type": "Jean",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Ácido",
+   "Destroyed",
+   "Jean",
+   "Pieza única"
+  ],
+  "price": 480000,
+  "status": "ACTIVE",
+  "accent": "#dff04a",
+  "corte": "Flare · Destroyed",
+  "created": "2026-10-15T14:06:30Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Verde sobreteñido con rotos rellenos de otro verde: color y textura que un jean básico no tiene.",
+  "nota_corte": "Flare: ajustado arriba y con bota amplia que cae sobre el zapato. Al sentarte se siente como un jean normal.",
+  "material": "Denim sobreteñido. Fresco para el día en clima templado y abriga lo justo en Bogotá.",
+  "confeccion": "Rotos rellenos de tela verde clara y bordes cosidos en zigzag para que el destroyed quede firme.",
+  "cuidado": "Lavar al revés, en agua fría y por separado: el tinte puede soltar color al principio. No usar secadora.",
+  "ocasiones": [
+   "Diario",
+   "Noche",
+   "Festivales"
+  ],
+  "por_puesta": 4800,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   },
+   {
+    "title": "Buzo Destroyed Ceniza",
+    "role": "Encima",
+    "price": 520000
+   },
+   {
+    "title": "Camiseta Célula Carmín",
+    "role": "Arriba",
+    "price": 169000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ },
+ {
+  "id": 15414259515591,
+  "handle": "chaqueta-smiley-acido",
+  "title": "Chaqueta Smiley Ácido",
+  "type": "Chaqueta",
+  "vendor": "Dust of Gods",
+  "tags": [
+   "Archivo",
+   "Chaqueta",
+   "Color Ácido",
+   "Pieza única",
+   "Pintada a mano"
+  ],
+  "price": 620000,
+  "status": "ACTIVE",
+  "accent": "#dff04a",
+  "corte": "Crop · Pintada a mano",
+  "created": "2026-10-15T23:42:05Z",
+  "available": true,
+  "group": "layer",
+  "distinto": "Pintada a mano con caras sonrientes, rayos y cuadros: el amarillo se ve desde lejos.",
+  "nota_corte": "Corta y holgada, a la cintura: se mueve bien y se lleva abierta encima de cualquier camiseta.",
+  "material": "Denim teñido y pintado: chaqueta liviana para las noches de Medellín o para capas en clima frío.",
+  "confeccion": "Pintura a mano y aerosol, botones metálicos, correa con placa y una cadena que se quita.",
+  "cuidado": "Lavar a mano, al revés y en agua fría, para cuidar la pintura. Quitar la cadena antes de lavar. No usar secadora.",
+  "ocasiones": [
+   "Festivales",
+   "Conciertos",
+   "Fin de semana"
+  ],
+  "por_puesta": 6200,
+  "origen": "Pieza de Dust of Gods, elegida por HIGHT en Medellín.",
+  "combina": [
+   {
+    "title": "Jean Flare Costura Neón",
+    "role": "Abajo",
+    "price": 560000
+   },
+   {
+    "title": "Top Halftone Carmín",
+    "role": "Arriba",
+    "price": 99000
+   },
+   {
+    "title": "Jean Wide Fleco Índigo",
+    "role": "Abajo",
+    "price": 620000
+   }
+  ],
+  "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
+  "unique": true
+ },
+ {
+  "id": 15414259548359,
+  "handle": "buzo-multitud-termica",
+  "title": "Buzo Multitud Térmica",
+  "type": "Buzo",
+  "vendor": "HIGHT",
+  "tags": [
+   "Buzo",
+   "Color Ceniza",
+   "Destroyed",
+   "Estampado"
+  ],
+  "price": 390000,
+  "status": "ACTIVE",
+  "accent": "#a066ff",
+  "corte": "Crop · Cremallera",
+  "created": "2026-10-15T23:42:06Z",
+  "available": true,
+  "group": "layer",
+  "distinto": "La multitud en colores de cámara térmica es el estampado: el buzo arma el outfit solo.",
+  "nota_corte": "Corto y amplio, con cremallera: se usa abierto o cerrado y los brazos se mueven sin tirar.",
+  "material": "Felpa con capas de tela en los rotos: abriga en las noches frescas y en clima frío.",
+  "confeccion": "Rotos con capas de tela por debajo, costura de manta en contraste en un hombro y ruedo con hilos sueltos a propósito.",
+  "cuidado": "Lavar al revés en agua fría. No planchar sobre el estampado ni usar secadora. Los hilos del ruedo se sueltan un poco con el uso.",
+  "ocasiones": [
+   "Diario",
+   "Noche",
+   "Viajes"
+  ],
+  "por_puesta": 3900,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Jean Flare Patchwork Leopardo",
+    "role": "Abajo",
+    "price": 690000
+   },
+   {
+    "title": "Top Crop Rostros",
+    "role": "Arriba",
+    "price": 89000
+   },
+   {
+    "title": "Jean Wide Fleco Índigo",
+    "role": "Abajo",
+    "price": 620000
+   }
+  ],
+  "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
+  "unique": false
+ },
+ {
+  "id": 15414259613895,
+  "handle": "chaqueta-trouble-maker",
+  "title": "Chaqueta Trouble Maker",
+  "type": "Chaqueta",
+  "vendor": "Moreriot",
+  "tags": [
+   "Archivo",
+   "Chaqueta",
+   "Color Ceniza",
+   "Pieza única",
+   "Pintada a mano"
+  ],
+  "price": 580000,
+  "status": "ACTIVE",
+  "accent": "#9aa356",
+  "corte": "Crop · Pintada a mano",
+  "created": "2026-10-15T23:42:07Z",
+  "available": true,
+  "group": "layer",
+  "distinto": "Pintada como un grabado, con un corazón con alas y “Trouble Maker” en la espalda.",
+  "nota_corte": "Corta y recta, a la cintura: se cierra con tiras al frente o se lleva abierta.",
+  "material": "Denim negro pintado, con capas de tela oliva en los bordes: liviana para las noches frescas.",
+  "confeccion": "Pintura a mano en blanco, capas de tela oliva deshilachada en cuello, ruedo y puños, y tiras para amarrar.",
+  "cuidado": "Lavar a mano, al revés y en agua fría, para cuidar la pintura. No usar secadora.",
+  "ocasiones": [
+   "Noche",
+   "Conciertos",
+   "Fin de semana"
+  ],
+  "por_puesta": 5800,
+  "origen": "Pieza de Moreriot, elegida por HIGHT en Medellín.",
+  "combina": [
+   {
+    "title": "Jean Wide Patchwork Índigo",
+    "role": "Abajo",
+    "price": 590000
+   },
+   {
+    "title": "Top Halftone Carmín",
+    "role": "Arriba",
+    "price": 99000
+   },
+   {
+    "title": "Jean Flare Patchwork Leopardo",
+    "role": "Abajo",
+    "price": 690000
+   }
+  ],
+  "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
+  "unique": true
+ },
+ {
+  "id": 15414259646663,
+  "handle": "jean-flare-costura-neon",
+  "title": "Jean Flare Costura Neón",
+  "type": "Jean",
+  "vendor": "HIGHT",
+  "tags": [
+   "Color Ácido",
+   "Jean",
+   "Patchwork",
+   "Pieza única"
+  ],
+  "price": 560000,
+  "status": "ACTIVE",
+  "accent": "#62f07c",
+  "corte": "Flare · Patchwork",
+  "created": "2026-10-15T23:42:08Z",
+  "available": true,
+  "group": "bottom",
+  "distinto": "Costuras en zigzag verde neón que dibujan equis sobre las piernas: se ve desde lejos.",
+  "nota_corte": "Flare: ajustado arriba y abierto desde la rodilla, con la bota sobre el zapato.",
+  "material": "Denim verde oscuro con paneles más oscuros por dentro: fresco en clima templado y abriga en Bogotá.",
+  "confeccion": "Costuras decorativas en zigzag neón, correas negras con ojales metálicos y bolsillos cargo con borde crudo.",
+  "cuidado": "Lavar al revés, en agua fría y por separado. No usar secadora.",
+  "ocasiones": [
+   "Noche",
+   "Festivales",
+   "Conciertos"
+  ],
+  "por_puesta": 5600,
+  "origen": "Pieza de HIGHT, desde Medellín.",
+  "combina": [
+   {
+    "title": "Top Malla Asimétrico Rojo",
+    "role": "Arriba",
+    "price": 390000
+   },
+   {
+    "title": "Chaqueta Smiley Ácido",
+    "role": "Encima",
+    "price": 620000
+   },
+   {
+    "title": "Top Halftone Carmín",
+    "role": "Arriba",
+    "price": 99000
+   }
+  ],
+  "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+  "unique": true
+ }
+]
