@@ -66,7 +66,12 @@
     {%- endif -%}
 
     {%- if section.settings.enable_filtering -%}
-      {% render 'facets', results: collection, section_id: section.id, density: section.settings.density_toggle %}
+      {%- render 'facets',
+        results: collection,
+        section_id: section.id,
+        density: section.settings.density_toggle,
+        columns: section.settings.columns_desktop
+      -%}
     {%- elsif section.settings.density_toggle -%}
       <div class="hi-toolbar">
         <div class="hi-toolbar__start"></div>

@@ -7,7 +7,8 @@
     {{ 'space-grotesk-latin.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 
     {%- liquid
-      # Una colección con el metacampo custom.acento pinta la tienda con su color.
+      # Una colección con el metacampo custom.acento pinta la tienda con su color. El script de abajo lo
+      # recuerda solo durante esa visita; el color que el visitante elige en Elige tu color sí se guarda.
       if request.page_type == 'collection'
         assign page_accent = collection.metafields.custom.acento.value
       endif
@@ -35,12 +36,14 @@
       <script>
         try {
           {%- if page_accent != blank %}
-            localStorage.setItem(
-              'hight-accent',
+            sessionStorage.setItem(
+              'hight-accent-visit',
               JSON.stringify({ color: '{{ page_accent }}', on: '{{ page_on_accent }}', name: {{ collection.title | json }} })
             );
           {%- else %}
-            var hightAccent = JSON.parse(localStorage.getItem('hight-accent') || 'null');
+            var hightAccent = JSON.parse(
+              sessionStorage.getItem('hight-accent-visit') || localStorage.getItem('hight-accent') || 'null'
+            );
             if (hightAccent && /^#[0-9a-f]{6}$/i.test(hightAccent.color) && /^#[0-9a-f]{6}$/i.test(hightAccent.on)) {
               document.documentElement.style.setProperty('--accent', hightAccent.color);
               document.documentElement.style.setProperty('--on-accent', hightAccent.on);

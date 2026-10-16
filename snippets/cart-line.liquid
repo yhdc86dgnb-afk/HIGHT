@@ -23,7 +23,7 @@
   endunless
   assign line_label = 'cart.quantity_for' | t: title: item.product.title
 -%}
-<li class="hi-line" data-cart-line="{{ index }}">
+<li class="hi-line" data-cart-line="{{ index }}" data-cart-key="{{ item.key }}">
   <a href="{{ item.url }}" class="hi-line-media" tabindex="-1" aria-hidden="true">
     {%- if item.image -%}
       {{

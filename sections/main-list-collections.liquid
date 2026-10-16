@@ -5,15 +5,11 @@
 {%- endcomment -%}
 {%- liquid
   assign list_count = 0
-  assign color_count = 0
   for list_collection in collections
     if list_collection.handle == 'frontpage' or list_collection.products_count == 0
       continue
     endif
     assign list_count = list_count | plus: 1
-    if list_collection.metafields.custom.acento.value != blank
-      assign color_count = color_count | plus: 1
-    endif
   endfor
   assign row_index = 0
 -%}
@@ -125,15 +121,13 @@
 
     {%- if pass_rows != blank -%}
       <div class="hi-list-group">
-        {%- if color_count > 0 -%}
-          <h2 class="t-label hi-list-group-title">
-            {%- if pass == 1 -%}
-              {{ 'collections.group_colors' | t }}
-            {%- else -%}
-              {{ 'collections.group_other' | t }}
-            {%- endif -%}
-          </h2>
-        {%- endif -%}
+        <h2 class="t-label hi-list-group-title">
+          {%- if pass == 1 -%}
+            {{ 'collections.group_colors' | t }}
+          {%- else -%}
+            {{ 'collections.group_other' | t }}
+          {%- endif -%}
+        </h2>
         {%- if section.settings.layout == 'grid' -%}
           <ul class="hi-grid-products" role="list">
             {{ pass_rows }}

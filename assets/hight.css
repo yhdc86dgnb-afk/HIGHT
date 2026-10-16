@@ -2328,7 +2328,7 @@ a.hi-piece-print:focus-visible .hi-piece-tag {
 }
 
 /* Talla de la pieza (metacampo custom.talla) sobre la foto */
-.hi-card-size {
+.hi-card-talla {
   position: absolute;
   right: calc(var(--print-pad) + 6px);
   bottom: calc(var(--print-pad) + 6px);

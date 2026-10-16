@@ -83,6 +83,23 @@
     }
   }
 
+  function sessionGet(key) {
+    try {
+      return window.sessionStorage.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function sessionSet(key, value) {
+    try {
+      if (value === null) window.sessionStorage.removeItem(key);
+      else window.sessionStorage.setItem(key, value);
+    } catch (e) {
+      /* almacenamiento bloqueado: se ignora */
+    }
+  }
+
   function toast(text, actionLabel, onAction) {
     var region = document.querySelector('[data-toast-region]');
     if (!region || !text) return;
@@ -255,9 +272,11 @@
     var menu = link.closest('dialog');
     if (!menu) return;
     var id = link.getAttribute('data-menu-preview');
-    menu.querySelectorAll('.hi-menu-preview').forEach(function (figure) {
-      figure.classList.toggle('is-active', figure.id === id);
-    });
+    if (id) {
+      menu.querySelectorAll('.hi-menu-preview').forEach(function (figure) {
+        figure.classList.toggle('is-active', figure.id === id);
+      });
+    }
     // Un enlace del submenú también marca a su enlace principal.
     menu.querySelectorAll('.hi-menu-link').forEach(function (other) {
       other.classList.toggle('is-active', other === link || other.parentNode.contains(link));
@@ -344,6 +363,34 @@
       return openDialog('CartDrawer');
     },
 
+    // Recuerda qué control del carrito tenía el foco para devolverlo después de volver a dibujarlo.
+    focusMemo: function (container) {
+      var active = document.activeElement;
+      if (!container || !active || !container.contains(active)) return null;
+      var line = active.closest('[data-cart-line]');
+      var control = null;
+      if (active.matches('[data-cart-remove]')) control = '[data-cart-remove]';
+      else if (active.name === 'plus' || active.name === 'minus') control = 'button[name="' + active.name + '"]';
+      else if (active.matches('input[data-line]')) control = 'input[data-line]';
+      return { key: line ? line.getAttribute('data-cart-key') : null, control: control };
+    },
+
+    restoreFocus: function (container, memo) {
+      if (!memo) return;
+      var target = null;
+      if (memo.key && memo.control) {
+        var line = container.querySelector('[data-cart-key="' + CSS.escape(memo.key) + '"]');
+        target = line && line.querySelector(memo.control);
+        if (target && target.disabled) target = line.querySelector('input[data-line]');
+      }
+      // La línea ya no está: el foco va a otra línea, al botón de cerrar o al primer enlace del carrito.
+      ['[data-cart-remove]', '[data-close-dialog]', 'a[href], button:not([disabled])'].some(function (selector) {
+        target = target || container.querySelector(selector);
+        return target;
+      });
+      if (target) target.focus({ preventScroll: true });
+    },
+
     renderSections: function (sections) {
       if (!sections) return;
       Object.keys(sections).forEach(function (id) {
@@ -355,8 +402,10 @@
           var current = Cart.drawer();
           var next = doc.getElementById('CartDrawer');
           if (current && next) {
+            var memo = Cart.focusMemo(current);
             current.innerHTML = next.innerHTML;
             current.setAttribute('data-cart-count', next.getAttribute('data-cart-count'));
+            Cart.restoreFocus(current, memo);
           }
           return;
         }
@@ -372,7 +421,14 @@
         var nextPage = doc.querySelector('[data-cart-page]');
         var currentPage = document.querySelector('[data-cart-page]');
         if (nextPage && currentPage && sectionIdOf(currentPage) === id) {
+          // La nota del pedido que se está escribiendo no se ha guardado: se conserva.
+          var note = currentPage.querySelector('textarea[name="note"]');
+          var noteValue = note ? note.value : null;
+          var pageMemo = Cart.focusMemo(currentPage);
           currentPage.innerHTML = nextPage.innerHTML;
+          var nextNote = currentPage.querySelector('textarea[name="note"]');
+          if (nextNote && noteValue !== null) nextNote.value = noteValue;
+          Cart.restoreFocus(currentPage, pageMemo);
         }
       });
     },
@@ -397,22 +453,31 @@
       });
     },
 
-    change: function (line, quantity) {
-      return fetch(routes.cartChange + '.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          line: line,
-          quantity: quantity,
-          sections: Cart.sectionsToRender(),
-          sections_url: window.location.pathname
-        })
-      }).then(function (response) {
-        return response.json().then(function (data) {
-          if (!response.ok || data.status) throw new Error(data.description || data.message || strings.error);
-          return data;
+    queue: Promise.resolve(),
+
+    // Los cambios van uno detrás de otro y por la clave de la línea, que no cambia cuando se quita
+    // otra línea (el número de línea sí).
+    change: function (lineEl, quantity) {
+      var payload = { quantity: quantity, sections: Cart.sectionsToRender(), sections_url: window.location.pathname };
+      var key = lineEl.getAttribute('data-cart-key');
+      if (key) payload.id = key;
+      else payload.line = parseInt(lineEl.getAttribute('data-cart-line'), 10);
+
+      var request = function () {
+        return fetch(routes.cartChange + '.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(payload)
+        }).then(function (response) {
+          return response.json().then(function (data) {
+            if (!response.ok || data.status) throw new Error(data.description || data.message || strings.error);
+            return data;
+          });
         });
-      });
+      };
+      var result = Cart.queue.then(request, request);
+      Cart.queue = result.catch(function () {});
+      return result;
     }
   };
 
@@ -430,9 +495,8 @@
 
   function updateLine(lineEl, quantity) {
     if (!lineEl) return;
-    var line = parseInt(lineEl.getAttribute('data-cart-line'), 10);
     lineEl.classList.add('is-updating');
-    Cart.change(line, quantity)
+    Cart.change(lineEl, quantity)
       .then(function (cart) {
         Cart.renderSections(cart.sections);
       })
@@ -449,11 +513,21 @@
       });
   }
 
-  var onLineQuantity = debounce(function (input) {
-    var quantity = parseInt(input.value, 10);
-    if (isNaN(quantity) || quantity < 0) return;
-    updateLine(lineFromEvent(input), quantity);
-  }, 350);
+  // Cada línea espera por su cuenta: tocar otra línea no cancela el cambio pendiente de la primera.
+  var lineTimers = {};
+
+  function onLineQuantity(input) {
+    var lineEl = lineFromEvent(input);
+    if (!lineEl) return;
+    var key = lineEl.getAttribute('data-cart-key') || lineEl.getAttribute('data-cart-line');
+    clearTimeout(lineTimers[key]);
+    lineTimers[key] = setTimeout(function () {
+      delete lineTimers[key];
+      var quantity = parseInt(input.value, 10);
+      if (isNaN(quantity) || quantity < 0) return;
+      updateLine(lineEl, quantity);
+    }, 350);
+  }
 
   document.addEventListener('change', function (event) {
     var input = event.target;
@@ -477,12 +551,19 @@
           this.form = this.querySelector('form');
           if (!this.form) return;
           this.form.addEventListener('submit', this.onSubmit.bind(this));
+          // Navegadores sin event.submitter: se recuerda el botón tocado (las tallas del agregado rápido).
+          var self = this;
+          this.form.addEventListener('click', function (event) {
+            var clicked = event.target.closest('button[type="submit"], button:not([type])');
+            if (clicked) self.lastSubmitter = clicked;
+          });
         }
 
         onSubmit(event) {
           if (config.cartType !== 'drawer' || !Cart.drawer()) return; // envío normal a la página del carrito
           event.preventDefault();
-          var button = event.submitter || this.form.querySelector('[data-add-button]');
+          var button = event.submitter || this.lastSubmitter || this.form.querySelector('[data-add-button]');
+          this.lastSubmitter = null;
           var errorEl = this.form.querySelector('[data-product-error]');
           if (button && button.disabled) return;
 
@@ -657,13 +738,20 @@
           });
 
           var idInput = this.querySelector('input[name="id"][data-variant-id]');
+          var paymentButton = this.querySelector('.hi-payment-button');
 
           if (!variant) {
+            // Sin variante no se puede comprar: ni el botón de agregar ni el de pago rápido.
             this.setButtons(true, strings.unavailable);
+            if (paymentButton) paymentButton.hidden = true;
             return;
           }
 
-          if (idInput) idInput.value = variant.id;
+          if (paymentButton) paymentButton.hidden = false;
+          if (idInput) {
+            idInput.value = variant.id;
+            idInput.dispatchEvent(new Event('change', { bubbles: true }));
+          }
           var url = new URL(window.location.href);
           url.searchParams.set('variant', variant.id);
           window.history.replaceState({}, '', url.toString());
@@ -689,11 +777,12 @@
             })
             .then(function (html) {
               var doc = parseHTML(html);
+              // Cada bloque se reemplaza por el suyo (el precio grande y el de la barra fija son distintos).
               ['[data-product-price]', '[data-variant-picker]', '[data-product-stock]', '[data-size-guide]'].forEach(function (selector) {
-                var next = doc.querySelector(selector);
-                if (!next) return;
-                self.querySelectorAll(selector).forEach(function (current) {
-                  current.innerHTML = next.innerHTML;
+                var nextAll = doc.querySelectorAll(selector);
+                if (!nextAll.length) return;
+                self.querySelectorAll(selector).forEach(function (current, index) {
+                  current.innerHTML = (nextAll[index] || nextAll[0]).innerHTML;
                 });
               });
 
@@ -1240,12 +1329,15 @@
 
   /* ---------- Color de acento de la tienda ---------- */
 
+  // El color que el visitante elige se guarda (localStorage). El de la última colección de color que
+  // abrió vale solo para esa visita (sessionStorage, lo escribe layout/theme.liquid) y tiene prioridad.
   var Accent = {
     key: 'hight-accent',
+    visitKey: 'hight-accent-visit',
 
     current: function () {
       try {
-        return JSON.parse(storageGet(Accent.key) || 'null');
+        return JSON.parse(sessionGet(Accent.visitKey) || storageGet(Accent.key) || 'null');
       } catch (e) {
         return null;
       }
@@ -1257,7 +1349,10 @@
         root.style.setProperty('--accent', color);
         root.style.setProperty('--on-accent', on);
       });
-      if (config.visitorAccent) storageSet(Accent.key, JSON.stringify({ color: color, on: on, name: name }));
+      if (config.visitorAccent) {
+        storageSet(Accent.key, JSON.stringify({ color: color, on: on, name: name }));
+        sessionSet(Accent.visitKey, null);
+      }
       document.dispatchEvent(new CustomEvent('hight:accent', { detail: { color: color, on: on, name: name } }));
     },
 
@@ -1268,6 +1363,7 @@
         root.style.removeProperty('--on-accent');
       });
       storageSet(Accent.key, null);
+      sessionSet(Accent.visitKey, null);
       document.dispatchEvent(new CustomEvent('hight:accent', { detail: null }));
     }
   };
