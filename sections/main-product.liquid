@@ -54,6 +54,14 @@
     endif
   endif
   assign zoom_id = 'Zoom-' | append: section.id
+
+  assign has_facts = false
+  for block in section.blocks
+    if block.type == 'facts'
+      assign has_facts = true
+      break
+    endif
+  endfor
 -%}
 
 <product-page
@@ -118,7 +126,7 @@
 
         {%- when 'variant_picker' -%}
           {%- liquid
-            assign fit_note = product.metafields.custom.nota_corte.value | default: block.settings.fit_note
+            assign fit_note = block.settings.fit_note
             assign piece_size = product.metafields.custom.talla.value
             assign piece_measures = product.metafields.custom.medidas.value
           -%}
@@ -137,6 +145,9 @@
                   <p class="hi-product-fit">{{ 'products.size_unique_note' | t }}</p>
                 {%- endif -%}
               </div>
+            {%- else -%}
+              {%- assign contact_url = pages.contact.url | default: '/pages/contact' -%}
+              <p class="hi-product-fit" {{ block.shopify_attributes }}>{{ 'products.size_ask_html' | t: url: contact_url }}</p>
             {%- endif -%}
           {%- else -%}
             <div class="hi-variant-block" {{ block.shopify_attributes }}>
@@ -235,9 +246,148 @@
           </div>
 
         {%- when 'description' -%}
-          {%- if product.description != blank -%}
-            <div class="rte" {{ block.shopify_attributes }}>{{ product.description }}</div>
+          {%- liquid
+            # Con el bloque de datos, el párrafo "Cuidado:" ya se lee en su fila y no se repite.
+            assign description_html = product.description
+            if has_facts and product.metafields.custom.cuidado.value != blank and description_html contains '<p>Cuidado:'
+              assign care_parts = description_html | split: '<p>Cuidado:'
+              assign care_text = care_parts[1] | split: '</p>' | first
+              assign care_paragraph = '<p>Cuidado:' | append: care_text | append: '</p>'
+              assign description_html = description_html | remove_first: care_paragraph
+            endif
+          -%}
+          {%- if description_html != blank -%}
+            <div class="rte" {{ block.shopify_attributes }}>{{ description_html }}</div>
           {%- endif -%}
+
+        {%- when 'facts' -%}
+          {%- liquid
+            assign fact_distinct = product.metafields.custom.distinto.value
+            assign fact_fit = product.metafields.custom.nota_corte.value
+            assign fact_material = product.metafields.custom.material.value
+            assign fact_build = product.metafields.custom.confeccion.value
+            assign fact_care = product.metafields.custom.cuidado.value
+            assign fact_occasions = product.metafields.custom.ocasiones.value
+
+            # El texto traducido ya sale escapado; solo se escapa el metacampo.
+            assign fact_origin = product.metafields.custom.origen.value | escape
+            if fact_origin == blank
+              assign origin_place = block.settings.origin_place
+              assign origin_brand = product.vendor | default: shop.name
+              assign origin_brand_key = origin_brand | downcase | strip
+              assign shop_key = shop.name | downcase | strip
+              if origin_brand_key == shop_key
+                if origin_place != blank
+                  assign fact_origin = 'products.facts.origin_own' | t: brand: origin_brand, place: origin_place
+                else
+                  assign fact_origin = 'products.facts.origin_own_short' | t: brand: origin_brand
+                endif
+              elsif origin_place != blank
+                assign fact_origin = 'products.facts.origin_other' | t: brand: origin_brand, shop: shop.name, place: origin_place
+              else
+                assign fact_origin = 'products.facts.origin_other_short' | t: brand: origin_brand, shop: shop.name
+              endif
+            endif
+
+            assign wears = block.settings.wears
+
+            assign shipping_url = ''
+            if shop.shipping_policy.body != blank
+              assign shipping_url = shop.shipping_policy.url
+            elsif block.settings.shipping_page != blank
+              assign shipping_url = block.settings.shipping_page.url
+            endif
+            assign returns_url = ''
+            if shop.refund_policy.body != blank
+              assign returns_url = shop.refund_policy.url
+            elsif block.settings.returns_page != blank
+              assign returns_url = block.settings.returns_page.url
+            endif
+          -%}
+          <dl class="hi-facts" {{ block.shopify_attributes }}>
+            {%- if fact_distinct != blank -%}
+              <div class="hi-facts-row">
+                <dt class="t-label">{{ 'products.facts.distinct' | t }}</dt>
+                <dd>{{ fact_distinct | escape }}</dd>
+              </div>
+            {%- endif -%}
+            {%- if fact_fit != blank -%}
+              <div class="hi-facts-row">
+                <dt class="t-label">{{ 'products.facts.fit' | t }}</dt>
+                <dd>{{ fact_fit | escape | newline_to_br }}</dd>
+              </div>
+            {%- endif -%}
+            {%- if fact_material != blank -%}
+              <div class="hi-facts-row">
+                <dt class="t-label">{{ 'products.facts.material' | t }}</dt>
+                <dd>{{ fact_material | escape | newline_to_br }}</dd>
+              </div>
+            {%- endif -%}
+            {%- if fact_build != blank -%}
+              <div class="hi-facts-row">
+                <dt class="t-label">{{ 'products.facts.build' | t }}</dt>
+                <dd>{{ fact_build | escape | newline_to_br }}</dd>
+              </div>
+            {%- endif -%}
+            {%- if fact_care != blank -%}
+              <div class="hi-facts-row">
+                <dt class="t-label">{{ 'products.facts.care' | t }}</dt>
+                <dd>{{ fact_care | escape | newline_to_br }}</dd>
+              </div>
+            {%- endif -%}
+            {%- if fact_occasions != blank -%}
+              <div class="hi-facts-row">
+                <dt class="t-label">{{ 'products.facts.occasions' | t }}</dt>
+                <dd>
+                  <ul class="hi-facts-chips" role="list">
+                    {%- for occasion in fact_occasions -%}
+                      <li>{{ occasion | escape }}</li>
+                    {%- endfor -%}
+                  </ul>
+                </dd>
+              </div>
+            {%- endif -%}
+            {%- if wears > 0 and current_variant.price > 0 -%}
+              <div class="hi-facts-row">
+                <dt class="t-label">{{ 'products.facts.per_wear' | t }}</dt>
+                <dd data-product-per-wear>
+                  {%- liquid
+                    assign per_wear_cents = current_variant.price | times: 1.0 | divided_by: wears | divided_by: 100 | round | times: 100
+                    assign per_wear_price = per_wear_cents | money_without_trailing_zeros
+                    echo 'products.facts.per_wear_value' | t: wears: wears, price: per_wear_price
+                  -%}
+                </dd>
+              </div>
+            {%- endif -%}
+            {%- if fact_origin != blank -%}
+              <div class="hi-facts-row">
+                <dt class="t-label">{{ 'products.facts.origin' | t }}</dt>
+                <dd>{{ fact_origin }}</dd>
+              </div>
+            {%- endif -%}
+            {%- if block.settings.shipping_text != blank -%}
+              <div class="hi-facts-row">
+                <dt class="t-label">{{ 'products.facts.shipping' | t }}</dt>
+                <dd>
+                  {{ block.settings.shipping_text | escape }}
+                  {%- if shipping_url != blank %}
+                    <a href="{{ shipping_url }}" class="hi-facts-link">{{ 'products.facts.shipping_link' | t }}</a>
+                  {%- endif -%}
+                </dd>
+              </div>
+            {%- endif -%}
+            {%- if block.settings.returns_text != blank -%}
+              <div class="hi-facts-row">
+                <dt class="t-label">{{ 'products.facts.returns' | t }}</dt>
+                <dd>
+                  {{ block.settings.returns_text | escape }}
+                  {%- if returns_url != blank %}
+                    <a href="{{ returns_url }}" class="hi-facts-link">{{ 'products.facts.returns_link' | t }}</a>
+                  {%- endif -%}
+                </dd>
+              </div>
+            {%- endif -%}
+          </dl>
 
         {%- when 'collapsible' -%}
           {%- liquid
@@ -462,7 +612,7 @@
           "id": "fit_note",
           "label": "Nota de corte",
           "default": "Si dudas entre dos tallas, revisa la guía: las medidas son de la prenda en plano.",
-          "info": "El metacampo custom.nota_corte del producto tiene prioridad."
+          "info": "Solo en prendas con varias tallas. El corte de cada pieza (metacampo custom.nota_corte) va en Datos de la pieza."
         }
       ]
     },
@@ -500,6 +650,58 @@
       "type": "description",
       "name": "Descripción",
       "limit": 1
+    },
+    {
+      "type": "facts",
+      "name": "Datos de la pieza",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Filas desde los metacampos del producto: custom.distinto, custom.nota_corte, custom.material, custom.confeccion, custom.cuidado, custom.ocasiones y custom.origen. Las filas sin dato no se muestran. Con este bloque, el párrafo \"Cuidado:\" de la descripción no se repite."
+        },
+        {
+          "type": "range",
+          "id": "wears",
+          "label": "Puestas para el costo por uso",
+          "min": 10,
+          "max": 200,
+          "step": 10,
+          "default": 100,
+          "info": "Divide el precio entre este número de puestas."
+        },
+        {
+          "type": "text",
+          "id": "origin_place",
+          "label": "Ciudad de la tienda",
+          "default": "Medellín",
+          "info": "Para el origen: \"Pieza de HIGHT, desde Medellín.\" o \"Pieza de otra marca, elegida por HIGHT en Medellín.\" El metacampo custom.origen lo reemplaza."
+        },
+        {
+          "type": "text",
+          "id": "shipping_text",
+          "label": "Envío",
+          "default": "A toda Colombia. Sale en 1 a 3 días hábiles y el costo se ve al pagar."
+        },
+        {
+          "type": "page",
+          "id": "shipping_page",
+          "label": "Página de envíos",
+          "info": "Se usa mientras no haya política de envío en Configuración > Políticas."
+        },
+        {
+          "type": "text",
+          "id": "returns_text",
+          "label": "Cambios",
+          "default": "Tienes 5 días hábiles desde que la recibes para devolverla sin usar."
+        },
+        {
+          "type": "page",
+          "id": "returns_page",
+          "label": "Página de cambios y devoluciones",
+          "info": "Se usa mientras no haya política de reembolso en Configuración > Políticas."
+        }
+      ]
     },
     {
       "type": "collapsible",

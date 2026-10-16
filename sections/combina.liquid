@@ -1,0 +1,287 @@
+{%- liquid
+  capture own_group
+    render 'outfit-group', type: product.type
+  endcapture
+  assign own_group = own_group | strip
+
+  case own_group
+    when 'bottom'
+      assign slot_groups = 'top,layer,top' | split: ','
+      assign basics_text = section.settings.basics_bottom
+    when 'top'
+      assign slot_groups = 'bottom,layer,bottom' | split: ','
+      assign basics_text = section.settings.basics_top
+    when 'layer'
+      assign slot_groups = 'bottom,top,bottom' | split: ','
+      assign basics_text = section.settings.basics_layer
+    else
+      assign slot_groups = 'bottom,top,layer' | split: ','
+      assign basics_text = ''
+  endcase
+
+  assign color_tag = ''
+  for product_tag in product.tags
+    assign tag_start = product_tag | downcase | slice: 0, 6
+    if tag_start == 'color '
+      assign color_tag = product_tag
+      break
+    endif
+  endfor
+
+  assign neutral_key = ','
+  assign neutral_list = section.settings.neutral_colors | split: ','
+  for neutral in neutral_list
+    assign neutral_clean = neutral | strip | downcase
+    if neutral_clean != ''
+      assign neutral_key = neutral_key | append: neutral_clean | append: ','
+    endif
+  endfor
+
+  # Prendas disponibles que no son esta: primero las del mismo color, luego las neutras y luego el resto.
+  assign same_color = ''
+  assign neutral_color = ''
+  assign other_color = ''
+  for candidate in collections.all.products
+    if candidate.id == product.id or candidate.available == false
+      continue
+    endif
+    capture candidate_group
+      render 'outfit-group', type: candidate.type
+    endcapture
+    assign candidate_group = candidate_group | strip
+    if candidate_group == '' or candidate_group == own_group
+      continue
+    endif
+    assign entry = candidate_group | append: ':' | append: candidate.handle | append: ','
+    assign candidate_tier = 'other'
+    if color_tag != '' and candidate.tags contains color_tag
+      assign candidate_tier = 'same'
+    else
+      for candidate_tag in candidate.tags
+        assign candidate_tag_key = candidate_tag | strip | downcase | prepend: ',' | append: ','
+        if neutral_key contains candidate_tag_key
+          assign candidate_tier = 'neutral'
+          break
+        endif
+      endfor
+    endif
+    case candidate_tier
+      when 'same'
+        assign same_color = same_color | append: entry
+      when 'neutral'
+        assign neutral_color = neutral_color | append: entry
+      else
+        assign other_color = other_color | append: entry
+    endcase
+  endfor
+
+  # Cada grupo arranca en un punto distinto según la prenda.
+  assign pool_text = ''
+  assign tiers = same_color | append: '|' | append: neutral_color | append: '|' | append: other_color | split: '|'
+  for tier_text in tiers
+    assign tier_entries = tier_text | split: ','
+    assign tier_size = tier_entries | size
+    if tier_size > 0
+      assign tier_offset = product.id | modulo: tier_size
+      for entry in tier_entries offset: tier_offset
+        assign pool_text = pool_text | append: entry | append: ','
+      endfor
+      if tier_offset > 0
+        for entry in tier_entries limit: tier_offset
+          assign pool_text = pool_text | append: entry | append: ','
+        endfor
+      endif
+    endif
+  endfor
+  assign pool = pool_text | split: ','
+
+  # Cada elegida se guarda como grupo:handle, separadas por comas. Primero las del metacampo
+  # custom.combina que sigan disponibles.
+  assign picks = ''
+  assign pick_count = 0
+  assign chosen = product.metafields.custom.combina.value
+  if chosen != blank
+    for chosen_product in chosen
+      if chosen_product.available == false or chosen_product.id == product.id
+        continue
+      endif
+      capture chosen_group
+        render 'outfit-group', type: chosen_product.type
+      endcapture
+      assign chosen_group = chosen_group | strip
+      assign picks = picks | append: chosen_group | append: ':' | append: chosen_product.handle | append: ','
+      assign pick_count = pick_count | plus: 1
+      if pick_count >= 3
+        break
+      endif
+    endfor
+  endif
+
+  # Un puesto por grupo (arriba, encima, abajo). Cada puesto elige entre las tres mejores de su grupo
+  # que queden, según la prenda, para que no todas las fichas sugieran lo mismo.
+  for slot_group in slot_groups
+    if pick_count >= 3
+      break
+    endif
+    assign slot_index = forloop.index0
+    assign slot_prefix = slot_group | append: ':'
+    assign slot_prefix_size = slot_prefix | size
+    assign picks_key = ',' | append: picks
+    assign window = ''
+    assign window_count = 0
+    for entry in pool
+      assign entry_start = entry | slice: 0, slot_prefix_size
+      if entry_start == slot_prefix
+        assign entry_key = ',' | append: entry | append: ','
+        unless picks_key contains entry_key
+          assign window = window | append: entry | append: ','
+          assign window_count = window_count | plus: 1
+          if window_count >= 3
+            break
+          endif
+        endunless
+      endif
+    endfor
+    if window_count > 0
+      assign window_entries = window | split: ','
+      assign window_index = product.id | plus: slot_index | modulo: window_count
+      assign picks = picks | append: window_entries[window_index] | append: ','
+      assign pick_count = pick_count | plus: 1
+    endif
+  endfor
+
+  # Si falta un grupo, se llena con lo que haya.
+  if pick_count < 3
+    for entry in pool
+      assign entry_key = ',' | append: entry | append: ','
+      assign picks_key = ',' | append: picks
+      unless picks_key contains entry_key
+        assign picks = picks | append: entry | append: ','
+        assign pick_count = pick_count | plus: 1
+        if pick_count >= 3
+          break
+        endif
+      endunless
+    endfor
+  endif
+
+  assign pick_entries = picks | split: ','
+-%}
+
+{%- if pick_entries.size > 0 or basics_text != blank -%}
+  <section class="hi-section hi-combina color-{{ section.settings.color_scheme }}" aria-labelledby="CombinaTitle-{{ section.id }}">
+    <div class="hi-container">
+      <div class="hi-featured-head" data-reveal>
+        <div class="hi-featured-titles">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="t-label">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          <h2 class="t-display-l" id="CombinaTitle-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+        </div>
+        {%- if basics_text != blank -%}
+          <div class="hi-featured-aside">
+            <p class="hi-combina-basics">
+              <span class="t-label">{{ 'sections.combina.basics_label' | t }}</span>
+              <span class="t-body-l">{{ basics_text | escape }}</span>
+            </p>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if pick_entries.size > 0 -%}
+        <ol class="hi-combina-list" role="list">
+          {%- for entry in pick_entries -%}
+            {%- liquid
+              assign entry_parts = entry | split: ':'
+              assign entry_group = entry_parts | first
+              assign entry_handle = entry_parts | last
+              assign pick = all_products[entry_handle]
+              assign role_key = 'sections.combina.role_' | append: entry_group
+              if entry_group == ''
+                assign role_key = 'sections.combina.role_other'
+              endif
+            -%}
+            {%- if pick != blank -%}
+              <li class="hi-combina-item" style="--i: {{ forloop.index0 }};">
+                <p class="t-label hi-combina-role">
+                  <span class="hi-combina-num">{{ forloop.index | prepend: '0' }}</span>
+                  {{ role_key | t }}
+                </p>
+                {% render 'product-card', product: pick, sizes: '(min-width: 990px) 30vw, (min-width: 750px) 40vw, 64vw' %}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ol>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Combínala con",
+  "tag": "div",
+  "class": "hi-combina-section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Muestra tres prendas disponibles que completan el look (arriba, encima o abajo, según el tipo de la prenda): primero las del mismo color y luego las de colores que van con todo. Para elegirlas a mano, llena el metacampo custom.combina del producto."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Marquilla",
+      "default": "(CÓMO LLEVARLA)"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titular",
+      "default": "COMBÍNALA CON"
+    },
+    {
+      "type": "text",
+      "id": "neutral_colors",
+      "label": "Colores que van con todo",
+      "default": "Color Ceniza, Color Índigo",
+      "info": "Etiquetas separadas por coma. Después de las prendas del mismo color se sugieren estas."
+    },
+    {
+      "type": "header",
+      "content": "Con lo que ya tienes"
+    },
+    {
+      "type": "text",
+      "id": "basics_bottom",
+      "label": "Para jeans, pantalones y shorts",
+      "default": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas."
+    },
+    {
+      "type": "text",
+      "id": "basics_top",
+      "label": "Para tops y camisetas",
+      "default": "Un jean recto oscuro o un pantalón negro amplio, con tenis blancos."
+    },
+    {
+      "type": "text",
+      "id": "basics_layer",
+      "label": "Para chaquetas, buzos y tejidos",
+      "default": "Una camiseta lisa, un jean recto y botas o tenis."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Combínala con"
+    }
+  ]
+}
+{% endschema %}

@@ -47,31 +47,15 @@
           "type": "description",
           "settings": {}
         },
-        "composicion": {
-          "type": "collapsible",
+        "datos": {
+          "type": "facts",
           "settings": {
-            "heading": "Cuidado",
-            "content": "<p>Cada pieza trae sus indicaciones de cuidado en la descripción. Si tienes dudas, escríbenos antes de lavarla.</p>",
-            "show_care": false,
-            "open": false
-          }
-        },
-        "corte": {
-          "type": "collapsible",
-          "settings": {
-            "heading": "Corte y talla",
-            "content": "<p>Las medidas son de la prenda en plano. Si dudas con la talla, escríbenos antes de comprar y te mandamos las medidas exactas de la pieza.</p>",
-            "show_care": false,
-            "open": false
-          }
-        },
-        "envios": {
-          "type": "collapsible",
-          "settings": {
-            "heading": "Envíos y cambios",
-            "content": "<p>El costo y el tiempo de envío se calculan al pagar. Si necesitas un cambio, escríbenos y lo coordinamos.</p>",
-            "show_care": false,
-            "open": false
+            "wears": 100,
+            "origin_place": "Medellín",
+            "shipping_text": "A toda Colombia. Sale en 1 a 3 días hábiles y el costo se ve al pagar.",
+            "shipping_page": "envios",
+            "returns_text": "Tienes 5 días hábiles desde que la recibes para devolverla sin usar.",
+            "returns_page": "cambios-y-devoluciones"
           }
         }
       },
@@ -84,20 +68,30 @@
         "comprar",
         "unidades",
         "descripcion",
-        "corte",
-        "envios",
-        "composicion"
+        "datos"
       ],
       "settings": {
         "show_sticker": true,
         "sticky_bar": true
       }
     },
+    "combina": {
+      "type": "combina",
+      "settings": {
+        "eyebrow": "(CÓMO LLEVARLA)",
+        "heading": "COMBÍNALA CON",
+        "neutral_colors": "Color Ceniza, Color Índigo",
+        "basics_bottom": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
+        "basics_top": "Un jean recto oscuro o un pantalón negro amplio, con tenis blancos.",
+        "basics_layer": "Una camiseta lisa, un jean recto y botas o tenis.",
+        "color_scheme": "scheme-1"
+      }
+    },
     "recomendados": {
       "type": "product-recommendations",
       "settings": {
-        "eyebrow": "(TAMBIÉN TE PUEDE GUSTAR)",
-        "heading": "COMPLETA EL LOOK",
+        "eyebrow": "(MÁS PIEZAS)",
+        "heading": "TAMBIÉN TE PUEDE GUSTAR",
         "products_to_show": 6,
         "color_scheme": "scheme-1"
       }
@@ -105,6 +99,7 @@
   },
   "order": [
     "main",
+    "combina",
     "recomendados"
   ]
 }

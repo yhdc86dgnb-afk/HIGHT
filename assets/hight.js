@@ -685,6 +685,17 @@
           if (guide) guide.addEventListener('hight:open', this.highlightSize.bind(this, guide));
 
           this.setupBuyBar();
+          this.setupStickyInfo();
+        }
+
+        setupStickyInfo() {
+          // La columna de datos se pega arriba; si es más alta que la pantalla, se pega por abajo
+          // para que se pueda leer completa mientras bajan las fotos.
+          var info = this.querySelector('.hi-product-info');
+          if (!info || !('ResizeObserver' in window)) return;
+          new ResizeObserver(function () {
+            info.style.setProperty('--info-h', info.offsetHeight + 'px');
+          }).observe(info);
         }
 
         setupBuyBar() {
@@ -778,7 +789,7 @@
             .then(function (html) {
               var doc = parseHTML(html);
               // Cada bloque se reemplaza por el suyo (el precio grande y el de la barra fija son distintos).
-              ['[data-product-price]', '[data-variant-picker]', '[data-product-stock]', '[data-size-guide]'].forEach(function (selector) {
+              ['[data-product-price]', '[data-product-per-wear]', '[data-variant-picker]', '[data-product-stock]', '[data-size-guide]'].forEach(function (selector) {
                 var nextAll = doc.querySelectorAll(selector);
                 if (!nextAll.length) return;
                 self.querySelectorAll(selector).forEach(function (current, index) {

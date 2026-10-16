@@ -3531,9 +3531,11 @@ a.hi-archive-link:hover .hi-archive-arrow {
     padding-block: 36px 112px;
   }
 
+  /* --info-h lo pone hight.js: si la columna no cabe en la pantalla, se pega por abajo,
+     dejando lugar para la tarjeta de compra flotante. */
   .hi-product-info {
     position: sticky;
-    top: calc(var(--header-h) + 24px);
+    top: min(calc(var(--header-h) + 24px), calc(100vh - var(--info-h, 0px) - 120px));
   }
 }
 
@@ -3614,6 +3616,179 @@ a.hi-archive-link:hover .hi-archive-arrow {
   margin: 0;
   font: 400 0.8125rem/1.6 var(--font-mono);
   letter-spacing: 0.02em;
+}
+
+.hi-product-fit a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+.hi-product-fit a:hover {
+  color: var(--hl);
+}
+
+/* ---------- Datos de la pieza ---------- */
+
+.hi-facts {
+  display: grid;
+  margin: 0;
+  border-top: 1px dashed var(--line);
+}
+
+.hi-facts-row {
+  display: grid;
+  grid-template-columns: 8.25rem minmax(0, 1fr);
+  gap: 4px 16px;
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.hi-facts-row dt {
+  padding-top: 0.2em;
+  color: var(--muted);
+}
+
+.hi-facts-row dd {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 749px) {
+  .hi-facts-row {
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 4px 12px;
+  }
+}
+
+@media (max-width: 339px) {
+  .hi-facts-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.hi-facts-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hi-facts-chips li {
+  padding: 0.3125rem 0.5rem 0.25rem;
+  border: 1px solid var(--text);
+  font: 700 0.6875rem/1 var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hi-facts-link {
+  color: inherit;
+  font: 400 0.75rem/1.45 var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+.hi-facts-link:hover {
+  color: var(--hl);
+}
+
+/* ---------- Combínala con ---------- */
+
+.hi-combina {
+  padding-top: clamp(8px, 2vw, 32px);
+}
+
+.hi-combina-basics {
+  display: grid;
+  gap: 8px;
+  max-width: 40ch;
+  margin: 0;
+}
+
+.hi-combina-basics .t-label {
+  color: var(--muted);
+}
+
+.hi-combina-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  gap: clamp(36px, 4vw, 72px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hi-combina-item {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.hi-combina-item:nth-child(odd) .hi-card-media {
+  rotate: -1.2deg;
+}
+
+.hi-combina-item:nth-child(even) .hi-card-media {
+  rotate: 1deg;
+}
+
+.hi-combina-item + .hi-combina-item::before {
+  content: '+';
+  content: '+' / '';
+  position: absolute;
+  top: 38%;
+  left: calc(clamp(36px, 4vw, 72px) / -2);
+  translate: -50% -50%;
+  font: 400 clamp(2rem, 3vw, 3rem) / 1 var(--font-display);
+  color: var(--hl);
+  pointer-events: none;
+}
+
+.hi-combina-role {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+}
+
+.hi-combina-num {
+  color: var(--muted);
+}
+
+@media (max-width: 749px) {
+  .hi-combina-list {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 64%;
+    gap: 28px;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 8px var(--gutter) 16px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+
+  .hi-combina-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hi-combina-item {
+    scroll-snap-align: start;
+  }
+
+  .hi-combina-item + .hi-combina-item::before {
+    left: -14px;
+    font-size: 1.75rem;
+  }
 }
 
 .hi-variant-block {
@@ -3894,9 +4069,17 @@ a.hi-archive-link:hover .hi-archive-arrow {
   white-space: nowrap;
 }
 
+/* En el computador es una tarjeta flotante: aparece cuando el botón de compra queda arriba,
+   por ejemplo cuando la columna de datos es más alta que la pantalla. */
 @media (min-width: 990px) {
   .hi-buybar {
-    display: none;
+    right: 24px;
+    bottom: 24px;
+    left: auto;
+    width: min(440px, calc(100vw - 48px));
+    padding: 12px 12px 12px 18px;
+    border: 2px solid var(--text);
+    transform: translateY(calc(100% + 40px));
   }
 }
 

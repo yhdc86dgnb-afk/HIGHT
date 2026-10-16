@@ -105,7 +105,27 @@
     },
     "size_short": "T. {{ size }}",
     "size_value": "Talla {{ size }}",
-    "size_unique_note": "Viene en una sola talla. Si quieres las medidas exactas, escríbenos."
+    "size_unique_note": "Viene en una sola talla. Si quieres las medidas exactas, escríbenos.",
+    "size_ask_html": "¿Dudas con la talla? <a href=\"{{ url }}\">Escríbenos</a> y te mandamos las medidas exactas de la pieza.",
+    "facts": {
+      "distinct": "Lo distinto",
+      "fit": "Cómo queda",
+      "material": "Material",
+      "build": "Confección",
+      "care": "Cuidado",
+      "occasions": "Para",
+      "per_wear": "Por puesta",
+      "per_wear_value": "Si la usas {{ wears }} veces, cada puesta te sale en {{ price }}.",
+      "origin": "Origen",
+      "origin_own": "Pieza de {{ brand }}, desde {{ place }}.",
+      "origin_own_short": "Pieza de {{ brand }}.",
+      "origin_other": "Pieza de {{ brand }}, elegida por {{ shop }} en {{ place }}.",
+      "origin_other_short": "Pieza de {{ brand }}, elegida por {{ shop }}.",
+      "shipping": "Envío",
+      "shipping_link": "Política de envíos",
+      "returns": "Cambios",
+      "returns_link": "Política de cambios"
+    }
   },
   "color_story": {
     "pick": "Pintar la tienda de {{ name }}",
@@ -117,6 +137,15 @@
   "hotspots": {
     "detail": "Detalle {{ number }}: {{ title }}",
     "list_label": "Detalles de la pieza"
+  },
+  "sections": {
+    "combina": {
+      "basics_label": "Con lo que ya tienes",
+      "role_top": "Arriba",
+      "role_bottom": "Abajo",
+      "role_layer": "Encima",
+      "role_other": "También"
+    }
   },
   "cart": {
     "page_title": "Carrito",

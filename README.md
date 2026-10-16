@@ -39,7 +39,8 @@ El logo gótico se mantiene: es la marca. El design system original sigue en [`d
 - **Archivo:** lista con nombres gigantes; en computador la foto de cada pieza sigue al cursor.
 - **Manifiesto:** el texto se enciende palabra por palabra con el scroll.
 - **Menú a pantalla completa** con foto al pasar por cada enlace; los colores llevan su punto y tiñen el menú.
-  También: **zoom** de fotos en la ficha, **barra fija para comprar** en el teléfono, selector de **columnas** en la
+  También: **zoom** de fotos en la ficha, **barra para comprar** cuando el botón queda arriba (abajo en el teléfono,
+  como tarjeta en el computador), selector de **columnas** en la
   tienda, etiqueta junto al cursor (VER, ARRASTRA) y transición suave entre páginas.
 
 Todo respeta la opción de reducir movimiento del teléfono o del computador, y se puede apagar en
@@ -70,6 +71,36 @@ Contacto.
 
 ![Colecciones](docs/preview/colecciones.jpg)
 
+## La ficha responde antes de que pregunten
+
+Cada ficha contesta, sin preguntas a la vista, lo que alguien revisa antes de comprar. El bloque **Datos de la
+pieza** va debajo de la descripción y la sección **Combínala con** debajo de la ficha.
+
+| Lo que se pregunta | Dónde se contesta | De dónde sale |
+| --- | --- | --- |
+| ¿La necesito o solo la quiero? | LO DISTINTO: qué tiene que no tiene lo de tu clóset | `custom.distinto` |
+| ¿Con qué la combino? | COMBÍNALA CON: tres prendas disponibles (arriba, encima, abajo) y *Con lo que ya tienes* | tipo y color de las prendas, o `custom.combina` |
+| ¿Cómo queda al sentarme o moverme? | CÓMO QUEDA, y la talla con sus medidas | `custom.nota_corte`, `custom.talla`, `custom.medidas` |
+| ¿Es cómoda? ¿Para qué clima? | MATERIAL | `custom.material` |
+| ¿Está bien hecha? | CONFECCIÓN | `custom.confeccion` |
+| ¿Cuánto dura? ¿Cómo se cuida? | CUIDADO (el párrafo "Cuidado:" de la descripción ya no se repite) | `custom.cuidado` |
+| ¿Vale lo que cuesta? | POR PUESTA: el precio dividido entre 100 puestas | precio de la variante |
+| ¿Cuándo me la pongo? | PARA: ocasiones | `custom.ocasiones` |
+| ¿Quién la hizo? ¿La puedo devolver? | ORIGEN, ENVÍO y CAMBIOS, con enlace a las políticas | marca (`vendor`) o `custom.origen`, y ajustes del bloque |
+
+Las filas sin dato no aparecen. *Combínala con* ordena las prendas disponibles: primero las del mismo color, luego
+las de colores que van con todo (Ceniza e Índigo) y después el resto. Cada puesto elige entre las tres mejores de su
+grupo según la prenda, para que no todas las fichas sugieran lo mismo. Las piezas vendidas no se sugieren, tampoco
+si alguien las dejó en `custom.combina`.
+
+![Datos de la pieza](docs/preview/ficha-datos.jpg)
+
+![Combínala con](docs/preview/combinala-con.jpg)
+
+Los textos de las políticas de cambios y de envíos están en [`docs/politicas/`](docs/politicas/), listos para pegar
+en *Configuración > Políticas*. Mientras no estén ahí, la ficha enlaza a las páginas **Envíos** y **Cambios y
+devoluciones**.
+
 ## Fotos y videos de Higgsfield
 
 El tema tiene tres lugares listos para el material de campaña (por ejemplo, el que generes en Higgsfield):
@@ -93,8 +124,11 @@ Sube el archivo en *Contenido > Archivos* o directamente en el campo de la secci
 7. **Talla y medidas de cada pieza:** metacampos `custom.talla` (*Talla de la pieza*: S, M, 30, Única) y
    `custom.medidas` (*Medidas de la pieza*, una por línea). La talla va en una marquilla sobre la foto de la
    tarjeta y, con las medidas, en la ficha. Se llenan en *Productos > (prenda) > Metacampos*.
-8. **Metacampos opcionales:** `custom.corte_material` (*Corte y material*, en la tarjeta), `custom.ficha`
-   (ficha técnica), `custom.nota_corte` y `custom.guia_tallas` (`camiseta`, `hoodie` o `pantalon`).
+8. **Datos de cada pieza:** `custom.distinto`, `custom.nota_corte` (*Cómo queda*), `custom.material`,
+   `custom.confeccion`, `custom.cuidado`, `custom.ocasiones` (lista) y, si hace falta, `custom.origen` y
+   `custom.combina` (hasta tres productos para *Combínala con*). Las 26 prendas ya los tienen.
+9. **Metacampos opcionales:** `custom.corte_material` (*Corte y material*, en la tarjeta), `custom.ficha`
+   (ficha técnica) y `custom.guia_tallas` (`camiseta`, `hoodie` o `pantalon`).
 
 ## Publicar con Shopify CLI
 

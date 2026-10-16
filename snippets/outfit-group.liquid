@@ -1,0 +1,50 @@
+{%- doc -%}
+  Escribe el grupo de una prenda según su tipo, para armar un look: bottom (jeans, pantalones,
+  shorts, faldas), top (tops, camisetas, camisas) o layer (chaquetas, buzos, tejidos, sacos).
+  Manda la palabra con la que empieza el tipo ("Chaqueta de jean" es layer, "Camisa de jean" es top);
+  si no empieza con ninguna, busca la palabra en el resto. No escribe nada si el tipo no encaja.
+
+  @param {string} type - Tipo de producto
+
+  @example
+  {%- capture group -%}{% render 'outfit-group', type: product.type %}{%- endcapture -%}
+{%- enddoc -%}
+{%- liquid
+  assign kind = type | downcase | strip
+  assign groups = 'layer:chaqueta,sobrecamisa,buzo,hoodie,tejido,saco,suéter,sueter,chaleco,abrigo,cárdigan,cardigan|top:top,camis,blusa,body|bottom:jean,pantal,short,bermuda,falda' | split: '|'
+  assign found = ''
+
+  for group_def in groups
+    assign group_name = group_def | split: ':' | first
+    assign group_words = group_def | split: ':' | last | split: ','
+    for word in group_words
+      assign word_size = word | size
+      assign kind_start = kind | slice: 0, word_size
+      if kind_start == word
+        assign found = group_name
+        break
+      endif
+    endfor
+    if found != ''
+      break
+    endif
+  endfor
+
+  if found == ''
+    for group_def in groups
+      assign group_name = group_def | split: ':' | first
+      assign group_words = group_def | split: ':' | last | split: ','
+      for word in group_words
+        if kind contains word
+          assign found = group_name
+          break
+        endif
+      endfor
+      if found != ''
+        break
+      endif
+    endfor
+  endif
+
+  echo found
+-%}
