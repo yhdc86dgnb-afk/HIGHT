@@ -40,9 +40,16 @@
 
   assign stock_threshold = settings.low_stock_threshold
 
+  # PIEZA ÚNICA solo con la etiqueta "Pieza única" y una unidad: la última de una edición dice ÚLTIMA.
   assign product_unique = false
   if product.variants.size == 1 and current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny' and current_variant.inventory_quantity == 1
-    assign product_unique = true
+    for product_tag in product.tags
+      assign unique_tag_name = product_tag | strip | downcase
+      if unique_tag_name == 'pieza única' or unique_tag_name == 'pieza unica'
+        assign product_unique = true
+        break
+      endif
+    endfor
   endif
 
   assign product_accent = product.metafields.custom.acento.value
@@ -224,7 +231,7 @@
             assign show_stock = false
             assign unique_piece = false
             if current_variant.available and current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny'
-              if current_variant.inventory_quantity == 1 and product.variants.size == 1
+              if product_unique
                 assign unique_piece = true
               elsif stock_threshold > 0 and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= stock_threshold
                 assign show_stock = true
@@ -255,8 +262,31 @@
               assign care_paragraph = '<p>Cuidado:' | append: care_text | append: '</p>'
               assign description_html = description_html | remove_first: care_paragraph
             endif
+
+            # Con el bloque de datos, a la vista queda el primer párrafo y el resto se abre en "Descripción completa".
+            assign description_more = ''
+            if has_facts and description_html contains '<h3>'
+              assign description_intro = description_html | split: '<h3>' | first
+              if description_intro != blank
+                assign description_more = description_html | remove_first: description_intro
+              endif
+            endif
           -%}
-          {%- if description_html != blank -%}
+          {%- if description_more != blank -%}
+            <div class="hi-product-description" {{ block.shopify_attributes }}>
+              <div class="rte">{{ description_intro }}</div>
+              <div class="hi-acc">
+                <details class="hi-acc-item">
+                  <summary class="hi-acc-btn">
+                    <span>{{ 'products.description_more' | t }}</span>
+                    {% render 'icon', name: 'add', size: 16, class: 'hi-acc-plus' %}
+                    {% render 'icon', name: 'remove', size: 16, class: 'hi-acc-minus' %}
+                  </summary>
+                  <div class="hi-acc-panel rte">{{ description_more }}</div>
+                </details>
+              </div>
+            </div>
+          {%- elsif description_html != blank -%}
             <div class="rte" {{ block.shopify_attributes }}>{{ description_html }}</div>
           {%- endif -%}
 
@@ -553,7 +583,7 @@
       "settings": [
         {
           "type": "paragraph",
-          "content": "Muestra el tipo de prenda, la etiqueta de drop (ej. DROP 06) y PIEZA ÚNICA cuando hay una sola unidad."
+          "content": "Muestra el tipo de prenda, la etiqueta de drop (ej. DROP 06) y PIEZA ÚNICA cuando la prenda tiene la etiqueta \"Pieza única\" y una sola unidad."
         },
         {
           "type": "text",

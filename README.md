@@ -30,7 +30,7 @@ El logo gótico se mantiene: es la marca. El design system original sigue en [`d
 - **Lo nuevo:** fila con las últimas piezas que entraron. Se arrastra con el mouse, tiene flechas y barra de avance.
   Las tarjetas se inclinan con el cursor y dejan **AGREGAR** al carrito sin entrar a la ficha (o elegir talla, en la
   camiseta).
-- **Elige tu color:** cada color es una colección (Ácido, Carmín, Índigo, Magenta, Ceniza, Leopardo). Al tocarlo,
+- **Elige tu color:** cada color es una colección (Radiactivo, Sangre Fría, Medianoche, Chicle, Asfalto y Fiera). Al tocarlo,
   **toda la tienda se pinta** con ese color, se ven sus piezas como fotos apiladas y un botón lleva a la colección. El
   navegador lo recuerda y se puede volver al color original.
 - **Colecciones de color:** al entrar a una (desde el menú, el home o la fila de colores de cada colección), la
@@ -50,18 +50,21 @@ Todo respeta la opción de reducir movimiento del teléfono o del computador, y 
 
 ## Colecciones y colores
 
-| Colección | Qué entra | Color |
-| --- | --- | --- |
-| Lo nuevo | Todas las piezas, de la más nueva a la más vieja (fila del home) | — |
-| Pantalones | Tipo de producto Jean, Pantalón o Short | — |
-| Tops | Tipo Top o Camiseta | — |
-| Buzos y tejidos | Tipo Buzo, Tejido o Chaqueta | — |
-| Ácido | Etiqueta `Color Ácido` | `#dff04a` |
-| Carmín | Etiqueta `Color Carmín` | `#c3142d` |
-| Índigo | Etiqueta `Color Índigo` | `#5b7cfa` |
-| Magenta | Etiqueta `Color Magenta` | `#e0218a` |
-| Ceniza | Etiqueta `Color Ceniza` | `#c4beb2` |
-| Leopardo | Etiqueta `Color Leopardo` | `#c08a4e` |
+| Colección | Qué entra | Color | Dirección |
+| --- | --- | --- | --- |
+| Lo nuevo | Todas las piezas, de la más nueva a la más vieja (fila del home) | — | `/collections/lo-nuevo` |
+| Pantalones | Tipo de producto Jean, Pantalón o Short | — | `/collections/pantalones` |
+| Tops | Tipo Top o Camiseta | — | `/collections/tops` |
+| Buzos y tejidos | Tipo Buzo, Tejido o Chaqueta | — | `/collections/buzos-y-tejidos` |
+| **Radiactivo** | Etiqueta `Color Ácido`: amarillo neón y verdes sobreteñidos | `#dff04a` | `/collections/acido` |
+| **Sangre Fría** | Etiqueta `Color Carmín`: rojo carmín | `#c3142d` | `/collections/carmin` |
+| **Medianoche** | Etiqueta `Color Índigo`: índigo y azul noche | `#5b7cfa` | `/collections/indigo` |
+| **Chicle** | Etiqueta `Color Magenta`: rosa, fucsia y violeta | `#e0218a` | `/collections/magenta` |
+| **Asfalto** | Etiqueta `Color Ceniza`: grises, hueso y carbón | `#c4beb2` | `/collections/ceniza` |
+| **Fiera** | Etiqueta `Color Leopardo`: animal print y tonos tierra | `#c08a4e` | `/collections/leopardo` |
+
+Cada color tiene nombre propio, descripción y título para buscadores. Al cambiarles el nombre se dejaron igual la
+dirección y la etiqueta, así que los enlaces viejos siguen funcionando y no hubo que volver a etiquetar las prendas.
 
 Son colecciones automáticas: una prenda nueva entra sola si tiene el tipo o la etiqueta. El color se cambia en
 *Productos > Colecciones > (colección) > Metacampos > Color de la colección*; con ese campo lleno, la colección
@@ -89,9 +92,12 @@ pieza** va debajo de la descripción y la sección **Combínala con** debajo de 
 | ¿Quién la hizo? ¿La puedo devolver? | ORIGEN, ENVÍO y CAMBIOS, con enlace a las políticas | marca (`vendor`) o `custom.origen`, y ajustes del bloque |
 
 Las filas sin dato no aparecen. *Combínala con* ordena las prendas disponibles: primero las del mismo color, luego
-las de colores que van con todo (Ceniza e Índigo) y después el resto. Cada puesto elige entre las tres mejores de su
+las de colores que van con todo (Asfalto y Medianoche) y después el resto. Cada puesto elige entre las tres mejores de su
 grupo según la prenda, para que no todas las fichas sugieran lo mismo. Las piezas vendidas no se sugieren, tampoco
 si alguien las dejó en `custom.combina`.
+
+La descripción de cada prenda abre con un párrafo y guarda el resto en **Descripción completa**: detalles, corte,
+material y clima, confección y cómo llevarla.
 
 ![Datos de la pieza](docs/preview/ficha-datos.jpg)
 
@@ -122,7 +128,10 @@ Sube el archivo en *Contenido > Archivos* o directamente en el campo de la secci
 3. **Color de cada colección:** metacampo de colección `custom.acento` (*Color de la colección*). Las colecciones
    con color se usan en *Elige tu color* (bloque **Color > Colección**), en el menú y en la fila de colores.
 4. **Precio:** *Configuración > Tienda > Moneda > Cambiar formato*: `${{amount_no_decimals_with_comma_separator}}` → `$690.000`.
-5. **Piezas únicas:** una prenda con una sola variante e inventario de 1 unidad muestra **PIEZA ÚNICA** y el sello que gira.
+5. **Existencias:** cada prenda tiene 4 unidades y la camiseta 3 por talla. Desde 5 unidades hacia abajo, la tarjeta
+   dice **ÚLTIMAS N** y la ficha *Quedan N unidades*; la última unidad dice **ÚLTIMA**. **PIEZA ÚNICA** y el sello que
+   gira salen solo en una prenda con la etiqueta `Pieza única`, una sola variante y 1 unidad. El límite se cambia en
+   *Configuración del tema > Productos*.
 6. **Envío gratis:** el aviso del carrito está apagado (0). Actívalo en *Configuración del tema > Carrito* solo si lo ofreces.
 7. **Talla y medidas de cada pieza:** metacampos `custom.talla` (*Talla de la pieza*: S, M, 30, Única) y
    `custom.medidas` (*Medidas de la pieza*, una por línea). La talla va en una marquilla sobre la foto de la

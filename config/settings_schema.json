@@ -204,7 +204,7 @@
         "max": 20,
         "step": 1,
         "default": 5,
-        "info": "0 desactiva el aviso. Las piezas de una sola unidad muestran PIEZA ÚNICA."
+        "info": "0 desactiva el aviso. Con la etiqueta \"Pieza única\" y 1 unidad, la prenda muestra PIEZA ÚNICA; sin la etiqueta, la última unidad muestra ÚLTIMA."
       },
       {
         "type": "textarea",

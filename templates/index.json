@@ -73,14 +73,14 @@
         "pieza-estrellas"
       ],
       "settings": {
-        "heading": "HIGHT — piezas únicas y denim intervenido",
+        "heading": "HIGHT — ediciones cortas y denim intervenido",
         "eyebrow": "(01) DENIM INTERVENIDO — MED/COL",
-        "text": "<p>Piezas únicas y prendas de archivo. Cada una existe una sola vez.</p>",
+        "text": "<p>Prendas intervenidas a mano y piezas de archivo, en pocas unidades. Cuando se acaban, no vuelven.</p>",
         "button_label": "VER LAS PIEZAS",
         "button_link": "shopify://collections/all",
         "show_shuffle": true,
         "show_badge": true,
-        "badge_text": "PIEZA ÚNICA · NO SE REPITE · ",
+        "badge_text": "EDICIÓN CORTA · NO SE REPITE · ",
         "media_opacity": 45,
         "full_height": true,
         "color_scheme": "scheme-1"
@@ -92,7 +92,7 @@
         "t1": {
           "type": "item",
           "settings": {
-            "text": "PIEZAS ÚNICAS",
+            "text": "EDICIONES CORTAS",
             "style": "fill"
           }
         },
@@ -140,7 +140,7 @@
         "layout": "rail",
         "eyebrow": "(RECIÉN LLEGADO)",
         "heading": "LO NUEVO",
-        "text": "<p>Una de cada una. Cuando se vende, se va del archivo.</p>",
+        "text": "<p>Pocas unidades de cada una. Cuando se acaban, no vuelven.</p>",
         "collection": "lo-nuevo",
         "products_to_show": 12,
         "columns_desktop": "4",
@@ -350,7 +350,7 @@
       "type": "manifesto",
       "settings": {
         "label": "(MANIFIESTO)",
-        "quote": "<p>Cada pieza tiene su historia: denim intervenido, parches, tintes ácidos y prendas de archivo.</p><p>La mayoría existe <strong>una sola vez</strong>. Si la ves y es tu talla, <strong>es tuya</strong>.</p>",
+        "quote": "<p>Cada pieza tiene su historia: denim intervenido, parches, tintes ácidos y prendas de archivo.</p><p>Cada una sale en <strong>pocas unidades</strong> y no se repite. Si la ves y es tu talla, <strong>es tuya</strong>.</p>",
         "scroll_fill": true,
         "signature": "HIGHT — MED/COL",
         "button_label": "",

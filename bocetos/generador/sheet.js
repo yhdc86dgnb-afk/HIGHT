@@ -157,6 +157,7 @@
     head += textEl(1620, 124, meta, { family: 'Space Mono', size: 15, weight: 700, anchor: 'end' });
     const chips = [d.status === 'ACTIVE' ? 'ACTIVA EN LA TIENDA' : 'BORRADOR'];
     if (d.unique) chips.push('PIEZA ÚNICA');
+    else if (d.stock_label) chips.push(d.stock_label);
     if (d.corte) chips.push(d.corte.toUpperCase());
     let cx = 1620;
     let chipSvg = '';
@@ -211,6 +212,12 @@
     pal += textEl(850, 690, 'ACENTO EN LA TIENDA', { family: 'Space Mono', size: 11, weight: 700, ls: 1.2, fill: MUTED });
     pal += K.rect(850, 706, 46, 26, { fill: accent, 'stroke-width': 1.2 });
     pal += textEl(908, 724, accent.toUpperCase(), { family: 'Space Mono', size: 11 });
+    if (d.coleccion) {
+      pal += textEl(850, 768, 'COLECCIÓN', { family: 'Space Mono', size: 11, weight: 700, ls: 1.2, fill: MUTED });
+      pal += K.rect(850, 784, 46, 26, { fill: d.coleccion.hex, 'stroke-width': 1.2 });
+      pal += textEl(908, 796, d.coleccion.name, { size: 13, weight: 500 });
+      pal += textEl(908, 809, d.coleccion.hex.toUpperCase(), { family: 'Space Mono', size: 10, fill: MUTED });
+    }
     out += g({ id: `${id}-colores` }, pal);
 
     // Leyenda: detalles (números) y cómo queda (letras)
@@ -322,7 +329,7 @@
     // Pie
     let foot = K.path('M60 1150 L1620 1150', { stroke: INK, 'stroke-width': 1 });
     foot += textEl(60, 1172, `hight18.myshopify.com/products/${id}`, { family: 'Space Mono', size: 11, fill: MUTED });
-    foot += textEl(1620, 1172, 'Boceto plano con los datos de la ficha de la tienda · 16 oct 2026 · Medidas en la prenda real', { family: 'Space Mono', size: 11, anchor: 'end', fill: MUTED });
+    foot += textEl(1620, 1172, 'Boceto plano con los datos de la ficha de la tienda · 19 oct 2026 · Medidas en la prenda real', { family: 'Space Mono', size: 11, anchor: 'end', fill: MUTED });
     out += g({ id: `${id}-pie` }, foot);
 
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="420mm" height="297mm" viewBox="0 0 ${WPAGE} ${HPAGE}">` + `<title>${esc(d.title)} · ficha técnica HIGHT</title>` + out + '</svg>';

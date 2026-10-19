@@ -53,7 +53,17 @@
           assign stock_total = stock_total | plus: card_variant.inventory_quantity
         endif
       endfor
+      assign card_unique = false
       if stock_tracked and stock_total == 1 and product.variants.size == 1
+        for product_tag in product.tags
+          assign unique_tag_name = product_tag | strip | downcase
+          if unique_tag_name == 'pieza única' or unique_tag_name == 'pieza unica'
+            assign card_unique = true
+            break
+          endif
+        endfor
+      endif
+      if card_unique
         assign card_tag = 'products.unique_tag' | t
         assign card_tag_style = 'accent'
       elsif stock_tracked and stock_total > 0 and stock_total <= settings.low_stock_threshold

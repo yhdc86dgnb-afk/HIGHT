@@ -15,7 +15,12 @@
   assign og_title = page_title | default: shop.name
   assign og_url = canonical_url | default: request.origin
   assign og_type = 'website'
-  assign og_description = page_description | default: shop.description | default: shop.name
+  # Sin descripción en Tienda online > Preferencias, el home usa la del tema.
+  assign meta_description = page_description
+  if meta_description == blank and request.page_type == 'index'
+    assign meta_description = 'general.meta_description' | t
+  endif
+  assign og_description = meta_description | default: shop.description | default: shop.name
 
   if request.page_type == 'product'
     assign og_type = 'product'
@@ -33,8 +38,8 @@
   {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
 </title>
 
-{%- if page_description %}
-  <meta name="description" content="{{ page_description | escape }}">
+{%- if meta_description != blank %}
+  <meta name="description" content="{{ meta_description | escape }}">
 {%- endif %}
 
 <link rel="canonical" href="{{ canonical_url }}">

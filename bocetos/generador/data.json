@@ -46,7 +46,13 @@
    }
   ],
   "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
-  "unique": false
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Chicle",
+   "hex": "#e0218a"
+  }
  },
  {
   "id": 15396634820807,
@@ -57,8 +63,7 @@
   "tags": [
    "Color Leopardo",
    "Jean",
-   "Patchwork",
-   "Pieza única"
+   "Patchwork"
   ],
   "price": 690000,
   "status": "ACTIVE",
@@ -97,7 +102,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Fiera",
+   "hex": "#c08a4e"
+  }
  },
  {
   "id": 15396634853575,
@@ -108,8 +119,7 @@
   "tags": [
    "Color Ácido",
    "Destroyed",
-   "Jean",
-   "Pieza única"
+   "Jean"
   ],
   "price": 490000,
   "status": "ACTIVE",
@@ -148,7 +158,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Radiactivo",
+   "hex": "#dff04a"
+  }
  },
  {
   "id": 15396634886343,
@@ -198,7 +214,18 @@
    }
   ],
   "basics": "Un jean recto oscuro o un pantalón negro amplio, con tenis blancos.",
-  "unique": false
+  "unique": false,
+  "stock": {
+   "S": 3,
+   "M": 3,
+   "L": 3,
+   "XL": 3
+  },
+  "stock_label": "3 POR TALLA",
+  "coleccion": {
+   "name": "Sangre Fría",
+   "hex": "#c3142d"
+  }
  },
  {
   "id": 15396634919111,
@@ -209,7 +236,6 @@
   "tags": [
    "Archivo",
    "Color Carmín",
-   "Pieza única",
    "Top"
   ],
   "price": 390000,
@@ -249,7 +275,13 @@
    }
   ],
   "basics": "Un jean recto oscuro o un pantalón negro amplio, con tenis blancos.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Sangre Fría",
+   "hex": "#c3142d"
+  }
  },
  {
   "id": 15396634951879,
@@ -260,8 +292,7 @@
   "tags": [
    "Color Índigo",
    "Jean",
-   "Patchwork",
-   "Pieza única"
+   "Patchwork"
   ],
   "price": 590000,
   "status": "ACTIVE",
@@ -300,7 +331,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Medianoche",
+   "hex": "#5b7cfa"
+  }
  },
  {
   "id": 15413644067015,
@@ -311,8 +348,7 @@
   "tags": [
    "Color Índigo",
    "Jean",
-   "Patchwork",
-   "Pieza única"
+   "Patchwork"
   ],
   "price": 620000,
   "status": "ACTIVE",
@@ -351,7 +387,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Medianoche",
+   "hex": "#5b7cfa"
+  }
  },
  {
   "id": 15413644099783,
@@ -362,8 +404,7 @@
   "tags": [
    "Color Ceniza",
    "Jean",
-   "Patchwork",
-   "Pieza única"
+   "Patchwork"
   ],
   "price": 520000,
   "status": "DRAFT",
@@ -402,7 +443,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Asfalto",
+   "hex": "#c4beb2"
+  }
  },
  {
   "id": 15413644132551,
@@ -413,8 +460,7 @@
   "tags": [
    "Color Carmín",
    "Intervenido",
-   "Pantalón",
-   "Pieza única"
+   "Pantalón"
   ],
   "price": 450000,
   "status": "DRAFT",
@@ -453,7 +499,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Sangre Fría",
+   "hex": "#c3142d"
+  }
  },
  {
   "id": 15413644165319,
@@ -503,7 +555,13 @@
    }
   ],
   "basics": "Un jean recto oscuro o un pantalón negro amplio, con tenis blancos.",
-  "unique": false
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Asfalto",
+   "hex": "#c4beb2"
+  }
  },
  {
   "id": 15413644198087,
@@ -553,7 +611,13 @@
    }
   ],
   "basics": "Un jean recto oscuro o un pantalón negro amplio, con tenis blancos.",
-  "unique": false
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Sangre Fría",
+   "hex": "#c3142d"
+  }
  },
  {
   "id": 15413644230855,
@@ -564,7 +628,6 @@
   "tags": [
    "Color Ceniza",
    "Deconstruido",
-   "Pieza única",
    "Tejido"
   ],
   "price": 380000,
@@ -604,7 +667,13 @@
    }
   ],
   "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Asfalto",
+   "hex": "#c4beb2"
+  }
  },
  {
   "id": 15413644263623,
@@ -615,8 +684,7 @@
   "tags": [
    "Buzo",
    "Color Ceniza",
-   "Destroyed",
-   "Pieza única"
+   "Destroyed"
   ],
   "price": 520000,
   "status": "ACTIVE",
@@ -655,7 +723,13 @@
    }
   ],
   "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Asfalto",
+   "hex": "#c4beb2"
+  }
  },
  {
   "id": 15413644329159,
@@ -666,8 +740,7 @@
   "tags": [
    "Color Ceniza",
    "Intervenido",
-   "Pantalón",
-   "Pieza única"
+   "Pantalón"
   ],
   "price": 890000,
   "status": "DRAFT",
@@ -706,7 +779,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Asfalto",
+   "hex": "#c4beb2"
+  }
  },
  {
   "id": 15413645050055,
@@ -716,7 +795,6 @@
   "vendor": "HIGHT",
   "tags": [
    "Color Índigo",
-   "Pieza única",
    "Tejido"
   ],
   "price": 460000,
@@ -756,7 +834,13 @@
    }
   ],
   "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Medianoche",
+   "hex": "#5b7cfa"
+  }
  },
  {
   "id": 15413645082823,
@@ -767,8 +851,7 @@
   "tags": [
    "Color Leopardo",
    "Jean",
-   "Patchwork",
-   "Pieza única"
+   "Patchwork"
   ],
   "price": 540000,
   "status": "ACTIVE",
@@ -807,7 +890,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Fiera",
+   "hex": "#c08a4e"
+  }
  },
  {
   "id": 15413645115591,
@@ -818,7 +907,6 @@
   "tags": [
    "Color Magenta",
    "Patchwork",
-   "Pieza única",
    "Short"
   ],
   "price": 260000,
@@ -858,7 +946,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Chicle",
+   "hex": "#e0218a"
+  }
  },
  {
   "id": 15413645148359,
@@ -908,7 +1002,13 @@
    }
   ],
   "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
-  "unique": false
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Chicle",
+   "hex": "#e0218a"
+  }
  },
  {
   "id": 15413645213895,
@@ -919,7 +1019,6 @@
   "tags": [
    "Color Magenta",
    "Jean",
-   "Pieza única",
    "Pintado"
   ],
   "price": 480000,
@@ -959,7 +1058,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Chicle",
+   "hex": "#e0218a"
+  }
  },
  {
   "id": 15413645246663,
@@ -970,8 +1075,7 @@
   "tags": [
    "Color Magenta",
    "Jean",
-   "Patchwork",
-   "Pieza única"
+   "Patchwork"
   ],
   "price": 650000,
   "status": "ACTIVE",
@@ -1010,7 +1114,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Chicle",
+   "hex": "#e0218a"
+  }
  },
  {
   "id": 15413645279431,
@@ -1021,8 +1131,7 @@
   "tags": [
    "Color Ácido",
    "Intervenido",
-   "Jean",
-   "Pieza única"
+   "Jean"
   ],
   "price": 560000,
   "status": "DRAFT",
@@ -1061,7 +1170,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Radiactivo",
+   "hex": "#dff04a"
+  }
  },
  {
   "id": 15413645312199,
@@ -1072,8 +1187,7 @@
   "tags": [
    "Color Ácido",
    "Destroyed",
-   "Jean",
-   "Pieza única"
+   "Jean"
   ],
   "price": 480000,
   "status": "ACTIVE",
@@ -1112,7 +1226,13 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Radiactivo",
+   "hex": "#dff04a"
+  }
  },
  {
   "id": 15414259515591,
@@ -1124,7 +1244,6 @@
    "Archivo",
    "Chaqueta",
    "Color Ácido",
-   "Pieza única",
    "Pintada a mano"
   ],
   "price": 620000,
@@ -1164,7 +1283,13 @@
    }
   ],
   "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Radiactivo",
+   "hex": "#dff04a"
+  }
  },
  {
   "id": 15414259548359,
@@ -1215,7 +1340,13 @@
    }
   ],
   "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
-  "unique": false
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Asfalto",
+   "hex": "#c4beb2"
+  }
  },
  {
   "id": 15414259613895,
@@ -1227,7 +1358,6 @@
    "Archivo",
    "Chaqueta",
    "Color Ceniza",
-   "Pieza única",
    "Pintada a mano"
   ],
   "price": 580000,
@@ -1267,7 +1397,13 @@
    }
   ],
   "basics": "Una camiseta lisa, un jean recto y botas o tenis.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Asfalto",
+   "hex": "#c4beb2"
+  }
  },
  {
   "id": 15414259646663,
@@ -1278,8 +1414,7 @@
   "tags": [
    "Color Ácido",
    "Jean",
-   "Patchwork",
-   "Pieza única"
+   "Patchwork"
   ],
   "price": 560000,
   "status": "ACTIVE",
@@ -1318,6 +1453,12 @@
    }
   ],
   "basics": "Una camiseta blanca o negra lisa, una chaqueta de jean y tenis o botas.",
-  "unique": true
+  "unique": false,
+  "stock": 4,
+  "stock_label": "4 UNIDADES",
+  "coleccion": {
+   "name": "Radiactivo",
+   "hex": "#dff04a"
+  }
  }
 ]

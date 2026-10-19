@@ -328,6 +328,31 @@ html.hi-locked {
   text-align: left;
 }
 
+/* Subtítulos de la descripción de la ficha: marquilla mono, como las filas de datos. */
+.hi-product-info .rte h3 {
+  margin-top: 1.6em;
+  color: var(--muted);
+  font: 400 0.75rem/1.45 var(--font-mono);
+  letter-spacing: 0.06em;
+}
+
+.hi-product-info .rte h3 + * {
+  margin-top: 0.35em;
+}
+
+.hi-product-info .rte > :first-child {
+  margin-top: 0;
+}
+
+.hi-product-description .hi-acc {
+  margin-top: 14px;
+}
+
+/* Con los datos justo debajo, el acordeón y los datos comparten la línea punteada. */
+.hi-product-description + .hi-facts {
+  margin-top: -23px;
+}
+
 /* ---------- Layout ---------- */
 
 .hi-container {

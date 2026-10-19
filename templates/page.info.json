@@ -19,7 +19,7 @@
       "type": "manifesto",
       "settings": {
         "label": "(MANIFIESTO)",
-        "quote": "<p>Cada pieza tiene su historia: denim intervenido, parches, tintes ácidos y prendas de archivo.</p><p>La mayoría existe <strong>una sola vez</strong>. Si la ves y es tu talla, <strong>es tuya</strong>.</p>",
+        "quote": "<p>Cada pieza tiene su historia: denim intervenido, parches, tintes ácidos y prendas de archivo.</p><p>Cada una sale en <strong>pocas unidades</strong> y no se repite. Si la ves y es tu talla, <strong>es tuya</strong>.</p>",
         "scroll_fill": true,
         "signature": "HIGHT — MED/COL",
         "button_label": "VER LAS PIEZAS",
@@ -34,7 +34,7 @@
         "t1": {
           "type": "item",
           "settings": {
-            "text": "PIEZAS ÚNICAS",
+            "text": "EDICIONES CORTAS",
             "style": "fill"
           }
         },

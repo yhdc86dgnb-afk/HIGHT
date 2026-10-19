@@ -20,6 +20,7 @@
       "other": "({{ count }}) PIEZAS"
     },
     "unique_badge": "PIEZA ÚNICA · NO SE REPITE · ",
+    "meta_description": "Denim intervenido a mano, prendas de archivo y ediciones cortas. HIGHT, desde Medellín, con envíos a toda Colombia.",
     "placeholder_video": "Sube aquí un video (por ejemplo, uno generado en Higgsfield) o una foto. Mientras no haya nada, esta sección no se muestra en la tienda."
   },
   "accessibility": {
@@ -85,7 +86,10 @@
       "one": "Queda {{ count }} unidad.",
       "other": "Quedan {{ count }} unidades."
     },
-    "low_stock_tag": "ÚLTIMAS {{ count }}",
+    "low_stock_tag": {
+      "one": "ÚLTIMA",
+      "other": "ÚLTIMAS {{ count }}"
+    },
     "unique_tag": "PIEZA ÚNICA",
     "unique_note": "Una sola pieza. Cuando se vende, no vuelve.",
     "photo_placeholder": "FOTO",
@@ -106,6 +110,7 @@
     "size_short": "T. {{ size }}",
     "size_value": "Talla {{ size }}",
     "size_unique_note": "Viene en una sola talla. Si quieres las medidas exactas, escríbenos.",
+    "description_more": "Descripción completa",
     "size_ask_html": "¿Dudas con la talla? <a href=\"{{ url }}\">Escríbenos</a> y te mandamos las medidas exactas de la pieza.",
     "facts": {
       "distinct": "Lo distinto",

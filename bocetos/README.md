@@ -18,13 +18,15 @@ Los números siguen el orden en que las prendas entraron a la tienda.
 
 ## Qué tiene cada hoja
 
-- **Encabezado:** nombre, tipo, marca, precio, si está activa o en borrador, si es pieza única y el corte.
+- **Encabezado:** nombre, tipo, marca, precio, si está activa o en borrador, las unidades (4 por prenda; 3 por talla
+  en la camiseta) y el corte. Si alguna vez una prenda es pieza única, el chip dice PIEZA ÚNICA.
 - **Frente y espalda:** silueta plana con costuras, pespuntes, herrajes y los detalles de la prenda (parches,
   rotos, pintura, cremalleras, cadenas, ojales…). Cuando la tienda no describe la espalda, dice *Referencia:
   confírmala con la prenda*.
 - **Llamadas numeradas (1, 2, 3…):** detalles de confección, explicados abajo en *Detalles de confección*.
 - **Llamadas con letra (A, B, C):** cómo queda en el cuerpo, explicado en *Cómo queda en el cuerpo*.
-- **Colores de la pieza** y el color de acento que usa la tienda.
+- **Colores de la pieza**, el color de acento que usa la tienda y la colección de color donde aparece (Radiactivo,
+  Sangre Fría, Medianoche, Chicle, Asfalto o Fiera).
 - **Columna derecha:** lo distinto, cómo queda, material y clima, confección, cuidado (con símbolos de lavado),
   ocasiones, costo por puesta, origen, con qué combinarla y talla y medidas.
 
@@ -57,6 +59,6 @@ Requiere Node con Playwright (Chromium). Desde la raíz del repo:
 node bocetos/generador/build.js bocetos/generador/data.json bocetos /tmp/bocetos-png
 ```
 
-`generador/data.json` es una copia de los datos de la tienda del 16 de octubre de 2026. Los dibujos de cada prenda
+`generador/data.json` es una copia de los datos de la tienda del 19 de octubre de 2026. Los dibujos de cada prenda
 están en `generador/specs.js`. Las fuentes de `generador/fonts/` son Space Grotesk 400, 500 y 700 en versión fija
 (SIL Open Font License 1.1), para que el PDF guarde el texto como texto.
