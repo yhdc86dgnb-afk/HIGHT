@@ -1,0 +1,341 @@
+{%- liquid
+  assign lupa_id = 'Lupa-' | append: section.id
+  assign item_count = 0
+  assign first_item = nil
+  assign zoom_value = section.settings.zoom | default: '2.5'
+-%}
+
+{%- comment -%} Cada Prenda lleva los Puntos de detalle que quedan debajo de ella, hasta la siguiente prenda. {%- endcomment -%}
+{%- capture lupa_items -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type != 'item' or block.settings.product == blank -%}
+      {%- continue -%}
+    {%- endif -%}
+    {%- liquid
+      assign item_product = block.settings.product
+      assign front_image = block.settings.image_front
+      if front_image == blank
+        assign front_image = item_product.featured_media.preview_image
+      endif
+      assign back_image = block.settings.image_back
+      if back_image == blank and item_product.media.size > 1
+        assign back_image = item_product.media[1].preview_image
+      endif
+      assign spot_offset = forloop.index
+      assign front_label = block.settings.label_front
+      if front_label == blank
+        assign front_label = 'lupa.front' | t
+      endif
+      assign back_label = block.settings.label_back
+      if back_label == blank
+        assign back_label = 'lupa.back' | t
+      endif
+    -%}
+    {%- if front_image == blank -%}
+      {%- continue -%}
+    {%- endif -%}
+    {%- if first_item == nil -%}
+      {%- assign first_item = block -%}
+      {%- assign first_image = front_image -%}
+    {%- endif -%}
+    {%- capture front_spots -%}
+      {%- assign spot_count = 0 -%}
+      {%- for spot_block in section.blocks offset: spot_offset -%}
+        {%- if spot_block.type == 'item' -%}
+          {%- break -%}
+        {%- endif -%}
+        {%- if spot_block.settings.side != 'back' -%}
+          {%- if spot_count > 0 %},{% endif -%}
+          {%- assign spot_count = spot_count | plus: 1 -%}
+          {"x":{{ spot_block.settings.x }},"y":{{ spot_block.settings.y }},"t":{{ spot_block.settings.title | json }},"d":{{ spot_block.settings.text | json }}}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- capture back_spots -%}
+      {%- assign spot_count = 0 -%}
+      {%- for spot_block in section.blocks offset: spot_offset -%}
+        {%- if spot_block.type == 'item' -%}
+          {%- break -%}
+        {%- endif -%}
+        {%- if spot_block.settings.side == 'back' -%}
+          {%- if spot_count > 0 %},{% endif -%}
+          {%- assign spot_count = spot_count | plus: 1 -%}
+          {"x":{{ spot_block.settings.x }},"y":{{ spot_block.settings.y }},"t":{{ spot_block.settings.title | json }},"d":{{ spot_block.settings.text | json }}}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- capture item_details -%}
+      {%- assign detail_count = 0 -%}
+      {%- assign detail_lines = block.settings.details | newline_to_br | split: '<br />' -%}
+      {%- for detail_line in detail_lines -%}
+        {%- assign detail_text = detail_line | strip -%}
+        {%- if detail_text != blank -%}
+          {%- if detail_count > 0 %},{% endif -%}
+          {%- assign detail_count = detail_count | plus: 1 -%}
+          {{ detail_text | json }}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- if item_count > 0 %},{% endif -%}
+    {%- assign item_count = item_count | plus: 1 -%}
+    {"t":{{ item_product.title | json }},"url":{{ item_product.url | json }},"price":{{ item_product.price | money_without_trailing_zeros | json }},"views":[
+      {"label":{{ front_label | json }},"src":{{ front_image | image_url: width: 1200 | json }},"zoom":{{ front_image | image_url: width: 2400 | json }},"w":{{ front_image.width | default: 1000 }},"h":{{ front_image.height | default: 1250 }},"spots":[{{ front_spots }}]}
+      {%- if back_image != blank -%}
+        ,{"label":{{ back_label | json }},"src":{{ back_image | image_url: width: 1200 | json }},"zoom":{{ back_image | image_url: width: 2400 | json }},"w":{{ back_image.width | default: 1000 }},"h":{{ back_image.height | default: 1250 }},"spots":[{{ back_spots }}]}
+      {%- endif -%}
+    ],"details":[{{ item_details }}]}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if item_count > 0 -%}
+  <section class="hi-section hi-lupa color-{{ section.settings.color_scheme }}" aria-labelledby="{{ lupa_id }}-title">
+    <hi-lupa
+      class="hi-container"
+      data-zoom="{{ zoom_value }}"
+      data-label-hint="{{ 'lupa.hint' | t: zoom: '[zoom]' }}"
+      data-label-spots="{{ 'lupa.start_spots' | t }}"
+      data-label-plain="{{ 'lupa.start_plain' | t }}"
+      data-label-spot="{{ 'lupa.spot_label' | t: number: '[number]', title: '[title]' }}"
+      data-label-alt="{{ 'lupa.photo_alt' | t: title: '[title]', side: '[side]' }}"
+    >
+      <div class="hi-lupa-head" data-reveal>
+        <p class="t-label hi-new-eyebrow">
+          {%- if section.settings.badge != blank -%}
+            <b>{{ section.settings.badge | escape }}</b>
+          {%- endif -%}
+          {%- if section.settings.badge != blank and section.settings.eyebrow != blank %} · {% endif -%}
+          {{- section.settings.eyebrow | escape -}}
+        </p>
+        <h2 class="t-display-l" id="{{ lupa_id }}-title">{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.text != blank -%}
+          <div class="hi-lupa-text t-body-l t-measure">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+
+      <div class="hi-lupa-grid">
+        <div class="hi-lupa-figure">
+          <div class="hi-lupa-stage hi-print">
+            <div class="hi-lupa-frame" data-lupa-stage>
+              {{
+                first_image
+                | image_url: width: 1200
+                | image_tag:
+                  widths: '600, 900, 1200',
+                  sizes: '(min-width: 990px) 40vw, 90vw',
+                  loading: 'lazy',
+                  alt: first_item.settings.product.title,
+                  draggable: 'false'
+              }}
+              <span class="hi-lupa-lens" data-lupa-lens hidden aria-hidden="true"></span>
+              <div class="hi-lupa-spots" data-lupa-spots></div>
+            </div>
+          </div>
+          <p class="hi-lupa-hint t-label js-only" data-lupa-hint></p>
+        </div>
+
+        <div class="hi-lupa-panel">
+          <div class="hi-lupa-chips js-only" role="radiogroup" aria-label="{{ 'lupa.pick' | t }}" data-lupa-items></div>
+          <div class="hi-lupa-chips js-only" role="radiogroup" aria-label="{{ 'lupa.side' | t }}" data-lupa-views hidden></div>
+          <div class="hi-lupa-chips js-only" role="radiogroup" aria-label="{{ 'lupa.zoom' | t }}" data-lupa-zooms>
+            {%- assign zoom_options = '2,2.5,3.5' | split: ',' -%}
+            {%- for zoom_option in zoom_options -%}
+              <label>
+                <input
+                  type="radio"
+                  name="{{ lupa_id }}-zoom"
+                  value="{{ zoom_option }}"
+                  {% if zoom_option == zoom_value %}
+                    checked
+                  {% endif %}
+                >
+                <span>{{ zoom_option | replace: '.', ',' }}×</span>
+              </label>
+            {%- endfor -%}
+          </div>
+          <h3 class="hi-lupa-title t-h1" data-lupa-title>{{ first_item.settings.product.title | escape }}</h3>
+          <p class="hi-lupa-buy">
+            <span class="t-label" data-lupa-price>{{ first_item.settings.product.price | money_without_trailing_zeros }}</span>
+            <a class="hi-btn hi-btn-ghost" href="{{ first_item.settings.product.url }}" data-lupa-link>
+              {{- 'general.view_piece' | t -}}
+            </a>
+          </p>
+          <ol class="hi-lupa-list" role="list" data-lupa-list></ol>
+          <p class="hi-lupa-detail t-body-s js-only" data-lupa-detail aria-live="polite"></p>
+        </div>
+      </div>
+
+      <script type="application/json" data-lupa-data>
+        [{{ lupa_items }}]
+      </script>
+    </hi-lupa>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Lupa",
+  "class": "hi-lupa-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Muestra la tela de cerca con una lupa que sigue al cursor o al dedo. Cada Prenda puede llevar Puntos de detalle: ponlos debajo de su prenda, en la lista de bloques."
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Marquilla",
+      "default": "Nuevo"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Texto pequeño",
+      "default": "Lupa"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Mira la tela de cerca"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Texto",
+      "default": "<p>Pasa el cursor o el dedo por la foto. En el jean, los números llevan a cada detalle.</p>"
+    },
+    {
+      "type": "select",
+      "id": "zoom",
+      "label": "Aumento al abrir",
+      "options": [
+        {
+          "value": "2",
+          "label": "2×"
+        },
+        {
+          "value": "2.5",
+          "label": "2,5×"
+        },
+        {
+          "value": "3.5",
+          "label": "3,5×"
+        }
+      ],
+      "default": "2.5"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Prenda",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Prenda"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_front",
+          "label": "Foto del frente",
+          "info": "Si queda vacía, usa la foto principal de la prenda. Mejor en alta (2400 px o más) para ver la tela."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_back",
+          "label": "Foto de la espalda",
+          "info": "Si queda vacía y la prenda tiene una segunda foto, usa esa."
+        },
+        {
+          "type": "text",
+          "id": "label_front",
+          "label": "Nombre del frente",
+          "default": "Frente"
+        },
+        {
+          "type": "text",
+          "id": "label_back",
+          "label": "Nombre de la espalda",
+          "default": "Espalda"
+        },
+        {
+          "type": "textarea",
+          "id": "details",
+          "label": "Detalles",
+          "info": "Uno por línea. Se muestran cuando la prenda no tiene Puntos de detalle."
+        }
+      ]
+    },
+    {
+      "type": "spot",
+      "name": "Punto de detalle",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Detalle"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Texto"
+        },
+        {
+          "type": "select",
+          "id": "side",
+          "label": "Lado",
+          "options": [
+            {
+              "value": "front",
+              "label": "Frente"
+            },
+            {
+              "value": "back",
+              "label": "Espalda"
+            }
+          ],
+          "default": "front"
+        },
+        {
+          "type": "range",
+          "id": "x",
+          "label": "Posición horizontal",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "y",
+          "label": "Posición vertical",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lupa",
+      "blocks": [
+        {
+          "type": "item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

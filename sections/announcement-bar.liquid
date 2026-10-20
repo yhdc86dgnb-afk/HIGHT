@@ -3,6 +3,17 @@
   if section.settings.tone == 'scheme'
     assign announce_class = 'color-' | append: section.settings.color_scheme
   endif
+
+  # Con la rotación de estilo, la cinta dice el color de ahora (después del primer mensaje) y el que
+  # sigue (después del segundo). Los llena snippets/rotation-data.liquid antes de que se vean.
+  assign show_turn = false
+  if settings.rotation_enabled and request.design_mode == false and section.settings.show_turn
+    assign show_turn = true
+  endif
+  assign turn_next_after = 2
+  if section.blocks.size == 1
+    assign turn_next_after = 1
+  endif
 -%}
 {%- if section.blocks.size > 0 -%}
   {%- capture announce_items -%}
@@ -15,6 +26,22 @@
         {%- endif -%}
       </li>
       <li class="hi-marquee-sep" aria-hidden="true">{% render 'icon', name: 'flare', size: 16 %}</li>
+      {%- if show_turn and forloop.index == 1 -%}
+        <li class="hi-marquee-item" data-turn-show hidden>
+          <span data-turn-template="{{ 'rotation.cinta_now' | t: name: '[name]' }}"></span>
+        </li>
+        <li class="hi-marquee-sep" aria-hidden="true" data-turn-show hidden>
+          {%- render 'icon', name: 'flare', size: 16 -%}
+        </li>
+      {%- endif -%}
+      {%- if show_turn and forloop.index == turn_next_after -%}
+        <li class="hi-marquee-item" data-turn-show hidden>
+          <span data-turn-template="{{ 'rotation.cinta_next' | t: name: '[next]' }}"></span>
+        </li>
+        <li class="hi-marquee-sep" aria-hidden="true" data-turn-show hidden>
+          {%- render 'icon', name: 'flare', size: 16 -%}
+        </li>
+      {%- endif -%}
     {%- endfor -%}
   {%- endcapture -%}
   <div
@@ -36,6 +63,11 @@
         </ul>
       </div>
     </hi-marquee>
+    {%- if show_turn -%}
+      <script>
+        window.HightRotation && window.HightRotation.text && window.HightRotation.text(document.currentScript.parentNode, window.HightRotation.shown);
+      </script>
+    {%- endif -%}
   </div>
 {%- endif -%}
 
@@ -83,6 +115,13 @@
       "label": "Esquema de color",
       "default": "scheme-1",
       "visible_if": "{{ section.settings.tone == 'scheme' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_turn",
+      "label": "Decir el color de ahora y el que sigue",
+      "info": "Con la rotación de estilo encendida, la cinta suma AHORA y SIGUE con los colores del turno.",
+      "default": true
     }
   ],
   "blocks": [

@@ -26,6 +26,17 @@ El logo gótico se mantiene: es la marca. El design system original sigue en [`d
 
 - **La tienda cambia de estilo cada minuto:** color, textura y prendas del collage van rotando por los 6 colores
   (más abajo, en [La tienda cambia de estilo cada minuto](#la-tienda-cambia-de-estilo-cada-minuto)).
+- **Probador (Arma tu look):** una prenda para encima, una arriba y una abajo, con flechas, *Sorpréndeme*, el total
+  del look y un botón que agrega las tres al carrito (con talla cuando la prenda tiene varias). Con *Del color del
+  turno* sigue al color que está en pantalla; si ese color no tiene prenda para un puesto, va una de Asfalto o
+  Medianoche y lo dice. Si alguien ya armó su look, el cambio de turno no se lo quita.
+- **Lupa (Mira la tela de cerca):** una lupa redonda sigue al cursor o al dedo sobre la foto, con aumento 2×, 2,5× o
+  3,5×. En el jean, los números llevan a cada detalle; la chaqueta tiene frente y espalda. La foto en alta se baja solo
+  cuando alguien llega a la foto. Reemplaza en el home a *Anatomía de una pieza*, que sigue en el editor (apagada) por
+  si se quiere volver a usar.
+- **Desliza (¿Te la pondrías?):** las prendas salen una por una; a la derecha si te la pondrías, a la izquierda si
+  no (arrastrando, con los botones o con las flechas del teclado). Las favoritas se guardan en el navegador, suman su
+  total y se agregan juntas al carrito.
 - **Hero collage:** el logo al centro y las prendas como fotos pegadas con cinta. En computador se arrastran y se
   mueven con el cursor; en el teléfono flotan. El botón **MEZCLAR** las reparte de nuevo.
 - **Cintas de texto:** corren de lado a lado y aceleran cuando haces scroll.
@@ -101,14 +112,29 @@ Al empezar cada minuto la tienda pasa al color siguiente: Radiactivo → Sangre 
   ya no se arrastra a las otras páginas.
 - **El cambio no interrumpe:** el color entra con una transición de casi un segundo que no bloquea clics ni toques,
   y las fotos se reemplazan como copias que se cambian. Con *reducir movimiento* cambia sin animación.
+- **El inicio dice el turno:** *(Turno 2/6) · Textura: Semitono de puntos negros*, el nombre del color en grande
+  (entra letra por letra), su frase y un botón *Ver Sangre Fría* que lleva a su colección. El sello dice *Cambia cada
+  1:00 · todos ven el mismo turno* y la cinta de arriba suma *Ahora: …* y *Sigue: …*.
+- **Agenda de turnos:** debajo del inicio, los próximos 6 turnos con su hora. Tocar uno lo muestra de una vez y la
+  tienda sigue rotando desde ahí; el control del encabezado ofrece *Volver a la hora* para juntarse otra vez con todos.
+- **Espera mientras usas el probador, la lupa o Desliza:** si el minuto cambia en ese momento, el cambio espera hasta 4
+  segundos después del último gesto (el control dice *Esperando*) y luego se pone al día con la hora.
 
 Se configura en *Configuración del tema > Rotación de estilo*: encenderla o apagarla, qué colecciones rotan y en qué
 orden (cada una necesita su *Color de la colección*), cada cuánto cambia (cada minuto, minuto y medio, 2 minutos o 2
 minutos y medio) y si cambian también las prendas, la textura y la página de contraseña. Para usar una foto como
 textura de un color, súbela en *Productos > Colecciones > (colección) > Metacampos > Textura de la colección*; si
-queda vacío, se usa la textura dibujada.
+queda vacío, se usa la textura dibujada. La frase de cada color está en el campo *Frase del turno* de la colección (si
+queda vacío, sale la primera frase de su descripción). El turno del inicio, la agenda y la cinta se apagan en los
+ajustes de esas secciones.
 
 ![La tienda en tres minutos seguidos](docs/preview/rotacion.jpg)
+
+![Probador](docs/preview/probador.jpg)
+
+![Lupa](docs/preview/lupa.jpg)
+
+![Desliza](docs/preview/desliza.jpg)
 
 ## La ficha responde antes de que pregunten
 
@@ -200,8 +226,8 @@ assets/          hight.css, hight.js, fuentes (Anton, Space Grotesk, Space Mono)
 config/          settings_schema.json (acento, 5 esquemas, movimiento, rotación de estilo) y settings_data.json
 layout/          theme.liquid y password.liquid
 locales/         es.default.json
-sections/        hero-collage, marquee, featured-collection, color-story, hotspots, index-list,
-                 manifesto, video-campaign, editorial-spread (lookbook), titular, header, footer…
+sections/        hero-collage, marquee, featured-collection, color-story, probador, lupa, desliza, hotspots,
+                 index-list, manifesto, video-campaign, editorial-spread (lookbook), titular, header, footer…
 snippets/        product-card, sticker, product-gallery, density-toggle, price, icon, rotation-data y
                  rotation-pill (rotación de estilo)…
 templates/       plantillas JSON + gift_card.liquid

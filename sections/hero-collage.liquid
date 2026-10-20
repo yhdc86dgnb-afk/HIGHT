@@ -19,6 +19,20 @@
   if rotation_on and settings.rotation_garments
     assign piece_loading = 'lazy'
   endif
+
+  # El texto del inicio, el botón y el sello hablan del turno; debajo va la agenda de turnos.
+  assign show_turn = false
+  if rotation_on and section.settings.show_turn
+    assign show_turn = true
+  endif
+  assign sticker_text = section.settings.badge_text
+  if show_turn
+    assign rotation_seconds = settings.rotation_interval | default: 60 | plus: 0
+    assign rotation_minutes = rotation_seconds | divided_by: 60 | floor
+    assign rotation_rest = rotation_seconds | modulo: 60 | prepend: '0' | slice: -2, 2
+    assign rotation_time = rotation_minutes | append: ':' | append: rotation_rest
+    assign sticker_text = 'rotation.sticker' | t: time: rotation_time
+  endif
 -%}
 
 <section
@@ -133,22 +147,46 @@
     {%- endif -%}
 
     {%- if section.settings.show_badge -%}
-      {% render 'sticker', id: section.id, text: section.settings.badge_text, class: 'hi-collage-sticker' %}
+      {% render 'sticker', id: section.id, text: sticker_text, class: 'hi-collage-sticker' %}
     {%- endif -%}
 
     <div class="hi-collage-foot">
       <div class="hi-collage-copy">
-        {%- if section.settings.eyebrow != blank -%}
-          <p class="t-label">{{ section.settings.eyebrow | escape }}</p>
+        {%- if show_turn -%}
+          <div class="hi-turn" data-turn-show hidden>
+            <p class="hi-turn-eyebrow t-label">
+              <span data-turn-template="{{ 'rotation.turn_count' | t: n: '[n]', total: '[total]' }}"></span>
+              <span class="hi-turn-tx" data-turn-template="{{ 'rotation.texture_label' | t: texture: '[texture]' }}"></span>
+            </p>
+            <p class="hi-turn-name" data-turn-letters></p>
+            <p class="hi-turn-copy" data-turn-template="[copy]"></p>
+          </div>
         {%- endif -%}
-        {%- if section.settings.text != blank -%}
-          <div class="hi-collage-text">{{ section.settings.text }}</div>
-        {%- endif -%}
+        <div class="hi-collage-intro"{% if show_turn %} data-turn-hide{% endif %}>
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="t-label">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.text != blank -%}
+            <div class="hi-collage-text">{{ section.settings.text }}</div>
+          {%- endif -%}
+        </div>
       </div>
       <div class="hi-collage-actions">
         {%- if section.settings.button_label != blank -%}
-          <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="hi-btn hi-btn-primary hi-btn-lg">
-            {{- section.settings.button_label | escape }}
+          <a
+            href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
+            class="hi-btn hi-btn-primary hi-btn-lg"
+            {% if show_turn %}
+              data-turn-href
+            {% endif %}
+          >
+            <span
+              {% if show_turn %}
+                data-turn-template="{{ 'rotation.view_turn' | t: name: '[name]' }}"
+              {% endif %}
+            >
+              {{- section.settings.button_label | escape -}}
+            </span>
             {% render 'icon', name: 'arrow_forward', size: 20 -%}
           </a>
         {%- endif -%}
@@ -167,7 +205,29 @@
         {{ 'general.drag_hint' | t -}}
       </p>
     {%- endif -%}
+    {%- if show_turn -%}
+      <script>
+        window.HightRotation && window.HightRotation.text && window.HightRotation.text(document.currentScript.parentNode, window.HightRotation.shown);
+      </script>
+    {%- endif -%}
   </hi-collage>
+
+  {%- if show_turn and section.settings.show_agenda -%}
+    <div class="hi-agenda hi-container" data-rotation-agenda hidden>
+      <p class="hi-agenda-title t-label">{{ 'rotation.agenda_title' | t }}</p>
+      <ol
+        class="hi-agenda-list"
+        role="list"
+        data-agenda-list
+        data-label-now="{{ 'rotation.agenda_now' | t }}"
+        data-label-jump="{{ 'rotation.agenda_jump' | t: name: '[name]', time: '[time]' }}"
+      ></ol>
+      <p class="hi-agenda-note t-label" data-agenda-note hidden>
+        <span>{{ 'rotation.offset_note' | t }}</span>
+        <button type="button" class="hi-btn hi-btn-ghost" data-rotation-sync>{{ 'rotation.sync' | t }}</button>
+      </p>
+    </div>
+  {%- endif -%}
 </section>
 
 {% schema %}
@@ -227,6 +287,24 @@
       "id": "badge_text",
       "label": "Texto del sello",
       "default": "EDICIÓN CORTA · NO SE REPITE · "
+    },
+    {
+      "type": "header",
+      "content": "Rotación de estilo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_turn",
+      "label": "Mostrar el turno",
+      "info": "Con la rotación encendida, el texto del inicio dice el turno, su textura, el nombre del color en grande y su frase (el campo Frase del turno de la colección o la primera frase de su descripción). El botón lleva a la colección del turno y el sello dice cada cuánto cambia.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_agenda",
+      "label": "Mostrar la agenda de turnos",
+      "info": "Debajo del inicio: los próximos turnos con su hora. Tocar uno lo muestra de una vez.",
+      "default": true
     },
     {
       "type": "header",

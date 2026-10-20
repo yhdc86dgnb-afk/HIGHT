@@ -148,6 +148,19 @@
         "color_scheme": "scheme-1"
       }
     },
+    "probador": {
+      "type": "probador",
+      "settings": {
+        "badge": "Nuevo",
+        "eyebrow": "Probador",
+        "heading": "Arma tu look",
+        "text": "<p>Una prenda para encima, una arriba y una abajo. Cámbialas con las flechas. Con “Del color del turno”, el probador sigue al color que está en pantalla.</p>",
+        "collection": "",
+        "turn_color": true,
+        "neutral_collections": "ceniza, indigo",
+        "color_scheme": "scheme-1"
+      }
+    },
     "colores": {
       "type": "color-story",
       "blocks": {
@@ -299,6 +312,130 @@
         "eyebrow": "(ANATOMÍA DE UNA PIEZA)",
         "heading": "",
         "color_scheme": "scheme-2"
+      },
+      "disabled": true
+    },
+    "lupa": {
+      "type": "lupa",
+      "blocks": {
+        "jean": {
+          "type": "item",
+          "settings": {
+            "product": "jean-flare-patchwork-leopardo",
+            "label_front": "Frente",
+            "label_back": "Espalda",
+            "details": ""
+          }
+        },
+        "jean-llama": {
+          "type": "spot",
+          "settings": {
+            "title": "Llama de serpiente",
+            "text": "Aplicación roja con textura de piel de serpiente que sube por la pierna.",
+            "side": "front",
+            "x": 25,
+            "y": 54
+          }
+        },
+        "jean-mariposas": {
+          "type": "spot",
+          "settings": {
+            "title": "Mariposas bordadas",
+            "text": "Tres parches de mariposa cruzan la otra pierna.",
+            "side": "front",
+            "x": 66,
+            "y": 44
+          }
+        },
+        "jean-cargo": {
+          "type": "spot",
+          "settings": {
+            "title": "Cargo camuflado",
+            "text": "Bolsillo cargo en camuflado con un dije de calavera.",
+            "side": "front",
+            "x": 80,
+            "y": 32
+          }
+        },
+        "jean-cadenas": {
+          "type": "spot",
+          "settings": {
+            "title": "Cadenas",
+            "text": "Cadenas plateadas que cuelgan del bolsillo delantero.",
+            "side": "front",
+            "x": 24,
+            "y": 20
+          }
+        },
+        "jean-cordon": {
+          "type": "spot",
+          "settings": {
+            "title": "Cordón cruzado",
+            "text": "Los costados se amarran con cordón cruzado.",
+            "side": "front",
+            "x": 92,
+            "y": 62
+          }
+        },
+        "jean-bota": {
+          "type": "spot",
+          "settings": {
+            "title": "Bota de leopardo",
+            "text": "Pelo sintético estampado leopardo y borde deshilachado que crece con el uso.",
+            "side": "front",
+            "x": 22,
+            "y": 85
+          }
+        },
+        "chaqueta": {
+          "type": "item",
+          "settings": {
+            "product": "chaqueta-trouble-maker",
+            "label_front": "Frente",
+            "label_back": "Espalda",
+            "details": "Denim negro pintado a mano en blanco.\nEspirales en las mangas; caras y figuras en el frente.\nCruces y firmas en rosa viejo.\nEspalda con un corazón con alas y “Trouble Maker”.\nCapas de tela verde oliva deshilachada en el cuello, el ruedo y los puños."
+          }
+        },
+        "tejido": {
+          "type": "item",
+          "settings": {
+            "product": "tejido-anillos-indigo",
+            "label_front": "Frente",
+            "label_back": "Espalda",
+            "details": "Tejido grueso en azul noche.\nTiras tubulares en el pecho y las mangas.\nArgollas metálicas que unen las tiras.\nTiras sueltas con argolla que cuelgan del frente.\nCuello alto y mangas abombadas."
+          }
+        }
+      },
+      "block_order": [
+        "jean",
+        "jean-llama",
+        "jean-mariposas",
+        "jean-cargo",
+        "jean-cadenas",
+        "jean-cordon",
+        "jean-bota",
+        "chaqueta",
+        "tejido"
+      ],
+      "settings": {
+        "badge": "Nuevo",
+        "eyebrow": "Lupa",
+        "heading": "Mira la tela de cerca",
+        "text": "<p>Pasa el cursor o el dedo por la foto. En el jean, los números llevan a cada detalle.</p>",
+        "zoom": "2.5",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "desliza": {
+      "type": "desliza",
+      "settings": {
+        "badge": "Nuevo",
+        "eyebrow": "Desliza",
+        "heading": "¿Te la pondrías?",
+        "text": "<p>Arrastra la prenda a la derecha si te la pondrías y a la izquierda si no. También sirven los botones o las flechas del teclado.</p>",
+        "collection": "",
+        "count": 10,
+        "color_scheme": "scheme-1"
       }
     },
     "archivo": {
@@ -364,9 +501,12 @@
     "hero",
     "cinta",
     "disponibles",
+    "probador",
     "colores",
     "campana",
     "anatomia",
+    "lupa",
+    "desliza",
     "archivo",
     "lookbook",
     "manifiesto"

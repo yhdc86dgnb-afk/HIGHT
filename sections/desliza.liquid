@@ -1,0 +1,191 @@
+{%- liquid
+  assign source = section.settings.collection
+  if source == blank
+    assign source = collections.all
+  endif
+  assign desliza_id = 'Desliza-' | append: section.id
+  assign card_count = 0
+-%}
+
+{%- comment -%} Prendas disponibles con foto y, si tiene, la colección de color a la que pertenece. {%- endcomment -%}
+{%- capture desliza_cards -%}
+  {%- for candidate in source.products limit: 60 -%}
+    {%- if candidate.available == false or candidate.featured_media == blank -%}
+      {%- continue -%}
+    {%- endif -%}
+    {%- liquid
+      assign candidate_image = candidate.featured_media.preview_image
+      assign candidate_variant = candidate.selected_or_first_available_variant
+      assign candidate_alt = candidate_image.alt | default: candidate.title
+      assign color_name = ''
+      assign color_value = ''
+      for candidate_collection in candidate.collections
+        assign candidate_color = candidate_collection.metafields.custom.acento.value | append: ''
+        if candidate_color != blank
+          assign color_name = candidate_collection.title
+          assign color_value = candidate_color | downcase
+          break
+        endif
+      endfor
+    -%}
+    {%- capture candidate_srcset -%}
+      {{- candidate_image | image_url: width: 300 }} 300w, {{ candidate_image | image_url: width: 450 }} 450w, {{ candidate_image | image_url: width: 600 }} 600w, {{ candidate_image | image_url: width: 900 }} 900w
+    {%- endcapture -%}
+    {%- capture candidate_sizes -%}
+      {%- unless candidate.has_only_default_variant -%}
+        {%- assign size_count = 0 -%}
+        {%- for size_variant in candidate.variants -%}
+          {%- if size_variant.available -%}
+            {%- if size_count > 0 %},{% endif -%}
+            {%- assign size_count = size_count | plus: 1 -%}
+            {"id":{{ size_variant.id }},"title":{{ size_variant.title | json }},"cents":{{ size_variant.price }}}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endunless -%}
+    {%- endcapture -%}
+    {%- if card_count > 0 %},{% endif -%}
+    {%- assign card_count = card_count | plus: 1 -%}
+    {"id":{{ candidate_variant.id }},"title":{{ candidate.title | json }},"url":{{ candidate.url | json }},"type":{{ candidate.type | json }},"cents":{{ candidate_variant.price }},"src":{{ candidate_image | image_url: width: 600 | json }},"srcset":{{ candidate_srcset | json }},"w":{{ candidate_image.width | default: 600 }},"h":{{ candidate_image.height | default: 750 }},"alt":{{ candidate_alt | json }},"colorName":{{ color_name | json }},"color":{{ color_value | json }},"sizes":[{{ candidate_sizes }}]}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if card_count > 1 -%}
+  <section class="hi-section hi-desliza color-{{ section.settings.color_scheme }}" aria-labelledby="{{ desliza_id }}-title">
+    <hi-desliza
+      class="hi-container"
+      data-count="{{ section.settings.count }}"
+      data-label-left="{{ 'desliza.left' | t: count: '[count]', total: '[total]' }}"
+      data-label-empty="{{ 'desliza.empty' | t }}"
+      data-label-need="{{ 'desliza.need_favs' | t }}"
+      data-label-added="{{ 'desliza.added' | t }}"
+      data-label-yes="{{ 'desliza.stamp_yes' | t }}"
+      data-label-no="{{ 'desliza.stamp_no' | t }}"
+      data-label-remove="{{ 'desliza.remove' | t: title: '[title]' }}"
+      data-label-size="{{ 'desliza.size' | t: title: '[title]' }}"
+    >
+      <div class="hi-desliza-head" data-reveal>
+        <p class="t-label hi-new-eyebrow">
+          {%- if section.settings.badge != blank -%}
+            <b>{{ section.settings.badge | escape }}</b>
+          {%- endif -%}
+          {%- if section.settings.badge != blank and section.settings.eyebrow != blank %} · {% endif -%}
+          {{- section.settings.eyebrow | escape -}}
+        </p>
+        <h2 class="t-display-l" id="{{ desliza_id }}-title">{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.text != blank -%}
+          <div class="hi-desliza-text t-body-l t-measure">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+
+      <div class="hi-desliza-grid js-only">
+        <div class="hi-desliza-deck-col">
+          <div
+            class="hi-desliza-deck"
+            tabindex="0"
+            role="group"
+            aria-label="{{ 'desliza.deck_label' | t }}"
+            data-desliza-deck
+          ></div>
+          <div class="hi-desliza-btns">
+            <button type="button" class="hi-round-btn hi-desliza-no" aria-label="{{ 'desliza.no' | t }}" data-desliza-no>
+              {%- render 'icon', name: 'close', size: 24 -%}
+            </button>
+            <button type="button" class="hi-round-btn hi-desliza-yes" aria-label="{{ 'desliza.yes' | t }}" data-desliza-yes>
+              {%- render 'icon', name: 'favorite', size: 24 -%}
+            </button>
+          </div>
+          <p class="hi-desliza-left t-label" aria-live="polite" data-desliza-left></p>
+        </div>
+
+        <div class="hi-desliza-favs">
+          <h3 class="t-h2">
+            {{- 'desliza.favs' | t }} <span data-desliza-count>(0)</span>
+          </h3>
+          <p class="hi-desliza-empty t-muted" data-desliza-empty>{{ 'desliza.favs_empty' | t }}</p>
+          <ul class="hi-desliza-list" role="list" data-desliza-list></ul>
+          <p class="hi-desliza-total">
+            {{- 'desliza.total' | t }}
+            <b data-desliza-total></b>
+          </p>
+          <div class="hi-desliza-actions">
+            <button type="button" class="hi-btn hi-btn-primary" data-desliza-add>{{ 'desliza.add' | t }}</button>
+            <button type="button" class="hi-btn" data-desliza-reset>{{ 'desliza.reset' | t }}</button>
+          </div>
+        </div>
+      </div>
+
+      <noscript>
+        <a class="hi-btn hi-btn-primary" href="{{ source.url | default: routes.all_products_collection_url }}">
+          {{- 'general.view_pieces' | t -}}
+        </a>
+      </noscript>
+
+      <script type="application/json" data-desliza-data>
+        [{{ desliza_cards }}]
+      </script>
+    </hi-desliza>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Desliza",
+  "class": "hi-desliza-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Las prendas salen una por una: a la derecha si te la pondrías, a la izquierda si no. Las favoritas se guardan en el navegador de cada cliente y se agregan juntas al carrito."
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Marquilla",
+      "default": "Nuevo"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Texto pequeño",
+      "default": "Desliza"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "¿Te la pondrías?"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Texto",
+      "default": "<p>Arrastra la prenda a la derecha si te la pondrías y a la izquierda si no. También sirven los botones o las flechas del teclado.</p>"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Prendas",
+      "info": "Si queda vacío, usa todas las prendas de la tienda."
+    },
+    {
+      "type": "range",
+      "id": "count",
+      "label": "Prendas por ronda",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Desliza"
+    }
+  ]
+}
+{% endschema %}

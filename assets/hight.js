@@ -126,6 +126,28 @@
     }, 4000);
   }
 
+  // Monto en el formato de la tienda, sin decimales cuando es entero (como money_without_trailing_zeros).
+  function formatMoney(cents) {
+    var value = (Number(cents) || 0) / 100;
+    function group(decimals, thousands, decimal) {
+      var parts = value.toFixed(decimals).split('.');
+      var whole = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousands);
+      return parts[1] && !/^0+$/.test(parts[1]) ? whole + decimal + parts[1] : whole;
+    }
+    return (config.moneyFormat || '${{amount}}')
+      .replace(/\{\{\s*(\w+)\s*\}\}/, function (match, key) {
+        if (key === 'amount_no_decimals') return group(0, ',', '.');
+        if (key === 'amount_with_comma_separator') return group(2, '.', ',');
+        if (key === 'amount_no_decimals_with_comma_separator') return group(0, '.', ',');
+        if (key === 'amount_with_apostrophe_separator') return group(2, "'", '.');
+        if (key === 'amount_no_decimals_with_space_separator') return group(0, ' ', ',');
+        if (key === 'amount_with_space_separator') return group(2, ' ', ',');
+        if (key === 'amount_with_period_and_space_separator') return group(2, ' ', '.');
+        return group(2, ',', '.');
+      })
+      .replace(/<[^>]*>/g, '');
+  }
+
   /* ---------- Velocidad del scroll (para las cintas) ---------- */
 
   var ScrollVelocity = (function () {
@@ -448,6 +470,20 @@
           if (!response.ok || data.status) {
             throw new Error(data.description || data.message || strings.error);
           }
+          return data;
+        });
+      });
+    },
+
+    // Varias prendas de una vez (probador y favoritas de Desliza).
+    addItems: function (items) {
+      return fetch(routes.cartAdd + '.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ items: items, sections: Cart.sectionsToRender(), sections_url: window.location.pathname })
+      }).then(function (response) {
+        return response.json().then(function (data) {
+          if (!response.ok || data.status) throw new Error(data.description || data.message || strings.error);
           return data;
         });
       });
@@ -1449,17 +1485,885 @@
     );
   }
 
+  /* ---------- Probador, Lupa y Desliza: ayudas comunes ---------- */
+
+  // Mientras alguien usa estas secciones, la rotación de estilo espera para cambiar de turno.
+  function holdRotation() {
+    var R = window.HightRotation;
+    if (R && R.hold) R.hold();
+  }
+
+  // Turno que está en pantalla (o null si la tienda no rota en esta página).
+  function currentTurn() {
+    var R = window.HightRotation;
+    return R && R.turns && R.turns.length && R.shown >= 0 ? R.turns[R.shown] : null;
+  }
+
+  function turnByHandle(handle) {
+    var R = window.HightRotation;
+    if (!R || !R.turns) return null;
+    for (var i = 0; i < R.turns.length; i++) {
+      if (R.turns[i].handle === handle) return R.turns[i];
+    }
+    return null;
+  }
+
+  function cartAdded(data, message) {
+    Cart.renderSections(data.sections);
+    if (config.cartType === 'drawer' && Cart.drawer() && Cart.open()) return;
+    toast(message || strings.added, strings.viewCart, function () {
+      window.location.href = routes.cart;
+    });
+  }
+
+  // Foto de una prenda (de los datos JSON de la sección) en un <img> que ya existe o uno nuevo.
+  function putImage(box, product, sizes) {
+    var img = box.querySelector('img');
+    if (!img) {
+      img = document.createElement('img');
+      img.setAttribute('loading', 'lazy');
+      img.setAttribute('draggable', 'false');
+      box.appendChild(img);
+    }
+    img.hidden = false;
+    img.setAttribute('sizes', sizes);
+    img.setAttribute('srcset', product.srcset);
+    img.setAttribute('src', product.src);
+    img.setAttribute('width', product.w);
+    img.setAttribute('height', product.h);
+    img.setAttribute('alt', product.alt || product.title);
+    return img;
+  }
+
+  // Selector de talla para las prendas con varias tallas disponibles.
+  function fillSizes(select, product, label) {
+    select.innerHTML = '';
+    (product.sizes || []).forEach(function (size) {
+      var option = document.createElement('option');
+      option.value = size.id;
+      option.textContent = size.title;
+      option.setAttribute('data-cents', size.cents);
+      select.appendChild(option);
+    });
+    select.setAttribute('aria-label', label.replace('[title]', product.title));
+  }
+
+  function chosenVariant(product, select) {
+    if (select && product.sizes && product.sizes.length > 1 && select.value) {
+      var option = select.options[select.selectedIndex];
+      return { id: parseInt(select.value, 10), cents: parseInt(option.getAttribute('data-cents'), 10) || product.cents };
+    }
+    return { id: product.id, cents: product.cents };
+  }
+
+  /* ---------- Probador: arma tu look ---------- */
+
+  // Una prenda para encima, una arriba y una abajo. Con "Del color del turno" sigue al color en pantalla;
+  // si ese color no tiene prendas para un puesto, va una de los colores que combinan con todo.
+  if (!customElements.get('hi-probador')) {
+    customElements.define(
+      'hi-probador',
+      class extends HTMLElement {
+        connectedCallback() {
+          var dataEl = this.querySelector('[data-probador-data]');
+          if (!dataEl || this.data) return;
+          try {
+            this.data = JSON.parse(dataEl.textContent);
+          } catch (e) {
+            return;
+          }
+          var self = this;
+          this.slots = Array.prototype.slice.call(this.querySelectorAll('[data-group]'));
+          this.color = this.querySelector('[data-probador-color]');
+          this.totalEl = this.querySelector('[data-probador-total]');
+          this.addButton = this.querySelector('[data-probador-add]');
+          this.reset();
+
+          if (currentTurn()) {
+            this.querySelector('[data-probador-turn]').hidden = false;
+            this.color.checked = this.getAttribute('data-turn-color') === 'true';
+          }
+
+          this.slots.forEach(function (slot) {
+            slot.querySelectorAll('[data-dir]').forEach(function (button) {
+              button.addEventListener('click', function () {
+                var dir = parseInt(button.getAttribute('data-dir'), 10);
+                self.index[slot.getAttribute('data-group')] += dir;
+                self.touched = true;
+                holdRotation();
+                self.renderSlot(slot, true, dir);
+                self.renderTotal();
+              });
+            });
+            slot.querySelector('[data-probador-size] select').addEventListener('change', function () {
+              self.touched = true;
+              holdRotation();
+              self.renderTotal();
+            });
+          });
+
+          this.color.addEventListener('change', function () {
+            self.touched = false;
+            self.reset();
+            self.renderAll(true);
+          });
+          this.querySelector('[data-probador-shuffle]').addEventListener('click', function () {
+            Object.keys(self.index).forEach(function (group) {
+              self.index[group] = Math.floor(Math.random() * 997);
+            });
+            self.touched = true;
+            holdRotation();
+            self.renderAll(true);
+          });
+          this.addButton.addEventListener('click', this.add.bind(this));
+
+          // Sigue al turno mientras nadie haya armado su propio look; si ya lo armó, solo cambia la textura.
+          this.onTurn = function () {
+            if (!self.color.checked) return;
+            if (self.touched) {
+              self.slots.forEach(function (slot) {
+                self.paintBackground(slot);
+              });
+              return;
+            }
+            self.reset();
+            self.renderAll(true);
+          };
+          document.addEventListener('hight:turn', this.onTurn);
+          this.renderAll(false);
+        }
+
+        disconnectedCallback() {
+          if (this.onTurn) document.removeEventListener('hight:turn', this.onTurn);
+        }
+
+        reset() {
+          this.index = { layer: 0, top: 0, bottom: 0 };
+        }
+
+        pool(group) {
+          var all = this.data.groups[group] || [];
+          var turn = this.color.checked ? currentTurn() : null;
+          if (!turn) return { list: all, fallback: false };
+          var own = all.filter(function (product) {
+            return product.cols.indexOf(turn.handle) > -1;
+          });
+          if (own.length) return { list: own, fallback: false };
+          var neutrals = this.data.neutrals || [];
+          var neutral = all.filter(function (product) {
+            return neutrals.some(function (handle) {
+              return product.cols.indexOf(handle) > -1;
+            });
+          });
+          return { list: neutral.length ? neutral : all, fallback: true, turn: turn };
+        }
+
+        pick(group) {
+          var pool = this.pool(group);
+          var n = pool.list.length;
+          if (!n) return null;
+          this.index[group] = ((this.index[group] % n) + n) % n;
+          return { product: pool.list[this.index[group]], fallback: pool.fallback, turn: pool.turn, count: n };
+        }
+
+        neutralNames() {
+          var names = (this.data.neutrals || [])
+            .map(function (handle) {
+              var turn = turnByHandle(handle);
+              return turn ? turn.name : null;
+            })
+            .filter(Boolean);
+          if (names.length < 2) return names.join('');
+          return names.slice(0, -1).join(', ') + ' ' + this.getAttribute('data-label-or') + ' ' + names[names.length - 1];
+        }
+
+        renderAll(animate) {
+          var self = this;
+          this.slots.forEach(function (slot) {
+            self.renderSlot(slot, animate, 1);
+          });
+          this.renderTotal();
+        }
+
+        renderSlot(slot, animate, dir) {
+          var group = slot.getAttribute('data-group');
+          var word = slot.getAttribute('data-group-word');
+          var picked = this.pick(group);
+          var link = slot.querySelector('[data-probador-link]');
+          var sizeBox = slot.querySelector('[data-probador-size]');
+          var select = sizeBox.querySelector('select');
+          var note = slot.querySelector('[data-probador-note]');
+          this.paintBackground(slot);
+
+          slot.querySelectorAll('[data-dir]').forEach(function (button) {
+            button.disabled = !picked || picked.count < 2;
+          });
+          slot._product = picked ? picked.product : null;
+
+          if (!picked) {
+            link.hidden = true;
+            slot.querySelector('[data-probador-name]').textContent = '';
+            slot.querySelector('[data-probador-price]').textContent = this.getAttribute('data-label-empty').replace('[group]', word);
+            sizeBox.hidden = true;
+            note.hidden = true;
+            return;
+          }
+
+          var product = picked.product;
+          link.hidden = false;
+          link.setAttribute('href', product.url);
+          putImage(link.querySelector('.hi-probador-media'), product, '(min-width: 990px) 24vw, 70vw');
+          slot.querySelector('[data-probador-name]').textContent = product.title;
+          slot.querySelector('[data-probador-price]').textContent = formatMoney(product.cents) + ' · ' + product.type;
+
+          if (product.sizes && product.sizes.length > 1) {
+            fillSizes(select, product, this.getAttribute('data-label-size'));
+            sizeBox.hidden = false;
+          } else {
+            select.innerHTML = '';
+            sizeBox.hidden = true;
+          }
+
+          note.hidden = !(picked.fallback && picked.turn);
+          if (!note.hidden) {
+            note.textContent = this.getAttribute('data-label-fallback')
+              .replace('[name]', picked.turn.name)
+              .replace('[group]', word)
+              .replace('[neutrals]', this.neutralNames());
+          }
+
+          if (animate && motionOK()) {
+            link.style.setProperty('--from', (dir || 1) * 24 + 'px');
+            link.classList.remove('is-swap');
+            void link.offsetWidth;
+            link.classList.add('is-swap');
+          }
+        }
+
+        // Fondo con la textura del turno, como el collage del inicio.
+        paintBackground(slot) {
+          var bg = slot.querySelector('[data-probador-bg]');
+          var turn = currentTurn();
+          bg.className = 'hi-probador-bg hi-tx' + (turn ? ' is-on hi-tx--' + (turn.texture ? 'foto' : turn.handle) : '');
+          bg.style.backgroundImage = turn && turn.texture ? 'url("' + turn.texture + '")' : '';
+        }
+
+        chosen() {
+          return this.slots
+            .filter(function (slot) {
+              return slot._product;
+            })
+            .map(function (slot) {
+              return chosenVariant(slot._product, slot.querySelector('[data-probador-size] select'));
+            });
+        }
+
+        renderTotal() {
+          var total = this.chosen().reduce(function (sum, item) {
+            return sum + item.cents;
+          }, 0);
+          this.totalEl.textContent = formatMoney(total);
+          this.addButton.disabled = total === 0;
+        }
+
+        add() {
+          var items = this.chosen().map(function (item) {
+            return { id: item.id, quantity: 1 };
+          });
+          if (!items.length || this.addButton.classList.contains('is-loading')) return;
+          var button = this.addButton;
+          var message = this.getAttribute('data-label-added');
+          button.classList.add('is-loading');
+          button.setAttribute('aria-busy', 'true');
+          Cart.addItems(items)
+            .then(function (data) {
+              cartAdded(data, message);
+            })
+            .catch(function (error) {
+              toast(error.message || strings.error);
+            })
+            .finally(function () {
+              button.classList.remove('is-loading');
+              button.removeAttribute('aria-busy');
+            });
+        }
+      }
+    );
+  }
+
+  /* ---------- Lupa: la tela de cerca ---------- */
+
+  // Una lupa redonda sigue al cursor o al dedo sobre la foto. Los números llevan a cada detalle de la prenda.
+  if (!customElements.get('hi-lupa')) {
+    customElements.define(
+      'hi-lupa',
+      class extends HTMLElement {
+        connectedCallback() {
+          var dataEl = this.querySelector('[data-lupa-data]');
+          if (!dataEl || this.items) return;
+          try {
+            this.items = JSON.parse(dataEl.textContent);
+          } catch (e) {
+            return;
+          }
+          if (!this.items.length) return;
+          var self = this;
+          this.frame = this.querySelector('[data-lupa-stage]');
+          this.img = this.frame.querySelector('img');
+          this.lens = this.querySelector('[data-lupa-lens]');
+          this.spotsBox = this.querySelector('[data-lupa-spots]');
+          this.list = this.querySelector('[data-lupa-list]');
+          this.detail = this.querySelector('[data-lupa-detail]');
+          this.views = this.querySelector('[data-lupa-views]');
+          this.state = { item: 0, view: 0, zoom: parseFloat(this.getAttribute('data-zoom')) || 2.5, spot: -1 };
+          this.uid = 'Lupa' + Math.random().toString(36).slice(2, 8);
+
+          var itemsBox = this.querySelector('[data-lupa-items]');
+          itemsBox.hidden = this.items.length < 2;
+          this.items.forEach(function (item, i) {
+            itemsBox.appendChild(self.chip(self.uid + '-item', i, item.t, i === 0));
+          });
+          itemsBox.addEventListener('change', function (event) {
+            self.state.item = parseInt(event.target.value, 10);
+            self.state.view = 0;
+            self.render();
+          });
+          this.views.addEventListener('change', function (event) {
+            self.state.view = parseInt(event.target.value, 10);
+            self.render();
+          });
+          this.querySelector('[data-lupa-zooms]').addEventListener('change', function (event) {
+            self.state.zoom = parseFloat(event.target.value) || 2.5;
+            self.renderHint();
+            if (self.state.spot > -1) self.pickSpot(self.state.spot);
+          });
+
+          var onPointer = this.onPointer.bind(this);
+          var warm = this.warm.bind(this);
+          this.frame.addEventListener('pointerenter', warm);
+          this.frame.addEventListener('pointerdown', warm);
+          this.frame.addEventListener('focusin', warm);
+          this.frame.addEventListener('pointermove', onPointer);
+          this.frame.addEventListener('pointerdown', onPointer);
+          // Con el dedo, la lupa se queda donde se levantó; con el mouse, se va al salir de la foto.
+          this.frame.addEventListener('pointerleave', function (event) {
+            if (event.pointerType === 'mouse' && self.state.spot < 0) self.lens.hidden = true;
+          });
+          this.img.addEventListener('load', function () {
+            if (self.state.spot > -1) self.pickSpot(self.state.spot);
+          });
+          this.render();
+        }
+
+        chip(name, value, text, checked) {
+          var label = document.createElement('label');
+          var input = document.createElement('input');
+          input.type = 'radio';
+          input.name = name;
+          input.value = value;
+          input.checked = checked;
+          var span = document.createElement('span');
+          span.textContent = text;
+          label.appendChild(input);
+          label.appendChild(span);
+          return label;
+        }
+
+        renderHint() {
+          var hint = this.querySelector('[data-lupa-hint]');
+          hint.textContent = this.getAttribute('data-label-hint').replace('[zoom]', String(this.state.zoom).replace('.', ',') + '×');
+        }
+
+        render() {
+          var self = this;
+          var item = this.items[this.state.item];
+          var view = item.views[this.state.view] || item.views[0];
+          this.state.spot = -1;
+          this.lens.hidden = true;
+
+          this.img.removeAttribute('srcset');
+          this.img.setAttribute('src', view.src);
+          this.img.setAttribute('width', view.w);
+          this.img.setAttribute('height', view.h);
+          this.img.setAttribute(
+            'alt',
+            item.views.length > 1 ? this.getAttribute('data-label-alt').replace('[title]', item.t).replace('[side]', view.label.toLowerCase()) : item.t
+          );
+          if (this.warmed) this.warm();
+
+          this.querySelector('[data-lupa-title]').textContent = item.t;
+          this.querySelector('[data-lupa-price]').textContent = item.price;
+          this.querySelector('[data-lupa-link]').setAttribute('href', item.url);
+
+          this.views.innerHTML = '';
+          this.views.hidden = item.views.length < 2;
+          item.views.forEach(function (v, i) {
+            self.views.appendChild(self.chip(self.uid + '-view', i, v.label, i === self.state.view));
+          });
+
+          this.spotsBox.innerHTML = '';
+          this.list.innerHTML = '';
+          var spotLabel = this.getAttribute('data-label-spot');
+          view.spots.forEach(function (spot, i) {
+            var pin = document.createElement('button');
+            pin.type = 'button';
+            pin.className = 'hi-lupa-spot';
+            pin.style.left = spot.x + '%';
+            pin.style.top = spot.y + '%';
+            pin.textContent = i + 1;
+            pin.setAttribute('aria-pressed', 'false');
+            pin.setAttribute('aria-label', spotLabel.replace('[number]', i + 1).replace('[title]', spot.t));
+            pin.addEventListener('click', function () {
+              self.pickSpot(i);
+            });
+            self.spotsBox.appendChild(pin);
+
+            var li = document.createElement('li');
+            var row = document.createElement('button');
+            row.type = 'button';
+            row.className = 'hi-lupa-row';
+            row.setAttribute('aria-pressed', 'false');
+            var number = document.createElement('b');
+            number.textContent = i + 1;
+            var title = document.createElement('strong');
+            title.textContent = spot.t;
+            row.appendChild(number);
+            row.appendChild(title);
+            row.addEventListener('click', function () {
+              self.pickSpot(i);
+            });
+            li.appendChild(row);
+            self.list.appendChild(li);
+          });
+          if (!view.spots.length) {
+            (item.details || []).forEach(function (text, i) {
+              var li = document.createElement('li');
+              var row = document.createElement('span');
+              row.className = 'hi-lupa-row';
+              var number = document.createElement('b');
+              number.textContent = i + 1;
+              var body = document.createElement('span');
+              body.textContent = text;
+              row.appendChild(number);
+              row.appendChild(body);
+              li.appendChild(row);
+              self.list.appendChild(li);
+            });
+          }
+          this.detail.textContent = this.getAttribute(view.spots.length ? 'data-label-spots' : 'data-label-plain');
+          this.renderHint();
+        }
+
+        view() {
+          var item = this.items[this.state.item];
+          return item.views[this.state.view] || item.views[0];
+        }
+
+        // La foto en alta (2400 px) se baja cuando alguien llega a la foto, no al abrir la página.
+        warm() {
+          this.warmed = true;
+          var src = this.view().zoom;
+          if (this.warmSrc === src) return;
+          this.warmSrc = src;
+          new Image().src = src;
+        }
+
+        lensAt(fx, fy) {
+          var rect = this.img.getBoundingClientRect();
+          if (!rect.width) return;
+          var zoom = this.state.zoom;
+          this.lens.hidden = false;
+          var size = this.lens.offsetWidth || 160;
+          this.lens.style.left = fx * rect.width + 'px';
+          this.lens.style.top = fy * rect.height + 'px';
+          this.lens.style.backgroundImage = 'url("' + this.view().zoom + '"), url("' + (this.img.currentSrc || this.img.src) + '")';
+          this.lens.style.backgroundSize = rect.width * zoom + 'px ' + rect.height * zoom + 'px';
+          this.lens.style.backgroundPosition = -(fx * rect.width * zoom - size / 2) + 'px ' + -(fy * rect.height * zoom - size / 2) + 'px';
+        }
+
+        onPointer(event) {
+          if (event.target.closest('.hi-lupa-spot')) return;
+          var rect = this.img.getBoundingClientRect();
+          var fx = (event.clientX - rect.left) / rect.width;
+          var fy = (event.clientY - rect.top) / rect.height;
+          if (fx < 0 || fx > 1 || fy < 0 || fy > 1) {
+            if (this.state.spot < 0) this.lens.hidden = true;
+            return;
+          }
+          holdRotation();
+          this.lensAt(fx, fy);
+        }
+
+        pickSpot(i) {
+          var spot = this.view().spots[i];
+          if (!spot) return;
+          this.state.spot = i;
+          holdRotation();
+          this.warm();
+          this.lensAt(spot.x / 100, spot.y / 100);
+          this.detail.textContent = i + 1 + '. ' + spot.t + (spot.d ? ': ' + spot.d : '');
+          this.spotsBox.querySelectorAll('.hi-lupa-spot').forEach(function (pin, j) {
+            pin.setAttribute('aria-pressed', j === i ? 'true' : 'false');
+          });
+          this.list.querySelectorAll('button').forEach(function (row, j) {
+            row.setAttribute('aria-pressed', j === i ? 'true' : 'false');
+          });
+        }
+      }
+    );
+  }
+
+  /* ---------- Desliza: ¿te la pondrías? ---------- */
+
+  // Las prendas salen una por una: a la derecha si te la pondrías, a la izquierda si no. Las favoritas se
+  // guardan en el navegador (localStorage) y se agregan juntas al carrito.
+  if (!customElements.get('hi-desliza')) {
+    customElements.define(
+      'hi-desliza',
+      class extends HTMLElement {
+        connectedCallback() {
+          var dataEl = this.querySelector('[data-desliza-data]');
+          if (!dataEl || this.products) return;
+          try {
+            this.products = JSON.parse(dataEl.textContent);
+          } catch (e) {
+            return;
+          }
+          var self = this;
+          this.key = 'hight-favoritas';
+          this.count = parseInt(this.getAttribute('data-count'), 10) || 10;
+          this.deckEl = this.querySelector('[data-desliza-deck]');
+          this.listEl = this.querySelector('[data-desliza-list]');
+          this.byUrl = {};
+          this.products.forEach(function (product) {
+            self.byUrl[product.url] = product;
+          });
+          this.sizes = {};
+          var stored = [];
+          try {
+            stored = JSON.parse(storageGet(this.key) || '[]');
+          } catch (e) {
+            stored = [];
+          }
+          this.favs = (Array.isArray(stored) ? stored : [])
+            .map(function (url) {
+              return self.byUrl[url];
+            })
+            .filter(Boolean);
+
+          this.querySelector('[data-desliza-yes]').addEventListener('click', function () {
+            self.decide(true);
+          });
+          this.querySelector('[data-desliza-no]').addEventListener('click', function () {
+            self.decide(false);
+          });
+          this.deckEl.addEventListener('keydown', function (event) {
+            if (event.key === 'ArrowRight') {
+              event.preventDefault();
+              self.decide(true);
+            } else if (event.key === 'ArrowLeft') {
+              event.preventDefault();
+              self.decide(false);
+            }
+          });
+          this.querySelector('[data-desliza-reset]').addEventListener('click', function () {
+            self.newDeck(true);
+          });
+          this.querySelector('[data-desliza-add]').addEventListener('click', this.add.bind(this));
+          this.listEl.addEventListener('click', function (event) {
+            var remove = event.target.closest('[data-fav-remove]');
+            if (!remove) return;
+            self.favs = self.favs.filter(function (product) {
+              return product.url !== remove.getAttribute('data-fav-remove');
+            });
+            self.store();
+            self.renderFavs();
+          });
+          this.listEl.addEventListener('change', function (event) {
+            var select = event.target.closest('select[data-fav-size]');
+            if (!select) return;
+            self.sizes[select.getAttribute('data-fav-size')] = select.value;
+            self.renderTotal();
+          });
+          this.newDeck(false);
+        }
+
+        isFav(url) {
+          return this.favs.some(function (product) {
+            return product.url === url;
+          });
+        }
+
+        store() {
+          storageSet(
+            this.key,
+            this.favs.length
+              ? JSON.stringify(
+                  this.favs.map(function (product) {
+                    return product.url;
+                  })
+                )
+              : null
+          );
+        }
+
+        newDeck(clear) {
+          var self = this;
+          if (clear) {
+            this.favs = [];
+            this.store();
+          }
+          var pool = this.products.filter(function (product) {
+            return !self.isFav(product.url);
+          });
+          for (var i = pool.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var swap = pool[i];
+            pool[i] = pool[j];
+            pool[j] = swap;
+          }
+          this.deck = pool.slice(0, this.count);
+          this.deckSize = this.deck.length;
+          this.renderDeck();
+          this.renderFavs();
+        }
+
+        card(product, depth) {
+          var card = document.createElement('article');
+          card.className = 'hi-desliza-card' + (depth === 0 ? ' is-top' : '');
+          card.style.setProperty('--depth', depth);
+          if (depth > 0) card.setAttribute('aria-hidden', 'true');
+          var media = document.createElement('div');
+          media.className = 'hi-desliza-card-media';
+          putImage(media, product, '(min-width: 990px) 320px, 76vw');
+          var info = document.createElement('div');
+          info.className = 'hi-desliza-card-info';
+          if (product.colorName) {
+            var chip = document.createElement('span');
+            chip.className = 'hi-desliza-chip t-label';
+            chip.style.setProperty('--c', product.color);
+            chip.appendChild(document.createElement('i'));
+            chip.appendChild(document.createTextNode(product.colorName));
+            info.appendChild(chip);
+          }
+          var title = document.createElement('h4');
+          title.className = 'hi-desliza-card-title';
+          title.textContent = product.title;
+          var meta = document.createElement('p');
+          meta.className = 't-label';
+          meta.textContent = formatMoney(product.cents) + ' · ' + product.type;
+          info.appendChild(title);
+          info.appendChild(meta);
+          var yes = document.createElement('span');
+          yes.className = 'hi-desliza-stamp is-yes';
+          yes.setAttribute('aria-hidden', 'true');
+          yes.textContent = this.getAttribute('data-label-yes');
+          var no = document.createElement('span');
+          no.className = 'hi-desliza-stamp is-no';
+          no.setAttribute('aria-hidden', 'true');
+          no.textContent = this.getAttribute('data-label-no');
+          card.appendChild(media);
+          card.appendChild(info);
+          card.appendChild(yes);
+          card.appendChild(no);
+          return card;
+        }
+
+        renderDeck() {
+          var self = this;
+          var left = this.querySelector('[data-desliza-left]');
+          this.deckEl.innerHTML = '';
+          if (!this.deck.length) {
+            var done = document.createElement('p');
+            done.className = 'hi-desliza-done';
+            done.textContent = this.getAttribute('data-label-empty');
+            this.deckEl.appendChild(done);
+            left.textContent = '';
+            return;
+          }
+          this.deck
+            .slice(0, 3)
+            .map(function (product, depth) {
+              return self.card(product, depth);
+            })
+            .reverse()
+            .forEach(function (card) {
+              self.deckEl.appendChild(card);
+            });
+          left.textContent = this.getAttribute('data-label-left')
+            .replace('[count]', this.deck.length)
+            .replace('[total]', this.deckSize);
+          this.bindDrag(this.deckEl.querySelector('.is-top'));
+        }
+
+        decide(yes) {
+          var self = this;
+          var product = this.deck[0];
+          var card = this.deckEl.querySelector('.hi-desliza-card.is-top');
+          if (!product || !card || this.busy) return;
+          holdRotation();
+          var done = function () {
+            self.busy = false;
+            self.deck.shift();
+            if (yes && !self.isFav(product.url)) {
+              self.favs.push(product);
+              self.store();
+            }
+            self.renderDeck();
+            self.renderFavs();
+          };
+          if (!motionOK()) {
+            done();
+            return;
+          }
+          this.busy = true;
+          card.style.transform = '';
+          card.classList.add(yes ? 'is-yes' : 'is-no');
+          setTimeout(done, 340);
+        }
+
+        bindDrag(card) {
+          if (!card) return;
+          var self = this;
+          var startX = 0;
+          var dx = 0;
+          var dragging = false;
+          var yes = card.querySelector('.hi-desliza-stamp.is-yes');
+          var no = card.querySelector('.hi-desliza-stamp.is-no');
+          card.addEventListener('pointerdown', function (event) {
+            if (event.button !== 0 || self.busy) return;
+            dragging = true;
+            startX = event.clientX;
+            dx = 0;
+            if (card.setPointerCapture) card.setPointerCapture(event.pointerId);
+            card.classList.add('is-drag');
+          });
+          card.addEventListener('pointermove', function (event) {
+            if (!dragging) return;
+            dx = event.clientX - startX;
+            if (Math.abs(dx) > 4) holdRotation();
+            card.style.transform = 'translateX(' + dx + 'px) rotate(' + dx * 0.06 + 'deg)';
+            yes.style.opacity = String(clamp(dx / 90, 0, 1));
+            no.style.opacity = String(clamp(-dx / 90, 0, 1));
+          });
+          var end = function () {
+            if (!dragging) return;
+            dragging = false;
+            card.classList.remove('is-drag');
+            if (dx > 90) self.decide(true);
+            else if (dx < -90) self.decide(false);
+            else {
+              card.style.transform = '';
+              yes.style.opacity = '';
+              no.style.opacity = '';
+            }
+          };
+          card.addEventListener('pointerup', end);
+          card.addEventListener('pointercancel', end);
+          card.addEventListener('dragstart', function (event) {
+            event.preventDefault();
+          });
+        }
+
+        renderFavs() {
+          var self = this;
+          this.querySelector('[data-desliza-count]').textContent = '(' + this.favs.length + ')';
+          this.querySelector('[data-desliza-empty]').hidden = this.favs.length > 0;
+          this.listEl.innerHTML = '';
+          this.favs.forEach(function (product) {
+            var li = document.createElement('li');
+            li.className = 'hi-desliza-fav';
+            var media = document.createElement('a');
+            media.className = 'hi-desliza-fav-media hi-print';
+            media.href = product.url;
+            media.setAttribute('tabindex', '-1');
+            media.setAttribute('aria-hidden', 'true');
+            putImage(media, product, '120px');
+            var name = document.createElement('a');
+            name.className = 'hi-desliza-fav-name';
+            name.href = product.url;
+            name.textContent = product.title;
+            var remove = document.createElement('button');
+            remove.type = 'button';
+            remove.className = 'hi-desliza-fav-remove';
+            remove.setAttribute('data-fav-remove', product.url);
+            remove.setAttribute('aria-label', self.getAttribute('data-label-remove').replace('[title]', product.title));
+            remove.textContent = '×';
+            li.appendChild(media);
+            li.appendChild(name);
+            if (product.sizes && product.sizes.length > 1) {
+              var wrap = document.createElement('div');
+              wrap.className = 'hi-select-wrap hi-desliza-fav-size';
+              var select = document.createElement('select');
+              select.className = 'hi-select';
+              select.setAttribute('data-fav-size', product.url);
+              fillSizes(select, product, self.getAttribute('data-label-size'));
+              if (self.sizes[product.url]) select.value = self.sizes[product.url];
+              wrap.appendChild(select);
+              li.appendChild(wrap);
+            }
+            li.appendChild(remove);
+            self.listEl.appendChild(li);
+          });
+          this.renderTotal();
+        }
+
+        chosen() {
+          var self = this;
+          return this.favs.map(function (product) {
+            return chosenVariant(product, self.listEl.querySelector('select[data-fav-size="' + CSS.escape(product.url) + '"]'));
+          });
+        }
+
+        renderTotal() {
+          var total = this.chosen().reduce(function (sum, item) {
+            return sum + item.cents;
+          }, 0);
+          this.querySelector('[data-desliza-total]').textContent = formatMoney(total);
+        }
+
+        add() {
+          var button = this.querySelector('[data-desliza-add]');
+          if (button.classList.contains('is-loading')) return;
+          if (!this.favs.length) {
+            toast(this.getAttribute('data-label-need'));
+            return;
+          }
+          var items = this.chosen().map(function (item) {
+            return { id: item.id, quantity: 1 };
+          });
+          var message = this.getAttribute('data-label-added');
+          button.classList.add('is-loading');
+          button.setAttribute('aria-busy', 'true');
+          Cart.addItems(items)
+            .then(function (data) {
+              cartAdded(data, message);
+            })
+            .catch(function (error) {
+              toast(error.message || strings.error);
+            })
+            .finally(function () {
+              button.classList.remove('is-loading');
+              button.removeAttribute('aria-busy');
+            });
+        }
+      }
+    );
+  }
+
   /* ---------- Rotación de estilo ---------- */
 
   // El turno sale de la hora (window.HightRotation, snippets/rotation-data.liquid): cambia justo al
   // empezar cada minuto, en el mismo orden y a la vez para todos. Cada cambio se programa contra el reloj,
-  // así que no se atrasa. Aquí van los cambios siguientes y el control para pausar.
+  // así que no se atrasa. Aquí van los cambios siguientes, el control para pausar, la agenda de turnos y la
+  // espera mientras alguien usa el probador, la lupa o Desliza.
   (function () {
     var R = window.HightRotation;
     if (!R || R.mode !== 'live' || !R.turns || R.turns.length < 2) return;
 
     var root = document.documentElement;
     var pausedKey = 'hight-rotation-paused';
+    var offsetKey = 'hight-rotation-offset';
     var stages = Array.prototype.slice.call(document.querySelectorAll('[data-rotation-stage]'));
     var pill = document.querySelector('[data-rotation-pill]');
     var label = pill && pill.querySelector('[data-rotation-label]');
@@ -1467,10 +2371,18 @@
     var time = pill && pill.querySelector('[data-rotation-time]');
     var toggle = pill && pill.querySelector('[data-rotation-toggle]');
     var auto = pill && pill.querySelector('[data-rotation-auto]');
+    var sync = pill && pill.querySelector('[data-rotation-sync]');
+    var agenda = document.querySelector('[data-rotation-agenda]');
+    var agendaList = agenda && agenda.querySelector('[data-agenda-list]');
+    var agendaNote = agenda && agenda.querySelector('[data-agenda-note]');
     var allHref = name && name.getAttribute('href');
     var sizes = stages.length ? R.sizes(stages[0]) : '';
+    var lang = root.getAttribute('lang') || 'es';
     var timer = 0;
     var fadeTimer = 0;
+    var holdTimer = 0;
+    var holdUntil = 0;
+    var waiting = false;
 
     function untilNext() {
       return R.ms - (Date.now() % R.ms);
@@ -1514,12 +2426,24 @@
       }, 320);
     }
 
+    // La cinta mide su ancho para dar la vuelta sin saltos; los nombres de los colores lo cambian.
+    function measureMarquees() {
+      Array.prototype.forEach.call(document.querySelectorAll('hi-marquee'), function (marquee) {
+        if (marquee.track && marquee.measure && marquee.querySelector('[data-turn-template]')) marquee.measure();
+      });
+    }
+
+    // Prendas, textura y textos del turno (cinta, inicio, agenda). El probador escucha hight:turn.
     function showGarments(index, animate) {
       R.shown = index;
       stages.forEach(function (stage) {
         swap(stage, index, animate);
       });
+      R.text(document, index);
+      measureMarquees();
+      renderAgenda();
       preload((index + 1) % R.turns.length);
+      document.dispatchEvent(new CustomEvent('hight:turn', { detail: { index: index, turn: R.turns[index] } }));
     }
 
     function show(index, animate) {
@@ -1532,12 +2456,13 @@
 
     function setState(state) {
       R.state = state;
+      if (state !== 'live') waiting = false;
       root.setAttribute('data-rotation', state);
       render();
     }
 
     function clock() {
-      if (!time || R.state !== 'live') return;
+      if (!time || R.state !== 'live' || waiting) return;
       var seconds = Math.ceil(untilNext() / 1000);
       var text = Math.floor(seconds / 60) + ':' + ('0' + (seconds % 60)).slice(-2);
       time.textContent = text;
@@ -1550,23 +2475,128 @@
       var turn = R.turns[R.shown] || R.turns[0];
       var match = own ? R.find(R.pick.color) : R.shown;
       pill.style.setProperty('--dot', own ? R.pick.color : turn.color);
-      label.textContent = pill.getAttribute(
-        R.state === 'live' ? 'data-label-now' : R.state === 'paused' ? 'data-label-paused' : 'data-label-own'
-      );
+      var key = 'data-label-own';
+      if (R.state === 'live') key = waiting ? 'data-label-waiting' : 'data-label-now';
+      else if (R.state === 'paused') key = 'data-label-paused';
+      label.textContent = pill.getAttribute(key);
       name.textContent = own ? R.pick.name || turn.name : turn.name;
       if (name.tagName === 'A') name.setAttribute('href', match > -1 ? R.turns[match].url : allHref);
-      time.hidden = R.state !== 'live';
+      time.hidden = R.state !== 'live' || waiting;
       toggle.hidden = R.state === 'own';
       auto.hidden = R.state !== 'own';
+      if (sync) sync.hidden = R.state === 'own' || !R.offset;
       toggle.setAttribute('aria-pressed', R.state === 'paused' ? 'true' : 'false');
       toggle.setAttribute('aria-label', pill.getAttribute(R.state === 'paused' ? 'data-label-resume' : 'data-label-pause'));
       clock();
     }
 
+    // Agenda: los próximos turnos con su hora. El primero es el de ahora; tocar uno lo muestra de una vez.
+    function renderAgenda() {
+      if (!agendaList) return;
+      var n = R.turns.length;
+      var base = Math.floor(Date.now() / R.ms);
+      var withSeconds = R.ms % 60000 !== 0;
+      var jumpLabel = agendaList.getAttribute('data-label-jump') || '';
+      agendaList.innerHTML = '';
+      for (var i = 0; i < n; i++) {
+        var index = (((base + i + R.offset) % n) + n) % n;
+        var turn = R.turns[index];
+        var at = new Date((base + i) * R.ms).toLocaleTimeString(lang, {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: withSeconds ? '2-digit' : undefined,
+          hour12: false
+        });
+        var li = document.createElement('li');
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'hi-agenda-item';
+        button.setAttribute('data-agenda-index', index);
+        button.setAttribute('aria-label', jumpLabel.replace('[name]', turn.name).replace('[time]', at));
+        if (index === R.shown && (R.state !== 'own' || R.find(R.pick && R.pick.color) === index)) {
+          button.setAttribute('aria-current', 'true');
+        }
+        var when = document.createElement('time');
+        when.textContent = i === 0 ? agendaList.getAttribute('data-label-now') : at;
+        var who = document.createElement('span');
+        who.className = 'hi-agenda-who';
+        var dot = document.createElement('i');
+        dot.style.setProperty('--c', turn.color);
+        who.appendChild(dot);
+        who.appendChild(document.createTextNode(turn.name));
+        button.appendChild(when);
+        button.appendChild(who);
+        li.appendChild(button);
+        agendaList.appendChild(li);
+      }
+      if (agendaNote) agendaNote.hidden = !R.offset;
+      agenda.hidden = false;
+    }
+
+    function setOffset(value) {
+      R.offset = value;
+      sessionSet(offsetKey, value ? String(value) : null);
+    }
+
+    // Ver un turno de la agenda ya: la tienda sigue rotando desde ahí, corrida frente a la hora.
+    function jump(target) {
+      var n = R.turns.length;
+      setOffset((((target - Math.floor(Date.now() / R.ms)) % n) + n) % n);
+      if (R.state === 'own') {
+        Accent.reset();
+        return;
+      }
+      waiting = false;
+      if (R.state === 'paused') storageSet(pausedKey, String(target));
+      R.painted = false;
+      show(target, motionOK());
+    }
+
+    // Volver a la hora: el mismo turno que ven todos, y sin pausa.
+    function resync() {
+      setOffset(0);
+      storageSet(pausedKey, null);
+      waiting = false;
+      if (R.state !== 'own') setState('live');
+      R.painted = false;
+      if (R.state === 'live') show(R.index(Date.now()), motionOK());
+      else renderAgenda();
+    }
+
+    // Mientras alguien usa el probador, la lupa o Desliza, el cambio espera hasta 4 s después del último gesto.
+    R.hold = function () {
+      holdUntil = Date.now() + 4000;
+    };
+
+    function tick() {
+      if (R.state !== 'live') return;
+      var index = R.index(Date.now());
+      if (index === R.shown && R.painted) {
+        if (waiting) {
+          waiting = false;
+          render();
+        }
+        return;
+      }
+      var wait = holdUntil - Date.now();
+      if (wait > 0) {
+        if (!waiting) {
+          waiting = true;
+          render();
+        }
+        clearTimeout(holdTimer);
+        holdTimer = setTimeout(tick, wait + 30);
+        return;
+      }
+      waiting = false;
+      show(index, motionOK());
+    }
+
     function schedule() {
       clearTimeout(timer);
       timer = setTimeout(function () {
-        if (R.state === 'live') show(R.index(Date.now()), motionOK());
+        tick();
+        renderAgenda();
         schedule();
       }, untilNext() + 30);
     }
@@ -1576,6 +2606,7 @@
         if (R.state === 'live') {
           storageSet(pausedKey, String(R.shown));
           setState('paused');
+          renderAgenda();
         } else if (R.state === 'paused') {
           storageSet(pausedKey, null);
           setState('live');
@@ -1588,6 +2619,17 @@
       pill.hidden = false;
     }
 
+    document.querySelectorAll('[data-rotation-sync]').forEach(function (button) {
+      button.addEventListener('click', resync);
+    });
+
+    if (agendaList) {
+      agendaList.addEventListener('click', function (event) {
+        var item = event.target.closest('[data-agenda-index]');
+        if (item) jump(parseInt(item.getAttribute('data-agenda-index'), 10));
+      });
+    }
+
     // Elige tu color: el color que el visitante escoge manda; al volver al original, la tienda sigue sola.
     document.addEventListener('hight:accent', function (event) {
       if (event.detail) {
@@ -1595,6 +2637,7 @@
         setState('own');
         var match = R.find(event.detail.color);
         if (match > -1 && match !== R.shown) showGarments(match, motionOK());
+        else renderAgenda();
       } else {
         R.pick = null;
         storageSet(pausedKey, null);
@@ -1610,13 +2653,20 @@
 
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) return;
-      if (R.state === 'live') show(R.index(Date.now()), false);
+      if (R.state === 'live') {
+        waiting = false;
+        show(R.index(Date.now()), false);
+      }
+      renderAgenda();
       schedule();
     });
 
     R.painted = R.state === 'live';
     render();
+    renderAgenda();
     schedule();
+    // Si el turno cambió mientras cargaba la página (entre el primer color y este archivo), se pone al día ya.
+    tick();
     preload((R.shown + 1) % R.turns.length);
     setTimeout(function () {
       clock();

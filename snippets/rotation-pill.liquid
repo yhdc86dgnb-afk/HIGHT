@@ -1,6 +1,7 @@
 {%- doc -%}
-  Control de la rotación de estilo: color del turno, cuánto falta para el siguiente y un botón para pausar.
-  Queda oculto hasta que hight.js lo enciende, y solo donde la tienda cambia sola.
+  Control de la rotación de estilo: color del turno, cuánto falta para el siguiente, un botón para pausar
+  y otro para volver a la hora si el visitante se movió de turno en la agenda. Queda oculto hasta que
+  hight.js lo enciende, y solo donde la tienda cambia sola.
 
   @param {boolean} [link] - El nombre del color lleva a su colección (no en la página de contraseña)
   @param {string} [variant] - header (en el encabezado) o inline (en la página de contraseña)
@@ -13,6 +14,7 @@
   data-label-now="{{ 'rotation.now' | t }}"
   data-label-paused="{{ 'rotation.paused' | t }}"
   data-label-own="{{ 'rotation.own' | t }}"
+  data-label-waiting="{{ 'rotation.waiting' | t }}"
   data-label-pause="{{ 'rotation.pause' | t }}"
   data-label-resume="{{ 'rotation.resume' | t }}"
   data-label-next="{{ 'rotation.next' | t: time: '[time]' }}"
@@ -33,6 +35,13 @@
     <svg class="hi-rotation-icon-play" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
       <path d="M4 1.75 14 8 4 14.25z" fill="currentColor"></path>
     </svg>
+  </button>
+  <button type="button" class="hi-rotation-auto" aria-label="{{ 'rotation.sync_label' | t }}" data-rotation-sync hidden>
+    <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+      <path d="M8 2.6a5.4 5.4 0 1 1-5.1 3.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+      <path d="M2.4 2.3v4h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    <span class="hi-rotation-auto-text">{{ 'rotation.sync' | t }}</span>
   </button>
   <button type="button" class="hi-rotation-auto" aria-label="{{ 'rotation.auto' | t }}" data-rotation-auto hidden>
     <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">

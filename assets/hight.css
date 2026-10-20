@@ -114,7 +114,10 @@ product-form,
 product-page,
 media-gallery,
 predictive-search,
-product-recommendations {
+product-recommendations,
+hi-probador,
+hi-lupa,
+hi-desliza {
   display: block;
 }
 
@@ -5133,5 +5136,798 @@ a.hi-rotation-name:hover {
 @media print {
   .hi-rotation {
     display: none;
+  }
+}
+
+/* ---------- Turno en el inicio y agenda de turnos ---------- */
+/* Con la rotación, el texto del inicio dice el turno: número, textura, el nombre en grande y su frase. */
+
+.hi-collage-copy {
+  max-width: none;
+}
+
+.hi-collage-intro,
+.hi-turn-copy {
+  max-width: 36ch;
+}
+
+.hi-collage-intro {
+  display: grid;
+  gap: 10px;
+}
+
+.hi-turn {
+  display: grid;
+  gap: 10px;
+}
+
+.hi-turn-eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+
+.hi-turn-tx {
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.hi-turn-name {
+  margin: 0;
+  font: 400 clamp(3rem, 7vw, 7rem) / 0.86 var(--font-display);
+  text-transform: uppercase;
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+.hi-turn-name span[aria-hidden] {
+  display: inline-block;
+  animation: hi-letter-in 0.55s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 28ms);
+}
+
+@keyframes hi-letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.32em) rotate(5deg);
+  }
+}
+
+.hi-turn-copy {
+  margin: 0;
+  font: 500 clamp(1.0625rem, 1.4vw, 1.375rem) / 1.35 var(--font-text);
+}
+
+.hi-agenda {
+  display: grid;
+  gap: 10px;
+  padding-block: 18px 8px;
+}
+
+.hi-agenda-title,
+.hi-agenda-note {
+  color: var(--muted);
+}
+
+.hi-agenda-list {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  border-top: 1px dashed var(--line);
+  list-style: none;
+}
+
+.hi-agenda-list li {
+  min-width: 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.hi-agenda-item {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  padding: 12px 10px 12px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.hi-agenda-item time {
+  justify-self: start;
+  font: 700 0.8125rem/1 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.hi-agenda-item[aria-current='true'] time {
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.hi-agenda-who {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font: 400 0.75rem/1.2 var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hi-agenda-who i {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--c);
+}
+
+.hi-agenda-item:hover .hi-agenda-who {
+  text-decoration: underline dashed;
+  text-underline-offset: 4px;
+}
+
+.hi-agenda-item:focus-visible {
+  outline: 2px solid var(--hl);
+  outline-offset: 2px;
+}
+
+.hi-agenda-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  margin: 0;
+}
+
+.hi-agenda-note .hi-btn-ghost {
+  min-height: 32px;
+}
+
+@media (max-width: 989px) {
+  .hi-agenda-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 479px) {
+  .hi-agenda-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hi-turn-name span[aria-hidden] {
+    animation: none;
+  }
+}
+
+/* ---------- Probador, Lupa y Desliza ---------- */
+
+.hi-new-eyebrow b {
+  padding: 1px 5px;
+  background: var(--hl);
+  color: var(--on-hl);
+  font-weight: 700;
+}
+
+.hi-probador-head,
+.hi-lupa-head,
+.hi-desliza-head {
+  display: grid;
+  gap: 14px;
+  margin-bottom: clamp(24px, 3.6vw, 48px);
+}
+
+/* Probador: tres puestos (encima, arriba, abajo) sobre la textura del turno. */
+.hi-probador-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.6vw, 22px);
+}
+
+.hi-probador-slot {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  padding: clamp(14px, 1.6vw, 22px);
+  overflow: hidden;
+  border: 1px dashed var(--line);
+}
+
+.hi-probador-bg {
+  z-index: -1;
+}
+
+.hi-probador-bg.is-on {
+  opacity: 0.38;
+}
+
+.hi-probador-stage {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.hi-probador-arrow {
+  width: 44px;
+  height: 44px;
+  background: var(--bg);
+}
+
+.hi-probador-arrow:hover:not(:disabled) {
+  border-color: var(--hl);
+  background: var(--hl);
+  color: var(--on-hl);
+}
+
+.hi-probador-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.hi-probador-print {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hi-probador-print.is-swap {
+  animation: hi-probador-swap 0.45s var(--ease-out) both;
+}
+
+@keyframes hi-probador-swap {
+  from {
+    opacity: 0;
+    transform: translateX(var(--from, 24px)) rotate(2deg);
+  }
+}
+
+.hi-probador-media,
+.hi-desliza-card-media {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #fff;
+}
+
+.hi-probador-media {
+  aspect-ratio: 4 / 5;
+}
+
+.hi-probador-media img,
+.hi-desliza-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.hi-probador-name {
+  margin: 0;
+  font: 400 clamp(1.15rem, 1.6vw, 1.5rem) / 1.02 var(--font-display);
+  text-transform: uppercase;
+}
+
+.hi-probador-price,
+.hi-probador-note {
+  margin: 0;
+}
+
+.hi-probador-price {
+  font-variant-numeric: tabular-nums;
+}
+
+.hi-probador-size select {
+  width: 100%;
+}
+
+.hi-probador-note {
+  color: var(--muted);
+}
+
+.hi-probador-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  margin-top: clamp(16px, 2vw, 26px);
+  padding-top: 18px;
+  border-top: 1px dashed var(--line);
+}
+
+.hi-probador-total,
+.hi-desliza-total {
+  margin: 0;
+  font: 400 1rem/1.2 var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hi-probador-total {
+  margin-right: auto;
+}
+
+.hi-probador-total b,
+.hi-desliza-total b {
+  margin-left: 8px;
+  font: 400 clamp(1.6rem, 2.4vw, 2.2rem) / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 749px) {
+  .hi-probador-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hi-probador-print {
+    justify-self: center;
+    width: 100%;
+    max-width: 240px;
+  }
+
+  .hi-probador-bar .hi-btn {
+    flex: 1 1 auto;
+  }
+}
+
+/* Lupa: la foto con su lupa y, al lado, las prendas, el aumento y los detalles. */
+.hi-lupa-grid,
+.hi-desliza-grid {
+  display: grid;
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+}
+
+.hi-lupa-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.hi-lupa-figure {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.hi-lupa-stage {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.hi-lupa-frame {
+  position: relative;
+  line-height: 0;
+  background: #fff;
+  cursor: crosshair;
+  touch-action: pan-y pinch-zoom;
+}
+
+.hi-lupa-frame img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: min(640px, 76vh);
+}
+
+.hi-lupa-lens {
+  position: absolute;
+  z-index: 3;
+  width: 160px;
+  height: 160px;
+  border: 3px solid var(--hl);
+  border-radius: 50%;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hi-lupa-spots {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hi-lupa-spot {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 2px solid #0d0c0b;
+  border-radius: 50%;
+  background: #faf6ee;
+  color: #0d0c0b;
+  font: 700 0.75rem/1 var(--font-mono);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.hi-lupa-spot:hover,
+.hi-lupa-spot[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.hi-lupa-hint {
+  margin: 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+.hi-lupa-panel,
+.hi-desliza-favs {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.hi-lupa-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.hi-lupa-chips label {
+  position: relative;
+}
+
+.hi-lupa-chips input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.hi-lupa-chips span {
+  display: block;
+  padding: 9px 12px;
+  border: 1px solid var(--text);
+  font: 700 0.6875rem/1 var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hi-lupa-chips input:checked + span {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.hi-lupa-chips input:focus-visible + span {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.hi-lupa-title,
+.hi-desliza-favs h3 {
+  margin: 0;
+}
+
+.hi-lupa-buy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 18px;
+  margin: 0;
+}
+
+.hi-lupa-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  border-top: 1px dashed var(--line);
+  list-style: none;
+}
+
+.hi-lupa-list li {
+  border-bottom: 1px dashed var(--line);
+}
+
+.hi-lupa-row {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+  width: 100%;
+  padding: 11px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+button.hi-lupa-row {
+  cursor: pointer;
+}
+
+button.hi-lupa-row:hover strong,
+button.hi-lupa-row[aria-pressed='true'] strong {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.hi-lupa-row b {
+  font: 700 0.75rem/1 var(--font-mono);
+}
+
+.hi-lupa-row strong {
+  font-weight: 500;
+}
+
+.hi-lupa-detail {
+  min-height: 3.2em;
+  margin: 0;
+  padding: 12px 14px;
+  background: var(--text);
+  color: var(--bg);
+}
+
+@media (max-width: 749px) {
+  .hi-lupa-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hi-lupa-lens {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Desliza: el mazo de prendas y, al lado, las favoritas. */
+.hi-desliza-grid {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.hi-desliza-deck-col {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+
+.hi-desliza-deck {
+  position: relative;
+  width: min(320px, 100%);
+  aspect-ratio: 3 / 4.4;
+  margin-bottom: 26px;
+  outline-offset: 8px;
+}
+
+.hi-desliza-deck:focus-visible {
+  outline: 2px solid var(--hl);
+}
+
+.hi-desliza-card {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  background: var(--print);
+  color: #0d0c0b;
+  box-shadow: var(--print-shadow);
+  transform: translateY(calc(var(--depth, 0) * 12px)) scale(calc(1 - var(--depth, 0) * 0.04));
+  transition: transform 0.3s var(--ease);
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.hi-desliza-card.is-top {
+  cursor: grab;
+}
+
+.hi-desliza-card.is-drag {
+  transition: none;
+  cursor: grabbing;
+}
+
+.hi-desliza-card.is-yes,
+.hi-desliza-card.is-no {
+  opacity: 0;
+  transition:
+    transform 0.38s ease-in,
+    opacity 0.38s;
+}
+
+.hi-desliza-card.is-yes {
+  transform: translateX(130%) rotate(18deg);
+}
+
+.hi-desliza-card.is-no {
+  transform: translateX(-130%) rotate(-18deg);
+}
+
+.hi-desliza-card-media {
+  min-height: 0;
+  margin: var(--print-pad) var(--print-pad) 0;
+}
+
+.hi-desliza-card-media img {
+  pointer-events: none;
+}
+
+.hi-desliza-card-info {
+  display: grid;
+  gap: 5px;
+  padding: 10px 12px 14px;
+}
+
+.hi-desliza-card-info p {
+  margin: 0;
+}
+
+.hi-desliza-card-title {
+  margin: 0;
+  font: 400 1.3rem/1 var(--font-display);
+  text-transform: uppercase;
+}
+
+.hi-desliza-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 6px;
+}
+
+.hi-desliza-chip i {
+  width: 10px;
+  height: 10px;
+  border: 1px solid rgba(13, 12, 11, 0.4);
+  border-radius: 50%;
+  background: var(--c);
+}
+
+.hi-desliza-stamp {
+  position: absolute;
+  top: 22px;
+  padding: 6px 10px;
+  border: 3px solid;
+  opacity: 0;
+  font: 400 1.6rem/1 var(--font-display);
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+.hi-desliza-stamp.is-yes {
+  left: 18px;
+  color: #1f8a3a;
+  transform: rotate(-12deg);
+}
+
+.hi-desliza-stamp.is-no {
+  right: 18px;
+  color: #c3142d;
+  transform: rotate(12deg);
+}
+
+.hi-desliza-done {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 24px;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  text-align: center;
+}
+
+.hi-desliza-btns {
+  display: flex;
+  gap: 16px;
+}
+
+.hi-desliza-btns .hi-round-btn {
+  width: 60px;
+  height: 60px;
+}
+
+.hi-desliza-yes {
+  border-color: var(--hl);
+  background: var(--hl);
+  color: var(--on-hl);
+}
+
+.hi-desliza-left,
+.hi-desliza-empty {
+  margin: 0;
+}
+
+.hi-desliza-left {
+  color: var(--muted);
+}
+
+.hi-desliza-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 16px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hi-desliza-fav {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.hi-desliza-fav-media img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: contain;
+  background: #fff;
+}
+
+.hi-desliza-fav-name {
+  color: inherit;
+  font: 400 0.6875rem/1.25 var(--font-mono);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.hi-desliza-fav-name:hover {
+  text-decoration: underline;
+}
+
+.hi-desliza-fav-size select {
+  width: 100%;
+  height: 36px;
+}
+
+.hi-desliza-fav-remove {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 2px solid var(--text);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text);
+  font: 700 1rem/1 var(--font-mono);
+  cursor: pointer;
+}
+
+.hi-desliza-fav-remove:hover {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.hi-desliza-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 749px) {
+  .hi-desliza-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hi-probador-print.is-swap {
+    animation: none;
+  }
+
+  .hi-desliza-card {
+    transition: none;
   }
 }

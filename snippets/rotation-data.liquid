@@ -26,10 +26,44 @@
             assign turn_on = '#ece3d0'
           endif
           assign turn_texture = turn_collection.metafields.custom.textura.value
+
+          # Frase del turno: el campo Frase del turno o, si está vacío, la primera frase de la descripción.
+          assign turn_copy = turn_collection.metafields.custom.frase.value | strip
+          if turn_copy == blank
+            assign turn_copy = turn_collection.description | strip_html | strip | split: '. ' | first | strip
+            assign turn_copy_end = turn_copy | slice: -1
+            if turn_copy != blank and turn_copy_end != '.' and turn_copy_end != '!' and turn_copy_end != '?'
+              assign turn_copy = turn_copy | append: '.'
+            endif
+          endif
+
+          # Nombre de la textura: el texto alternativo de la foto o el de la textura dibujada.
+          assign turn_tx = ''
+          if turn_texture != blank
+            assign turn_tx = turn_texture.alt | strip
+            if turn_tx == blank
+              assign turn_tx = 'rotation.textures.foto' | t
+            endif
+          else
+            case turn_collection.handle
+              when 'acido'
+                assign turn_tx = 'rotation.textures.acido' | t
+              when 'carmin'
+                assign turn_tx = 'rotation.textures.carmin' | t
+              when 'indigo'
+                assign turn_tx = 'rotation.textures.indigo' | t
+              when 'magenta'
+                assign turn_tx = 'rotation.textures.magenta' | t
+              when 'ceniza'
+                assign turn_tx = 'rotation.textures.ceniza' | t
+              when 'leopardo'
+                assign turn_tx = 'rotation.textures.leopardo' | t
+            endcase
+          endif
         -%}
         {%- if rotation_count > 0 %},{% endif -%}
         {%- assign rotation_count = rotation_count | plus: 1 -%}
-        {"handle":{{ turn_collection.handle | json }},"name":{{ turn_collection.title | json }},"url":{{ turn_collection.url | json }},"color":{{ turn_color | downcase | json }},"on":{{ turn_on | json }},"texture":
+        {"handle":{{ turn_collection.handle | json }},"name":{{ turn_collection.title | json }},"url":{{ turn_collection.url | json }},"copy":{{ turn_copy | json }},"tx":{{ turn_tx | json }},"color":{{ turn_color | downcase | json }},"on":{{ turn_on | json }},"texture":
         {%- if turn_texture != blank -%}{{ turn_texture | image_url: width: 1800 | json }}{%- else -%}null{%- endif -%}
         {%- if pieces -%}
           ,"pieces":[
@@ -65,7 +99,7 @@
 
 {%- if rotation_count > 1 -%}
   <script type="application/json" id="HightRotationData">
-    {"mode":{{ mode | json }},"ms":{{ rotation_ms }},"visitorAccent":{{ settings.visitor_accent | json }},"turns":[{{ rotation_turns }}]}
+    {"mode":{{ mode | json }},"ms":{{ rotation_ms }},"motion":{{ settings.motion | json }},"visitorAccent":{{ settings.visitor_accent | json }},"turns":[{{ rotation_turns }}]}
   </script>
   <script>
     (function () {
@@ -84,10 +118,18 @@
         R.mode = data.mode;
         R.ms = data.ms;
         R.turns = data.turns;
+        R.still = data.motion === false || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Turnos que el visitante se adelantó o atrasó a mano en la agenda (solo durante esta visita).
+        R.offset = 0;
+        try {
+          R.offset = parseInt(window.sessionStorage.getItem('hight-rotation-offset'), 10) || 0;
+        } catch (e) {}
 
         // Minutos (o el tiempo elegido) contados desde 1970: el mismo número para todos a la misma hora.
         R.index = function (now) {
-          return Math.floor(now / R.ms) % R.turns.length;
+          var n = R.turns.length;
+          return (((Math.floor(now / R.ms) + R.offset) % n) + n) % n;
         };
         R.find = function (color) {
           for (var i = 0; i < R.turns.length; i++) {
@@ -224,6 +266,61 @@
           } else {
             for (var k = 0; k < layers.length; k++) layers[k].classList.toggle('is-on', layers[k] === next);
           }
+        };
+
+        // Nombre grande letra por letra (sin animación si el visitante pidió menos movimiento).
+        R.letters = function (el, name) {
+          el.setAttribute('data-name', name);
+          if (R.still) {
+            el.textContent = name;
+            return;
+          }
+          el.innerHTML = '';
+          var label = document.createElement('span');
+          label.className = 'visually-hidden';
+          label.textContent = name;
+          el.appendChild(label);
+          Array.prototype.forEach.call(name, function (ch, i) {
+            var span = document.createElement('span');
+            span.setAttribute('aria-hidden', 'true');
+            span.style.setProperty('--i', i);
+            span.textContent = ch === ' ' ? ' ' : ch;
+            el.appendChild(span);
+          });
+        };
+
+        // Textos del turno (cinta, inicio): data-turn-template con [name], [next], [n], [total], [texture]
+        // y [copy]; data-turn-href toma el enlace de la colección; data-turn-show y data-turn-hide se
+        // muestran u ocultan cuando hay turno.
+        R.text = function (scope, index) {
+          var turn = R.turns[index];
+          var values = {
+            name: turn.name,
+            next: R.turns[(index + 1) % R.turns.length].name,
+            n: index + 1,
+            total: R.turns.length,
+            texture: turn.tx || '',
+            copy: turn.copy || ''
+          };
+          Array.prototype.forEach.call(scope.querySelectorAll('[data-turn-template]'), function (el) {
+            var tpl = el.getAttribute('data-turn-template');
+            el.hidden = (tpl.indexOf('[texture]') > -1 && !turn.tx) || (tpl.indexOf('[copy]') > -1 && !turn.copy);
+            el.textContent = tpl.replace(/\[(name|next|n|total|texture|copy)\]/g, function (match, key) {
+              return values[key];
+            });
+          });
+          Array.prototype.forEach.call(scope.querySelectorAll('[data-turn-letters]'), function (el) {
+            if (el.getAttribute('data-name') !== turn.name) R.letters(el, turn.name);
+          });
+          Array.prototype.forEach.call(scope.querySelectorAll('[data-turn-href]'), function (el) {
+            el.setAttribute('href', turn.url);
+          });
+          Array.prototype.forEach.call(scope.querySelectorAll('[data-turn-show]'), function (el) {
+            el.hidden = false;
+          });
+          Array.prototype.forEach.call(scope.querySelectorAll('[data-turn-hide]'), function (el) {
+            el.hidden = true;
+          });
         };
 
         // Lo llama el collage apenas se escribe, antes de que se vea.
