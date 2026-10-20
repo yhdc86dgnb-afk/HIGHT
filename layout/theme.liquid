@@ -19,6 +19,20 @@
           assign page_on_accent = '#ece3d0'
         endif
       endif
+
+      # Rotación de estilo: cambia sola en casi toda la tienda; en la ficha y el carrito se queda el turno
+      # con el que se abrió la página, y en las colecciones de color manda su propio color.
+      assign rotation_mode = 'off'
+      if settings.rotation_enabled and request.design_mode == false and page_accent == blank
+        assign rotation_mode = 'live'
+        if request.page_type == 'product' or request.page_type == 'cart'
+          assign rotation_mode = 'static'
+        endif
+      endif
+      assign rotation_pieces = false
+      if request.page_type == 'index' and settings.rotation_garments
+        assign rotation_pieces = true
+      endif
     -%}
 
     {% render 'css-variables', page_accent: page_accent, page_on_accent: page_on_accent %}
@@ -52,6 +66,8 @@
         } catch (e) {}
       </script>
     {%- endif -%}
+
+    {% render 'rotation-data', mode: rotation_mode, pieces: rotation_pieces %}
 
     <script src="{{ 'hight.js' | asset_url }}" defer="defer"></script>
 

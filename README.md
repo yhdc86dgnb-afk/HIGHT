@@ -24,6 +24,8 @@ El logo gótico se mantiene: es la marca. El design system original sigue en [`d
 
 ## Lo interactivo
 
+- **La tienda cambia de estilo cada minuto:** color, textura y prendas del collage van rotando por los 6 colores
+  (más abajo, en [La tienda cambia de estilo cada minuto](#la-tienda-cambia-de-estilo-cada-minuto)).
 - **Hero collage:** el logo al centro y las prendas como fotos pegadas con cinta. En computador se arrastran y se
   mueven con el cursor; en el teléfono flotan. El botón **MEZCLAR** las reparte de nuevo.
 - **Cintas de texto:** corren de lado a lado y aceleran cuando haces scroll.
@@ -32,7 +34,8 @@ El logo gótico se mantiene: es la marca. El design system original sigue en [`d
   camiseta).
 - **Elige tu color:** cada color es una colección (Radiactivo, Sangre Fría, Medianoche, Chicle, Asfalto y Fiera). Al tocarlo,
   **toda la tienda se pinta** con ese color, se ven sus piezas como fotos apiladas y un botón lleva a la colección. El
-  navegador lo recuerda y se puede volver al color original.
+  navegador lo recuerda y se puede volver al color original (con la rotación encendida, la tienda vuelve a
+  cambiar sola).
 - **Colecciones de color:** al entrar a una (desde el menú, el home o la fila de colores de cada colección), la
   tienda toma su color: botones, cintas, marquillas y el título gigante.
 - **Anatomía de una pieza:** puntos numerados sobre el Jean Flare Patchwork Leopardo; cada uno abre su detalle.
@@ -73,6 +76,39 @@ El menú principal queda así: Tienda, Pantalones, Tops, Buzos y tejidos, Colore
 Contacto.
 
 ![Colecciones](docs/preview/colecciones.jpg)
+
+## La tienda cambia de estilo cada minuto
+
+Al empezar cada minuto la tienda pasa al color siguiente: Radiactivo → Sangre Fría → Medianoche → Chicle → Asfalto
+→ Fiera, y vuelve a empezar. Con el color cambian la textura del fondo del collage (zigzag ácido, semitono, sarga
+índigo, camuflado, malla y leopardo) y las fotos del collage, que pasan a ser prendas disponibles de ese color.
+
+- **No varía en el tiempo:** el turno sale de la hora, no de cuándo se abrió la página. Cambia en el segundo :00 de
+  cada minuto, en el mismo orden y a la vez para todos los que estén en la tienda. Cada cambio se programa contra el
+  reloj, así que no se atrasa aunque la página lleve horas abierta, y si la pestaña queda en segundo plano se pone al
+  día al volver. En las pruebas, todos los cambios cayeron entre 31 y 51 milésimas después del segundo exacto.
+- **Sin parpadeo ni descargas de más:** el color del turno se pinta antes de que se vea la página y el collage ya
+  sale con las prendas del turno. Las fotos que el turno reemplaza no se descargan y las del turno siguiente se
+  precargan durante el minuto.
+- **Control en el encabezado,** al lado de MENÚ: AHORA, el nombre del color (lleva a su colección), cuánto falta para
+  el siguiente y un botón para **pausar**. La pausa se recuerda en las otras páginas. En el teléfono quedan el punto y
+  el botón.
+- **Dónde no rota:** en la ficha y en el carrito se queda el color con el que se abrió la página, para no distraer al
+  comprar. En las colecciones de color manda su propio color. En la página de contraseña sí rota, con el control
+  debajo del texto.
+- **Elige tu color manda:** si el visitante elige un color, la tienda se queda en ese (el control dice TU COLOR) y el
+  botón QUE CAMBIE SOLO la pone a rotar otra vez. Con la rotación encendida, el color de la última colección abierta
+  ya no se arrastra a las otras páginas.
+- **El cambio no interrumpe:** el color entra con una transición de casi un segundo que no bloquea clics ni toques,
+  y las fotos se reemplazan como copias que se cambian. Con *reducir movimiento* cambia sin animación.
+
+Se configura en *Configuración del tema > Rotación de estilo*: encenderla o apagarla, qué colecciones rotan y en qué
+orden (cada una necesita su *Color de la colección*), cada cuánto cambia (cada minuto, minuto y medio, 2 minutos o 2
+minutos y medio) y si cambian también las prendas, la textura y la página de contraseña. Para usar una foto como
+textura de un color, súbela en *Productos > Colecciones > (colección) > Metacampos > Textura de la colección*; si
+queda vacío, se usa la textura dibujada.
+
+![La tienda en tres minutos seguidos](docs/preview/rotacion.jpg)
 
 ## La ficha responde antes de que pregunten
 
@@ -161,12 +197,13 @@ Cuando el tema esté revisado, se publica desde **Tienda online > Temas > Hight 
 
 ```
 assets/          hight.css, hight.js, fuentes (Anton, Space Grotesk, Space Mono), logos y grano
-config/          settings_schema.json (acento, 5 esquemas, movimiento) y settings_data.json
+config/          settings_schema.json (acento, 5 esquemas, movimiento, rotación de estilo) y settings_data.json
 layout/          theme.liquid y password.liquid
 locales/         es.default.json
 sections/        hero-collage, marquee, featured-collection, color-story, hotspots, index-list,
                  manifesto, video-campaign, editorial-spread (lookbook), titular, header, footer…
-snippets/        product-card, sticker, product-gallery, density-toggle, price, icon…
+snippets/        product-card, sticker, product-gallery, density-toggle, price, icon, rotation-data y
+                 rotation-pill (rotación de estilo)…
 templates/       plantillas JSON + gift_card.liquid
 design-system/   design system HIGHT original (referencia)
 docs/preview/    capturas de la vista previa

@@ -1181,6 +1181,8 @@
             piece.style.setProperty('--dy', '0px');
             piece.style.zIndex = ++self.z;
           });
+          // La rotación de estilo vuelve a ordenar los huecos alrededor del logo en el próximo turno.
+          this._ring = null;
         }
       }
     );
@@ -1446,6 +1448,181 @@
       }
     );
   }
+
+  /* ---------- Rotación de estilo ---------- */
+
+  // El turno sale de la hora (window.HightRotation, snippets/rotation-data.liquid): cambia justo al
+  // empezar cada minuto, en el mismo orden y a la vez para todos. Cada cambio se programa contra el reloj,
+  // así que no se atrasa. Aquí van los cambios siguientes y el control para pausar.
+  (function () {
+    var R = window.HightRotation;
+    if (!R || R.mode !== 'live' || !R.turns || R.turns.length < 2) return;
+
+    var root = document.documentElement;
+    var pausedKey = 'hight-rotation-paused';
+    var stages = Array.prototype.slice.call(document.querySelectorAll('[data-rotation-stage]'));
+    var pill = document.querySelector('[data-rotation-pill]');
+    var label = pill && pill.querySelector('[data-rotation-label]');
+    var name = pill && pill.querySelector('[data-rotation-name]');
+    var time = pill && pill.querySelector('[data-rotation-time]');
+    var toggle = pill && pill.querySelector('[data-rotation-toggle]');
+    var auto = pill && pill.querySelector('[data-rotation-auto]');
+    var allHref = name && name.getAttribute('href');
+    var sizes = stages.length ? R.sizes(stages[0]) : '';
+    var timer = 0;
+    var fadeTimer = 0;
+
+    function untilNext() {
+      return R.ms - (Date.now() % R.ms);
+    }
+
+    function preload(index) {
+      var turn = R.turns[index];
+      (turn.pieces || []).forEach(function (piece) {
+        var img = new Image();
+        img.sizes = sizes;
+        img.srcset = piece.srcset;
+        img.src = piece.src;
+      });
+      if (turn.texture) new Image().src = turn.texture;
+    }
+
+    // Transición de CSS (hight.css, html.hi-accent-fade) y no de vista: la página sigue tomando clics.
+    function paint(turn, animate) {
+      clearTimeout(fadeTimer);
+      root.classList.toggle('hi-accent-fade', !!animate);
+      root.style.setProperty('--accent', turn.color);
+      root.style.setProperty('--on-accent', turn.on);
+      if (animate) {
+        fadeTimer = setTimeout(function () {
+          root.classList.remove('hi-accent-fade');
+        }, 1000);
+      }
+    }
+
+    function swap(stage, index, animate) {
+      R.texture(stage, index, animate);
+      if (!stage.hasAttribute('data-rotation-pieces')) return;
+      if (!animate) {
+        R.pieces(stage, index);
+        return;
+      }
+      stage.classList.add('is-swapping');
+      setTimeout(function () {
+        R.pieces(stage, index);
+        stage.classList.remove('is-swapping');
+      }, 320);
+    }
+
+    function showGarments(index, animate) {
+      R.shown = index;
+      stages.forEach(function (stage) {
+        swap(stage, index, animate);
+      });
+      preload((index + 1) % R.turns.length);
+    }
+
+    function show(index, animate) {
+      if (index === R.shown && R.painted) return;
+      R.painted = true;
+      paint(R.turns[index], animate);
+      showGarments(index, animate);
+      render();
+    }
+
+    function setState(state) {
+      R.state = state;
+      root.setAttribute('data-rotation', state);
+      render();
+    }
+
+    function clock() {
+      if (!time || R.state !== 'live') return;
+      var seconds = Math.ceil(untilNext() / 1000);
+      var text = Math.floor(seconds / 60) + ':' + ('0' + (seconds % 60)).slice(-2);
+      time.textContent = text;
+      time.setAttribute('aria-label', (pill.getAttribute('data-label-next') || '').replace('[time]', text));
+    }
+
+    function render() {
+      if (!pill) return;
+      var own = R.state === 'own' && R.pick;
+      var turn = R.turns[R.shown] || R.turns[0];
+      var match = own ? R.find(R.pick.color) : R.shown;
+      pill.style.setProperty('--dot', own ? R.pick.color : turn.color);
+      label.textContent = pill.getAttribute(
+        R.state === 'live' ? 'data-label-now' : R.state === 'paused' ? 'data-label-paused' : 'data-label-own'
+      );
+      name.textContent = own ? R.pick.name || turn.name : turn.name;
+      if (name.tagName === 'A') name.setAttribute('href', match > -1 ? R.turns[match].url : allHref);
+      time.hidden = R.state !== 'live';
+      toggle.hidden = R.state === 'own';
+      auto.hidden = R.state !== 'own';
+      toggle.setAttribute('aria-pressed', R.state === 'paused' ? 'true' : 'false');
+      toggle.setAttribute('aria-label', pill.getAttribute(R.state === 'paused' ? 'data-label-resume' : 'data-label-pause'));
+      clock();
+    }
+
+    function schedule() {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        if (R.state === 'live') show(R.index(Date.now()), motionOK());
+        schedule();
+      }, untilNext() + 30);
+    }
+
+    if (pill) {
+      toggle.addEventListener('click', function () {
+        if (R.state === 'live') {
+          storageSet(pausedKey, String(R.shown));
+          setState('paused');
+        } else if (R.state === 'paused') {
+          storageSet(pausedKey, null);
+          setState('live');
+          show(R.index(Date.now()), motionOK());
+        }
+      });
+      auto.addEventListener('click', function () {
+        Accent.reset();
+      });
+      pill.hidden = false;
+    }
+
+    // Elige tu color: el color que el visitante escoge manda; al volver al original, la tienda sigue sola.
+    document.addEventListener('hight:accent', function (event) {
+      if (event.detail) {
+        R.pick = event.detail;
+        setState('own');
+        var match = R.find(event.detail.color);
+        if (match > -1 && match !== R.shown) showGarments(match, motionOK());
+      } else {
+        R.pick = null;
+        storageSet(pausedKey, null);
+        setState('live');
+        // Accent.reset quita el color dentro de una transición de vista: el turno se pinta en otra para que
+        // quede después de esa (y con el turno de ese momento, por si justo cambió el minuto).
+        withTransition(function () {
+          R.painted = false;
+          show(R.index(Date.now()), false);
+        });
+      }
+    });
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) return;
+      if (R.state === 'live') show(R.index(Date.now()), false);
+      schedule();
+    });
+
+    R.painted = R.state === 'live';
+    render();
+    schedule();
+    preload((R.shown + 1) % R.turns.length);
+    setTimeout(function () {
+      clock();
+      setInterval(clock, 1000);
+    }, 1000 - (Date.now() % 1000) + 10);
+  })();
 
   /* ---------- Colores de la colección: el color actual a la vista en el teléfono ---------- */
 

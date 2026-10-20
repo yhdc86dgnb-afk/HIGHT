@@ -248,5 +248,15 @@
     "use": "IR A LA TIENDA",
     "print": "IMPRIMIR",
     "add_to_wallet": "Agregar a Apple Wallet"
+  },
+  "rotation": {
+    "region": "Estilo de la tienda",
+    "now": "Ahora",
+    "paused": "En pausa",
+    "own": "Tu color",
+    "pause": "Pausar el cambio de estilo",
+    "resume": "Seguir cambiando el estilo",
+    "auto": "Que cambie solo",
+    "next": "Cambia en {{ time }}"
   }
 }

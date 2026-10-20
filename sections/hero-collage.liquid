@@ -9,13 +9,26 @@
   if request.page_type == 'password'
     assign link_pieces = false
   endif
+
+  # Con la rotación de estilo, las prendas y la textura las pone el turno (snippets/rotation-data.liquid).
+  assign rotation_on = false
+  if settings.rotation_enabled and request.design_mode == false
+    assign rotation_on = true
+  endif
+  assign piece_loading = 'eager'
+  if rotation_on and settings.rotation_garments
+    assign piece_loading = 'lazy'
+  endif
 -%}
 
 <section
   class="hi-collage color-{{ section.settings.color_scheme }}{% if section.settings.full_height %} hi-collage--full{% endif %}"
   aria-label="{{ collage_heading | escape }}"
 >
-  <hi-collage class="hi-collage-stage">
+  <hi-collage class="hi-collage-stage"{% if rotation_on and settings.rotation_garments %} data-rotation-pieces{% endif %}>
+    {%- if rotation_on and settings.rotation_textures -%}
+      <div class="hi-collage-texture" aria-hidden="true" data-rotation-texture><span class="hi-tx"></span><span class="hi-tx"></span></div>
+    {%- endif -%}
     {%- if section.settings.video != blank or section.settings.image != blank -%}
       <div class="hi-collage-bg" style="--media-opacity: {{ media_opacity }};" aria-hidden="true">
         {%- if section.settings.video != blank -%}
@@ -94,7 +107,7 @@
                   | image_tag:
                     widths: '300, 450, 600, 900',
                     sizes: '(min-width: 990px) 22vw, 40vw',
-                    loading: 'eager',
+                    loading: piece_loading,
                     alt: piece_alt,
                     draggable: 'false'
                 }}
@@ -112,6 +125,11 @@
           </li>
         {%- endfor -%}
       </ul>
+    {%- endif -%}
+    {%- if rotation_on -%}
+      <script>
+        window.HightRotation && window.HightRotation.fill && window.HightRotation.fill(document.currentScript.parentNode);
+      </script>
     {%- endif -%}
 
     {%- if section.settings.show_badge -%}

@@ -62,6 +62,19 @@
           "print": "#fbfbe9"
         }
       }
-    }
+    },
+    "rotation_enabled": true,
+    "rotation_collections": [
+      "acido",
+      "carmin",
+      "indigo",
+      "magenta",
+      "ceniza",
+      "leopardo"
+    ],
+    "rotation_interval": "60",
+    "rotation_garments": true,
+    "rotation_textures": true,
+    "rotation_password": true
   }
 }

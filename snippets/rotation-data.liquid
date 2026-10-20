@@ -1,0 +1,241 @@
+{%- doc -%}
+  Rotación de estilo. Cada colección de Configuración del tema > Rotación de estilo es un turno, en ese
+  orden: su color (custom.acento) pinta la tienda y en el collage salen su textura (custom.textura) y sus
+  prendas disponibles. El turno sale de la hora, no de cuándo se abrió la página: cambia justo al empezar
+  cada minuto (o el tiempo elegido), en el mismo orden y al mismo tiempo para todos.
+
+  Escribe los turnos en JSON y define window.HightRotation, que pinta el turno antes de que se vea la
+  página (sin parpadeo) y llena el collage. hight.js hace los cambios siguientes y el control de pausa.
+
+  @param {string} mode - live (cambia sola), static (pinta el turno al abrir y no cambia) u off
+  @param {boolean} [pieces] - Incluir las prendas de cada turno (solo en páginas con collage)
+{%- enddoc -%}
+{%- liquid
+  assign rotation_count = 0
+  assign rotation_ms = settings.rotation_interval | default: 60 | times: 1000
+-%}
+{%- if mode == 'live' or mode == 'static' -%}
+  {%- capture rotation_turns -%}
+    {%- for turn_collection in settings.rotation_collections -%}
+      {%- assign turn_color = turn_collection.metafields.custom.acento.value | append: '' -%}
+      {%- if turn_color != blank -%}
+        {%- liquid
+          assign turn_on = '#0d0c0b'
+          assign turn_brightness = turn_color | color_brightness
+          if turn_brightness < 120
+            assign turn_on = '#ece3d0'
+          endif
+          assign turn_texture = turn_collection.metafields.custom.textura.value
+        -%}
+        {%- if rotation_count > 0 %},{% endif -%}
+        {%- assign rotation_count = rotation_count | plus: 1 -%}
+        {"handle":{{ turn_collection.handle | json }},"name":{{ turn_collection.title | json }},"url":{{ turn_collection.url | json }},"color":{{ turn_color | downcase | json }},"on":{{ turn_on | json }},"texture":
+        {%- if turn_texture != blank -%}{{ turn_texture | image_url: width: 1800 | json }}{%- else -%}null{%- endif -%}
+        {%- if pieces -%}
+          ,"pieces":[
+          {%- assign piece_count = 0 -%}
+          {%- for turn_product in turn_collection.products limit: 24 -%}
+            {%- if turn_product.available and turn_product.featured_media != blank and piece_count < 6 -%}
+              {%- liquid
+                assign turn_image = turn_product.featured_media.preview_image
+                assign turn_ratio = turn_image.aspect_ratio | default: 0.8
+                if turn_ratio < 0.6
+                  assign turn_ratio = 0.6
+                elsif turn_ratio > 1.2
+                  assign turn_ratio = 1.2
+                endif
+                assign turn_alt = turn_image.alt | default: turn_product.title
+              -%}
+              {%- capture turn_srcset -%}
+                {{- turn_image | image_url: width: 300 }} 300w, {{ turn_image | image_url: width: 450 }} 450w, {{ turn_image | image_url: width: 600 }} 600w, {{ turn_image | image_url: width: 900 }} 900w
+              {%- endcapture -%}
+              {%- capture turn_price -%}{%- render 'price', product: turn_product -%}{%- endcapture -%}
+              {%- if piece_count > 0 %},{% endif -%}
+              {%- assign piece_count = piece_count | plus: 1 -%}
+              {"title":{{ turn_product.title | json }},"url":{{ turn_product.url | json }},"src":{{ turn_image | image_url: width: 600 | json }},"srcset":{{ turn_srcset | json }},"w":{{ turn_image.width | default: 600 }},"h":{{ turn_image.height | default: 750 }},"ar":{{ turn_ratio | round: 3 }},"alt":{{ turn_alt | json }},"price":{{ turn_price | strip | json }}}
+            {%- endif -%}
+          {%- endfor -%}
+          ]
+        {%- endif -%}
+        }
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- if rotation_count > 1 -%}
+  <script type="application/json" id="HightRotationData">
+    {"mode":{{ mode | json }},"ms":{{ rotation_ms }},"visitorAccent":{{ settings.visitor_accent | json }},"turns":[{{ rotation_turns }}]}
+  </script>
+  <script>
+    (function () {
+      var R = (window.HightRotation = { mode: 'off', turns: [] });
+      var el = document.getElementById('HightRotationData');
+      function stored(key) {
+        try {
+          return window.localStorage.getItem(key);
+        } catch (e) {
+          return null;
+        }
+      }
+      try {
+        var data = JSON.parse(el.textContent);
+        if (!data.turns || data.turns.length < 2) return;
+        R.mode = data.mode;
+        R.ms = data.ms;
+        R.turns = data.turns;
+
+        // Minutos (o el tiempo elegido) contados desde 1970: el mismo número para todos a la misma hora.
+        R.index = function (now) {
+          return Math.floor(now / R.ms) % R.turns.length;
+        };
+        R.find = function (color) {
+          for (var i = 0; i < R.turns.length; i++) {
+            if (R.turns[i].color === String(color).toLowerCase()) return i;
+          }
+          return -1;
+        };
+
+        var hex = /^#[0-9a-f]{6}$/i;
+        var pick = null;
+        if (data.visitorAccent) {
+          try {
+            pick = JSON.parse(stored('hight-accent') || 'null');
+          } catch (e) {}
+        }
+        var paused = parseInt(stored('hight-rotation-paused'), 10);
+        R.state = 'live';
+        R.shown = R.index(Date.now());
+        if (pick && hex.test(pick.color) && hex.test(pick.on)) {
+          R.state = 'own';
+          R.pick = pick;
+          if (R.find(pick.color) > -1) R.shown = R.find(pick.color);
+        } else if (paused >= 0 && paused < R.turns.length) {
+          R.state = 'paused';
+          R.shown = paused;
+        }
+
+        // Con la rotación, el color de la última colección abierta ya no se arrastra a otras páginas.
+        try {
+          window.sessionStorage.removeItem('hight-accent-visit');
+        } catch (e) {}
+
+        var paint = R.state === 'own' ? pick : R.turns[R.shown];
+        var root = document.documentElement;
+        root.style.setProperty('--accent', paint.color);
+        root.style.setProperty('--on-accent', paint.on);
+        root.setAttribute('data-rotation', R.state);
+
+        // Huecos del collage en orden alrededor del logo: con pocas prendas quedan repartidas.
+        R.ring = function (stage) {
+          if (stage._ring) return stage._ring;
+          var items = Array.prototype.slice.call(stage.querySelectorAll('[data-piece]'));
+          stage._ring = items
+            .map(function (li) {
+              var x = parseFloat(li.style.getPropertyValue('--x')) || 50;
+              var y = parseFloat(li.style.getPropertyValue('--y')) || 40;
+              return { li: li, angle: Math.atan2(y - 40, x - 45) };
+            })
+            .sort(function (a, b) {
+              return a.angle - b.angle;
+            })
+            .map(function (item) {
+              return item.li;
+            });
+          return stage._ring;
+        };
+
+        // El sizes de las fotos del collage (cambia entre la portada y la contraseña).
+        R.sizes = function (stage) {
+          if (!stage._sizes) {
+            var sample = stage.querySelector('.hi-piece-media img[sizes]');
+            stage._sizes = sample ? sample.getAttribute('sizes') : '(min-width: 990px) 22vw, 40vw';
+          }
+          return stage._sizes;
+        };
+
+        R.put = function (li, piece, plain, sizes) {
+          li.style.setProperty('--ar', piece.ar);
+          var print = li.querySelector('.hi-piece-print');
+          if (print && print.tagName === 'A') print.setAttribute('href', piece.url);
+          var media = li.querySelector('.hi-piece-media');
+          if (!media) return;
+          var img = media.querySelector('img');
+          if (!img) {
+            media.innerHTML = '';
+            img = document.createElement('img');
+            img.setAttribute('draggable', 'false');
+            img.setAttribute('sizes', sizes);
+            media.appendChild(img);
+          }
+          img.setAttribute('srcset', piece.srcset);
+          img.setAttribute('src', piece.src);
+          img.setAttribute('width', piece.w);
+          img.setAttribute('height', piece.h);
+          img.setAttribute('alt', plain ? '' : piece.alt);
+          // Las fotos del collage vienen en lazy para que no se descarguen las que el turno reemplaza.
+          img.setAttribute('loading', 'eager');
+          var tag = li.querySelector('.hi-piece-tag');
+          if (tag) {
+            tag.innerHTML = '<span class="hi-piece-name"></span>' + piece.price;
+            tag.firstChild.textContent = piece.title;
+          }
+        };
+
+        R.pieces = function (stage, index) {
+          var list = R.turns[index].pieces || [];
+          if (!list.length) return;
+          var ring = R.ring(stage);
+          var plain = stage.hasAttribute('data-rotation-plain');
+          var sizes = R.sizes(stage);
+          var used = [];
+          for (var j = 0; j < list.length && j < ring.length; j++) {
+            used.push(ring[Math.floor((j * ring.length) / Math.min(list.length, ring.length))]);
+          }
+          ring.forEach(function (li) {
+            var slot = used.indexOf(li);
+            li.classList.toggle('is-off', slot === -1);
+            if (slot > -1) {
+              R.put(li, list[slot], plain, sizes);
+            } else {
+              // Un hueco que ningún turno ha usado no descarga la foto que traía (queda oculto).
+              var img = li.querySelector('.hi-piece-media img[loading="lazy"]');
+              if (img) {
+                img.removeAttribute('srcset');
+                img.removeAttribute('src');
+              }
+            }
+          });
+        };
+
+        R.texture = function (stage, index, fade) {
+          var box = stage.querySelector('[data-rotation-texture]');
+          if (!box) return;
+          var layers = box.children;
+          var turn = R.turns[index];
+          var current = box.querySelector('.is-on');
+          var next = fade && current ? (current === layers[0] ? layers[1] : layers[0]) : layers[0];
+          next.className = 'hi-tx hi-tx--' + (turn.texture ? 'foto' : turn.handle);
+          next.style.backgroundImage = turn.texture ? 'url("' + turn.texture + '")' : '';
+          if (fade && current && current !== next) {
+            void next.offsetWidth;
+            next.classList.add('is-on');
+            current.classList.remove('is-on');
+          } else {
+            for (var k = 0; k < layers.length; k++) layers[k].classList.toggle('is-on', layers[k] === next);
+          }
+        };
+
+        // Lo llama el collage apenas se escribe, antes de que se vea.
+        R.fill = function (stage) {
+          if (!stage) return;
+          stage.setAttribute('data-rotation-stage', '');
+          if (stage.hasAttribute('data-rotation-pieces')) R.pieces(stage, R.shown);
+          R.texture(stage, R.shown, false);
+        };
+      } catch (e) {
+        R.mode = 'off';
+      }
+    })();
+  </script>
+{%- endif -%}

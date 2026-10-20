@@ -18,6 +18,9 @@
       {% render 'icon', name: 'menu', size: 20 %}
       <span>{{ 'accessibility.menu_button' | t }}</span>
     </button>
+    {%- if settings.rotation_enabled -%}
+      {% render 'rotation-pill', link: true, variant: 'header' %}
+    {%- endif -%}
   </div>
 
   <a href="{{ routes.root_url }}" class="hi-header-logo" aria-label="{{ 'accessibility.home' | t: shop: shop.name }}">

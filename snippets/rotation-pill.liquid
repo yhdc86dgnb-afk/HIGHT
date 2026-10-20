@@ -1,0 +1,43 @@
+{%- doc -%}
+  Control de la rotación de estilo: color del turno, cuánto falta para el siguiente y un botón para pausar.
+  Queda oculto hasta que hight.js lo enciende, y solo donde la tienda cambia sola.
+
+  @param {boolean} [link] - El nombre del color lleva a su colección (no en la página de contraseña)
+  @param {string} [variant] - header (en el encabezado) o inline (en la página de contraseña)
+{%- enddoc -%}
+<div
+  class="hi-rotation hi-rotation--{{ variant | default: 'header' }}"
+  role="region"
+  aria-label="{{ 'rotation.region' | t }}"
+  data-rotation-pill
+  data-label-now="{{ 'rotation.now' | t }}"
+  data-label-paused="{{ 'rotation.paused' | t }}"
+  data-label-own="{{ 'rotation.own' | t }}"
+  data-label-pause="{{ 'rotation.pause' | t }}"
+  data-label-resume="{{ 'rotation.resume' | t }}"
+  data-label-next="{{ 'rotation.next' | t: time: '[time]' }}"
+  hidden
+>
+  <span class="hi-rotation-dot" aria-hidden="true"></span>
+  <span class="hi-rotation-label" data-rotation-label>{{ 'rotation.now' | t }}</span>
+  {%- if link -%}
+    <a class="hi-rotation-name" href="{{ routes.collections_url }}" data-rotation-name></a>
+  {%- else -%}
+    <span class="hi-rotation-name" data-rotation-name></span>
+  {%- endif -%}
+  <span class="hi-rotation-time" data-rotation-time></span>
+  <button type="button" class="hi-rotation-btn" aria-pressed="false" aria-label="{{ 'rotation.pause' | t }}" data-rotation-toggle>
+    <svg class="hi-rotation-icon-pause" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+      <path d="M3.5 2h3.25v12H3.5zM9.25 2h3.25v12H9.25z" fill="currentColor"></path>
+    </svg>
+    <svg class="hi-rotation-icon-play" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+      <path d="M4 1.75 14 8 4 14.25z" fill="currentColor"></path>
+    </svg>
+  </button>
+  <button type="button" class="hi-rotation-auto" aria-label="{{ 'rotation.auto' | t }}" data-rotation-auto hidden>
+    <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+      <path d="M4 1.75 14 8 4 14.25z" fill="currentColor"></path>
+    </svg>
+    <span class="hi-rotation-auto-text">{{ 'rotation.auto' | t }}</span>
+  </button>
+</div>

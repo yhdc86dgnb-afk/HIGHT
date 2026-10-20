@@ -86,6 +86,75 @@
     ]
   },
   {
+    "name": "Rotación de estilo",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "La tienda cambia sola de color, textura y prendas del collage. Cada colección de la lista es un turno, en ese orden. El turno sale de la hora: cambia justo al empezar cada minuto (o el tiempo elegido) y todos ven el mismo a la vez."
+      },
+      {
+        "type": "checkbox",
+        "id": "rotation_enabled",
+        "label": "Cambiar el estilo solo",
+        "default": true
+      },
+      {
+        "type": "collection_list",
+        "id": "rotation_collections",
+        "label": "Colores que rotan",
+        "limit": 12,
+        "info": "Cada colección usa su Color de la colección y, si la tiene, su Textura de la colección. Las que no tienen color no entran."
+      },
+      {
+        "type": "select",
+        "id": "rotation_interval",
+        "label": "Cada cuánto cambia",
+        "default": "60",
+        "options": [
+          {
+            "value": "60",
+            "label": "Cada minuto"
+          },
+          {
+            "value": "90",
+            "label": "Cada minuto y medio"
+          },
+          {
+            "value": "120",
+            "label": "Cada 2 minutos"
+          },
+          {
+            "value": "150",
+            "label": "Cada 2 minutos y medio"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "rotation_garments",
+        "label": "Cambiar las prendas del collage",
+        "info": "Salen las prendas disponibles de la colección del turno.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "rotation_textures",
+        "label": "Cambiar la textura del collage",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "rotation_password",
+        "label": "También en la página de contraseña",
+        "default": true
+      },
+      {
+        "type": "paragraph",
+        "content": "No cambia en la ficha de la prenda ni en el carrito: ahí se queda el turno con el que se abrió la página. En las colecciones de color manda su propio color. Si un visitante elige un color en Elige tu color, se queda con ese. Siempre hay un botón para pausar."
+      }
+    ]
+  },
+  {
     "name": "Logo y favicon",
     "settings": [
       {
