@@ -166,7 +166,8 @@ material y clima, confección y cómo llevarla.
 ![Combínala con](docs/preview/combinala-con.jpg)
 
 Las mismas respuestas están dibujadas, prenda por prenda, en los bocetos para Illustrator de
-[`bocetos/`](bocetos/README.md): boceto plano de frente y espalda, detalles numerados y la ficha completa.
+[`bocetos/`](bocetos/README.md): boceto plano de frente y espalda, detalles numerados y la ficha completa. Ahí
+también está la Chaqueta Trouble Maker dibujada en vector, de frente y de espalda, que usa la prueba de vista 360.
 
 Los textos de las políticas de cambios y de envíos están en [`docs/politicas/`](docs/politicas/), listos para pegar
 en *Configuración > Políticas*. Mientras no estén ahí, la ficha enlaza a las páginas **Envíos** y **Cambios y
@@ -234,7 +235,7 @@ templates/       plantillas JSON + gift_card.liquid
 design-system/   design system HIGHT original (referencia)
 docs/preview/    capturas de la vista previa
 docs/politicas/  políticas de envío y de cambios para pegar en Shopify
-bocetos/         fichas técnicas para Illustrator (SVG y PDF) y su generador
+bocetos/         fichas técnicas para Illustrator (SVG y PDF), su generador y la chaqueta en vector (vector/)
 ```
 
 `shopify theme check` pasa sin observaciones y el workflow `.github/workflows/theme-check.yml` lo corre en cada push.

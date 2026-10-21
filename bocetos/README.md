@@ -13,6 +13,7 @@ respuestas que cada ficha de la tienda da sin preguntas a la vista.
 | `hight-bocetos.pdf` | Las 26 hojas en un solo PDF, para ver, imprimir o abrir en Illustrator. |
 | `vista-previa-1.jpg` a `-3.jpg` | Hojas de contacto para mirar todas de un vistazo. |
 | `generador/` | El programa que arma las hojas a partir de los datos de la tienda. |
+| `vector/` | La Chaqueta Trouble Maker dibujada en vector, de frente y de espalda, para el visor 360. |
 
 Los números siguen el orden en que las prendas entraron a la tienda.
 
@@ -45,6 +46,30 @@ volver a generar la hoja.
    `estampado` o usa *Objeto > Máscara de recorte > Soltar*.
 
 El PDF también abre en Illustrator, una página a la vez. Para editar, el SVG queda más ordenado.
+
+## La chaqueta en vector (360)
+
+![Chaqueta Trouble Maker en vector](vector/vista-previa.jpg)
+
+`vector/` tiene la Chaqueta Trouble Maker redibujada a partir de sus dos fotos de la tienda, como sacada del Calco de
+imagen de Illustrator: tintas planas, curvas limpias y un contorno negro. Es el dibujo que usa la prueba de vista
+360: las dos caras van sobre la misma silueta y se juntan por todo el borde, así que se puede girar en cualquier
+dirección sin huecos ni partes estiradas.
+
+| Archivo | Para qué |
+| --- | --- |
+| `vector/25-chaqueta-trouble-maker-frente.svg` | El frente. |
+| `vector/25-chaqueta-trouble-maker-espalda.svg` | La espalda, al derecho (como se ve desde atrás). |
+| `vector/vista-previa.jpg` | Las dos caras juntas, para mirar sin abrir Illustrator. |
+
+- **Tintas** (los colores de la ficha técnica de la chaqueta): Denim negro `#262626`, Pintura blanca `#F3EFE6`, Tela
+  oliva deshilachada `#9AA356`, Oliva en sombra `#6B7238`, Rosa viejo `#D4A5A5` y Forro de jean `#5D6B70`. El
+  contorno va en `#0D0C0B`.
+- **Capas:** en el panel *Capas*, cada tinta lleva su nombre (`frente-silueta`, `frente-blanco`, `frente-oliva`…) y
+  el contorno va arriba de todo. Las tintas van apiladas, como en el método *Superpuesto* del Calco de imagen: cada
+  una tapa a la de abajo, así que entre dos colores nunca queda una rendija.
+- **Tamaño:** 1109 × 867 px, el mismo encuadre en las dos caras, para que calcen una sobre la otra.
+- Las fotos de la tienda no se tocaron: el dibujo se hizo sobre copias.
 
 ## Medidas
 
