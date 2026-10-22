@@ -1,0 +1,98 @@
+{%- liquid
+  assign closet_collection = section.settings.collection
+  if closet_collection == blank
+    assign closet_collection = collections.all
+  endif
+-%}
+
+<section class="hi-closet color-{{ section.settings.color_scheme }}" aria-label="{{ 'closet.label' | t }}">
+  <hi-closet class="hi-closet-stage">
+    <img
+      class="hi-closet-poster"
+      src="{{ 'closet-poster.webp' | asset_url }}"
+      alt=""
+      width="1920"
+      height="1080"
+      loading="lazy"
+      decoding="async"
+    >
+    <canvas class="hi-closet-rods" aria-hidden="true"></canvas>
+
+    {%- comment -%}
+      Cada prenda con su vista 360 es también un botón: el clóset lo toca al hacer clic en la prenda, y con el
+      teclado se recorren uno por uno.
+    {%- endcomment -%}
+    <ul class="hi-closet-items" role="list">
+      {%- for product in closet_collection.products -%}
+        {%- capture closet_button -%}
+          {%- render 'vista-360', product: product, class: 'hi-closet-item' -%}
+        {%- endcapture -%}
+        {%- if closet_button contains 'data-360' -%}
+          {%- liquid
+            assign closet_rail = 'arriba'
+            case product.type
+              when 'Jean', 'Pantalón', 'Short', 'Falda'
+                assign closet_rail = 'abajo'
+            endcase
+            assign closet_name = '360-' | append: product.handle | append: '-armario'
+            assign closet_model = closet_name | append: '.json'
+            assign closet_front = closet_name | append: '-frente.webp'
+            assign closet_back = closet_name | append: '-espalda.webp'
+          -%}
+          <li
+            data-closet-item
+            data-rail="{{ closet_rail }}"
+            data-model="{{ closet_model | asset_url }}"
+            data-frente="{{ closet_front | asset_url }}"
+            data-espalda="{{ closet_back | asset_url }}"
+          >
+            {{- closet_button -}}
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+    <button
+      type="button"
+      class="hi-pause-btn"
+      data-closet-toggle
+      aria-label="{{ 'closet.pause' | t }}"
+      data-label-pause="{{ 'closet.pause' | t }}"
+      data-label-play="{{ 'closet.play' | t }}"
+    >
+      <span class="hi-pause-icon">{% render 'icon', name: 'pause', size: 20 %}</span>
+      <span class="hi-play-icon">{% render 'icon', name: 'play_arrow', size: 20 %}</span>
+    </button>
+  </hi-closet>
+</section>
+
+{% schema %}
+{
+  "name": "Clóset",
+  "tag": "div",
+  "class": "hi-closet-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Todas las prendas con vista 360, colgadas en 3D. Se mueven solas; al tocar una se abre en 360°."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Colección",
+      "info": "Vacío usa todas las prendas."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Clóset"
+    }
+  ]
+}
+{% endschema %}

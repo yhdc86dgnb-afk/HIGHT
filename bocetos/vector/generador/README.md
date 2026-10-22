@@ -18,6 +18,10 @@ que usa el visor 360 del tema. Las fotos de la tienda no se tocan: se trabaja so
 `boceto-caras.js` saca el frente y la espalda del boceto plano de una prenda que todavía no tiene foto (así se armó
 la Chaqueta Blood Rose).
 
+`armario.py` arma la versión liviana de cada prenda para el clóset del inicio: la misma silueta con una grilla más
+gruesa (paso de 8 px en vez de 4) y texturas de 768 px. Deja `360-<prenda>-armario.json`, `-armario-frente.webp` y
+`-armario-espalda.webp` junto a los demás archivos de la prenda.
+
 ## Carpeta de trabajo
 
 ```
@@ -40,6 +44,7 @@ python3 recorte.py <prenda>
 python3 prenda.py <prenda>
 node rasterizar.js <prenda>          # requiere Playwright con Chromium
 python3 exportar.py <tema>/assets <prenda>
+python3 armario.py <tema>/assets <prenda>
 ```
 
 Después se agrega la dirección de la prenda a la lista de `snippets/vista-360.liquid`.

@@ -337,6 +337,11 @@
     "remove": "Quitar {{ title }} de tus favoritas",
     "size": "Talla de {{ title }}"
   },
+  "closet": {
+    "label": "Clóset con todas las prendas en 3D. Toca una para verla en 360°.",
+    "pause": "Pausar el movimiento",
+    "play": "Mover las prendas"
+  },
   "vista_360": {
     "badge": "360°",
     "open": "Ver en 360°",

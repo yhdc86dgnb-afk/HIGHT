@@ -3066,15 +3066,9 @@
     });
   })();
 
-  /* ---------- Videos en bucle: no arrancan solos si se pide menos movimiento; el de campaña se pausa con su botón ---------- */
+  /* ---------- Videos en bucle: arrancan solos; el de campaña se pausa con su botón ---------- */
 
   function initVideos(root) {
-    if (reducedMotion()) {
-      root.querySelectorAll('video[autoplay]').forEach(function (video) {
-        video.removeAttribute('autoplay');
-        video.pause();
-      });
-    }
     root.querySelectorAll('[data-video-toggle]').forEach(function (button) {
       var video = button.parentElement.querySelector('video');
       if (!video) {
@@ -3093,6 +3087,42 @@
       });
       sync();
     });
+  }
+
+  /* ---------- Clóset: su módulo y three.js se cargan cuando la sección se acerca ---------- */
+
+  if (!customElements.get('hi-closet')) {
+    customElements.define(
+      'hi-closet',
+      class extends HTMLElement {
+        connectedCallback() {
+          if (!config.closet || !('IntersectionObserver' in window)) return;
+          var self = this;
+          this.observer = new IntersectionObserver(
+            function (entries) {
+              if (!entries.some(function (entry) { return entry.isIntersecting; })) return;
+              self.observer.disconnect();
+              import(config.closet)
+                .then(function (module) {
+                  if (!self.isConnected) return;
+                  self.module = module;
+                  module.mount(self);
+                })
+                .catch(function () {
+                  self.classList.add('is-static');
+                });
+            },
+            { rootMargin: '600px 0px' }
+          );
+          this.observer.observe(this);
+        }
+
+        disconnectedCallback() {
+          if (this.observer) this.observer.disconnect();
+          if (this.module) this.module.unmount(this);
+        }
+      }
+    );
   }
 
   /* ---------- Inicio y editor de temas ---------- */

@@ -40,6 +40,10 @@ El logo gótico se mantiene: es la marca. El design system original sigue en [`d
 - **Vista 360:** cada prenda tiene un botón **360°** en su ficha y en las tarjetas del catálogo. La abre dibujada en
   vector, como sacada de Illustrator, con las texturas de su tela, para girarla en cualquier dirección (más abajo,
   en [Vista 360 de las prendas](#vista-360-de-las-prendas)).
+- **Clóset:** en el inicio, todas las prendas con vista 360 colgadas en 3D de dos barras (arriba las de arriba, abajo
+  jeans, pantalones y shorts). Se mueven solas y cada una gira al pasar; con el cursor encima se marca y el clóset va
+  más lento. Al tocar una prenda se abre su vista 360. Tiene botón para pausar y, con el teclado, cada prenda es un
+  botón.
 - **Hero collage:** el logo al centro y las prendas como fotos pegadas con cinta. En computador se arrastran y se
   mueven con el cursor; en el teléfono flotan. El botón **MEZCLAR** las reparte de nuevo.
 - **Cintas de texto:** corren de lado a lado y aceleran cuando haces scroll.
@@ -197,6 +201,9 @@ despacio y los botones llevan al frente, el costado, la espalda, arriba y abajo.
   dibujo, que ahí se vería estirado. De frente y de espalda se ve el dibujo entero.
 - **Liviano:** el visor (`hight-360.js`) y three.js r160 (`three.module.min.js` y `three-orbit-controls.js`, licencia
   MIT) se bajan recién al tocar un botón 360°, y cada prenda suma unos 400 KB.
+- **El clóset** (`hight-closet.js`) usa una versión liviana de cada prenda (grilla más gruesa y texturas de 768 px,
+  unos 140 KB por prenda) y se baja recién cuando la sección se acerca. Solo se dibuja mientras se ve, y se queda
+  quieto mientras hay un 360, el carrito o el menú abiertos.
 
 Archivos de cada prenda, en `assets/` con la dirección de la prenda:
 
@@ -206,25 +213,25 @@ Archivos de cada prenda, en `assets/` con la dirección de la prenda:
 | `360-<prenda>-alto.png` | Qué tan abombada está la prenda en cada punto de la grilla |
 | `360-<prenda>-lado.png` | La tela del canto, la que se ve de lado, arriba y abajo |
 | `360-<prenda>-frente.webp`, `360-<prenda>-espalda.webp` | El dibujo de cada cara, con sus texturas |
+| `360-<prenda>-armario.json`, `-armario-frente.webp`, `-armario-espalda.webp` | La versión liviana para el clóset |
 
 Para sumar una prenda nueva: se arman sus cinco archivos con el generador de
-[`bocetos/vector/generador/`](bocetos/vector/generador/README.md), se suben a `assets/` y se agrega su dirección a la
-lista de `snippets/vista-360.liquid`.
+[`bocetos/vector/generador/`](bocetos/vector/generador/README.md) y, con `armario.py`, los tres del clóset; se suben a
+`assets/` y se agrega su dirección a la lista de `snippets/vista-360.liquid`.
 
 ## Fotos y videos de Higgsfield
 
 El tema tiene tres lugares listos para el material de campaña (por ejemplo, el que generes en Higgsfield):
 
 1. **Hero collage > Fondo:** un video en bucle detrás del logo y las fotos.
-2. **Video de campaña:** sección a pantalla completa con titular y botón. Sin video no aparece en la tienda.
-   En el inicio ya tiene **En movimiento** (`hight-en-movimiento.mp4`): las 26 prendas del visor 360 colgadas de
-   dos rieles de tintorería, girando en 3D. Se arma con [`bocetos/video/`](bocetos/video/README.md).
+2. **Video de campaña:** sección a pantalla completa con titular y botón. Sin video no aparece en la tienda. En el
+   inicio la reemplaza el clóset; el video de las prendas en 3D (`hight-en-movimiento.mp4`) sigue en *Contenido >
+   Archivos* y se arma con [`bocetos/video/`](bocetos/video/README.md).
 3. **Lookbook:** hasta 6 fotos pegadas como en un fanzine. Sin fotos no aparece en la tienda.
 
 Sube el archivo en *Contenido > Archivos* o directamente en el campo de la sección, desde *Personalizar*.
 
-Los videos en bucle no arrancan solos si el teléfono o el computador piden menos movimiento, y el de *Video de
-campaña* lleva un botón para pausarlo (abajo a la derecha).
+Los videos en bucle arrancan solos y el de *Video de campaña* lleva un botón para pausarlo (abajo a la derecha).
 
 ## Configurar la tienda
 

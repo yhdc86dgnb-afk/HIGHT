@@ -3450,8 +3450,8 @@ a.hi-archive-link:hover .hi-archive-arrow {
   padding-block: clamp(40px, 6vw, 88px);
 }
 
-/* Pausar el video en bucle: abajo a la derecha, lejos del texto. */
-.hi-campaign-toggle {
+/* Pausar lo que se mueve solo (el video de campaña, el clóset): abajo a la derecha, lejos del texto. */
+.hi-pause-btn {
   position: absolute;
   right: var(--gutter);
   bottom: clamp(40px, 6vw, 88px);
@@ -3471,21 +3471,113 @@ a.hi-archive-link:hover .hi-archive-arrow {
     border-color 0.2s;
 }
 
-.hi-campaign-toggle:hover,
-.hi-campaign-toggle:focus-visible {
+.hi-pause-btn:hover,
+.hi-pause-btn:focus-visible {
   border-color: var(--accent);
   background: var(--accent);
   color: var(--on-accent);
 }
 
-.hi-campaign-toggle .hi-campaign-pause,
-.hi-campaign-toggle.is-paused .hi-campaign-play {
+.hi-pause-btn .hi-pause-icon,
+.hi-pause-btn.is-paused .hi-play-icon {
   display: contents;
 }
 
-.hi-campaign-toggle .hi-campaign-play,
-.hi-campaign-toggle.is-paused .hi-campaign-pause {
+.hi-pause-btn .hi-play-icon,
+.hi-pause-btn.is-paused .hi-pause-icon {
   display: none;
+}
+
+/* ---------- Clóset: las prendas en 3D colgadas de dos barras que se mueven solas ---------- */
+
+.hi-closet-stage {
+  --closet-side: clamp(14px, 2.6vw, 44px);
+  position: relative;
+  display: block;
+  height: clamp(560px, 56.25vw, 100svh);
+  overflow: hidden;
+  background-color: #0d0c0b;
+  background-image: radial-gradient(rgba(236, 227, 208, 0.085) 1.2px, transparent 1.6px);
+  background-position: 9px 9px;
+  background-size: 18px 18px;
+  touch-action: pan-y;
+}
+
+/* Los costados del clóset: las prendas entran y salen por detrás. */
+.hi-closet-stage::before,
+.hi-closet-stage::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: var(--closet-side);
+  pointer-events: none;
+}
+
+.hi-closet-stage::before {
+  left: 0;
+  border-right: 2px solid rgba(236, 227, 208, 0.9);
+  background: linear-gradient(90deg, #1d1a17, #0d0c0b);
+}
+
+.hi-closet-stage::after {
+  right: 0;
+  border-left: 2px solid rgba(236, 227, 208, 0.9);
+  background: linear-gradient(270deg, #1d1a17, #0d0c0b);
+}
+
+.hi-closet-poster,
+.hi-closet-rods,
+.hi-closet-3d {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hi-closet-poster {
+  object-fit: cover;
+  pointer-events: none;
+  transition: opacity 0.6s;
+}
+
+.hi-closet-stage.is-live .hi-closet-poster {
+  opacity: 0;
+}
+
+.hi-closet-3d {
+  z-index: 1;
+}
+
+.hi-closet-stage .hi-pause-btn {
+  right: calc(var(--closet-side) + 14px);
+  bottom: 16px;
+  z-index: 3;
+}
+
+/* Cada prenda también es un botón, para el teclado: escondido hasta que tiene el foco. */
+.hi-closet-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hi-closet-items .hi-360-btn {
+  position: absolute;
+  left: calc(var(--closet-side) + 14px);
+  bottom: 16px;
+  z-index: 3;
+}
+
+.hi-closet-items .hi-360-btn:not(:focus-visible) {
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .hi-campaign-empty {

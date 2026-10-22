@@ -11,8 +11,8 @@ y pasa rápido por el costado. Los rieles son cintas métricas y cada gancho es 
   sonido.
 - Sin letras: el texto lo pone la sección *Video de campaña* del tema. Abajo queda espacio para el titular y el
   botón, y en el teléfono, que muestra solo el centro, se ve una prenda de cada riel.
-- Está en *Contenido > Archivos* como `hight-en-movimiento.mp4` y es el video de la sección *Video de campaña*
-  del inicio.
+- Está en *Contenido > Archivos* como `hight-en-movimiento.mp4`. En el inicio lo reemplazó el clóset, que muestra
+  las mismas prendas en vivo y abre su 360 al tocarlas.
 
 ## Cómo se arma
 

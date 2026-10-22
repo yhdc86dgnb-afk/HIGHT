@@ -50,14 +50,14 @@
     {%- if section.settings.video != blank -%}
       <button
         type="button"
-        class="hi-campaign-toggle"
+        class="hi-pause-btn"
         data-video-toggle
         aria-label="{{ 'general.video_pause' | t }}"
         data-label-pause="{{ 'general.video_pause' | t }}"
         data-label-play="{{ 'general.video_play' | t }}"
       >
-        <span class="hi-campaign-pause">{% render 'icon', name: 'pause', size: 20 %}</span>
-        <span class="hi-campaign-play">{% render 'icon', name: 'play_arrow', size: 20 %}</span>
+        <span class="hi-pause-icon">{% render 'icon', name: 'pause', size: 20 %}</span>
+        <span class="hi-play-icon">{% render 'icon', name: 'play_arrow', size: 20 %}</span>
       </button>
     {%- endif -%}
     <div class="hi-container hi-campaign-copy">

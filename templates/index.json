@@ -229,19 +229,6 @@
         "color_scheme": "scheme-1"
       }
     },
-    "campana": {
-      "type": "video-campaign",
-      "settings": {
-        "video": "shopify://files/videos/hight-en-movimiento.mp4",
-        "overlay": 30,
-        "height": "screen",
-        "eyebrow": "(CAMPAÑA)",
-        "heading": "EN MOVIMIENTO",
-        "button_label": "VER LAS PIEZAS",
-        "button_link": "shopify://collections/all",
-        "color_scheme": "scheme-1"
-      }
-    },
     "anatomia": {
       "type": "hotspots",
       "blocks": {
@@ -497,6 +484,13 @@
         "show_logo": true,
         "color_scheme": "scheme-1"
       }
+    },
+    "closet": {
+      "type": "closet",
+      "settings": {
+        "collection": "",
+        "color_scheme": "scheme-1"
+      }
     }
   },
   "order": [
@@ -505,7 +499,7 @@
     "disponibles",
     "probador",
     "colores",
-    "campana",
+    "closet",
     "anatomia",
     "lupa",
     "desliza",
