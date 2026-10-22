@@ -6039,7 +6039,7 @@ button.hi-lupa-row[aria-pressed='true'] strong {
   background-size: 18px 18px;
   color: #0d0c0b;
   cursor: grab;
-  touch-action: pan-y;
+  touch-action: none;
   user-select: none;
 }
 

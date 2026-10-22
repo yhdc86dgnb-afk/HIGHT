@@ -186,7 +186,6 @@ class Viewer {
     controls.maxPolarAngle = Math.PI - 0.12;
     controls.autoRotateSpeed = 1.6;
     controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.ROTATE };
-    this.renderer.domElement.style.touchAction = 'pan-y';
     this.controls = controls;
 
     this.steps = toonSteps();
@@ -285,6 +284,18 @@ class Viewer {
       onRim[k] = 1;
       place(k, data.rim.x[r] + 0.5, data.rim.y[r] + 0.5, 0);
     });
+    // Puntos para encuadrar: todo el borde y, adentro, uno de cada tres de la grilla, por delante y por detrás.
+    const fit = [];
+    for (let j = 0; j < gh; j++) {
+      for (let i = 0; i < gw; i++) {
+        const k = j * gw + i;
+        if (!onRim[k] && (heights[k] === 0 || i % 3 || j % 3)) continue;
+        const x = positions[k * 3], y = positions[k * 3 + 1], z = positions[k * 3 + 2];
+        fit.push(x, y, z);
+        if (z) fit.push(x, y, -z);
+      }
+    }
+    this.points = new Float32Array(fit);
     const front = [];
     const back = [];
     for (let j = 0; j < gh - 1; j++) {
@@ -339,16 +350,6 @@ class Viewer {
     this.jacket = jacket;
     this.scene.add(jacket);
     const box = new THREE.Box3().setFromObject(jacket);
-    const sample = [];
-    jacket.children.forEach((mesh) => {
-      const pos = mesh.geometry.attributes.position.array;
-      const index = mesh.geometry.index.array;
-      for (let k = 0; k < index.length; k += 15) {
-        const i = index[k] * 3;
-        sample.push(pos[i], pos[i + 1], pos[i + 2]);
-      }
-    });
-    this.points = new Float32Array(sample);
     // Sombra en el piso, plana como en un dibujo.
     const shadow = new THREE.Mesh(
       new THREE.CircleGeometry(1, 72),
@@ -580,7 +581,9 @@ export function open(trigger) {
     });
     ui.stage.addEventListener('keydown', (event) => viewer.key(event));
   }
+  // Sin la prenda anterior mientras carga la nueva.
   viewer.clear();
+  viewer.renderer.clear();
   const ticket = ++current;
   Promise.all([
     fetch(d['360Datos']).then((r) => (r.ok ? r.json() : Promise.reject(new Error('datos')))),
@@ -590,7 +593,8 @@ export function open(trigger) {
     loadImage(d['360Lado']),
   ])
     .then(([data, front, back, alto, lado]) => {
-      if (ticket !== current) return;
+      // Si se cerró mientras cargaba, no se arma ni se anima a escondidas.
+      if (ticket !== current || !ui.dialog.open) return;
       ui.loading.hidden = true;
       viewer.show(data, texture(front, viewer.renderer), texture(back, viewer.renderer), alto, lado);
       ui.stage.focus({ preventScroll: true });
