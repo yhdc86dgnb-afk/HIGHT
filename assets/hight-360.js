@@ -1,9 +1,10 @@
 /*
  * HIGHT · Vista 360 de las prendas.
  *
- * Cada prenda está dibujada en vector, como sacada de Illustrator, con las texturas de su tela. El frente y la
- * espalda van sobre la misma silueta y se juntan por todo el borde: un volumen cerrado que se gira en cualquier
- * dirección, también desde arriba y desde abajo, sin huecos ni partes estiradas.
+ * Cada prenda está dibujada en vector, como sacada de Illustrator, con las texturas de su tela, y tiene forma de ropa
+ * colgada en su percha (hight-ropa.js): el frente y la espalda son dos capas de tela delgadas sobre la misma silueta,
+ * con sus pliegues, cosidas por los costados y abiertas en el ruedo, así que desde abajo se ve por dentro. Se gira en
+ * cualquier dirección, también desde arriba y desde abajo, sin partes estiradas.
  *
  * Archivos por prenda (en assets/, con la dirección de la prenda):
  *   360-<prenda>.json         medidas del dibujo, grilla del volumen, borde exacto y tipo de espalda
@@ -16,6 +17,7 @@
  */
 import * as THREE from './three.module.min.js';
 import { OrbitControls } from './three-orbit-controls.js';
+import { drape } from './hight-ropa.js?v=1';
 
 const config = (() => {
   try {
@@ -105,16 +107,18 @@ function buildDialog() {
 /* ---------- La escena ---------- */
 
 const WIDTH = 3.3;       // ancho de la prenda en la escena
-const THICK = 0.13;      // hondo máximo de cada cara, sobre el ancho
 const OUTLINE = 0.015;   // grosor del contorno
+const WIRE = 0.02;       // grosor del alambre de la percha
 const INK = 0x0d0c0b;
+const BOTTOMS = ['Jean', 'Pantalón', 'Short', 'Falda'];
 
 function toonSteps() {
-  // Sombreado de ilustración: dos tonos, luz plena o sombra, sin degradé.
-  const steps = 16;
+  // Sombreado de ilustración, sin degradé: luz plena, el medio tono de los pliegues y la sombra.
+  const steps = 32;
   const data = new Uint8Array(steps * 4);
   for (let i = 0; i < steps; i++) {
-    const v = (i + 0.5) / steps >= 0.68 ? 255 : 112;
+    const x = (i + 0.5) / steps;
+    const v = x >= 0.84 ? 255 : x >= 0.6 ? 196 : 112;
     data.set([v, v, v, 255], i * 4);
   }
   const texture = new THREE.DataTexture(data, steps, 1, THREE.RGBAFormat);
@@ -190,6 +194,7 @@ class Viewer {
 
     this.steps = toonSteps();
     this.outline = new THREE.MeshBasicMaterial({ color: INK, side: THREE.BackSide });
+    this.wire = new THREE.MeshToonMaterial({ color: 0x3a3632, gradientMap: this.steps });
     this.uWeave = { value: 0 };
     this.uPx = { value: 0.003 };
     this.points = null;
@@ -212,8 +217,9 @@ class Viewer {
     this.tick = this.tick.bind(this);
   }
 
+  // Por fuera el dibujo; por dentro (lo que asoma por el ruedo) la misma tela en sombra.
   material(texture) {
-    const material = new THREE.MeshToonMaterial({ map: texture, gradientMap: this.steps });
+    const material = new THREE.MeshToonMaterial({ map: texture, gradientMap: this.steps, side: THREE.DoubleSide });
     const uWeave = this.uWeave;
     const uPx = this.uPx;
     const webgl2 = this.renderer.capabilities.isWebGL2;
@@ -231,10 +237,14 @@ class Viewer {
         shader.fragmentShader
           .replace('#include <common>', '#include <common>\nvarying vec4 vSide;\nvarying vec3 vFront;\n' + FABRIC)
           .replace(
+            '#include <map_fragment>',
+            '#include <map_fragment>\nif ( !gl_FrontFacing ) diffuseColor.rgb *= 0.32;'
+          )
+          .replace(
             '#include <normal_fragment_maps>',
             [
               '#include <normal_fragment_maps>',
-              'if ( vSide.a > 0.5 ) {',
+              'if ( gl_FrontFacing && vSide.a > 0.5 ) {',
               '  vec3 front = normalize( vFront );',
               '  float facing = abs( dot( normalize( vViewPosition ), front ) );',
               '  float tilt = abs( dot( normal, front ) );',
@@ -246,32 +256,43 @@ class Viewer {
     return material;
   }
 
-  // Volumen cerrado: las dos caras van sobre la misma silueta y se juntan por todo el borde.
-  build(data, frontTexture, backTexture, heightImage, sideImage) {
+  // La prenda: dos capas de tela sobre la misma silueta, con la forma y los pliegues de hight-ropa.js.
+  build(data, frontTexture, backTexture, heightImage, sideImage, bottom, seed) {
     const [gw, gh] = data.grid;
     const [tw, th] = data.tex;
     const step = data.step;
     const pixels = gridPixels(heightImage, gw, gh);
     const sidePixels = gridPixels(sideImage, gw, gh);
     const scale = WIDTH / data.widthPx;
-    const depth = THICK * WIDTH;
     const n = gw * gh;
     const heights = new Float32Array(n);
     for (let k = 0; k < n; k++) heights[k] = pixels[k * 4] / 255;
-    const positions = new Float32Array(n * 3);
-    const uvs = new Float32Array(n * 2);
-    const place = (k, x, y, z) => {
-      positions[k * 3] = (x - tw / 2) * scale;
-      positions[k * 3 + 1] = (th / 2 - y) * scale;
-      positions[k * 3 + 2] = z;
-      uvs[k * 2] = x / tw;
-      uvs[k * 2 + 1] = 1 - y / th;
-    };
+    // Dónde cae cada punto en el dibujo; los del borde, en el borde exacto.
+    const px = new Float32Array(n);
+    const py = new Float32Array(n);
     for (let j = 0; j < gh; j++) {
       for (let i = 0; i < gw; i++) {
-        const k = j * gw + i;
-        place(k, Math.min(i * step, tw - 1) + 0.5, Math.min(j * step, th - 1) + 0.5, heights[k] * depth);
+        px[j * gw + i] = Math.min(i * step, tw - 1) + 0.5;
+        py[j * gw + i] = Math.min(j * step, th - 1) + 0.5;
       }
+    }
+    const onRim = new Uint8Array(n);
+    data.rim.i.forEach((k, r) => {
+      onRim[k] = 1;
+      px[k] = data.rim.x[r] + 0.5;
+      py[k] = data.rim.y[r] + 0.5;
+    });
+    const shape = drape({ gw, gh, step, heights, px, py, onRim, bottom, seed });
+    const frontPos = new Float32Array(n * 3);
+    const backPos = new Float32Array(n * 3);
+    const uvs = new Float32Array(n * 2);
+    for (let k = 0; k < n; k++) {
+      const x = (px[k] - tw / 2) * scale;
+      const y = (th / 2 - py[k]) * scale;
+      frontPos.set([x, y, (shape.fold[k] + shape.z[k]) * scale], k * 3);
+      backPos.set([x, y, (shape.fold[k] - shape.z[k]) * scale], k * 3);
+      uvs[k * 2] = px[k] / tw;
+      uvs[k * 2 + 1] = 1 - py[k] / th;
     }
     const side = new Float32Array(n * 4);
     for (let k = 0; k < n; k++) {
@@ -279,23 +300,16 @@ class Viewer {
       if (r + g + b === 0) continue;
       side.set([toLinear(r / 255), toLinear(g / 255), toLinear(b / 255), 1], k * 4);
     }
-    const onRim = new Uint8Array(n);
-    data.rim.i.forEach((k, r) => {
-      onRim[k] = 1;
-      place(k, data.rim.x[r] + 0.5, data.rim.y[r] + 0.5, 0);
-    });
     // Puntos para encuadrar: todo el borde y, adentro, uno de cada tres de la grilla, por delante y por detrás.
     const fit = [];
     for (let j = 0; j < gh; j++) {
       for (let i = 0; i < gw; i++) {
         const k = j * gw + i;
         if (!onRim[k] && (heights[k] === 0 || i % 3 || j % 3)) continue;
-        const x = positions[k * 3], y = positions[k * 3 + 1], z = positions[k * 3 + 2];
-        fit.push(x, y, z);
-        if (z) fit.push(x, y, -z);
+        fit.push(frontPos[k * 3], frontPos[k * 3 + 1], frontPos[k * 3 + 2]);
+        if (shape.z[k]) fit.push(backPos[k * 3], backPos[k * 3 + 1], backPos[k * 3 + 2]);
       }
     }
-    this.points = new Float32Array(fit);
     const front = [];
     const back = [];
     for (let j = 0; j < gh - 1; j++) {
@@ -311,19 +325,17 @@ class Viewer {
       }
     }
     const group = new THREE.Group();
-    const surface = (sign, index, texture) => {
-      const pos = positions.slice();
-      if (sign < 0) for (let k = 0; k < n; k++) pos[k * 3 + 2] = -pos[k * 3 + 2];
+    const surface = (pos, index, texture) => {
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute('position', new THREE.BufferAttribute(pos, 3));
       geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
       geometry.setAttribute('side', new THREE.BufferAttribute(side, 4));
       geometry.setIndex(index);
       geometry.computeVertexNormals();
-      // En el canto las dos caras se tocan: su normal queda de lado, igual en las dos.
+      // Donde las dos capas están cosidas, su normal queda de lado, igual en las dos; en el ruedo cada una tiene la suya.
       const normals = geometry.attributes.normal.array;
       for (let k = 0; k < n; k++) {
-        if (!onRim[k]) continue;
+        if (!onRim[k] || shape.open[k] > 0.5) continue;
         const x = normals[k * 3], y = normals[k * 3 + 1];
         const l = Math.hypot(x, y);
         normals[k * 3] = l > 1e-6 ? x / l : 0;
@@ -337,16 +349,20 @@ class Viewer {
       for (let k = 0; k < p.length; k++) p[k] += normals[k] * OUTLINE;
       group.add(new THREE.Mesh(shell, this.outline));
     };
-    surface(1, front, frontTexture);
-    surface(-1, back, backTexture);
+    surface(frontPos, front, frontTexture);
+    surface(backPos, back, backTexture);
+    const hook = hanger(shape, px, py, onRim, (x, y) => [(x - tw / 2) * scale, (th / 2 - y) * scale], scale, bottom, this.wire);
+    group.add(hook.group);
+    fit.push(...hook.points);
+    this.points = new Float32Array(fit);
     return group;
   }
 
-  show(data, frontTexture, backTexture, heightImage, sideImage) {
+  show(data, frontTexture, backTexture, heightImage, sideImage, bottom, seed) {
     this.clear();
     this.uWeave.value = { sarga: 0, punto: 1, jersey: 2, malla: 2 }[data.tela] ?? 0;
     this.uPx.value = WIDTH / data.widthPx;
-    const jacket = this.build(data, frontTexture, backTexture, heightImage, sideImage);
+    const jacket = this.build(data, frontTexture, backTexture, heightImage, sideImage, bottom, seed);
     this.jacket = jacket;
     this.scene.add(jacket);
     const box = new THREE.Box3().setFromObject(jacket);
@@ -377,7 +393,7 @@ class Viewer {
       this.scene.remove(obj);
       obj.traverse((child) => {
         if (child.geometry) child.geometry.dispose();
-        if (child.material && child.material !== this.outline) {
+        if (child.material && child.material !== this.outline && child.material !== this.wire) {
           if (child.material.map) child.material.map.dispose();
           child.material.dispose();
         }
@@ -510,6 +526,58 @@ class Viewer {
   }
 }
 
+// La percha, para que se lea como ropa colgada: un gancho de alambre que sale del cuello y, en las de abajo, una barra
+// con dos pinzas que muerden la pretina. Devuelve el grupo y sus puntos, para encuadrar.
+function hanger(shape, px, py, onRim, toScene, scale, bottom, material) {
+  const { x0, x1, y0, y1 } = shape.box;
+  const W = x1 - x0;
+  const cx = (x0 + x1) / 2;
+  let top = Infinity;
+  let lo = Infinity;
+  let hi = -Infinity;
+  for (let k = 0; k < px.length; k++) {
+    if (!onRim[k]) continue;
+    if (Math.abs(px[k] - cx) < 0.1 * W) top = Math.min(top, py[k]);
+    if (py[k] < y0 + 0.05 * (y1 - y0)) {
+      lo = Math.min(lo, px[k]);
+      hi = Math.max(hi, px[k]);
+    }
+  }
+  if (!isFinite(top)) top = y0;
+  const group = new THREE.Group();
+  const points = [];
+  const wire = (list) => {
+    const curve = new THREE.CatmullRomCurve3(list.map(([x, y]) => new THREE.Vector3(x, y, 0)));
+    group.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 64, WIRE, 8), material));
+    curve.getPoints(24).forEach((p) => points.push(p.x, p.y, p.z));
+  };
+  const [mid, ty] = toScene(cx, top);
+  // El gancho arranca adentro, entre las dos capas de tela.
+  let base = ty - 0.12;
+  if (bottom && isFinite(lo)) {
+    const inset = 0.1 * (hi - lo);
+    const [ax] = toScene(lo + inset, top);
+    const [bx] = toScene(hi - inset, top);
+    base = ty + 0.2;
+    wire([[ax - 0.06, base], [mid, base], [bx + 0.06, base]]);
+    // Cada pinza abraza la pretina: un poco más honda que las dos capas juntas.
+    const deep = 2 * 0.05 * W * scale + 0.05;
+    for (const x of [ax, bx]) {
+      const clip = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.32, deep), material);
+      clip.position.set(x, base - 0.15, 0);
+      group.add(clip);
+      points.push(x, base - 0.31, deep / 2, x, base - 0.31, -deep / 2);
+    }
+  }
+  // Sube derecho y se curva hacia un lado, como un signo de pregunta.
+  const r = 0.13;
+  const stem = Math.max(base, ty) + 0.2;
+  const path = [[mid, base], [mid, (base + stem) / 2], [mid, stem]];
+  for (const a of [2.6, 2.0, 1.4, 0.8, 0.2, -0.4, -0.8]) path.push([mid + r + r * Math.cos(a), stem + r * Math.sin(a)]);
+  wire(path);
+  return { group, points };
+}
+
 function gridPixels(image, gw, gh) {
   const canvas = document.createElement('canvas');
   canvas.width = gw;
@@ -596,7 +664,9 @@ export function open(trigger) {
       // Si se cerró mientras cargaba, no se arma ni se anima a escondidas.
       if (ticket !== current || !ui.dialog.open) return;
       ui.loading.hidden = true;
-      viewer.show(data, texture(front, viewer.renderer), texture(back, viewer.renderer), alto, lado);
+      const bottom = BOTTOMS.includes(d['360Tipo']);
+      const seed = (d['360Datos'].match(/360-([^/?]+)\.json/) || [])[1] || title;
+      viewer.show(data, texture(front, viewer.renderer), texture(back, viewer.renderer), alto, lado, bottom, seed);
       ui.stage.focus({ preventScroll: true });
     })
     .catch(() => {

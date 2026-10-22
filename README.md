@@ -186,9 +186,15 @@ devoluciones**.
 
 Las 26 prendas tienen un botón **360°**: en la ficha va arriba de la foto (*Ver en 360°*) y en las tarjetas del
 catálogo, las colecciones, Lo nuevo y la búsqueda va en la esquina de la foto. Abre la prenda dibujada en vector, con
-tintas planas, contorno negro y las texturas de su tela, sobre un volumen cerrado que se gira en cualquier dirección:
-de lado, desde arriba y desde abajo, con el dedo, el mouse o las flechas del teclado. *Girar sola* la da vuelta
-despacio y los botones llevan al frente, el costado, la espalda, arriba y abajo.
+tintas planas, contorno negro y las texturas de su tela, colgada en su percha como ropa de verdad, y se gira en
+cualquier dirección: de lado, desde arriba y desde abajo, con el dedo, el mouse o las flechas del teclado. *Girar sola*
+la da vuelta despacio y los botones llevan al frente, el costado, la espalda, arriba y abajo.
+
+- **Forma de ropa** (`hight-ropa.js`): cada prenda son dos capas de tela delgadas, más hondas arriba, donde la
+  sostiene la percha, y con pliegues que caen y crecen hacia abajo; cada prenda tiene los suyos, iguales en el visor y
+  en el clóset. Están cosidas por los costados y abiertas en el ruedo (y en la pretina de jeans, pantalones y
+  shorts), así que desde abajo se ve por dentro. Las de arriba cuelgan de un gancho de alambre y las de abajo de una
+  barra con dos pinzas.
 
 - **Frente y espalda:** el frente sale de la foto de la tienda (una copia; las fotos no se tocan). La Chaqueta
   Trouble Maker tiene foto de la espalda, así que su espalda es real. En las demás la espalda es de referencia y el
@@ -214,7 +220,7 @@ Archivos de cada prenda, en `assets/` con la dirección de la prenda:
 | Archivo | Qué tiene |
 | --- | --- |
 | `360-<prenda>.json` | Medidas del dibujo, la grilla del volumen, el borde exacto, el tipo de espalda y la tela |
-| `360-<prenda>-alto.png` | Qué tan abombada está la prenda en cada punto de la grilla |
+| `360-<prenda>-alto.png` | La silueta en la grilla, con el borde redondeado (el hondo y los pliegues los pone `hight-ropa.js`) |
 | `360-<prenda>-lado.png` | La tela del canto, la que se ve de lado, arriba y abajo |
 | `360-<prenda>-frente.webp`, `360-<prenda>-espalda.webp` | El dibujo de cada cara, con sus texturas |
 | `360-<prenda>-armario.json`, `-armario-frente.webp`, `-armario-espalda.webp` | La versión liviana para el clóset |

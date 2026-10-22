@@ -40,6 +40,7 @@
     aria-label="{{ 'vista_360.open_label' | t: title: product.title }}"
     data-360
     data-360-title="{{ product.title | escape }}"
+    data-360-tipo="{{ product.type | escape }}"
     data-360-back="{{ v360_back }}"
     data-360-datos="{{ v360_datos | asset_url }}"
     data-360-alto="{{ v360_alto | asset_url }}"

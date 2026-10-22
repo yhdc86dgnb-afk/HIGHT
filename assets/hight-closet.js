@@ -9,10 +9,10 @@
  * hight.js lo carga recién cuando la sección se acerca, y solo se dibuja mientras se ve.
  */
 import * as THREE from './three.module.min.js';
+import { drape } from './hight-ropa.js?v=1';
 
 const FOV = 20;
 const FRAME = 10.8;      // alto visible de la escena, en unidades
-const THICK = 0.13;      // hondo de cada cara sobre el ancho, como en el visor
 const LINE = 0.02;       // trazo negro de la ilustración
 const STICKER = 0.075;   // borde hueso, como un sticker recortado
 const EASE = 0.3;        // cuánto se queda cada prenda de frente y de espalda al girar
@@ -58,10 +58,11 @@ vec3 fabric( vec3 c, vec3 p, vec3 n ) {
 }`;
 
 function toonSteps() {
-  const steps = 16;
+  const steps = 32;
   const data = new Uint8Array(steps * 4);
   for (let i = 0; i < steps; i++) {
-    const v = (i + 0.5) / steps >= 0.68 ? 255 : 112;
+    const x = (i + 0.5) / steps;
+    const v = x >= 0.84 ? 255 : x >= 0.6 ? 196 : 112;
     data.set([v, v, v, 255], i * 4);
   }
   const texture = new THREE.DataTexture(data, steps, 1, THREE.RGBAFormat);
@@ -104,7 +105,7 @@ function fabricMaterial(texture, steps, weave, px, webgl2) {
   return material;
 }
 
-/* ---------- Una prenda: volumen cerrado con su dibujo, como en el visor ---------- */
+/* ---------- Una prenda: dos capas de tela con su dibujo y sus pliegues, como en el visor ---------- */
 
 function bytes(b64) {
   const s = atob(b64);
@@ -115,7 +116,7 @@ function bytes(b64) {
 
 const toLinear = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
 
-function buildGarment(data, frente, espalda, rail, shared) {
+function buildGarment(data, frente, espalda, rail, shared, seed) {
   const [gw, gh] = data.grid;
   const [tw, th] = data.tex;
   const step = data.step;
@@ -136,35 +137,43 @@ function buildGarment(data, frente, espalda, rail, shared) {
     const c = new THREE.Color(hex);
     return [toLinear(c.r), toLinear(c.g), toLinear(c.b)];
   });
-  const depth = THICK * data.widthPx * s;
   const n = gw * gh;
   const heights = new Float32Array(n);
   for (let k = 0; k < n; k++) heights[k] = alto[k] / 255;
-  const positions = new Float32Array(n * 3);
-  const uvs = new Float32Array(n * 2);
-  const place = (k, x, y, z) => {
-    positions[k * 3] = (x - cx) * s;
-    positions[k * 3 + 1] = (cy - y) * s;
-    positions[k * 3 + 2] = z;
-    uvs[k * 2] = x / tw;
-    uvs[k * 2 + 1] = 1 - y / th;
-  };
+  // Dónde cae cada punto en el dibujo; los del borde, en el borde exacto.
+  const px = new Float32Array(n);
+  const py = new Float32Array(n);
   for (let j = 0; j < gh; j++) {
     for (let i = 0; i < gw; i++) {
-      const k = j * gw + i;
-      place(k, Math.min(i * step, tw - 1) + 0.5, Math.min(j * step, th - 1) + 0.5, heights[k] * depth);
+      px[j * gw + i] = Math.min(i * step, tw - 1) + 0.5;
+      py[j * gw + i] = Math.min(j * step, th - 1) + 0.5;
     }
+  }
+  const onRim = new Uint8Array(n);
+  data.rim.i.forEach((k, r) => {
+    onRim[k] = 1;
+    px[k] = data.rim.x[r] + 0.5;
+    py[k] = data.rim.y[r] + 0.5;
+  });
+  // La forma de la ropa colgada, como en el visor, pero cerrada por todo el borde: aquí se ven de frente, con borde
+  // de sticker.
+  const shape = drape({ gw, gh, step, heights, px, py, onRim, bottom: rail.clip, seed, openings: false });
+  const frontPos = new Float32Array(n * 3);
+  const backPos = new Float32Array(n * 3);
+  const uvs = new Float32Array(n * 2);
+  for (let k = 0; k < n; k++) {
+    const x = (px[k] - cx) * s;
+    const y = (cy - py[k]) * s;
+    frontPos.set([x, y, (shape.fold[k] + shape.z[k]) * s], k * 3);
+    backPos.set([x, y, (shape.fold[k] - shape.z[k]) * s], k * 3);
+    uvs[k * 2] = px[k] / tw;
+    uvs[k * 2 + 1] = 1 - py[k] / th;
   }
   const side = new Float32Array(n * 4);
   for (let k = 0; k < n; k++) {
     const p = sideIndex[k];
     if (p) side.set([...palette[p - 1], 1], k * 4);
   }
-  const onRim = new Uint8Array(n);
-  data.rim.i.forEach((k, r) => {
-    onRim[k] = 1;
-    place(k, data.rim.x[r] + 0.5, data.rim.y[r] + 0.5, 0);
-  });
   const front = [];
   const back = [];
   for (let j = 0; j < gh - 1; j++) {
@@ -197,9 +206,7 @@ function buildGarment(data, frente, espalda, rail, shared) {
   const group = new THREE.Group();
   const surfaces = [];
   const stickers = [];
-  const surface = (sign, index, texture) => {
-    const pos = positions.slice();
-    if (sign < 0) for (let k = 0; k < n; k++) pos[k * 3 + 2] = -pos[k * 3 + 2];
+  const surface = (pos, index, texture) => {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
@@ -231,8 +238,8 @@ function buildGarment(data, frente, espalda, rail, shared) {
       if (list) list.push(hull);
     }
   };
-  surface(1, front, frente);
-  surface(-1, back, espalda);
+  surface(frontPos, front, frente);
+  surface(backPos, back, espalda);
   // Cuelga de su gancho: la parte más alta queda a `hook` de la barra.
   group.position.y = rail.rail - rail.hook - (cy - (y0 + 0.5)) * s;
   return {
@@ -408,7 +415,9 @@ class Closet {
           t.needsUpdate = true;
           return t;
         };
-        Object.assign(item, buildGarment(data, tex(frente), tex(espalda), item.rail, this.shared));
+        // La misma semilla que en el visor 360: cada prenda tiene los mismos pliegues en los dos.
+        const seed = (item.model.match(/360-([^/?]+)-armario\.json/) || [])[1] || item.model;
+        Object.assign(item, buildGarment(data, tex(frente), tex(espalda), item.rail, this.shared, seed));
         item.group.userData.item = item;
         this.place(item);
         this.scene.add(item.group);
