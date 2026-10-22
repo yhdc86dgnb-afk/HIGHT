@@ -15,6 +15,7 @@ respuestas que cada ficha de la tienda da sin preguntas a la vista.
 | `generador/` | El programa que arma las hojas a partir de los datos de la tienda. |
 | `vector/` | La Chaqueta Trouble Maker dibujada en vector, de frente y de espalda, plana y con texturas, para el visor 360. |
 | `vector/generador/` | El generador de la vista 360: arma el dibujo y los archivos del visor de cualquier prenda a partir de su foto. |
+| `video/` | El video de campaña *En movimiento*: las 26 prendas en 3D colgadas de dos rieles, y cómo se arma. |
 
 Los números siguen el orden en que las prendas entraron a la tienda.
 

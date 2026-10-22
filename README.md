@@ -215,9 +215,14 @@ El tema tiene tres lugares listos para el material de campaña (por ejemplo, el 
 
 1. **Hero collage > Fondo:** un video en bucle detrás del logo y las fotos.
 2. **Video de campaña:** sección a pantalla completa con titular y botón. Sin video no aparece en la tienda.
+   En el inicio ya tiene **En movimiento** (`hight-en-movimiento.mp4`): las 26 prendas del visor 360 colgadas de
+   dos rieles de tintorería, girando en 3D. Se arma con [`bocetos/video/`](bocetos/video/README.md).
 3. **Lookbook:** hasta 6 fotos pegadas como en un fanzine. Sin fotos no aparece en la tienda.
 
 Sube el archivo en *Contenido > Archivos* o directamente en el campo de la sección, desde *Personalizar*.
+
+Los videos en bucle no arrancan solos si el teléfono o el computador piden menos movimiento, y el de *Video de
+campaña* lleva un botón para pausarlo (abajo a la derecha).
 
 ## Configurar la tienda
 
@@ -272,7 +277,8 @@ templates/       plantillas JSON + gift_card.liquid
 design-system/   design system HIGHT original (referencia)
 docs/preview/    capturas de la vista previa
 docs/politicas/  políticas de envío y de cambios para pegar en Shopify
-bocetos/         fichas técnicas para Illustrator (SVG y PDF), su generador y la chaqueta en vector (vector/)
+bocetos/         fichas técnicas para Illustrator (SVG y PDF), su generador, la chaqueta en vector (vector/) y el
+                 video de campaña (video/)
 ```
 
 `shopify theme check` pasa sin observaciones y el workflow `.github/workflows/theme-check.yml` lo corre en cada push.

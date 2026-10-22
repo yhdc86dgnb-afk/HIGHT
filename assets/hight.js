@@ -3066,13 +3066,44 @@
     });
   })();
 
+  /* ---------- Videos en bucle: no arrancan solos si se pide menos movimiento; el de campaña se pausa con su botón ---------- */
+
+  function initVideos(root) {
+    if (reducedMotion()) {
+      root.querySelectorAll('video[autoplay]').forEach(function (video) {
+        video.removeAttribute('autoplay');
+        video.pause();
+      });
+    }
+    root.querySelectorAll('[data-video-toggle]').forEach(function (button) {
+      var video = button.parentElement.querySelector('video');
+      if (!video) {
+        button.hidden = true;
+        return;
+      }
+      function sync() {
+        button.classList.toggle('is-paused', video.paused);
+        button.setAttribute('aria-label', button.getAttribute(video.paused ? 'data-label-play' : 'data-label-pause'));
+      }
+      video.addEventListener('play', sync);
+      video.addEventListener('pause', sync);
+      button.addEventListener('click', function () {
+        if (video.paused) video.play().catch(function () {});
+        else video.pause();
+      });
+      sync();
+    });
+  }
+
   /* ---------- Inicio y editor de temas ---------- */
 
   initReveal(document);
   initDensity(document);
+  initVideos(document);
 
   document.addEventListener('shopify:section:load', function (event) {
     initReveal(event.target);
     initDensity(event.target);
+    initVideos(event.target);
   });
 })();

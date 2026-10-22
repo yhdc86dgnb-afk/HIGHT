@@ -21,7 +21,9 @@
     },
     "unique_badge": "PIEZA ÚNICA · NO SE REPITE · ",
     "meta_description": "Denim intervenido a mano, prendas de archivo y ediciones cortas. HIGHT, desde Medellín, con envíos a toda Colombia.",
-    "placeholder_video": "Sube aquí un video (por ejemplo, uno generado en Higgsfield) o una foto. Mientras no haya nada, esta sección no se muestra en la tienda."
+    "placeholder_video": "Sube aquí un video (por ejemplo, uno generado en Higgsfield) o una foto. Mientras no haya nada, esta sección no se muestra en la tienda.",
+    "video_pause": "Pausar el video",
+    "video_play": "Reproducir el video"
   },
   "accessibility": {
     "skip_to_content": "Saltar al contenido",

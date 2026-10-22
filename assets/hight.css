@@ -3337,6 +3337,44 @@ a.hi-archive-link:hover .hi-archive-arrow {
   padding-block: clamp(40px, 6vw, 88px);
 }
 
+/* Pausar el video en bucle: abajo a la derecha, lejos del texto. */
+.hi-campaign-toggle {
+  position: absolute;
+  right: var(--gutter);
+  bottom: clamp(40px, 6vw, 88px);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid currentColor;
+  background: rgba(13, 12, 11, 0.55);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.hi-campaign-toggle:hover,
+.hi-campaign-toggle:focus-visible {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.hi-campaign-toggle .hi-campaign-pause,
+.hi-campaign-toggle.is-paused .hi-campaign-play {
+  display: contents;
+}
+
+.hi-campaign-toggle .hi-campaign-play,
+.hi-campaign-toggle.is-paused .hi-campaign-pause {
+  display: none;
+}
+
 .hi-campaign-empty {
   display: grid;
   justify-items: center;

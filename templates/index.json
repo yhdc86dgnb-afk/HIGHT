@@ -232,6 +232,7 @@
     "campana": {
       "type": "video-campaign",
       "settings": {
+        "video": "shopify://files/videos/hight-en-movimiento.mp4",
         "overlay": 30,
         "height": "screen",
         "eyebrow": "(CAMPAÑA)",
