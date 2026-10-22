@@ -1036,7 +1036,9 @@
       'hi-marquee',
       class extends HTMLElement {
         connectedCallback() {
-          if (reducedMotion()) return;
+          // Con menos movimiento las cintas se quedan quietas, salvo las que piden ir despacio (data-calm="slow").
+          this.calm = reducedMotion();
+          if (this.calm && this.getAttribute('data-calm') !== 'slow') return;
           this.track = this.querySelector('.hi-marquee-track');
           if (!this.track || !('IntersectionObserver' in window)) return;
           this.direction = this.getAttribute('data-direction') === 'right' ? 1 : -1;
@@ -1093,7 +1095,8 @@
             }
             var speed = self.width / (self.duration * 1000);
             var factor = self.hover ? 0.2 : 1;
-            if (self.boost) factor += ScrollVelocity.value * 3;
+            if (self.calm) factor *= 0.4;
+            else if (self.boost) factor += ScrollVelocity.value * 3;
             self.x += self.direction * speed * factor * dt;
             if (self.x <= -self.width) self.x += self.width;
             if (self.x > 0) self.x -= self.width;

@@ -1,0 +1,150 @@
+{%- liquid
+  assign band_class = 'hi-bg-accent'
+  if section.settings.background == 'scheme'
+    assign band_class = 'color-' | append: section.settings.color_scheme
+  endif
+  assign second = 'right'
+  if section.settings.direction == 'right'
+    assign second = 'left'
+  endif
+-%}
+
+{%- comment -%}
+  Las 12 correas de tachas, dibujadas en vector (bocetos/correas/), en dos filas que corren en sentidos contrarios:
+  arriba las seis primeras de la foto, abajo las otras seis.
+{%- endcomment -%}
+{%- capture belts_a -%}
+  {%- for i in (1..6) -%}
+    {%- assign num = i | prepend: '0' | slice: -2, 2 -%}
+    {%- assign file = 'correa-' | append: num | append: '.svg' -%}
+    <li class="hi-belt">
+      <img src="{{ file | asset_url }}" alt="" width="2412" height="170" loading="lazy" decoding="async">
+    </li>
+  {%- endfor -%}
+{%- endcapture -%}
+{%- capture belts_b -%}
+  {%- for i in (7..12) -%}
+    {%- assign num = i | prepend: '0' | slice: -2, 2 -%}
+    {%- assign file = 'correa-' | append: num | append: '.svg' -%}
+    <li class="hi-belt">
+      <img src="{{ file | asset_url }}" alt="" width="2412" height="170" loading="lazy" decoding="async">
+    </li>
+  {%- endfor -%}
+{%- endcapture -%}
+
+<div class="hi-band-wrap" style="--tilt: {{ section.settings.tilt }}deg;">
+  <div class="hi-band hi-belts {{ band_class }}">
+    {%- for row in (1..2) -%}
+      {%- liquid
+        if row == 1
+          assign row_items = belts_a
+          assign row_direction = section.settings.direction
+        else
+          assign row_items = belts_b
+          assign row_direction = second
+        endif
+      -%}
+      <hi-marquee
+        class="hi-marquee"
+        style="--marquee-duration: {{ section.settings.speed }}s;"
+        data-speed="{{ section.settings.speed }}"
+        data-direction="{{ row_direction }}"
+        data-scroll-boost="{{ section.settings.scroll_boost }}"
+        data-calm="slow"
+      >
+        <div class="hi-marquee-track">
+          <ul class="hi-marquee-group" role="list">
+            {{- row_items -}}
+          </ul>
+          <ul class="hi-marquee-group" role="list" aria-hidden="true" inert>
+            {{- row_items -}}
+          </ul>
+        </div>
+      </hi-marquee>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Correas",
+  "tag": "section",
+  "class": "hi-band-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Las correas de tachas, dibujadas en vector, corren de lado a lado en dos filas. Al hacer scroll se aceleran."
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Duración de una vuelta",
+      "min": 40,
+      "max": 240,
+      "step": 10,
+      "unit": "s",
+      "default": 120
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Dirección de la fila de arriba",
+      "options": [
+        {
+          "value": "left",
+          "label": "Hacia la izquierda"
+        },
+        {
+          "value": "right",
+          "label": "Hacia la derecha"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "scroll_boost",
+      "label": "Acelerar con el scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "tilt",
+      "label": "Inclinación",
+      "min": -4,
+      "max": 4,
+      "step": 1,
+      "unit": "°",
+      "default": -2
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Fondo",
+      "options": [
+        {
+          "value": "accent",
+          "label": "Color de acento"
+        },
+        {
+          "value": "scheme",
+          "label": "Esquema de color"
+        }
+      ],
+      "default": "accent"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "scheme-3",
+      "visible_if": "{{ section.settings.background == 'scheme' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Correas"
+    }
+  ]
+}
+{% endschema %}

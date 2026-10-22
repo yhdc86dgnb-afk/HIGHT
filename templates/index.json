@@ -87,46 +87,9 @@
       }
     },
     "cinta": {
-      "type": "marquee",
-      "blocks": {
-        "t1": {
-          "type": "item",
-          "settings": {
-            "text": "EDICIONES CORTAS",
-            "style": "fill"
-          }
-        },
-        "t2": {
-          "type": "item",
-          "settings": {
-            "text": "NO SE REPITEN",
-            "style": "outline"
-          }
-        },
-        "t3": {
-          "type": "item",
-          "settings": {
-            "text": "DENIM INTERVENIDO",
-            "style": "fill"
-          }
-        },
-        "t4": {
-          "type": "item",
-          "settings": {
-            "text": "PRENDAS DE ARCHIVO",
-            "style": "outline"
-          }
-        }
-      },
-      "block_order": [
-        "t1",
-        "t2",
-        "t3",
-        "t4"
-      ],
+      "type": "correas",
       "settings": {
-        "size": "l",
-        "speed": 28,
+        "speed": 120,
         "direction": "left",
         "scroll_boost": true,
         "tilt": -2,

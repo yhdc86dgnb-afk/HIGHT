@@ -1469,6 +1469,28 @@ details[open] > .hi-acc-btn .hi-acc-minus {
   font-size: clamp(3.5rem, 12vw, 12rem);
 }
 
+/* ---------- Correas: la cinta del inicio hecha de correas de tachas, en dos filas ---------- */
+
+.hi-belts {
+  display: grid;
+  gap: clamp(8px, 1.1vw, 16px);
+  padding-block: clamp(12px, 1.5vw, 22px);
+}
+
+.hi-belts .hi-marquee {
+  --gap: clamp(16px, 1.8vw, 30px);
+}
+
+.hi-belts .hi-marquee-group {
+  padding-block: 0;
+}
+
+.hi-belt img {
+  width: auto;
+  max-width: none;
+  height: clamp(54px, 7vw, 104px);
+}
+
 /* ---------- Header y menú ---------- */
 
 .hi-header-section {
@@ -5076,7 +5098,7 @@ a.hi-archive-link:hover .hi-archive-arrow {
     scroll-behavior: auto !important;
   }
 
-  .hi-marquee .hi-marquee-track {
+  .hi-marquee:not([data-calm='slow']) .hi-marquee-track {
     animation: none !important;
     transform: none !important;
   }

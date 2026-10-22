@@ -18,7 +18,7 @@ colecciones: cada color es una colección y, al abrirla, toda la tienda toma su 
 | Colores | Plata cepillada y aura (azul) | **Carbón** y **hueso** de base; **ácido** (Jean Dragón), **carmín** (Camiseta Célula), **índigo** (Jean Wide) y **leopardo** como acentos y fondos de sección |
 | Tipografías | Archivo, IBM Plex Mono, Instrument Serif, Hight Espina | **Anton** (titulares gigantes), **Space Grotesk** (texto) y **Space Mono** (marquillas, precios, botones) |
 | Motivos | Metal, cianotipo, halo | Fotos como copias impresas con cinta, costuras punteadas, grano de fotocopia y sellos que giran |
-| Home | Hero, catálogo, spread, manifiesto | Hero collage → cinta → Lo nuevo → Elige tu color → video de campaña → Anatomía de una pieza → Archivo → Lookbook → Manifiesto |
+| Home | Hero, catálogo, spread, manifiesto | Hero collage → correas → Lo nuevo → Probador → Elige tu color → clóset → Anatomía de una pieza → Lupa → Desliza → Archivo → Lookbook → Manifiesto |
 
 El logo gótico se mantiene: es la marca. El design system original sigue en [`design-system/`](design-system/README.md) como referencia.
 
@@ -44,6 +44,10 @@ El logo gótico se mantiene: es la marca. El design system original sigue en [`d
   jeans, pantalones y shorts). Se mueven solas y cada una gira al pasar; con el cursor encima se marca y el clóset va
   más lento. Al tocar una prenda se abre su vista 360. Tiene botón para pausar y, con el teclado, cada prenda es un
   botón. Cuelgan por nombre, o en el orden de la colección que se elija en la sección.
+- **Correas:** debajo del hero, las 12 correas de tachas dibujadas en vector (`assets/correa-01.svg` a `-12.svg`,
+  hechas con [`bocetos/correas/`](bocetos/correas/README.md)) corren en dos filas en sentidos contrarios sobre una
+  franja del color de acento. Se mueven solas, van más lento con el cursor encima y se aceleran con el scroll; si el
+  dispositivo pide menos movimiento, siguen moviéndose, pero despacio.
 - **Hero collage:** el logo al centro y las prendas como fotos pegadas con cinta. En computador se arrastran y se
   mueven con el cursor; en el teléfono flotan. El botón **MEZCLAR** las reparte de nuevo.
 - **Cintas de texto:** corren de lado a lado y aceleran cuando haces scroll.
@@ -289,7 +293,7 @@ assets/          hight.css, hight.js, fuentes (Anton, Space Grotesk, Space Mono)
 config/          settings_schema.json (acento, 5 esquemas, movimiento, rotación de estilo) y settings_data.json
 layout/          theme.liquid y password.liquid
 locales/         es.default.json
-sections/        hero-collage, marquee, featured-collection, color-story, probador, lupa, desliza, hotspots,
+sections/        hero-collage, correas, marquee, featured-collection, color-story, probador, closet, lupa, desliza, hotspots,
                  index-list, manifesto, video-campaign, editorial-spread (lookbook), titular, header, footer…
 snippets/        product-card, sticker, product-gallery, density-toggle, price, icon, rotation-data y
                  rotation-pill (rotación de estilo), vista-360 (botón 360°)…
