@@ -3536,8 +3536,13 @@ a.hi-archive-link:hover .hi-archive-arrow {
   height: 100%;
 }
 
+/* El primer cuadro, del alto del clóset y centrado como la cámara: así calza con las prendas en vivo. */
 .hi-closet-poster {
-  object-fit: cover;
+  left: 50%;
+  right: auto;
+  width: auto;
+  max-width: none;
+  transform: translateX(-50%);
   pointer-events: none;
   transition: opacity 0.6s;
 }
@@ -3554,6 +3559,15 @@ a.hi-archive-link:hover .hi-archive-arrow {
   right: calc(var(--closet-side) + 14px);
   bottom: 16px;
   z-index: 3;
+}
+
+/* Sin 3D (sin WebGL o si no bajó el archivo) queda el primer cuadro quieto, sin nada que pausar; sin él, nada. */
+.hi-closet-stage.is-static .hi-pause-btn {
+  display: none;
+}
+
+.hi-closet-stage.is-static:not(:has(.hi-closet-poster)) {
+  display: none;
 }
 
 /* Cada prenda también es un botón, para el teclado: escondido hasta que tiene el foco. */

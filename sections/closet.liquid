@@ -1,55 +1,54 @@
 {%- liquid
-  assign closet_collection = section.settings.collection
-  if closet_collection == blank
-    assign closet_collection = collections.all
+  # Sin colección van todas las prendas por nombre, así el clóset sale siempre en el mismo orden.
+  if section.settings.collection == blank
+    assign closet_products = collections.all.products | sort_natural: 'title'
+  else
+    assign closet_products = section.settings.collection.products
   endif
+  assign closet_shown = ''
 -%}
+
+{%- comment -%}
+  Cada prenda con su vista 360 es también un botón: el clóset lo toca al hacer clic en la prenda, y con el teclado
+  se recorren uno por uno.
+{%- endcomment -%}
+{%- capture closet_items -%}
+  {%- for product in closet_products -%}
+    {%- capture closet_button -%}
+      {%- render 'vista-360', product: product, class: 'hi-closet-item' -%}
+    {%- endcapture -%}
+    {%- if closet_button contains 'data-360' -%}
+      {%- liquid
+        assign closet_rail = 'arriba'
+        case product.type
+          when 'Jean', 'Pantalón', 'Short', 'Falda'
+            assign closet_rail = 'abajo'
+        endcase
+        assign closet_shown = closet_shown | append: ' ' | append: product.handle | append: ':' | append: closet_rail
+        assign closet_name = '360-' | append: product.handle | append: '-armario'
+        assign closet_model = closet_name | append: '.json'
+        assign closet_front = closet_name | append: '-frente.webp'
+        assign closet_back = closet_name | append: '-espalda.webp'
+      -%}
+      <li
+        data-closet-item
+        data-rail="{{ closet_rail }}"
+        data-model="{{ closet_model | asset_url }}"
+        data-frente="{{ closet_front | asset_url }}"
+        data-espalda="{{ closet_back | asset_url }}"
+      >
+        {{- closet_button -}}
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
 
 <section class="hi-closet color-{{ section.settings.color_scheme }}" aria-label="{{ 'closet.label' | t }}">
   <hi-closet class="hi-closet-stage">
-    <img
-      class="hi-closet-poster"
-      src="{{ 'closet-poster.webp' | asset_url }}"
-      alt=""
-      width="1920"
-      height="1080"
-      loading="lazy"
-      decoding="async"
-    >
+    {%- render 'closet-poster', prendas: closet_shown -%}
     <canvas class="hi-closet-rods" aria-hidden="true"></canvas>
-
-    {%- comment -%}
-      Cada prenda con su vista 360 es también un botón: el clóset lo toca al hacer clic en la prenda, y con el
-      teclado se recorren uno por uno.
-    {%- endcomment -%}
     <ul class="hi-closet-items" role="list">
-      {%- for product in closet_collection.products -%}
-        {%- capture closet_button -%}
-          {%- render 'vista-360', product: product, class: 'hi-closet-item' -%}
-        {%- endcapture -%}
-        {%- if closet_button contains 'data-360' -%}
-          {%- liquid
-            assign closet_rail = 'arriba'
-            case product.type
-              when 'Jean', 'Pantalón', 'Short', 'Falda'
-                assign closet_rail = 'abajo'
-            endcase
-            assign closet_name = '360-' | append: product.handle | append: '-armario'
-            assign closet_model = closet_name | append: '.json'
-            assign closet_front = closet_name | append: '-frente.webp'
-            assign closet_back = closet_name | append: '-espalda.webp'
-          -%}
-          <li
-            data-closet-item
-            data-rail="{{ closet_rail }}"
-            data-model="{{ closet_model | asset_url }}"
-            data-frente="{{ closet_front | asset_url }}"
-            data-espalda="{{ closet_back | asset_url }}"
-          >
-            {{- closet_button -}}
-          </li>
-        {%- endif -%}
-      {%- endfor -%}
+      {{- closet_items -}}
     </ul>
 
     <button

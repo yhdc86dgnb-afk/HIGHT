@@ -22,6 +22,12 @@ la Chaqueta Blood Rose).
 gruesa (paso de 8 px en vez de 4) y texturas de 768 px. Deja `360-<prenda>-armario.json`, `-armario-frente.webp` y
 `-armario-espalda.webp` junto a los demás archivos de la prenda.
 
+`poster.js` saca el primer cuadro del clóset, el que se ve mientras cargan las prendas: abre el inicio de la tienda,
+cuelga las mismas prendas que la sección y las deja quietas en el cuadro inicial. Escribe en el tema
+`assets/closet-poster.webp` (2592 × 1080), `assets/closet-poster-cel.webp` (el centro, para el teléfono) y
+`snippets/closet-poster.liquid`, con la lista de prendas que salen en él. Hay que volver a correrlo cuando se publica
+o se oculta una prenda, o cambia su nombre o su tipo.
+
 ## Carpeta de trabajo
 
 ```
@@ -45,6 +51,7 @@ python3 prenda.py <prenda>
 node rasterizar.js <prenda>          # requiere Playwright con Chromium
 python3 exportar.py <tema>/assets <prenda>
 python3 armario.py <tema>/assets <prenda>
+node poster.js http://127.0.0.1:9292 <tema>   # con `shopify theme dev` andando en el tema
 ```
 
 Después se agrega la dirección de la prenda a la lista de `snippets/vista-360.liquid`.

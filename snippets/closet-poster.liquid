@@ -1,0 +1,34 @@
+{%- doc -%}
+  El primer cuadro del clóset (assets/closet-poster.webp y, en el teléfono, closet-poster-cel.webp), que se ve
+  mientras cargan las prendas en 3D. Lo escribe bocetos/vector/generador/poster.js junto con las imágenes y solo se
+  muestra si el clóset va a colgar las mismas prendas, en el mismo orden y en las mismas barras. Si cambian (se
+  publica o se oculta una prenda, o cambia su nombre o su tipo), el clóset aparece cuando cargan las prendas.
+
+  @param {string} prendas - Las prendas del clóset, "<dirección>:<barra>" separadas por espacios
+
+  @example
+  {% render 'closet-poster', prendas: closet_shown %}
+{%- enddoc -%}
+{%- liquid
+  assign poster_prendas = 'buzo-destroyed-ceniza:arriba buzo-multitud-termica:arriba camiseta-celula-carmin:arriba chaqueta-blood-rose:arriba chaqueta-smiley-acido:arriba chaqueta-trouble-maker:arriba jean-flare-costura-neon:abajo jean-flare-destroyed-verde:abajo jean-flare-dragon-acido:abajo jean-flare-patchwork-leopardo:abajo jean-patchwork-cuadros:abajo jean-patchwork-estrellas-violeta:abajo jean-wide-fleco-indigo:abajo jean-wide-patchwork-indigo:abajo short-camuflado-leopardo-rosa:abajo tejido-anillos-indigo:arriba tejido-deshilado-ceniza:arriba top-crop-rostros:arriba top-halftone-carmin:arriba top-malla-asimetrico-rojo:arriba'
+  assign poster_actual = prendas | strip
+-%}
+{%- if poster_actual == poster_prendas -%}
+  <picture>
+    <source
+      media="(max-width: 560px)"
+      srcset="{{ 'closet-poster-cel.webp' | asset_url }}"
+      width="1080"
+      height="1080"
+    >
+    <img
+      class="hi-closet-poster"
+      src="{{ 'closet-poster.webp' | asset_url }}"
+      alt=""
+      width="2592"
+      height="1080"
+      loading="lazy"
+      decoding="async"
+    >
+  </picture>
+{%- endif -%}

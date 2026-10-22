@@ -43,7 +43,7 @@ El logo gótico se mantiene: es la marca. El design system original sigue en [`d
 - **Clóset:** en el inicio, todas las prendas con vista 360 colgadas en 3D de dos barras (arriba las de arriba, abajo
   jeans, pantalones y shorts). Se mueven solas y cada una gira al pasar; con el cursor encima se marca y el clóset va
   más lento. Al tocar una prenda se abre su vista 360. Tiene botón para pausar y, con el teclado, cada prenda es un
-  botón.
+  botón. Cuelgan por nombre, o en el orden de la colección que se elija en la sección.
 - **Hero collage:** el logo al centro y las prendas como fotos pegadas con cinta. En computador se arrastran y se
   mueven con el cursor; en el teléfono flotan. El botón **MEZCLAR** las reparte de nuevo.
 - **Cintas de texto:** corren de lado a lado y aceleran cuando haces scroll.
@@ -204,6 +204,10 @@ despacio y los botones llevan al frente, el costado, la espalda, arriba y abajo.
 - **El clóset** (`hight-closet.js`) usa una versión liviana de cada prenda (grilla más gruesa y texturas de 768 px,
   unos 140 KB por prenda) y se baja recién cuando la sección se acerca. Solo se dibuja mientras se ve, y se queda
   quieto mientras hay un 360, el carrito o el menú abiertos.
+- **El primer cuadro del clóset** (`closet-poster.webp`, y `closet-poster-cel.webp` en el teléfono) se ve mientras
+  cargan las prendas y calza con ellas en cualquier pantalla. Se saca con `poster.js` del generador, que anota en
+  `snippets/closet-poster.liquid` qué prendas tiene: si el clóset cuelga otras (se publicó u ocultó una prenda, o
+  cambió su nombre o su tipo), no aparece hasta que se vuelva a sacar.
 
 Archivos de cada prenda, en `assets/` con la dirección de la prenda:
 
@@ -217,7 +221,8 @@ Archivos de cada prenda, en `assets/` con la dirección de la prenda:
 
 Para sumar una prenda nueva: se arman sus cinco archivos con el generador de
 [`bocetos/vector/generador/`](bocetos/vector/generador/README.md) y, con `armario.py`, los tres del clóset; se suben a
-`assets/` y se agrega su dirección a la lista de `snippets/vista-360.liquid`.
+`assets/`, se agrega su dirección a la lista de `snippets/vista-360.liquid` y, con la prenda ya publicada, se vuelve a
+sacar el primer cuadro del clóset con `poster.js`.
 
 ## Fotos y videos de Higgsfield
 
