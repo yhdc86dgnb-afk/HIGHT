@@ -1,4 +1,4 @@
-# Video de campaña: En movimiento
+# Video de campaña
 
 ![Primer cuadro del video](en-movimiento.jpg)
 
