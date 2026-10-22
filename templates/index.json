@@ -442,11 +442,12 @@
     "archivo": {
       "type": "index-list",
       "settings": {
+        "layout": "indice",
         "eyebrow": "(ARCHIVO)",
         "heading": "TODAS LAS PIEZAS",
         "source": "products",
         "collection": "all",
-        "limit": 24,
+        "limit": 50,
         "color_scheme": "scheme-1"
       }
     },

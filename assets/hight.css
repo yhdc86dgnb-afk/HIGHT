@@ -3173,6 +3173,119 @@ a.hi-archive-link:hover .hi-archive-arrow {
   }
 }
 
+/* Índice por tipo: los nombres a un tamaño de lectura, agrupados, en dos columnas cuando caben. */
+
+.hi-archive-total {
+  margin: 0;
+  color: var(--muted);
+}
+
+.hi-archive-groups {
+  columns: 2 20rem;
+  column-gap: clamp(32px, 5vw, 88px);
+}
+
+.hi-archive-group {
+  margin-bottom: clamp(20px, 2.6vw, 36px);
+}
+
+.hi-archive-group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 10px 0 8px;
+  border-bottom: 2px solid var(--text);
+  font: 700 0.75rem/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  break-after: avoid;
+}
+
+.hi-archive-group-count {
+  color: var(--muted);
+}
+
+.hi-archive--indice .hi-archive-list {
+  border-top: 0;
+}
+
+.hi-archive--indice .hi-archive-row {
+  break-inside: avoid;
+}
+
+.hi-archive--indice .hi-archive-link {
+  grid-template-columns: 2rem minmax(0, 1fr) auto auto;
+  gap: 14px;
+  padding: 11px 0;
+}
+
+.hi-archive--indice .hi-archive-title {
+  font-size: clamp(1.3rem, 1.9vw, 1.85rem);
+  line-height: 1;
+}
+
+.hi-archive--indice .hi-archive-meta {
+  display: none;
+}
+
+.hi-archive--indice .hi-archive-arrow {
+  width: 18px;
+  height: 18px;
+}
+
+.hi-archive--indice a.hi-archive-link:hover .hi-archive-title,
+.hi-archive--indice a.hi-archive-link:focus-visible .hi-archive-title {
+  transform: translateX(8px);
+}
+
+.hi-archive-foot {
+  margin-top: clamp(8px, 1.5vw, 20px);
+}
+
+/* Sin cursor (tablet y teléfono) o en pantallas angostas no hay foto flotante: cada fila lleva su miniatura. */
+@media (hover: none), (max-width: 989px) {
+  .hi-archive--indice .hi-archive-link {
+    grid-template-columns: 44px minmax(0, 1fr) auto auto;
+    padding: 8px 0;
+  }
+
+  .hi-archive--indice .hi-archive-n {
+    display: none;
+  }
+
+  .hi-archive--indice .hi-archive-thumb {
+    display: block;
+    width: 44px;
+    aspect-ratio: 4 / 5;
+    padding: 2px;
+    background: var(--print);
+  }
+
+  .hi-archive--indice .hi-archive-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+@media (max-width: 749px) {
+  .hi-archive--indice .hi-archive-link {
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 8px 0;
+  }
+
+  .hi-archive--indice .hi-archive-thumb {
+    width: 44px;
+  }
+
+  .hi-archive--indice .hi-archive-title {
+    font-size: clamp(1.15rem, 5.2vw, 1.45rem);
+  }
+}
+
 /* ---------- Manifiesto ---------- */
 
 .hi-manifesto {

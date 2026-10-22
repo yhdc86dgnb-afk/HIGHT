@@ -1,0 +1,45 @@
+{%- doc -%}
+  Fila de una prenda en el Archivo de piezas: número, miniatura, nombre, corte, precio y flecha. En computador la
+  foto sigue al cursor (data-reveal-src); en tablet y teléfono se ve la miniatura.
+
+  @param {product} product - Prenda
+  @param {number} index - Posición en la lista, desde 1
+
+  @example
+  {% render 'archive-product-row', product: product, index: forloop.index %}
+{%- enddoc -%}
+{%- liquid
+  assign row_number = index
+  if row_number < 10
+    assign row_number = '0' | append: row_number
+  endif
+  assign row_image = product.featured_media.preview_image
+  assign row_meta = product.metafields.custom.corte_material.value | default: product.type
+-%}
+<li class="hi-archive-row{% unless product.available %} is-sold{% endunless %}" style="--i: {{ index | minus: 1 }};">
+  <a
+    href="{{ product.url }}"
+    class="hi-archive-link"
+    {% if row_image %}
+      data-reveal-src="{{ row_image | image_url: width: 700 }}"
+    {% endif %}
+    data-cursor="{{ 'general.cursor_view' | t }}"
+  >
+    <span class="hi-archive-n" aria-hidden="true">{{ row_number }}</span>
+    <span class="hi-archive-thumb" aria-hidden="true">
+      {%- if row_image -%}
+        {{ row_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '', widths: '100, 200', sizes: '64px' }}
+      {%- endif -%}
+    </span>
+    <span class="hi-archive-title">{{ product.title | escape }}</span>
+    <span class="hi-archive-meta">{{ row_meta | escape }}</span>
+    <span class="hi-archive-price">
+      {%- if product.available -%}
+        {% render 'price', product: product, show_from: true %}
+      {%- else -%}
+        <span class="hi-tag hi-tag-ink">{{ 'products.sold_out' | t }}</span>
+      {%- endif -%}
+    </span>
+    {% render 'icon', name: 'arrow_forward', size: 24, class: 'hi-archive-arrow' %}
+  </a>
+</li>

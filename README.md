@@ -53,7 +53,9 @@ El logo gótico se mantiene: es la marca. El design system original sigue en [`d
 - **Colecciones de color:** al entrar a una (desde el menú, el home o la fila de colores de cada colección), la
   tienda toma su color: botones, cintas, marquillas y el título gigante.
 - **Anatomía de una pieza:** puntos numerados sobre el Jean Flare Patchwork Leopardo; cada uno abre su detalle.
-- **Archivo:** lista con nombres gigantes; en computador la foto de cada pieza sigue al cursor.
+- **Archivo:** índice de todas las piezas agrupadas por tipo (Chaquetas, Jeans, Tops…), con su cantidad, en dos
+  columnas cuando caben. En computador la foto de cada pieza sigue al cursor; en tablet y teléfono cada fila lleva su
+  miniatura. En *Diseño* se puede volver a la lista de nombres gigantes.
 - **Manifiesto:** el texto se enciende palabra por palabra con el scroll.
 - **Menú a pantalla completa** con foto al pasar por cada enlace; los colores llevan su punto y tiñen el menú.
   También: **zoom** de fotos en la ficha, **barra para comprar** cuando el botón queda arriba (abajo en el teléfono,

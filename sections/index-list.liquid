@@ -4,9 +4,14 @@
     assign list_collection = collections.all
   endif
   assign list_limit = section.settings.limit
+  assign list_layout = section.settings.layout | default: 'indice'
+  assign grouped = false
+  if list_layout == 'indice' and section.settings.source == 'products'
+    assign grouped = true
+  endif
 -%}
 
-<section class="hi-section hi-archive color-{{ section.settings.color_scheme }}">
+<section class="hi-section hi-archive hi-archive--{{ list_layout }} color-{{ section.settings.color_scheme }}">
   <hi-reveal-list class="hi-container hi-archive-inner">
     <div class="hi-archive-head" data-reveal>
       {%- if section.settings.eyebrow != blank -%}
@@ -15,47 +20,65 @@
       {%- if section.settings.heading != blank -%}
         <h2 class="t-display-l">{{ section.settings.heading | escape }}</h2>
       {%- endif -%}
+      {%- if grouped -%}
+        <p class="t-label hi-archive-total">{{ 'general.pieces_count' | t: count: list_collection.products_count }}</p>
+      {%- endif -%}
     </div>
 
+    {%- if grouped -%}
+      {%- comment -%} Índice por tipo: cada tipo de prenda con su título y su cantidad, en dos columnas cuando caben. {%- endcomment -%}
+      <div class="hi-archive-groups">
+        {%- liquid
+          assign list_types = list_collection.products | map: 'type' | uniq
+          assign shown = 0
+        -%}
+        {%- for list_type in list_types -%}
+          {%- if shown >= list_limit -%}{%- break -%}{%- endif -%}
+          {%- liquid
+            assign group = list_collection.products | where: 'type', list_type
+            assign type_end = list_type | slice: -2, 2
+            assign type_last = list_type | slice: -1, 1
+            if list_type == blank
+              assign group_name = 'general.other_pieces' | t
+            elsif type_end == 'ón'
+              assign group_name = list_type | remove_last: 'ón' | append: 'ones'
+            elsif type_last == 's'
+              assign group_name = list_type
+            else
+              assign group_name = list_type | append: 's'
+            endif
+            assign group_count = group.size
+            if group_count < 10
+              assign group_count = '0' | append: group_count
+            endif
+          -%}
+          <div class="hi-archive-group">
+            <h3 class="hi-archive-group-head">
+              <span>{{ group_name | escape }}</span>
+              <span class="hi-archive-group-count">{{ group_count }}</span>
+            </h3>
+            <ol class="hi-archive-list" role="list">
+              {%- for product in group -%}
+                {%- if shown >= list_limit -%}{%- break -%}{%- endif -%}
+                {%- assign shown = shown | plus: 1 -%}
+                {%- render 'archive-product-row', product: product, index: shown -%}
+              {%- endfor -%}
+            </ol>
+          </div>
+        {%- endfor -%}
+      </div>
+      <div class="hi-archive-foot">
+        <a href="{{ list_collection.url }}" class="hi-btn">
+          {{- 'general.view_all' | t }}
+          {% render 'icon', name: 'arrow_forward', size: 20 -%}
+        </a>
+      </div>
+    {%- else -%}
     <ol class="hi-archive-list" role="list">
       {%- case section.settings.source -%}
         {%- when 'products' -%}
           {%- for product in list_collection.products limit: list_limit -%}
-            {%- liquid
-              assign row_number = forloop.index
-              if row_number < 10
-                assign row_number = '0' | append: row_number
-              endif
-              assign row_image = product.featured_media.preview_image
-              assign row_meta = product.metafields.custom.corte_material.value | default: product.type
-            -%}
-            <li class="hi-archive-row{% unless product.available %} is-sold{% endunless %}" style="--i: {{ forloop.index0 }};">
-              <a
-                href="{{ product.url }}"
-                class="hi-archive-link"
-                {% if row_image %}
-                  data-reveal-src="{{ row_image | image_url: width: 700 }}"
-                {% endif %}
-                data-cursor="{{ 'general.cursor_view' | t }}"
-              >
-                <span class="hi-archive-n" aria-hidden="true">{{ row_number }}</span>
-                <span class="hi-archive-thumb" aria-hidden="true">
-                  {%- if row_image -%}
-                    {{ row_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '', widths: '100, 200', sizes: '64px' }}
-                  {%- endif -%}
-                </span>
-                <span class="hi-archive-title">{{ product.title | escape }}</span>
-                <span class="hi-archive-meta">{{ row_meta | escape }}</span>
-                <span class="hi-archive-price">
-                  {%- if product.available -%}
-                    {% render 'price', product: product, show_from: true %}
-                  {%- else -%}
-                    <span class="hi-tag hi-tag-ink">{{ 'products.sold_out' | t }}</span>
-                  {%- endif -%}
-                </span>
-                {% render 'icon', name: 'arrow_forward', size: 24, class: 'hi-archive-arrow' %}
-              </a>
-            </li>
+            {%- render 'archive-product-row', product: product, index: forloop.index -%}
           {%- endfor -%}
         {%- when 'collections' -%}
           {%- for row_collection in section.settings.collections -%}
@@ -128,6 +151,7 @@
           {%- endfor -%}
       {%- endcase -%}
     </ol>
+    {%- endif -%}
 
     <div class="hi-archive-float hi-print" aria-hidden="true" data-reveal-float></div>
   </hi-reveal-list>
@@ -141,7 +165,24 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Lista con nombres gigantes. En computador, la foto de cada pieza sigue al cursor; en el teléfono se ve una miniatura."
+      "content": "Todas las piezas en una lista. En computador, la foto de cada pieza sigue al cursor; en tablet y teléfono se ve una miniatura."
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Diseño",
+      "options": [
+        {
+          "value": "indice",
+          "label": "Índice por tipo (compacto, en dos columnas)"
+        },
+        {
+          "value": "gigante",
+          "label": "Nombres gigantes"
+        }
+      ],
+      "default": "indice",
+      "info": "El índice agrupa las prendas por tipo cuando el contenido son prendas de una colección."
     },
     {
       "type": "text",
@@ -186,7 +227,7 @@
       "id": "limit",
       "label": "Máximo de filas",
       "min": 3,
-      "max": 30,
+      "max": 50,
       "step": 1,
       "default": 12,
       "visible_if": "{{ section.settings.source == 'products' }}"
