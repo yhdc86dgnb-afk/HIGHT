@@ -82,6 +82,7 @@
 >
   <div class="hi-product-media">
     {% render 'product-gallery', product: product, current_variant: current_variant, section_id: section.id, zoom_id: zoom_id %}
+    {% render 'vista-360', product: product, class: 'hi-360-btn--gallery', text: true %}
     {%- if product_unique and section.settings.show_sticker -%}
       {% render 'sticker', id: section.id, class: 'hi-product-sticker' %}
     {%- endif -%}

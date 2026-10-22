@@ -37,6 +37,9 @@ El logo gótico se mantiene: es la marca. El design system original sigue en [`d
 - **Desliza (¿Te la pondrías?):** las prendas salen una por una; a la derecha si te la pondrías, a la izquierda si
   no (arrastrando, con los botones o con las flechas del teclado). Las favoritas se guardan en el navegador, suman su
   total y se agregan juntas al carrito.
+- **Vista 360:** cada prenda tiene un botón **360°** en su ficha y en las tarjetas del catálogo. La abre dibujada en
+  vector, como sacada de Illustrator, con las texturas de su tela, para girarla en cualquier dirección (más abajo,
+  en [Vista 360 de las prendas](#vista-360-de-las-prendas)).
 - **Hero collage:** el logo al centro y las prendas como fotos pegadas con cinta. En computador se arrastran y se
   mueven con el cursor; en el teléfono flotan. El botón **MEZCLAR** las reparte de nuevo.
 - **Cintas de texto:** corren de lado a lado y aceleran cuando haces scroll.
@@ -173,6 +176,39 @@ Los textos de las políticas de cambios y de envíos están en [`docs/politicas/
 en *Configuración > Políticas*. Mientras no estén ahí, la ficha enlaza a las páginas **Envíos** y **Cambios y
 devoluciones**.
 
+## Vista 360 de las prendas
+
+Las 26 prendas tienen un botón **360°**: en la ficha va arriba de la foto (*Ver en 360°*) y en las tarjetas del
+catálogo, las colecciones, Lo nuevo y la búsqueda va en la esquina de la foto. Abre la prenda dibujada en vector, con
+tintas planas, contorno negro y las texturas de su tela, sobre un volumen cerrado que se gira en cualquier dirección:
+de lado, desde arriba y desde abajo, con el dedo, el mouse o las flechas del teclado. *Girar sola* la da vuelta
+despacio y los botones llevan al frente, el costado, la espalda, arriba y abajo.
+
+- **Frente y espalda:** el frente sale de la foto de la tienda (una copia; las fotos no se tocan). La Chaqueta
+  Trouble Maker tiene foto de la espalda, así que su espalda es real. En las demás la espalda es de referencia y el
+  visor lo dice: el mismo estampado del frente con la pretina lisa en jeans y pantalones, la tela de base con los
+  puños, el ruedo y la capucha en buzos y chaquetas, y el short sin las letras. La Chaqueta Blood Rose, que todavía no
+  tiene foto, sale de su boceto.
+- **Texturas:** sarga en jeans, pantalones, shorts y chaquetas, punto en buzos y tejidos, jersey en camisetas y tops y
+  malla en el Top Malla. Encima van el desgaste, el grano y los hilos que salen del detalle fino de cada foto.
+- **El canto:** de lado, desde arriba y desde abajo, la parte curva de la prenda toma su tela principal en vez del
+  dibujo, que ahí se vería estirado. De frente y de espalda se ve el dibujo entero.
+- **Liviano:** el visor (`hight-360.js`) y three.js r160 (`three.module.min.js` y `three-orbit-controls.js`, licencia
+  MIT) se bajan recién al tocar un botón 360°, y cada prenda suma unos 400 KB.
+
+Archivos de cada prenda, en `assets/` con la dirección de la prenda:
+
+| Archivo | Qué tiene |
+| --- | --- |
+| `360-<prenda>.json` | Medidas del dibujo, la grilla del volumen, el borde exacto, el tipo de espalda y la tela |
+| `360-<prenda>-alto.png` | Qué tan abombada está la prenda en cada punto de la grilla |
+| `360-<prenda>-lado.png` | La tela del canto, la que se ve de lado, arriba y abajo |
+| `360-<prenda>-frente.webp`, `360-<prenda>-espalda.webp` | El dibujo de cada cara, con sus texturas |
+
+Para sumar una prenda nueva: se arman sus cinco archivos con el generador de
+[`bocetos/vector/generador/`](bocetos/vector/generador/README.md), se suben a `assets/` y se agrega su dirección a la
+lista de `snippets/vista-360.liquid`.
+
 ## Fotos y videos de Higgsfield
 
 El tema tiene tres lugares listos para el material de campaña (por ejemplo, el que generes en Higgsfield):
@@ -223,14 +259,15 @@ Cuando el tema esté revisado, se publica desde **Tienda online > Temas > Hight 
 ## Estructura
 
 ```
-assets/          hight.css, hight.js, fuentes (Anton, Space Grotesk, Space Mono), logos y grano
+assets/          hight.css, hight.js, fuentes (Anton, Space Grotesk, Space Mono), logos, grano, el visor 360
+                 (hight-360.js y three.js) y los archivos 360 de cada prenda
 config/          settings_schema.json (acento, 5 esquemas, movimiento, rotación de estilo) y settings_data.json
 layout/          theme.liquid y password.liquid
 locales/         es.default.json
 sections/        hero-collage, marquee, featured-collection, color-story, probador, lupa, desliza, hotspots,
                  index-list, manifesto, video-campaign, editorial-spread (lookbook), titular, header, footer…
 snippets/        product-card, sticker, product-gallery, density-toggle, price, icon, rotation-data y
-                 rotation-pill (rotación de estilo)…
+                 rotation-pill (rotación de estilo), vista-360 (botón 360°)…
 templates/       plantillas JSON + gift_card.liquid
 design-system/   design system HIGHT original (referencia)
 docs/preview/    capturas de la vista previa

@@ -14,6 +14,7 @@ respuestas que cada ficha de la tienda da sin preguntas a la vista.
 | `vista-previa-1.jpg` a `-3.jpg` | Hojas de contacto para mirar todas de un vistazo. |
 | `generador/` | El programa que arma las hojas a partir de los datos de la tienda. |
 | `vector/` | La Chaqueta Trouble Maker dibujada en vector, de frente y de espalda, plana y con texturas, para el visor 360. |
+| `vector/generador/` | El generador de la vista 360: arma el dibujo y los archivos del visor de cualquier prenda a partir de su foto. |
 
 Los números siguen el orden en que las prendas entraron a la tienda.
 

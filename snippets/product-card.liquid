@@ -189,6 +189,8 @@
       </div>
     </a>
 
+    {% render 'vista-360', product: product, class: 'hi-360-btn--card' %}
+
     {%- if card_quick != 'none' -%}
       <product-form class="hi-card-quick hi-card-quick--{{ card_quick }}">
         <form action="{{ routes.cart_add_url }}" method="post" accept-charset="UTF-8">

@@ -333,5 +333,28 @@
     "stamp_no": "NO",
     "remove": "Quitar {{ title }} de tus favoritas",
     "size": "Talla de {{ title }}"
+  },
+  "vista_360": {
+    "badge": "360°",
+    "open": "Ver en 360°",
+    "open_label": "Ver {{ title }} en 360°, dibujada en vector",
+    "title": "360° · Ilustración",
+    "loading": "Cargando la prenda…",
+    "hint": "Arrastra en cualquier dirección",
+    "front": "Frente",
+    "side": "Costado",
+    "back": "Espalda",
+    "top": "Arriba",
+    "bottom": "Abajo",
+    "auto": "Girar sola",
+    "three_quarters": "Tres cuartos",
+    "three_quarters_back": "Tres cuartos de espalda",
+    "from_above": "Desde arriba",
+    "from_below": "Desde abajo",
+    "stage": "[title] en 3D. Arrastra o usa las flechas del teclado para girarla de lado y de arriba abajo.",
+    "back_photo": "Frente y espalda dibujados de las fotos de la prenda.",
+    "back_reference": "Espalda de referencia: la prenda solo tiene foto de frente.",
+    "back_sketch": "Dibujada de su boceto: la prenda todavía no tiene foto.",
+    "error": "No se pudo cargar la vista 360. Prueba de nuevo."
   }
 }

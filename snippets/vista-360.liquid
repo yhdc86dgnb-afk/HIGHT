@@ -1,0 +1,55 @@
+{%- doc -%}
+  Botón 360° de una prenda: abre la prenda dibujada en vector (con las texturas de su tela) en 3D, para girarla
+  en cualquier dirección. Solo aparece en las prendas que tienen sus archivos 360 en assets/ (360-<prenda>.json,
+  -alto.png, -lado.png, -frente.webp y -espalda.webp). El visor (hight-360.js y three.js) se carga al tocarlo.
+
+  @param {product} product - Producto
+  @param {string} [class] - Clase extra del botón (hi-360-btn--card en las tarjetas, hi-360-btn--gallery en la ficha)
+  @param {boolean} [text] - true muestra "Ver en 360°" en vez de solo "360°"
+
+  @example
+  {% render 'vista-360', product: product, class: 'hi-360-btn--card' %}
+{%- enddoc -%}
+{%- liquid
+  assign v360 = false
+  assign v360_back = 'referencia'
+  case product.handle
+    when 'chaqueta-trouble-maker'
+      assign v360 = true
+      assign v360_back = 'foto'
+    when 'chaqueta-blood-rose'
+      assign v360 = true
+      assign v360_back = 'boceto'
+    when 'buzo-destroyed-ceniza', 'buzo-multitud-termica', 'buzo-sakura-rosa', 'camiseta-celula-carmin', 'chaqueta-smiley-acido', 'jean-flare-costura-neon', 'jean-flare-destroyed-verde', 'jean-flare-dragon-acido', 'jean-flare-patchwork-leopardo', 'jean-musgo', 'jean-patchwork-cuadros', 'jean-patchwork-estrellas-violeta', 'jean-pintado-fucsia', 'jean-wide-fleco-indigo', 'jean-wide-ojales-ceniza', 'jean-wide-patchwork-indigo', 'pantalon-hibrido-carmin', 'pantalon-hojas-carbon', 'short-camuflado-leopardo-rosa', 'tejido-anillos-indigo', 'tejido-deshilado-ceniza', 'top-crop-rostros', 'top-halftone-carmin', 'top-malla-asimetrico-rojo'
+      assign v360 = true
+  endcase
+-%}
+{%- if v360 -%}
+  {%- liquid
+    assign v360_name = '360-' | append: product.handle
+    assign v360_datos = v360_name | append: '.json'
+    assign v360_alto = v360_name | append: '-alto.png'
+    assign v360_lado = v360_name | append: '-lado.png'
+    assign v360_frente = v360_name | append: '-frente.webp'
+    assign v360_espalda = v360_name | append: '-espalda.webp'
+  -%}
+  <button
+    type="button"
+    class="hi-360-btn {{ class }}"
+    aria-haspopup="dialog"
+    aria-label="{{ 'vista_360.open_label' | t: title: product.title }}"
+    data-360
+    data-360-title="{{ product.title | escape }}"
+    data-360-back="{{ v360_back }}"
+    data-360-datos="{{ v360_datos | asset_url }}"
+    data-360-alto="{{ v360_alto | asset_url }}"
+    data-360-lado="{{ v360_lado | asset_url }}"
+    data-360-frente="{{ v360_frente | asset_url }}"
+    data-360-espalda="{{ v360_espalda | asset_url }}"
+  >
+    {%- render 'icon', name: 'rotate_360', size: 16 -%}
+    <span>
+      {%- if text -%}{{ 'vista_360.open' | t }}{%- else -%}{{ 'vista_360.badge' | t }}{%- endif -%}
+    </span>
+  </button>
+{%- endif -%}

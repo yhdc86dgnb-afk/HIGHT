@@ -109,6 +109,7 @@
         "cursorLabel": {{ settings.cursor_label | json }},
         "cardTilt": {{ settings.card_tilt | json }},
         "visitorAccent": {{ settings.visitor_accent | json }},
+        "viewer360": {{ 'hight-360.js' | asset_url | json }},
         "strings": {
           "addToCart": {{ 'products.add_to_cart' | t | json }},
           "soldOut": {{ 'products.sold_out' | t | json }},
@@ -119,7 +120,28 @@
           "close": {{ 'accessibility.close' | t | json }},
           "slideCount": {{ 'products.gallery_count' | t | json }},
           "accentChanged": {{ 'color_story.changed' | t: name: '[name]' | json }},
-          "accentReset": {{ 'color_story.reset_done' | t | json }}
+          "accentReset": {{ 'color_story.reset_done' | t | json }},
+          "v360": {
+            "title": {{ 'vista_360.title' | t | json }},
+            "loading": {{ 'vista_360.loading' | t | json }},
+            "hint": {{ 'vista_360.hint' | t | json }},
+            "front": {{ 'vista_360.front' | t | json }},
+            "side": {{ 'vista_360.side' | t | json }},
+            "back": {{ 'vista_360.back' | t | json }},
+            "top": {{ 'vista_360.top' | t | json }},
+            "bottom": {{ 'vista_360.bottom' | t | json }},
+            "auto": {{ 'vista_360.auto' | t | json }},
+            "threeQuarters": {{ 'vista_360.three_quarters' | t | json }},
+            "threeQuartersBack": {{ 'vista_360.three_quarters_back' | t | json }},
+            "fromAbove": {{ 'vista_360.from_above' | t | json }},
+            "fromBelow": {{ 'vista_360.from_below' | t | json }},
+            "stage": {{ 'vista_360.stage' | t | json }},
+            "backPhoto": {{ 'vista_360.back_photo' | t | json }},
+            "backReference": {{ 'vista_360.back_reference' | t | json }},
+            "backSketch": {{ 'vista_360.back_sketch' | t | json }},
+            "error": {{ 'vista_360.error' | t | json }},
+            "close": {{ 'accessibility.close' | t | json }}
+          }
         }
       }
     </script>

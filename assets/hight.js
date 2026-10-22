@@ -258,6 +258,44 @@
     true
   );
 
+  /* ---------- Vista 360: el visor y three.js se cargan recién al tocar un botón 360° ---------- */
+
+  (function () {
+    var viewer = null;
+    function load() {
+      if (!viewer && config.viewer360) {
+        viewer = import(config.viewer360).catch(function (error) {
+          viewer = null;
+          throw error;
+        });
+      }
+      return viewer;
+    }
+    function warm(event) {
+      if (event.target.closest && event.target.closest('[data-360]')) load();
+    }
+    document.addEventListener('pointerover', warm, { passive: true });
+    document.addEventListener('focusin', warm);
+    document.addEventListener('click', function (event) {
+      var button = event.target.closest('[data-360]');
+      if (!button) return;
+      event.preventDefault();
+      var loading = load();
+      if (!loading) return;
+      button.setAttribute('aria-busy', 'true');
+      loading
+        .then(function (module) {
+          module.open(button);
+        })
+        .catch(function () {
+          toast(config.strings && config.strings.v360 ? config.strings.v360.error : '');
+        })
+        .then(function () {
+          button.removeAttribute('aria-busy');
+        });
+    });
+  })();
+
   /* ---------- Header: se esconde al bajar y vuelve al subir ---------- */
 
   (function () {
