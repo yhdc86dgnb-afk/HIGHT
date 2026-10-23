@@ -12,6 +12,36 @@ tienda del 23 de octubre de 2026; si cambian, cámbialos aquí también.
 El feed alterna carbón con hueso o un color de la tienda, como las secciones de la página, así que en la cuadrícula del
 perfil queda un tablero.
 
+## Fechas
+
+Una propuesta: el lanzamiento es el jueves 12 de noviembre de 2026 a las 8:00 p. m., hora de Colombia. Cae un jueves
+en la noche, como el ejemplo del manual de marca («Drop 05 — jueves 8 p. m.»), deja dos semanas antes del primer
+post para terminar la tienda y el último post sale antes del Black Friday (27 de noviembre). Los posts salen a las
+12:00 m. y los reels a las 7:00 p. m.; el día del lanzamiento la tienda abre a las 8:00 p. m. y con ella sale el
+segundo post. Si cambias la fecha, corre todo igual. Meta Business Suite deja programar los posts y los reels.
+
+| Día | Fecha | 12:00 m. | 7:00 p. m. |
+| --- | --- | --- | --- |
+| −6 | viernes 6 de noviembre | 01 | |
+| −5 | sábado 7 | 02 | |
+| −4 | domingo 8 | 03 | Reel adelanto |
+| −3 | lunes 9 | 04 | |
+| −2 | martes 10 | 05 | |
+| −1 | miércoles 11 | 06 | Reel giro |
+| 0 | jueves 12 | 07 | Reel hoy; a las 8:00 p. m. abre la tienda y sale el 08 |
+| +1 | viernes 13 | 09 | Reel correas |
+| +2 | sábado 14 | 10 | |
+| +3 | domingo 15 | 11 | |
+| +4 | lunes 16 (festivo) | 12 | |
+| +5 | martes 17 | 13 | |
+| +6 | miércoles 18 | 14 | |
+| +7 | jueves 19 | 15 | |
+| +8 | viernes 20 | 16 | |
+| +9 | sábado 21 | 17 | |
+| +10 | domingo 22 | 18 | |
+| +11 | lunes 23 | 19 | |
+| +12 | martes 24 | 20 | |
+
 ## Bio
 
 Tres líneas y 137 caracteres (Instagram deja 150). Empieza con el lema de firma y el formato de bio del manual de marca,

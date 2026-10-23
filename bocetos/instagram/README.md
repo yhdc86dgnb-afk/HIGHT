@@ -21,7 +21,8 @@ correas, el manifiesto y la ficha con los datos de la pieza.
 ## Orden
 
 El feed alterna carbón con hueso o un color, así que en la cuadrícula del perfil (tres columnas) queda un tablero.
-Seis posts salen antes del lanzamiento, dos el mismo día y doce después, uno por día.
+Seis posts salen antes del lanzamiento, dos el mismo día y doce después, uno por día. Las fechas propuestas, con el
+lanzamiento el jueves 12 de noviembre de 2026 a las 8:00 p. m., están en `textos.md`.
 
 | Post | Día | Fondo | Qué muestra |
 | --- | --- | --- | --- |
