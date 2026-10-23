@@ -12,7 +12,7 @@
  * quedan fuera de los 290 px de arriba y de abajo, donde Instagram pone su interfaz.
  *
  * window.frame(i) dibuja el cuadro i y lo devuelve como PNG (data URL); window.FRAMES dice cuántos tiene el reel y
- * window.SFX, en qué segundo suena cada efecto (sonido.py los junta en un WAV).
+ * window.SFX, en qué segundo suena cada efecto y cómo va la música (sonido.py arma el sonido con eso).
  */
 import * as THREE from '../../assets/three.module.min.js';
 import { drape } from '../../assets/hight-ropa.js';
@@ -723,6 +723,15 @@ const adelanto = {
     });
     sfx.push([AD.barrido, 'whoosh', 1]);
     const c = cierreGolpes(AD.cierre);
+    // La música: una negra por color, redoble en la pregunta, golpes en las letras y la caída cuando cae el logo.
+    const logo = AD.cierre + 0.55;
+    this.musica = {
+      bpm: 60 / AD.paso,
+      origen: AD.color0,
+      logo,
+      golpes: letras.map((d) => AD.drop + d),
+      secciones: [[0, AD.color0, 'entrada'], [AD.color0, AD.pregunta, 'ritmo'], [AD.pregunta, AD.drop, 'redoble'], [AD.drop, AD.barrido, 'golpes'], [AD.barrido, logo, 'subida'], [logo, this.seconds, 'caida']],
+    };
     this.golpes = golpes.concat(c.golpes);
     this.destellos = [[0.19, 0.18, 0.06], [0.45, 0.18, 0.06], ...GOLPE_COLOR.map((_, k) => [AD.color0 + k * AD.paso, 0.22, 0.06])].concat(c.destellos);
     this.sfx = sfx.concat(c.sfx);
@@ -1084,6 +1093,16 @@ const giro = {
     });
     sfx.push([GI.cierre - 0.15, 'whoosh', 1]);
     const c = cierreGolpes(GI.cierre);
+    // La música: cada prenda dura seis negras, así que los paneos caen en el tiempo.
+    const logo = GI.cierre + 0.55;
+    const fuera = ventana(GIRO.length - 1) + GI.dura;
+    this.musica = {
+      bpm: 60 / ((GI.dura + GI.paso) / 6),
+      origen: GI.intro,
+      logo,
+      golpes: [0.44],
+      secciones: [[0, GI.intro, 'entrada'], [GI.intro, fuera, 'ritmo'], [fuera, logo, 'subida'], [logo, this.seconds, 'caida']],
+    };
     this.golpes = golpes.concat(c.golpes);
     this.destellos = [[0.44, 0.2, 0.07]].concat(c.destellos);
     this.sfx = sfx.concat(c.sfx);
@@ -1211,6 +1230,15 @@ const hoy = {
     });
     sfx.push([HO.barrido, 'whoosh', 1]);
     const c = cierreGolpes(HO.cierre);
+    // La música: golpes en la cuenta y en HOY; en la mesa, una semicorchea por cada pieza que cae.
+    const logo = HO.cierre + 0.55;
+    this.musica = {
+      bpm: 60 / (HO.cada * 4),
+      origen: HO.caida + 0.14,
+      logo,
+      golpes: [0.03, 0.53, 1.03, HO.hoy + 0.05],
+      secciones: [[0, HO.mesa, 'golpes'], [HO.mesa, HO.barrido, 'ritmo'], [HO.barrido, logo, 'subida'], [logo, this.seconds, 'caida']],
+    };
     this.golpes = golpes.concat(c.golpes);
     this.destellos = [...CUENTA.map((_, k) => [k * 0.5 + 0.03, 0.2, 0.06]), [HO.hoy + 0.05, 0.55, 0.12]].concat(c.destellos);
     this.sfx = sfx.concat(c.sfx);
@@ -1350,6 +1378,15 @@ const correas = {
     const crack = CO.latigo + CO.dura * CO.crack;
     this.crack = crack;
     this.golpes = [[CO.tachas, 20, 0.12], [crack, 62, 0.18]].concat(cierreGolpes(CO.cierre).golpes);
+    // La música se acelera con las franjas, se calla antes del latigazo y cae con el logo.
+    const logo = CO.cierre + 0.55;
+    this.musica = {
+      bpm: 140,
+      origen: 0,
+      logo,
+      golpes: [CO.tachas],
+      secciones: [[0, CO.frena, 'acelera'], [CO.frena, crack + 0.1, 'pausa'], [crack + 0.1, logo, 'subida'], [logo, this.seconds, 'caida']],
+    };
     this.destellos = [[CO.tachas, 0.18, 0.06], [crack, 0.85, 0.07]].concat(cierreGolpes(CO.cierre).destellos);
     this.sfx = [
       [0, 'whoosh', 0.8], [0.25, 'subida', 0.5], [CO.tachas, 'golpe', 1], [1.6, 'subida', 0.9],
@@ -1561,7 +1598,7 @@ window.frame = (i) => {
   await reel.setup();
   GOLPES = reel.golpes || [];
   DESTELLOS = reel.destellos || [];
-  window.SFX = { seconds: reel.seconds, events: reel.sfx || [] };
+  window.SFX = { seconds: reel.seconds, events: reel.sfx || [], musica: reel.musica || null };
   reel.draw(0);
   window.ready = true;
 })().catch((e) => {
