@@ -221,9 +221,9 @@ la tienda.
 
 ## Reels
 
-Cuatro videos, en `../reels/`. Cada uno sale el día que dice, a otra hora que el post de ese día. Traen música propia
-y efectos (golpes, barridos, el latigazo y las campanas de la marca cuando cae el logo), así que se pueden subir tal
-cual; si se prefiere una canción de Instagram, se baja el volumen del audio original.
+Cuatro videos, en `../reels/`. Cada uno sale el día que dice, a otra hora que el post de ese día. Traen música propia,
+psicodelia de sintetizadores, y efectos (golpes, barridos, el latigazo y las campanas de la marca cuando cae el logo),
+así que se pueden subir tal cual; si se prefiere una canción de Instagram, se baja el volumen del audio original.
 
 ### Adelanto · Día −4
 

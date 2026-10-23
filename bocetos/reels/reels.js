@@ -702,21 +702,24 @@ const GOLPE_COLOR = [
   ['ceniza', 'chaqueta-trouble-maker', -3],
   ['leopardo', 'jean-flare-patchwork-leopardo', 2],
 ];
-const AD = { color0: 0.62, paso: 0.42, pregunta: 3.14, drop: 3.84, barrido: 4.85, cierre: 5.05 };
+// A 120 golpes por minuto: un color por negra, la pregunta en una negra, DROP 01 en corcheas y el logo cae en el
+// tiempo 12 (6 s).
+const AD = { color0: 0.5, paso: 0.5, pregunta: 3.5, drop: 4.0, barrido: 5.25, cierre: 5.45 };
+const LETRAS = [0, 0.125, 0.25, 0.375, 0.5, 0.625];
 
 const adelanto = {
   seconds: 9.6,
   async setup() {
     await prendas(GOLPE_COLOR.map((g) => g[1]));
-    const golpes = [[0.2, 18, 0.12], [0.46, 18, 0.12]];
-    const sfx = [[0, 'whoosh', 0.8], [0.19, 'golpe', 0.75], [0.27, 'whoosh', 0.8], [0.45, 'golpe', 0.75]];
+    const golpes = [[0.12, 18, 0.12], [0.32, 18, 0.12]];
+    const sfx = [[0, 'whoosh', 0.8], [0.11, 'golpe', 0.75], [0.19, 'whoosh', 0.8], [0.31, 'golpe', 0.75]];
     GOLPE_COLOR.forEach((_, k) => {
       const t = AD.color0 + k * AD.paso;
       golpes.push([t, 26, 0.12]);
       sfx.push([t, 'golpe', 1]);
     });
-    for (let k = 0; k < 6; k++) sfx.push([AD.pregunta + k * 0.1, 'tic', 0.6]);
-    const letras = [0, 0.11, 0.22, 0.33, 0.48, 0.59];
+    for (let k = 0; k < 6; k++) sfx.push([AD.pregunta + (k * (AD.drop - AD.pregunta)) / 6, 'tic', 0.6]);
+    const letras = LETRAS;
     letras.forEach((d) => {
       golpes.push([AD.drop + d, 12, 0.1]);
       sfx.push([AD.drop + d, 'golpe', 0.5]);
@@ -733,15 +736,15 @@ const adelanto = {
       secciones: [[0, AD.color0, 'entrada'], [AD.color0, AD.pregunta, 'ritmo'], [AD.pregunta, AD.drop, 'redoble'], [AD.drop, AD.barrido, 'golpes'], [AD.barrido, logo, 'subida'], [logo, this.seconds, 'caida']],
     };
     this.golpes = golpes.concat(c.golpes);
-    this.destellos = [[0.19, 0.18, 0.06], [0.45, 0.18, 0.06], ...GOLPE_COLOR.map((_, k) => [AD.color0 + k * AD.paso, 0.22, 0.06])].concat(c.destellos);
+    this.destellos = [[0.11, 0.18, 0.06], [0.31, 0.18, 0.06], ...GOLPE_COLOR.map((_, k) => [AD.color0 + k * AD.paso, 0.22, 0.06])].concat(c.destellos);
     this.sfx = sfx.concat(c.sfx);
   },
   franjas(t) {
     fondo(CARBON);
-    const a = easeOut(seg(t, 0, 0.2));
-    const b = easeOut(seg(t, 0.27, 0.46));
+    const a = easeOut(seg(t, 0, 0.12));
+    const b = easeOut(seg(t, 0.19, 0.32));
     franja(820, -8, t * 420 + lerp(-1400, 0, a), { bg: COLORES.acido.c, fg: CARBON, h: 150, size: 46 });
-    if (t >= 0.27) franja(1120, 6, -t * 420 + lerp(1400, 0, b), { bg: HUESO, fg: CARBON, h: 150, size: 46 });
+    if (t >= 0.19) franja(1120, 6, -t * 420 + lerp(1400, 0, b), { bg: HUESO, fg: CARBON, h: 150, size: 46 });
   },
   color(t, k) {
     const [id, h, rot] = GOLPE_COLOR[k];
@@ -757,7 +760,7 @@ const adelanto = {
     copia(A[h], W / 2, 790, 620, 740, { rot, scale: s, corte: p.corte || '', tag: { text: 'Últimas 4', bg: p.acc } });
   },
   pregunta(t) {
-    const k = Math.min(5, Math.floor((t - AD.pregunta) / 0.1));
+    const k = Math.min(5, Math.floor(((t - AD.pregunta) * 6) / (AD.drop - AD.pregunta)));
     const id = ORDEN[k];
     fondo(CARBON);
     textura(id, 0.9, 0.6);
@@ -787,7 +790,7 @@ const adelanto = {
     const size = 300;
     const font = `400 ${size}px Anton`;
     const total = ancho(word, font, -0.005 * size);
-    const letras = [0, 0.11, 0.22, 0.33, null, 0.48, 0.59];
+    const letras = [...LETRAS.slice(0, 4), null, ...LETRAS.slice(4)];
     let x = W / 2 - total / 2;
     [...word].forEach((ch, k) => {
       const w = ancho(ch, font, -0.005 * size);
@@ -798,9 +801,9 @@ const adelanto = {
       }
       x += w;
     });
-    mono('(01) Denim intervenido — MED/COL', W / 2, 760, 28, HUESO, { align: 'center', alpha: seg(t, 4.5, 4.62) });
-    grotesk('Prendas intervenidas a mano y piezas de archivo.', W / 2, 1190, 38, HUESO, { align: 'center', alpha: seg(t, 4.55, 4.7) });
-    sello(840, 1380, 130, 'EDICIÓN CORTA · NO SE REPITE · ', COLORES.acido.c, CARBON, { rot: t * 60, scale: easeBack(seg(t, 4.55, 4.78), 2) });
+    mono('(01) Denim intervenido — MED/COL', W / 2, 760, 28, HUESO, { align: 'center', alpha: seg(t, AD.drop + 0.68, AD.drop + 0.8) });
+    grotesk('Prendas intervenidas a mano y piezas de archivo.', W / 2, 1190, 38, HUESO, { align: 'center', alpha: seg(t, AD.drop + 0.72, AD.drop + 0.86) });
+    sello(840, 1380, 130, 'EDICIÓN CORTA · NO SE REPITE · ', COLORES.acido.c, CARBON, { rot: t * 60, scale: easeBack(seg(t, AD.drop + 0.72, AD.drop + 0.94), 2) });
   },
   draw(i) {
     const t = i / FPS;
@@ -1315,7 +1318,9 @@ const hoy = {
 
 /* ---------- Correas: corren en las franjas del inicio y una cruza la pantalla como un látigo ---------- */
 
-const CO = { tachas: 0.9, frena: 3.2, entra: 3.42, latigo: 3.58, dura: 0.45, crack: 0.86, cierre: 3.98 };
+// A 120 golpes por minuto: TACHAS en el tiempo 2, las franjas se van en el 6 y medio, la punta revienta en el 8 (4 s)
+// y el logo cae en el 9. Entre las franjas y el latigazo la pantalla queda vacía apenas un cuarto de segundo.
+const CO = { tachas: 1.0, frena: 3.25, entra: 3.45, latigo: 3.62, dura: 0.45, crack: 0.86, cierre: 3.95 };
 const TH0 = rad(-100);
 const TH1 = rad(-43);
 
@@ -1381,7 +1386,7 @@ const correas = {
     // La música se acelera con las franjas, se calla antes del latigazo y cae con el logo.
     const logo = CO.cierre + 0.55;
     this.musica = {
-      bpm: 140,
+      bpm: 120,
       origen: 0,
       logo,
       golpes: [CO.tachas],
@@ -1448,7 +1453,11 @@ const correas = {
       ctx.save();
       ctx.globalAlpha = 1 - salida;
       anton('Tachas', W / 2, 1060, 280, HUESO, { align: 'center', scale: lerp(2, 1, s), alpha: s });
-      mono('(12) correas · ninguna igual', W / 2, 1140, 30, HUESO, { align: 'center', alpha: seg(t, CO.tachas + 0.15, CO.tachas + 0.25) });
+      // en una marquilla de carbón, porque debajo pasa la franja ácida y el hueso no se lee sobre ella
+      const m = '(12) correas · ninguna igual';
+      const tw = ancho(m.toUpperCase(), '700 30px "Space Mono"', 1.8) + 42;
+      ctx.globalAlpha *= seg(t, CO.tachas + 0.15, CO.tachas + 0.25);
+      marquilla(m, W / 2 - tw / 2, 1094, { bg: CARBON, fg: HUESO, size: 30, rot: -2 });
       ctx.restore();
     }
   },

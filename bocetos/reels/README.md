@@ -22,13 +22,17 @@ de reels.
 ## Sonido
 
 Cada video trae música propia y efectos, hechos aquí mismo con `sonido.py` (sin canciones de nadie, así que Instagram
-no los silencia por derechos de autor). La música es una base en re menor con bombo, palmas, platillos, bajo 808 y
-acordes, al tempo de los cortes de cada video: una negra por color en el adelanto, seis por prenda en el giro, una
-semicorchea por cada pieza que cae en hoy y platillos que se aceleran con las franjas en correas, que se calla justo
-antes del latigazo. Cuando el logo cae, en los cuatro suena lo mismo: el golpe grave y tres campanas (re, fa, la), que
-son el sonido de la marca. Encima van los efectos: un golpe en cada corte, el aire de las franjas y los paneos, la
-subida antes del logo, los tics de las letras y de las piezas, y el chasquido del látigo; en cada golpe la música baja
-un poco para que el golpe se sienta.
+no los silencia por derechos de autor). La música es psicodelia de sintetizadores: acordes soñadores en re mayor (Dmaj9,
+F#m7, Gmaj7 y Gm6, un compás cada uno) que giran con la fase y se abren con el coro, un bajo melódico que salta de
+octava, batería con cuerpo y mucha sala, platillos en semicorcheas con algo de swing, un arpegio que rebota de un lado
+al otro con eco y un poco de vaivén de cinta. Va al tempo de los cortes de cada video: a 120 golpes por minuto en el
+adelanto (un color por negra y el logo en el tiempo 12), a 126 en el giro (seis negras por prenda), a 125 en hoy (una
+semicorchea por cada pieza que cae) y a 120 en correas, donde los platillos se aceleran con las franjas y la música se
+calla justo antes del latigazo. Cuando el logo cae, en los cuatro suena lo mismo: el golpe grave y tres campanas en re
+mayor (re, fa sostenido, la), que son el sonido de la marca. Encima van los efectos: un golpe en cada corte, el aire de
+las franjas y los paneos, la subida antes del logo, los tics de las letras y de las piezas, y el chasquido del látigo;
+en cada golpe la música baja un poco para que el golpe se sienta. En el último medio segundo el sonido se apaga, así que
+cuando el reel vuelve a empezar no se oye un corte.
 
 Se pueden subir tal cual. Si se prefiere una canción de Instagram, se baja el volumen del audio original en el editor
 de Instagram y los golpes quedan debajo de la canción.
