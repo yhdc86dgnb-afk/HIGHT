@@ -12,8 +12,17 @@ tienda del 23 de octubre de 2026; si cambian, cámbialos aquí también.
 El feed alterna carbón con hueso o un color de la tienda, como las secciones de la página, así que en la cuadrícula del
 perfil queda un tablero.
 
-Bio sugerida (del manual de marca): *Streetwear de autor para el uso diario. Hecho en Medellín. Drop 01 →* y el enlace a
-la tienda.
+## Bio
+
+Tres líneas y 137 caracteres (Instagram deja 150). Empieza con el lema de firma y el formato de bio del manual de marca,
+dice qué trae el Drop 01 con la misma frase de los posts y termina con la pregunta de la campaña, para que quien llega
+al perfil se busque en un color. En el campo del enlace va la tienda.
+
+```
+Streetwear de autor para el uso diario. Hecho en Medellín.
+Prendas intervenidas a mano y piezas de archivo.
+¿De qué color eres? Drop 01 →
+```
 
 ---
 
