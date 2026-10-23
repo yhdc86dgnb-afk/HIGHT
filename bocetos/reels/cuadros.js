@@ -1,4 +1,5 @@
-// Dibuja los cuadros de un reel y los guarda como PNG en cuadros-<reel>/. Uso: node cuadros.js <dirección de reels.html> <reel> [desde] [hasta]
+// Dibuja los cuadros de un reel y los guarda como PNG en cuadros-<reel>/, con sonido.json (los efectos de sonido).
+// Uso: node cuadros.js <dirección de reels.html> <reel> [desde] [hasta]
 const { chromium } = require('playwright');
 const fs = require('fs');
 const [, , base, reel, from, to] = process.argv;
@@ -21,6 +22,8 @@ const [, , base, reel, from, to] = process.argv;
     fs.writeFileSync(name + '.tmp', Buffer.from(url.split(',')[1], 'base64'));
     fs.renameSync(name + '.tmp', name);
   }
+  // los efectos de sonido del reel, para sonido.py
+  fs.writeFileSync(`${dir}/sonido.json`, JSON.stringify(await page.evaluate(() => window.SFX)));
   console.log(`${reel}: ${frames} cuadros en ${((Date.now() - t0) / 1000).toFixed(1)} s`);
   await browser.close();
 })();

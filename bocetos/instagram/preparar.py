@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Prepara las imágenes de los posts a partir de copias de las fotos de la tienda (las fotos originales no se tocan).
 
-Por prenda deja en imagenes/:
-  <prenda>-recorte.webp   la prenda sola, sobre fondo transparente (con la máscara del generador 360)
-  <prenda>-ciano.webp     la misma, en cianotipo: azul de Prusia, sombras de noche y luces casi blancas
-  <prenda>-bn.webp        la misma, en blanco y negro con contraste de revista
-  <prenda>-dibujo.webp    el dibujo en vector del visor 360, sin el fondo blanco
-  detalle-<nombre>.webp   un detalle de cerca, cuadrado, para las hojas de detalles y la lupa
+Deja en imagenes/:
+  <prenda>-recorte.webp   cada prenda sola, sobre fondo transparente (con la máscara del generador 360), para las
+                          copias impresas de los posts y los reels
+  <prenda>-foto.webp      la foto completa, para la anatomía del jean y la lupa de la Chaqueta Smiley Ácido
+  detalle-<nombre>.webp   un detalle de cerca, cuadrado, para el post de los seis detalles
+  chaqueta-blood-rose-dibujo.webp   el dibujo de la chaqueta, que todavía no tiene foto
 
 Uso: python3 preparar.py <carpeta de trabajo del 360 (con productos/<prenda>/foto.jpg y foto-mascara.png)> <carpeta del tema>
 """
@@ -15,7 +15,7 @@ import sys
 from collections import deque
 
 import numpy as np
-from PIL import Image, ImageFilter, ImageOps, ImageEnhance
+from PIL import Image, ImageFilter
 
 PRENDAS = [
     'jean-flare-patchwork-leopardo', 'jean-flare-dragon-acido', 'camiseta-celula-carmin', 'top-malla-asimetrico-rojo',
@@ -65,14 +65,6 @@ def defringe(im, r=4):
     return Image.fromarray(out.round().clip(0, 255).astype(np.uint8), 'RGBA')
 
 
-def tone(rgba, stops):
-    """Pasa la luminancia por una escala de colores (sombras → medios → luces) y deja el alfa como estaba."""
-    gray = ImageOps.autocontrast(rgba.convert('L'), cutoff=1)
-    colored = ImageOps.colorize(gray, black=stops[0], mid=stops[1], white=stops[2], midpoint=118)
-    colored.putalpha(rgba.getchannel('A'))
-    return colored
-
-
 def drawing_alpha(path):
     """El dibujo del 360 viene sobre blanco: lo blanco que toca el borde se vuelve transparente."""
     im = Image.open(path).convert('RGB')
@@ -108,8 +100,9 @@ DETALLES = [
     ('jean-wide-fleco-indigo', 'flecos', 0.42, 0.5, 0.5),
     ('tejido-anillos-indigo', 'argollas', 0.48, 0.36, 0.32),
     ('chaqueta-trouble-maker', 'espiral', 0.82, 0.32, 0.32),
-    ('chaqueta-smiley-acido', 'lupa', 0.62, 0.24, 0.44),
 ]
+# Fotos completas que usan los posts (la anatomía del jean y la lupa).
+FOTOS = ['jean-flare-patchwork-leopardo', 'chaqueta-smiley-acido']
 
 
 def detail(cut, cx, cy, side):
@@ -134,13 +127,12 @@ def main():
         cut.putalpha(mask)
         cut = defringe(crop_alpha(cut))
         cut.save(os.path.join(out, f'{h}-recorte.webp'), quality=88)
-        tone(cut, ('#040b1c', '#1d4f8a', '#e6efff')).save(os.path.join(out, f'{h}-ciano.webp'), quality=86)
-        bn = ImageEnhance.Contrast(cut.convert('LA').convert('RGBA')).enhance(1.25)
-        bn.putalpha(cut.getchannel('A'))
-        bn.save(os.path.join(out, f'{h}-bn.webp'), quality=86)
-        dib = os.path.join(theme, 'assets', f'360-{h}-frente.webp')
-        if os.path.exists(dib):
-            drawing_alpha(dib).save(os.path.join(out, f'{h}-dibujo.webp'), quality=88)
+        if h in FOTOS:
+            full = foto.copy()
+            if max(full.size) > 1600:
+                s = 1600 / max(full.size)
+                full = full.resize((round(full.width * s), round(full.height * s)), Image.LANCZOS)
+            full.save(os.path.join(out, f'{h}-foto.webp'), quality=88)
         print(h, cut.size)
     for h, name, cx, cy, side in DETALLES:
         cut = Image.open(os.path.join(out, f'{h}-recorte.webp')).convert('RGBA')
