@@ -301,8 +301,8 @@ templates/       plantillas JSON + gift_card.liquid
 design-system/   design system HIGHT original (referencia)
 docs/preview/    capturas de la vista previa
 docs/politicas/  políticas de envío y de cambios para pegar en Shopify
-bocetos/         fichas técnicas para Illustrator (SVG y PDF), su generador, la chaqueta en vector (vector/) y el
-                 video de campaña (video/)
+bocetos/         fichas técnicas para Illustrator (SVG y PDF), su generador, la chaqueta en vector (vector/), el
+                 video de campaña (video/), las correas (correas/) y los posts y reels de Instagram (instagram/, reels/)
 ```
 
 `shopify theme check` pasa sin observaciones y el workflow `.github/workflows/theme-check.yml` lo corre en cada push.

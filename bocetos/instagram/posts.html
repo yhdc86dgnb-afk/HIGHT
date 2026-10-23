@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Posts del lanzamiento</title>
+<style>
+@font-face { font-family: 'Espina'; src: url(fuentes/HightEspina-Regular.woff) format('woff'); }
+@font-face { font-family: 'Archivo'; src: url(fuentes/archivo-latin.woff2) format('woff2'); font-weight: 400 800; }
+@font-face { font-family: 'Plex'; src: url(fuentes/ibm-plex-mono-400-latin.woff2) format('woff2'); font-weight: 400; }
+@font-face { font-family: 'Plex'; src: url(fuentes/ibm-plex-mono-500-latin.woff2) format('woff2'); font-weight: 500; }
+@font-face { font-family: 'Serif'; src: url(fuentes/instrument-serif-italic-latin.woff2) format('woff2'); font-style: italic; }
+
+/* Colores del design system de Hight: plata, noche, aura y cianotipo. */
+:root {
+  --ink: #0b1222; --ink-muted: #3c4350;
+  --night: #070a11; --night-100: #0e131d; --night-200: #181f2c; --on-night: #e3e6eb; --muted-night: #a2a8b4;
+  --aura: #6fa2ff; --prussian: #1d4f8a; --on-photo: #eef4ff;
+  --s050: #f7f8f9; --s100: #eceef0; --s200: #d9dbdf; --s300: #bfc2c8; --s400: #9da1a8; --s500: #7c8088;
+  --ds: ../../design-system;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #2b2f36; display: flex; flex-direction: column; align-items: center; gap: 40px; padding: 40px 0; }
+
+.post { position: relative; width: 1080px; height: 1350px; overflow: hidden; isolation: isolate; }
+.plata { background: url(../../design-system/graficos/plata-cepillada.svg) center / cover, var(--s200); color: var(--ink); }
+.noche { background: var(--night); color: var(--on-night); }
+.grano::after {
+  content: ''; position: absolute; inset: 0; z-index: 9; pointer-events: none;
+  background: url(../../design-system/graficos/grano.svg) 0 0 / 540px 540px; filter: invert(1); opacity: .38; mix-blend-mode: screen;
+}
+
+.label { font: 500 22px/1.3 'Plex', monospace; letter-spacing: .08em; text-transform: uppercase; }
+.small { font: 500 17px/1.3 'Plex', monospace; letter-spacing: .08em; text-transform: uppercase; }
+.esq { position: absolute; z-index: 8; }
+.tl { top: 54px; left: 60px; } .tr { top: 54px; right: 60px; text-align: right; }
+.bl { bottom: 54px; left: 60px; } .br { bottom: 54px; right: 60px; text-align: right; }
+.logo { display: block; height: 30px; }
+.muted { color: var(--ink-muted); } .noche .muted { color: var(--muted-night); }
+
+.espina { font-family: 'Espina'; font-weight: 400; line-height: .86; white-space: nowrap; }
+.chrome {
+  background: linear-gradient(180deg, #ffffff 0%, #e4e8ef 30%, #7c8088 49%, #f2f6ff 62%, #a9b0bd 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.glow { filter: drop-shadow(0 0 20px rgba(111, 162, 255, .6)) drop-shadow(0 0 64px rgba(111, 162, 255, .32)); }
+.halo { position: absolute; z-index: 0; border-radius: 50%;
+  background: radial-gradient(circle, rgba(111, 162, 255, .5) 0%, rgba(111, 162, 255, .17) 34%, rgba(111, 162, 255, 0) 66%); }
+.star { position: absolute; z-index: 4; }
+.serif { font-family: 'Serif'; font-style: italic; font-weight: 400; }
+.name { font: 700 50px/1.04 'Archivo', sans-serif; letter-spacing: -.012em; }
+.price { font: 500 46px/1 'Plex', monospace; }
+.spec { font: 400 21px/1.5 'Plex', monospace; letter-spacing: .08em; text-transform: uppercase; }
+.fig { position: absolute; z-index: 3; }
+.fig img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.sombra img { filter: drop-shadow(0 28px 34px rgba(11, 18, 34, .3)); }
+.abs { position: absolute; z-index: 5; }
+.rule { position: absolute; left: 60px; right: 60px; height: 1px; background: currentColor; opacity: .3; z-index: 6; }
+
+/* Hojas de contacto */
+.hoja { position: absolute; z-index: 4; display: grid; }
+.hoja figure { display: flex; flex-direction: column; gap: 10px; }
+.hoja .marco { border: 1px solid currentColor; padding: 8px; }
+.hoja .marco img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hoja .cut img { object-fit: contain; }
+.noche .hoja .marco { border-color: rgba(227, 230, 235, .35); background: var(--night-200); }
+.plata .hoja .marco { border-color: rgba(11, 18, 34, .45); }
+/* Prendas que la foto original corta por un lado: ese lado toca el marco o el borde del post, y el corte se ve a
+   propósito. */
+.corte-der img { object-position: 100% 50%; }
+.corte-abajo img { object-position: 50% 100%; }
+.hoja .corte-der { padding-right: 0; }
+.hoja .corte-abajo { padding-bottom: 0; }
+.hoja .corte-lados { padding-left: 0; padding-right: 0; }
+
+/* Correas */
+.correa { position: absolute; z-index: 3; transform-origin: center; }
+.correa img { display: block; height: 100%; width: auto; }
+
+/* Lupa */
+.lente { position: absolute; z-index: 4; border-radius: 50%; overflow: hidden;
+  box-shadow: 0 0 0 14px var(--s100), 0 0 0 16px var(--ink), 0 30px 60px rgba(11, 18, 34, .35); }
+.lente img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.callout { position: absolute; z-index: 6; display: flex; align-items: center; gap: 14px; }
+.callout::before { content: ''; width: 46px; height: 1px; background: currentColor; }
+
+/* Ficha técnica: marcas numeradas sobre el dibujo y su leyenda */
+.marca { position: absolute; z-index: 6; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--ink); color: var(--s100); font: 500 22px/1 'Plex', monospace; box-shadow: 0 0 0 4px var(--s100); }
+.num { display: inline-grid; place-items: center; width: 28px; height: 28px; margin-right: 8px; border-radius: 50%;
+  background: var(--ink); color: var(--s100); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<!-- 01 · noche · Lo que viene -->
+<section class="post noche grano" id="p01">
+  <div class="halo" style="width:1400px;height:1400px;left:-160px;top:-120px"></div>
+  <img class="star" src="../../design-system/graficos/estrella-luz.svg" style="width:330px;left:375px;top:250px" alt="">
+  <div class="abs espina chrome glow" style="left:0;right:0;top:600px;text-align:center;font-size:206px">DROP 01</div>
+  <p class="abs label muted" style="left:0;right:0;top:845px;text-align:center">Ediciones cortas · denim intervenido</p>
+  <p class="esq tl label">(N1)</p>
+  <p class="esq tr label">MED/COL</p>
+  <p class="esq bl label">Pronto</p>
+  <img class="esq br logo" src="../../design-system/logos/hight-wordmark-plata.svg" alt="">
+</section>
+
+<!-- 02 · plata · Hoja de detalles -->
+<section class="post plata" id="p02">
+  <p class="esq tl label">Hoja 01 — detalles</p>
+  <img class="esq tr logo" src="../../design-system/logos/hight-wordmark-tinta.svg" alt="">
+  <div class="hoja" style="left:60px;right:60px;top:134px;grid-template-columns:1fr 1fr;gap:22px 24px">
+    <figure><div class="marco" style="height:312px"><img src="imagenes/detalle-mariposas.webp" alt=""></div><figcaption class="small">01 · Mariposas bordadas</figcaption></figure>
+    <figure><div class="marco" style="height:312px"><img src="imagenes/detalle-pintura.webp" alt=""></div><figcaption class="small">02 · Pintura a mano</figcaption></figure>
+    <figure><div class="marco" style="height:312px"><img src="imagenes/detalle-semitono.webp" alt=""></div><figcaption class="small">03 · Semitono</figcaption></figure>
+    <figure><div class="marco" style="height:312px"><img src="imagenes/detalle-flecos.webp" alt=""></div><figcaption class="small">04 · Flecos</figcaption></figure>
+    <figure><div class="marco" style="height:312px"><img src="imagenes/detalle-argollas.webp" alt=""></div><figcaption class="small">05 · Argollas de metal</figcaption></figure>
+    <figure><div class="marco" style="height:312px"><img src="imagenes/detalle-espiral.webp" alt=""></div><figcaption class="small">06 · Pintura blanca</figcaption></figure>
+  </div>
+  <p class="esq bl label">Drop 01</p>
+  <p class="esq br label">Seis detalles</p>
+</section>
+
+<!-- 03 · noche · La prenda se siente antes de verse -->
+<section class="post noche grano" id="p03">
+  <div class="halo" style="width:1000px;height:1000px;right:-330px;top:-300px"></div>
+  <img class="star" src="../../design-system/graficos/estrella-luz.svg" style="width:150px;left:44px;top:330px" alt="">
+  <p class="abs serif" style="left:60px;right:80px;top:500px;font-size:124px;line-height:1">La prenda se siente antes de verse.</p>
+  <p class="esq tl label">(Manifiesto)</p>
+  <p class="esq tr label">MED/COL</p>
+  <p class="esq bl label">Drop 01</p>
+  <img class="esq br logo" src="../../design-system/logos/hight-wordmark-plata.svg" alt="">
+</section>
+
+<!-- 04 · plata · Nueve dibujos -->
+<section class="post plata" id="p04">
+  <p class="esq tl label">Dibujos — vista 360°</p>
+  <img class="esq tr logo" src="../../design-system/logos/hight-wordmark-tinta.svg" alt="">
+  <div class="hoja" style="left:60px;right:60px;top:140px;grid-template-columns:repeat(3,1fr);gap:20px">
+    <figure class="cut"><div class="marco" style="height:318px"><img src="imagenes/chaqueta-trouble-maker-dibujo.webp" alt=""></div><figcaption class="small">01</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:318px"><img src="imagenes/jean-flare-patchwork-leopardo-dibujo.webp" alt=""></div><figcaption class="small">02</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:318px"><img src="imagenes/buzo-multitud-termica-dibujo.webp" alt=""></div><figcaption class="small">03</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:318px"><img src="imagenes/camiseta-celula-carmin-dibujo.webp" alt=""></div><figcaption class="small">04</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:318px"><img src="imagenes/chaqueta-smiley-acido-dibujo.webp" alt=""></div><figcaption class="small">05</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:318px"><img src="imagenes/jean-wide-patchwork-indigo-dibujo.webp" alt=""></div><figcaption class="small">06</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:318px"><img src="imagenes/top-halftone-carmin-dibujo.webp" alt=""></div><figcaption class="small">07</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:318px"><img src="imagenes/tejido-anillos-indigo-dibujo.webp" alt=""></div><figcaption class="small">08</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:318px"><img src="imagenes/jean-flare-costura-neon-dibujo.webp" alt=""></div><figcaption class="small">09</figcaption></figure>
+  </div>
+  <p class="esq bl label">Drop 01</p>
+  <p class="esq br label">9 de 20 piezas</p>
+</section>
+
+<!-- 05 · noche · Chaqueta Trouble Maker en cianotipo -->
+<section class="post noche grano" id="p05">
+  <div class="halo" style="width:1300px;height:1300px;left:-110px;top:-20px"></div>
+  <div class="fig" style="left:30px;right:30px;top:210px;height:800px"><img src="imagenes/chaqueta-trouble-maker-ciano.webp" alt=""></div>
+  <p class="abs serif" style="left:60px;bottom:146px;font-size:92px;line-height:1">Pintada a mano.</p>
+  <p class="esq tl label">(N1) — Chaqueta</p>
+  <p class="esq tr label">MED/COL</p>
+  <p class="esq bl label">Chaqueta Trouble Maker · $580.000</p>
+  <img class="esq br logo" src="../../design-system/logos/hight-wordmark-plata.svg" alt="">
+</section>
+
+<!-- 06 · plata · Vista 360 -->
+<section class="post plata" id="p06">
+  <div class="abs espina" style="left:0;right:0;top:118px;text-align:center;font-size:190px;color:var(--ink)">360</div>
+  <div class="fig sombra" style="left:40px;width:500px;top:350px;height:780px"><img src="imagenes/chaqueta-smiley-acido-3d-tres-cuartos.webp" alt=""></div>
+  <div class="fig sombra" style="right:40px;width:500px;top:350px;height:780px"><img src="imagenes/jean-flare-costura-neon-3d-tres-cuartos.webp" alt=""></div>
+  <svg class="abs" style="left:110px;top:1112px;width:860px;height:86px" viewBox="0 0 860 86" aria-hidden="true">
+    <ellipse cx="430" cy="43" rx="420" ry="34" fill="none" stroke="#0b1222" stroke-width="2" stroke-dasharray="2 9" stroke-linecap="round"/>
+    <path d="M818 30l22 13-24 9" fill="none" stroke="#0b1222" stroke-width="3" stroke-linejoin="round"/>
+  </svg>
+  <p class="esq tl label">(N1) — Vista 360°</p>
+  <img class="esq tr logo" src="../../design-system/logos/hight-wordmark-tinta.svg" alt="">
+  <p class="esq bl label">Frente · costado · espalda · arriba · abajo</p>
+</section>
+
+<!-- 07 · noche · Hoy -->
+<section class="post noche grano" id="p07">
+  <div class="halo" style="width:1500px;height:1500px;left:-210px;top:-160px"></div>
+  <img class="star" src="../../design-system/graficos/estrella-luz.svg" style="width:260px;left:410px;top:210px" alt="">
+  <div class="abs espina chrome glow" style="left:0;right:0;top:520px;text-align:center;font-size:400px">HOY</div>
+  <p class="abs label muted" style="left:0;right:0;top:940px;text-align:center">Drop 01 · en el enlace de la bio</p>
+  <p class="esq tl label">(N1)</p>
+  <p class="esq tr label">MED/COL</p>
+  <p class="esq bl label">20 piezas · máximo 4 por talla</p>
+  <img class="esq br logo" src="../../design-system/logos/hight-wordmark-plata.svg" alt="">
+</section>
+
+<!-- 08 · plata · Las 20 piezas -->
+<section class="post plata" id="p08">
+  <p class="esq tl label">Drop 01 — las 20 piezas</p>
+  <img class="esq tr logo" src="../../design-system/logos/hight-wordmark-tinta.svg" alt="">
+  <div class="hoja" style="left:60px;right:60px;top:128px;grid-template-columns:repeat(5,1fr);gap:14px 14px">
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/chaqueta-trouble-maker-recorte.webp" alt=""></div><figcaption class="small">01 · $580.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/chaqueta-smiley-acido-recorte.webp" alt=""></div><figcaption class="small">02 · $620.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/chaqueta-blood-rose-dibujo.webp" alt=""></div><figcaption class="small">03 · $500.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/buzo-multitud-termica-recorte.webp" alt=""></div><figcaption class="small">04 · $390.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/buzo-destroyed-ceniza-recorte.webp" alt=""></div><figcaption class="small">05 · $520.000</figcaption></figure>
+    <figure class="cut"><div class="marco corte-der" style="height:226px"><img src="imagenes/tejido-anillos-indigo-recorte.webp" alt=""></div><figcaption class="small">06 · $460.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/tejido-deshilado-ceniza-recorte.webp" alt=""></div><figcaption class="small">07 · $380.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/camiseta-celula-carmin-recorte.webp" alt=""></div><figcaption class="small">08 · $169.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/top-halftone-carmin-recorte.webp" alt=""></div><figcaption class="small">09 · $99.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/top-crop-rostros-recorte.webp" alt=""></div><figcaption class="small">10 · $89.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/top-malla-asimetrico-rojo-recorte.webp" alt=""></div><figcaption class="small">11 · $390.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/jean-flare-patchwork-leopardo-recorte.webp" alt=""></div><figcaption class="small">12 · $690.000</figcaption></figure>
+    <figure class="cut"><div class="marco corte-lados" style="height:226px"><img src="imagenes/jean-flare-dragon-acido-recorte.webp" alt=""></div><figcaption class="small">13 · $490.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/jean-flare-destroyed-verde-recorte.webp" alt=""></div><figcaption class="small">14 · $480.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/jean-flare-costura-neon-recorte.webp" alt=""></div><figcaption class="small">15 · $560.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/jean-patchwork-cuadros-recorte.webp" alt=""></div><figcaption class="small">16 · $540.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/jean-patchwork-estrellas-violeta-recorte.webp" alt=""></div><figcaption class="small">17 · $650.000</figcaption></figure>
+    <figure class="cut"><div class="marco corte-der" style="height:226px"><img src="imagenes/jean-wide-patchwork-indigo-recorte.webp" alt=""></div><figcaption class="small">18 · $590.000</figcaption></figure>
+    <figure class="cut"><div class="marco corte-abajo" style="height:226px"><img src="imagenes/jean-wide-fleco-indigo-recorte.webp" alt=""></div><figcaption class="small">19 · $620.000</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:226px"><img src="imagenes/short-camuflado-leopardo-rosa-recorte.webp" alt=""></div><figcaption class="small">20 · $260.000</figcaption></figure>
+  </div>
+  <p class="esq bl label">Cuando se acaban, no vuelven</p>
+</section>
+
+<!-- 09 · noche · Correas -->
+<section class="post noche grano" id="p09">
+  <div class="halo" style="width:1200px;height:1200px;left:-60px;top:80px"></div>
+  <div class="correa" style="height:150px;left:-420px;top:300px;transform:rotate(-24deg)"><img src="../../assets/correa-04.svg" alt=""></div>
+  <div class="correa" style="height:150px;left:-560px;top:520px;transform:rotate(-24deg)"><img src="../../assets/correa-07.svg" alt=""></div>
+  <div class="correa" style="height:150px;left:-700px;top:740px;transform:rotate(-24deg)"><img src="../../assets/correa-02.svg" alt=""></div>
+  <div class="correa" style="height:150px;left:-840px;top:960px;transform:rotate(-24deg)"><img src="../../assets/correa-09.svg" alt=""></div>
+  <div class="abs espina chrome glow" style="left:60px;bottom:120px;font-size:140px">TACHAS</div>
+  <p class="esq tl label">(N1) — Correas</p>
+  <p class="esq tr label">MED/COL</p>
+  <img class="esq br logo" src="../../design-system/logos/hight-wordmark-plata.svg" alt="">
+</section>
+
+<!-- 10 · plata · Jean Flare Patchwork Leopardo -->
+<section class="post plata" id="p10">
+  <div class="fig sombra" style="left:150px;right:150px;top:110px;height:930px"><img src="imagenes/jean-flare-patchwork-leopardo-recorte.webp" alt=""></div>
+  <div class="rule" style="top:1078px"></div>
+  <p class="abs name" style="left:60px;top:1104px;width:640px">Jean Flare Patchwork Leopardo</p>
+  <p class="abs spec muted" style="left:60px;top:1222px">Flare · patchwork · talla 30</p>
+  <p class="abs price" style="right:60px;top:1110px">$690.000</p>
+  <p class="abs spec muted" style="right:60px;top:1222px;text-align:right">4 unidades</p>
+  <p class="esq tl label">(N1) — Jean</p>
+  <img class="esq tr logo" src="../../design-system/logos/hight-wordmark-tinta.svg" alt="">
+</section>
+
+<!-- 11 · noche · Buzo Destroyed Ceniza en cianotipo -->
+<section class="post noche grano" id="p11">
+  <div class="halo" style="width:1300px;height:1300px;left:-110px;top:-40px"></div>
+  <div class="fig" style="left:90px;right:90px;top:150px;height:900px"><img src="imagenes/buzo-destroyed-ceniza-ciano.webp" alt=""></div>
+  <p class="abs serif" style="left:60px;bottom:146px;font-size:92px;line-height:1">Roto por capas.</p>
+  <p class="esq tl label">(N1) — Buzo</p>
+  <p class="esq tr label">MED/COL</p>
+  <p class="esq bl label">Buzo Destroyed Ceniza · $520.000</p>
+  <img class="esq br logo" src="../../design-system/logos/hight-wordmark-plata.svg" alt="">
+</section>
+
+<!-- 12 · plata · Camiseta Célula Carmín -->
+<section class="post plata" id="p12">
+  <div class="fig sombra" style="left:110px;right:110px;top:150px;height:880px"><img src="imagenes/camiseta-celula-carmin-recorte.webp" alt=""></div>
+  <div class="rule" style="top:1078px"></div>
+  <p class="abs name" style="left:60px;top:1104px;width:640px">Camiseta Célula Carmín</p>
+  <p class="abs spec muted" style="left:60px;top:1222px">Estampado total · tallas S, M, L, XL</p>
+  <p class="abs price" style="right:60px;top:1110px">$169.000</p>
+  <p class="abs spec muted" style="right:60px;top:1222px;text-align:right">3 por talla</p>
+  <p class="esq tl label">(N1) — Camiseta</p>
+  <img class="esq tr logo" src="../../design-system/logos/hight-wordmark-tinta.svg" alt="">
+</section>
+
+<!-- 13 · noche · Si la ves y es tu talla, es tuya -->
+<section class="post noche grano" id="p13">
+  <div class="halo" style="width:1000px;height:1000px;left:-360px;bottom:-320px"></div>
+  <img class="star" src="../../design-system/graficos/estrella-luz.svg" style="width:150px;right:60px;top:300px" alt="">
+  <p class="abs serif" style="left:60px;right:80px;top:470px;font-size:128px;line-height:1">Si la ves y es tu talla, es tuya.</p>
+  <p class="esq tl label">(Manifiesto)</p>
+  <p class="esq tr label">MED/COL</p>
+  <p class="esq bl label">Máximo 4 por talla</p>
+  <img class="esq br logo" src="../../design-system/logos/hight-wordmark-plata.svg" alt="">
+</section>
+
+<!-- 14 · plata · De cerca: Chaqueta Smiley Ácido -->
+<section class="post plata" id="p14">
+  <div class="fig sombra" style="left:30px;width:470px;top:250px;height:690px"><img src="imagenes/chaqueta-smiley-acido-recorte.webp" alt=""></div>
+  <div class="lente" style="left:480px;top:220px;width:540px;height:540px"><img src="imagenes/detalle-lupa.webp" alt=""></div>
+  <svg class="abs" style="left:300px;top:300px;width:240px;height:160px" viewBox="0 0 240 160" aria-hidden="true">
+    <path d="M6 92L200 22" stroke="#0b1222" stroke-width="2" fill="none"/><circle cx="6" cy="92" r="6" fill="#0b1222"/>
+  </svg>
+  <p class="callout label" style="left:540px;top:830px">Pintura a mano y aerosol</p>
+  <p class="callout label" style="left:540px;top:880px">Botones metálicos</p>
+  <p class="callout label" style="left:540px;top:930px">Cadena que se quita</p>
+  <div class="rule" style="top:1078px"></div>
+  <p class="abs name" style="left:60px;top:1104px;width:640px">Chaqueta Smiley Ácido</p>
+  <p class="abs spec muted" style="left:60px;top:1222px">Corta y holgada · denim pintado</p>
+  <p class="abs price" style="right:60px;top:1110px">$620.000</p>
+  <p class="abs spec muted" style="right:60px;top:1222px;text-align:right">4 unidades</p>
+  <p class="esq tl label">(N1) — De cerca</p>
+  <img class="esq tr logo" src="../../design-system/logos/hight-wordmark-tinta.svg" alt="">
+</section>
+
+<!-- 15 · noche · Hoja de contacto en blanco y negro -->
+<section class="post noche grano" id="p15">
+  <p class="esq tl label">Hoja 02 — tomas</p>
+  <p class="esq tr label">MED/COL</p>
+  <div class="hoja cut" style="left:60px;right:60px;top:134px;grid-template-columns:repeat(3,1fr);gap:22px 20px">
+    <figure class="cut"><div class="marco" style="height:470px"><img src="imagenes/tejido-deshilado-ceniza-bn.webp" alt=""></div><figcaption class="small">Toma 01</figcaption></figure>
+    <figure class="cut"><div class="marco corte-abajo" style="height:470px"><img src="imagenes/jean-wide-fleco-indigo-bn.webp" alt=""></div><figcaption class="small">Toma 02</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:470px"><img src="imagenes/jean-patchwork-cuadros-bn.webp" alt=""></div><figcaption class="small">Toma 03</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:470px"><img src="imagenes/buzo-multitud-termica-bn.webp" alt=""></div><figcaption class="small">Toma 04</figcaption></figure>
+    <figure class="cut"><div class="marco" style="height:470px"><img src="imagenes/jean-patchwork-estrellas-violeta-bn.webp" alt=""></div><figcaption class="small">Toma 05</figcaption></figure>
+    <figure class="cut"><div class="marco corte-lados" style="height:470px"><img src="imagenes/jean-flare-dragon-acido-bn.webp" alt=""></div><figcaption class="small">Toma 06</figcaption></figure>
+  </div>
+  <p class="esq bl label">Drop 01</p>
+  <img class="esq br logo" src="../../design-system/logos/hight-wordmark-plata.svg" alt="">
+</section>
+
+<!-- 16 · plata · Jean Wide Patchwork Índigo -->
+<section class="post plata" id="p16">
+  <div class="fig sombra corte-der" style="left:70px;right:0;top:120px;height:920px"><img src="imagenes/jean-wide-patchwork-indigo-recorte.webp" alt=""></div>
+  <div class="rule" style="top:1078px"></div>
+  <p class="abs name" style="left:60px;top:1104px;width:640px">Jean Wide Patchwork Índigo</p>
+  <p class="abs spec muted" style="left:60px;top:1222px">Wide · tiras cosidas en diagonal</p>
+  <p class="abs price" style="right:60px;top:1110px">$590.000</p>
+  <p class="abs spec muted" style="right:60px;top:1222px;text-align:right">4 unidades</p>
+  <p class="esq tl label">(N1) — Jean</p>
+  <img class="esq tr logo" src="../../design-system/logos/hight-wordmark-tinta.svg" alt="">
+</section>
+
+<!-- 17 · noche · Tejido Anillos Índigo en cianotipo -->
+<section class="post noche grano" id="p17">
+  <div class="halo" style="width:1300px;height:1300px;left:-110px;top:-60px"></div>
+  <div class="fig corte-der" style="left:40px;right:0;top:220px;height:780px"><img src="imagenes/tejido-anillos-indigo-ciano.webp" alt=""></div>
+  <p class="abs serif" style="left:60px;bottom:146px;font-size:92px;line-height:1">Unido con argollas.</p>
+  <p class="esq tl label">(N1) — Tejido</p>
+  <p class="esq tr label">MED/COL</p>
+  <p class="esq bl label">Tejido Anillos Índigo · $460.000</p>
+  <img class="esq br logo" src="../../design-system/logos/hight-wordmark-plata.svg" alt="">
+</section>
+
+<!-- 18 · plata · Correas de cerca -->
+<section class="post plata" id="p18">
+  <div class="correa" style="height:230px;left:-900px;top:420px;transform:rotate(-32deg)"><img src="../../assets/correa-06.svg" alt=""></div>
+  <div class="correa" style="height:230px;left:-760px;top:560px;transform:rotate(30deg)"><img src="../../assets/correa-11.svg" alt=""></div>
+  <p class="abs serif" style="left:60px;bottom:140px;font-size:84px;line-height:1">Doce correas, ninguna igual.</p>
+  <p class="esq tl label">(N1) — Correas</p>
+  <img class="esq tr logo" src="../../design-system/logos/hight-wordmark-tinta.svg" alt="">
+  <p class="esq bl label">Tachas · piedras · incrustaciones · hebillas</p>
+</section>
+
+<!-- 19 · noche · Dos flare -->
+<section class="post noche grano" id="p19">
+  <div class="halo" style="width:1300px;height:1300px;left:-110px;top:-40px"></div>
+  <div class="fig" style="left:30px;width:520px;top:150px;height:900px"><img src="imagenes/jean-flare-destroyed-verde-recorte.webp" alt=""></div>
+  <div class="fig" style="right:30px;width:520px;top:150px;height:900px"><img src="imagenes/jean-flare-costura-neon-recorte.webp" alt=""></div>
+  <p class="abs label" style="left:60px;top:1090px">Jean Flare Destroyed Verde</p>
+  <p class="abs price" style="left:60px;top:1134px;font-size:40px">$480.000</p>
+  <p class="abs label" style="right:60px;top:1090px;text-align:right">Jean Flare Costura Neón</p>
+  <p class="abs price" style="right:60px;top:1134px;font-size:40px;text-align:right">$560.000</p>
+  <p class="esq tl label">(N1) — Flare</p>
+  <p class="esq tr label">MED/COL</p>
+  <p class="esq bl label">Ajustado arriba, abierto desde la rodilla</p>
+  <img class="esq br logo" src="../../design-system/logos/hight-wordmark-plata.svg" alt="">
+</section>
+
+<!-- 20 · plata · Ficha: Buzo Multitud Térmica -->
+<section class="post plata" id="p20">
+  <div class="fig" style="left:160px;right:160px;top:150px;height:800px"><img src="imagenes/buzo-multitud-termica-dibujo.webp" alt=""></div>
+  <span class="marca" style="left:526px;top:470px">1</span>
+  <span class="marca" style="left:760px;top:600px">2</span>
+  <span class="marca" style="left:566px;top:842px">3</span>
+  <p class="abs small" style="left:60px;right:60px;top:1000px;display:flex;gap:34px;justify-content:center">
+    <span><b class="num">1</b> Cremallera</span><span><b class="num">2</b> Rotos con tela por debajo</span><span><b class="num">3</b> Hilos sueltos en el ruedo</span>
+  </p>
+  <div class="rule" style="top:1078px"></div>
+  <p class="abs name" style="left:60px;top:1104px;width:640px">Buzo Multitud Térmica</p>
+  <p class="abs spec muted" style="left:60px;top:1222px">Corto y amplio · felpa</p>
+  <p class="abs price" style="right:60px;top:1110px">$390.000</p>
+  <p class="abs spec muted" style="right:60px;top:1222px;text-align:right">Gíralo en 360°</p>
+  <p class="esq tl label">(N1) — Dibujo</p>
+  <img class="esq tr logo" src="../../design-system/logos/hight-wordmark-tinta.svg" alt="">
+</section>
+
+</body>
+</html>

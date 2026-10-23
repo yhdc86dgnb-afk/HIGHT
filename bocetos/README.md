@@ -17,6 +17,8 @@ respuestas que cada ficha de la tienda da sin preguntas a la vista.
 | `vector/generador/` | El generador de la vista 360: arma el dibujo y los archivos del visor de cualquier prenda a partir de su foto. |
 | `video/` | El video de campaña: las 26 prendas en 3D colgadas de dos rieles, y cómo se arma. |
 | `correas/` | Las 12 correas de tachas en vector (se abren en Illustrator) y el programa que las dibuja. |
+| `instagram/` | Los 20 posts del lanzamiento, sus pies de foto y el orden de publicación. |
+| `reels/` | Los cuatro reels del lanzamiento, en MP4, y cómo se arman. |
 
 Los números siguen el orden en que las prendas entraron a la tienda.
 
