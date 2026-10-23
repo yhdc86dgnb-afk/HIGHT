@@ -7,9 +7,11 @@
  * reels.html?r=correas    las correas corren en las franjas del inicio y una cruza la pantalla como un látigo
  *
  * Todos cierran igual: el logo cae de arriba, golpea y anuncia el lanzamiento, con una pregunta para la comunidad y
- * los seis colores de la tienda. El estilo es el de la página y los posts (bocetos/instagram): carbón, hueso y los seis
- * colores con sus texturas; Anton, Space Grotesk y Space Mono; copias impresas con cinta, sellos y franjas. Los textos
- * quedan fuera de los 290 px de arriba y de abajo, donde Instagram pone su interfaz.
+ * los seis colores de la tienda. Cada uno va al tempo de una canción de Tame Impala, que se le pone en Instagram (ver
+ * README.md): los tiempos de cada reel están en golpes de su canción. El estilo es el de la página y los posts
+ * (bocetos/instagram): carbón, hueso y los seis colores con sus texturas; Anton, Space Grotesk y Space Mono; copias
+ * impresas con cinta, sellos y franjas. Los textos quedan fuera de los 290 px de arriba y de abajo, donde Instagram
+ * pone su interfaz.
  *
  * window.frame(i) dibuja el cuadro i y lo devuelve como PNG (data URL); window.FRAMES dice cuántos tiene el reel y
  * window.SFX, en qué segundo suena cada efecto y cómo va la música (sonido.py arma el sonido con eso).
@@ -554,11 +556,13 @@ function polvo(cx, cy, u, color = HUESO, n = 48, seed = 9) {
 /* ---------- Cierre de todos los reels: el logo cae de arriba y anuncia el lanzamiento ---------- */
 
 // Golpes y sonidos del cierre, para sumarlos a los de cada reel.
-function cierreGolpes(t0) {
+// El logo golpea en t0 + 0,55 y DROP 01 cae un tiempo de la canción después.
+function cierreGolpes(t0, tiempo = 0.43) {
+  const drop = t0 + 0.55 + tiempo;
   return {
-    golpes: [[t0 + 0.55, 46, 0.2], [t0 + 0.98, 14, 0.12]],
+    golpes: [[t0 + 0.55, 46, 0.2], [drop, 14, 0.12]],
     destellos: [[t0 + 0.55, 0.6, 0.14]],
-    sfx: [[t0 - 0.05, 'subida', 0.9], [t0 + 0.55, 'boom', 1], [t0 + 0.97, 'golpe', 0.6], [t0 + 1.12, 'pop', 0.7], [t0 + 2.1, 'tic', 0.35], [t0 + 2.16, 'tic', 0.35], [t0 + 2.22, 'tic', 0.35], [t0 + 2.28, 'tic', 0.35], [t0 + 2.34, 'tic', 0.35], [t0 + 2.4, 'tic', 0.35]],
+    sfx: [[t0 - 0.05, 'subida', 0.9], [t0 + 0.55, 'boom', 1], [drop - 0.01, 'golpe', 0.6], [drop + 0.14, 'pop', 0.7], [t0 + 2.1, 'tic', 0.35], [t0 + 2.16, 'tic', 0.35], [t0 + 2.22, 'tic', 0.35], [t0 + 2.28, 'tic', 0.35], [t0 + 2.34, 'tic', 0.35], [t0 + 2.4, 'tic', 0.35]],
   };
 }
 function cierre(t, t0, cfg) {
@@ -598,12 +602,13 @@ function cierre(t, t0, cfg) {
     ctx.restore();
   }
   polvo(W / 2, base - 20, u - 0.55);
-  if (u >= 0.82) {
-    const k = easeOut(seg(u, 0.82, 0.98));
+  const drop = 0.55 + (cfg.tiempo ?? 0.43);
+  if (u >= drop - 0.16) {
+    const k = easeOut(seg(u, drop - 0.16, drop));
     anton('Drop 01', W / 2, 1132, 230, cfg.acc, { align: 'center', scale: lerp(2.1, 1, k), alpha: k });
   }
-  if (u >= 1.08) {
-    const k = easeBack(seg(u, 1.08, 1.28), 2.2);
+  if (u >= drop + 0.1) {
+    const k = easeBack(seg(u, drop + 0.1, drop + 0.3), 2.2);
     const font = `700 38px "Space Mono"`;
     const bw = ancho(cfg.cta.toUpperCase(), font, 3.8) + 120;
     ctx.save();
@@ -702,17 +707,21 @@ const GOLPE_COLOR = [
   ['ceniza', 'chaqueta-trouble-maker', -3],
   ['leopardo', 'jean-flare-patchwork-leopardo', 2],
 ];
-// A 120 golpes por minuto: un color por negra, la pregunta en una negra, DROP 01 en corcheas y el logo cae en el
-// tiempo 12 (6 s).
-const AD = { color0: 0.5, paso: 0.5, pregunta: 3.5, drop: 4.0, barrido: 5.25, cierre: 5.45 };
-const LETRAS = [0, 0.125, 0.25, 0.375, 0.5, 0.625];
+// Va al tempo de «New Person, Same Old Mistakes» de Tame Impala (152 golpes por minuto), la canción que se le pone en
+// Instagram: las franjas golpean en el medio tiempo y en el 1, un color por tiempo desde el 2, la pregunta en dos
+// tiempos, DROP 01 letra por semicorchea desde el 10 y el logo cae en el 16 (6,3 s), al empezar el quinto compás.
+const AD_T = 60 / 152;
+const AD = { franja1: 0.5 * AD_T, franja2: AD_T, color0: 2 * AD_T, paso: AD_T, pregunta: 8 * AD_T, drop: 10 * AD_T, logo: 16 * AD_T };
+AD.cierre = AD.logo - 0.55;
+AD.barrido = AD.cierre - 0.2;
+const LETRAS = [0, 1, 2, 3, 4, 5].map((k) => (k * AD_T) / 4);
 
 const adelanto = {
-  seconds: 9.6,
+  seconds: Math.round((AD.logo + 3.6) * 10) / 10,
   async setup() {
     await prendas(GOLPE_COLOR.map((g) => g[1]));
-    const golpes = [[0.12, 18, 0.12], [0.32, 18, 0.12]];
-    const sfx = [[0, 'whoosh', 0.8], [0.11, 'golpe', 0.75], [0.19, 'whoosh', 0.8], [0.31, 'golpe', 0.75]];
+    const golpes = [[AD.franja1, 18, 0.12], [AD.franja2, 18, 0.12]];
+    const sfx = [[0, 'whoosh', 0.8], [AD.franja1 - 0.01, 'golpe', 0.75], [AD.franja2 - 0.13, 'whoosh', 0.8], [AD.franja2 - 0.01, 'golpe', 0.75]];
     GOLPE_COLOR.forEach((_, k) => {
       const t = AD.color0 + k * AD.paso;
       golpes.push([t, 26, 0.12]);
@@ -725,26 +734,27 @@ const adelanto = {
       sfx.push([AD.drop + d, 'golpe', 0.5]);
     });
     sfx.push([AD.barrido, 'whoosh', 1]);
-    const c = cierreGolpes(AD.cierre);
-    // La música: una negra por color, redoble en la pregunta, golpes en las letras y la caída cuando cae el logo.
-    const logo = AD.cierre + 0.55;
+    const c = cierreGolpes(AD.cierre, AD_T);
+    // La música propia va a la mitad del tempo, como se siente la canción (76): redoble en la pregunta, golpes en las
+    // letras y la caída cuando cae el logo, al empezar el tercer compás.
+    const logo = AD.logo;
     this.musica = {
-      bpm: 60 / AD.paso,
-      origen: AD.color0,
+      bpm: 60 / AD_T / 2,
+      origen: 0,
       logo,
       golpes: letras.map((d) => AD.drop + d),
       secciones: [[0, AD.color0, 'entrada'], [AD.color0, AD.pregunta, 'ritmo'], [AD.pregunta, AD.drop, 'redoble'], [AD.drop, AD.barrido, 'golpes'], [AD.barrido, logo, 'subida'], [logo, this.seconds, 'caida']],
     };
     this.golpes = golpes.concat(c.golpes);
-    this.destellos = [[0.11, 0.18, 0.06], [0.31, 0.18, 0.06], ...GOLPE_COLOR.map((_, k) => [AD.color0 + k * AD.paso, 0.22, 0.06])].concat(c.destellos);
+    this.destellos = [[AD.franja1 - 0.01, 0.18, 0.06], [AD.franja2 - 0.01, 0.18, 0.06], ...GOLPE_COLOR.map((_, k) => [AD.color0 + k * AD.paso, 0.22, 0.06])].concat(c.destellos);
     this.sfx = sfx.concat(c.sfx);
   },
   franjas(t) {
     fondo(CARBON);
-    const a = easeOut(seg(t, 0, 0.12));
-    const b = easeOut(seg(t, 0.19, 0.32));
+    const a = easeOut(seg(t, 0, AD.franja1));
+    const b = easeOut(seg(t, AD.franja2 - 0.13, AD.franja2));
     franja(820, -8, t * 420 + lerp(-1400, 0, a), { bg: COLORES.acido.c, fg: CARBON, h: 150, size: 46 });
-    if (t >= 0.19) franja(1120, 6, -t * 420 + lerp(1400, 0, b), { bg: HUESO, fg: CARBON, h: 150, size: 46 });
+    if (t >= AD.franja2 - 0.13) franja(1120, 6, -t * 420 + lerp(1400, 0, b), { bg: HUESO, fg: CARBON, h: 150, size: 46 });
   },
   color(t, k) {
     const [id, h, rot] = GOLPE_COLOR[k];
@@ -808,7 +818,7 @@ const adelanto = {
   draw(i) {
     const t = i / FPS;
     begin(t);
-    const fin = { tx: 'acido', acc: COLORES.acido.c, cta: 'Pronto', q: '¿De qué color eres?', sub: 'Entérate primero · enlace en la bio' };
+    const fin = { tx: 'acido', acc: COLORES.acido.c, cta: 'Pronto', q: '¿De qué color eres?', sub: 'Entérate primero · enlace en la bio', tiempo: AD_T };
     if (t < AD.color0) this.franjas(t);
     else if (t < AD.pregunta) this.color(t, Math.min(5, Math.floor((t - AD.color0) / AD.paso)));
     else if (t < AD.drop) this.pregunta(t);
@@ -1038,11 +1048,17 @@ const GIRO = [
   { h: 'jean-flare-costura-neon', bottom: true, fondo: 'textura' },
   { h: 'buzo-multitud-termica', bottom: false, fondo: 'hueso' },
 ];
-const GI = { intro: 0.72, dura: 2.6, paso: 0.25, cierre: 9.17 };
-const ventana = (k) => GI.intro + k * (GI.dura + GI.paso);
+// Va al tempo de «Feels Like We Only Go Backwards» de Tame Impala (150 golpes por minuto, que se sienten a la mitad):
+// el 360° golpea en el 1, cada prenda dura ocho tiempos (un compás de la canción) y entra en el 2, el 10 y el 18, donde
+// suena la caja, y el logo cae en el 26 (10,4 s), también en la caja.
+const GI_T = 60 / 150;
+const GI = { golpe: GI_T, intro: 2 * GI_T, ventana: 8 * GI_T, paso: 0.25, logo: 26 * GI_T };
+GI.dura = GI.ventana - GI.paso;
+GI.cierre = GI.logo - 0.55;
+const ventana = (k) => GI.intro + k * GI.ventana;
 
 const giro = {
-  seconds: 13.4,
+  seconds: Math.round((GI.logo + 3.7) * 10) / 10,
   async setup() {
     this.renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, preserveDrawingBuffer: true });
     this.renderer.setPixelRatio(SS);
@@ -1086,40 +1102,41 @@ const giro = {
       const size = box.getSize(new THREE.Vector3());
       this.items.push({ ...g, pivot, height: size.y, radius: Math.max(size.x, size.z) / 2 });
     }
-    const golpes = [[0.45, 22, 0.14]];
-    const sfx = [[0, 'whoosh', 0.9], [0.44, 'golpe', 1]];
+    const golpes = [[GI.golpe, 22, 0.14]];
+    const sfx = [[0, 'whoosh', 0.9], [GI.golpe - 0.01, 'golpe', 1]];
     GIRO.forEach((_, k) => {
+      // cada prenda golpea justo cuando entra, en el tiempo
       const t = ventana(k);
-      sfx.push([t + 0.02, 'whoosh', 0.7], [t + 0.16, 'golpe', 0.65]);
-      golpes.push([t + 0.16, 12, 0.12]);
+      sfx.push([t - 0.01, 'golpe', 0.65], [t + 0.02, 'whoosh', 0.7]);
+      golpes.push([t, 12, 0.12]);
       if (k > 0) sfx.push([t - GI.paso, 'whoosh', 1]);
     });
     sfx.push([GI.cierre - 0.15, 'whoosh', 1]);
-    const c = cierreGolpes(GI.cierre);
-    // La música: cada prenda dura seis negras, así que los paneos caen en el tiempo.
-    const logo = GI.cierre + 0.55;
-    const fuera = ventana(GIRO.length - 1) + GI.dura;
+    const c = cierreGolpes(GI.cierre, GI_T);
+    // La música propia va a la mitad del tempo (75), como se siente la canción, y sube en el último tiempo antes del logo.
+    const logo = GI.logo;
+    const sube = logo - 2 * GI_T;
     this.musica = {
-      bpm: 60 / ((GI.dura + GI.paso) / 6),
-      origen: GI.intro,
+      bpm: 60 / GI_T / 2,
+      origen: 0,
       logo,
-      golpes: [0.44],
-      secciones: [[0, GI.intro, 'entrada'], [GI.intro, fuera, 'ritmo'], [fuera, logo, 'subida'], [logo, this.seconds, 'caida']],
+      golpes: [GI.golpe - 0.01],
+      secciones: [[0, GI.intro, 'entrada'], [GI.intro, sube, 'ritmo'], [sube, logo, 'subida'], [logo, this.seconds, 'caida']],
     };
     this.golpes = golpes.concat(c.golpes);
-    this.destellos = [[0.44, 0.2, 0.07]].concat(c.destellos);
+    this.destellos = [[GI.golpe - 0.01, 0.2, 0.07]].concat(c.destellos);
     this.sfx = sfx.concat(c.sfx);
   },
   intro(t) {
     fondo(COLORES.acido.c);
-    const p = seg(t, 0, 0.45);
+    const p = seg(t, 0, GI.golpe);
     const flip = Math.cos(Math.PI * (1 - easeOut(p)) * 2);
     ctx.save();
     ctx.translate(W / 2, 1000);
     ctx.scale(lerp(2.6, 1, easeOut(p)) * Math.max(0.05, Math.abs(flip)), lerp(2.6, 1, easeOut(p)));
     anton('360°', 0, 230, 640, CARBON, { align: 'center' });
     ctx.restore();
-    mono('(Vista 360°) · Drop 01', W / 2, 1420, 30, CARBON, { align: 'center', alpha: seg(t, 0.46, 0.56) });
+    mono('(Vista 360°) · Drop 01', W / 2, 1420, 30, CARBON, { align: 'center', alpha: seg(t, GI.golpe + 0.02, GI.golpe + 0.12) });
   },
   prenda(t, k) {
     const it = this.items[k];
@@ -1180,14 +1197,14 @@ const giro = {
   draw(i) {
     const t = i / FPS;
     begin(t);
-    const fin = { tx: 'acido', acc: COLORES.acido.c, cta: 'Mañana', q: '¿Cuál te pondrías?', sub: 'Gíralas en la tienda · enlace en la bio' };
+    const fin = { tx: 'acido', acc: COLORES.acido.c, cta: 'Mañana', q: '¿Cuál te pondrías?', sub: 'Gíralas en la tienda · enlace en la bio', tiempo: GI_T };
     const last = GIRO.length - 1;
     const fuera = ventana(last) + GI.dura;
     if (t < GI.intro) this.intro(t);
     else if (t >= GI.cierre + 0.2) cierre(t, GI.cierre, fin);
     else if (t >= GI.cierre - 0.2) barrido(t, GI.cierre - 0.2, 0.4, () => this.prenda(Math.min(t, fuera - 1e-3), last), () => cierre(t, GI.cierre, fin), { bg: COLORES.acido.c, fg: CARBON });
     else {
-      const k = Math.min(last, Math.floor((t - GI.intro) / (GI.dura + GI.paso)));
+      const k = Math.min(last, Math.floor((t - GI.intro) / GI.ventana));
       const u = t - ventana(k);
       if (u < GI.dura || k === last) this.prenda(Math.min(t, ventana(k) + GI.dura - 1e-3), k);
       else paneo(t, ventana(k) + GI.dura, GI.paso, () => this.prenda(ventana(k) + GI.dura - 1e-3, k), () => this.prenda(ventana(k + 1), k + 1));
@@ -1211,45 +1228,53 @@ const CUENTA = [
   ['2', COLORES.carmin.c, HUESO, 'carmin'],
   ['1', '#1c2a63', HUESO, 'indigo'],
 ];
-const HO = { hoy: 1.5, mesa: 2.65, caida: 2.75, cada: 0.12, barrido: 5.4, cierre: 5.6 };
+// Va al tempo de «Let It Happen» de Tame Impala (125 golpes por minuto): 3, 2 y 1 en los tiempos 0, 1 y 2, HOY en el 3,
+// las piezas caen una por semicorchea desde el 5 y medio y el logo cae en el 12 (5,76 s), al empezar el cuarto compás.
+const HO_T = 60 / 125;
+const HO = { cuenta: HO_T, hoy: 3 * HO_T, mesa: 5 * HO_T, cae: 5.5 * HO_T, cada: HO_T / 4, logo: 12 * HO_T };
+HO.caida = HO.cae - 0.14; // cada pieza tarda 0,14 s en caer
+HO.cierre = HO.logo - 0.55;
+HO.barrido = HO.cierre - 0.2;
 
 const hoy = {
-  seconds: 9.8,
+  seconds: Math.round((HO.logo + 3.65) * 10) / 10,
   async setup() {
     await prendas(PIEZAS);
     await assets({ logo: AS + 'hight-logo-plata.webp' });
     const golpes = [];
     const sfx = [];
-    CUENTA.forEach((_, k) => {
-      golpes.push([k * 0.5 + 0.04, 26, 0.12]);
-      sfx.push([k * 0.5 + 0.03, 'golpe', 1]);
+    // la cuenta y HOY golpean justo en el tiempo; el primero, apenas después del arranque para que suene entero
+    const cuenta = CUENTA.map((_, k) => Math.max(0.03, k * HO.cuenta));
+    cuenta.forEach((t) => {
+      golpes.push([t, 26, 0.12]);
+      sfx.push([t, 'golpe', 1]);
     });
-    golpes.push([HO.hoy + 0.05, 48, 0.2]);
-    sfx.push([HO.hoy - 0.35, 'subida', 0.7], [HO.hoy + 0.05, 'boom', 1], [HO.mesa - 0.02, 'whoosh', 0.8]);
+    golpes.push([HO.hoy, 48, 0.2]);
+    sfx.push([HO.hoy - 0.35, 'subida', 0.7], [HO.hoy, 'boom', 1], [HO.mesa - 0.02, 'whoosh', 0.8]);
     PIEZAS.forEach((_, k) => {
       const t = HO.caida + k * HO.cada + 0.14;
       golpes.push([t, 5, 0.08]);
       sfx.push([t, 'tic', 0.55]);
     });
     sfx.push([HO.barrido, 'whoosh', 1]);
-    const c = cierreGolpes(HO.cierre);
-    // La música: golpes en la cuenta y en HOY; en la mesa, una semicorchea por cada pieza que cae.
-    const logo = HO.cierre + 0.55;
+    const c = cierreGolpes(HO.cierre, HO_T);
+    // La música propia: golpes en la cuenta y en HOY; en la mesa, una semicorchea por cada pieza que cae.
+    const logo = HO.logo;
     this.musica = {
-      bpm: 60 / (HO.cada * 4),
-      origen: HO.caida + 0.14,
+      bpm: 60 / HO_T,
+      origen: 0,
       logo,
-      golpes: [0.03, 0.53, 1.03, HO.hoy + 0.05],
+      golpes: [...cuenta, HO.hoy],
       secciones: [[0, HO.mesa, 'golpes'], [HO.mesa, HO.barrido, 'ritmo'], [HO.barrido, logo, 'subida'], [logo, this.seconds, 'caida']],
     };
     this.golpes = golpes.concat(c.golpes);
-    this.destellos = [...CUENTA.map((_, k) => [k * 0.5 + 0.03, 0.2, 0.06]), [HO.hoy + 0.05, 0.55, 0.12]].concat(c.destellos);
+    this.destellos = [...cuenta.map((t) => [t, 0.2, 0.06]), [HO.hoy, 0.55, 0.12]].concat(c.destellos);
     this.sfx = sfx.concat(c.sfx);
   },
   cuenta(t) {
-    const k = Math.min(2, Math.floor(t / 0.5));
+    const k = Math.min(2, Math.floor(t / HO.cuenta));
     const [n, bg, fg, tx] = CUENTA[k];
-    const u = t - k * 0.5;
+    const u = t - k * HO.cuenta;
     fondo(bg);
     ctx.globalAlpha = 0.22;
     ctx.drawImage(TX[tx], 0, 0);
@@ -1305,7 +1330,7 @@ const hoy = {
   draw(i) {
     const t = i / FPS;
     begin(t);
-    const fin = { tx: 'leopardo', acc: COLORES.leopardo.c, cta: 'Sale hoy', q: 'Si es tu talla, es tuya.', sub: 'Enlace en la bio · máximo 4 por talla', sello: 'SALE HOY · DROP 01 · SALE HOY · DROP 01 · ' };
+    const fin = { tx: 'leopardo', acc: COLORES.leopardo.c, cta: 'Sale hoy', q: 'Si es tu talla, es tuya.', sub: 'Enlace en la bio · máximo 4 por talla', sello: 'SALE HOY · DROP 01 · SALE HOY · DROP 01 · ', tiempo: HO_T };
     if (t < HO.hoy) this.cuenta(t);
     else if (t < HO.mesa) this.hoy(t);
     else if (t < HO.barrido) this.mesa(t);
@@ -1318,9 +1343,14 @@ const hoy = {
 
 /* ---------- Correas: corren en las franjas del inicio y una cruza la pantalla como un látigo ---------- */
 
-// A 120 golpes por minuto: TACHAS en el tiempo 2, las franjas se van en el 6 y medio, la punta revienta en el 8 (4 s)
-// y el logo cae en el 9. Entre las franjas y el latigazo la pantalla queda vacía apenas un cuarto de segundo.
-const CO = { tachas: 1.0, frena: 3.25, entra: 3.45, latigo: 3.62, dura: 0.45, crack: 0.86, cierre: 3.95 };
+// Va al tempo de «Dracula» de Tame Impala (115 golpes por minuto): TACHAS en el tiempo 2, las franjas se van en el 6 y
+// medio, la punta revienta en el 8 (4,17 s), al empezar el tercer compás, y el logo cae en el 9. Entre las franjas y el
+// latigazo la pantalla queda vacía apenas un cuarto de segundo.
+const CO_T = 60 / 115;
+const CO = { tachas: 2 * CO_T, frena: 6.5 * CO_T, dura: 0.45, crack: 0.86 };
+CO.latigo = 8 * CO_T - CO.dura * CO.crack; // la punta revienta justo en el tiempo 8
+CO.entra = CO.frena + 0.2;
+CO.cierre = 9 * CO_T - 0.55;
 const TH0 = rad(-100);
 const TH1 = rad(-43);
 
@@ -1360,7 +1390,7 @@ function dibujaCorrea(img, pts, bh, alpha = 1) {
 }
 
 const correas = {
-  seconds: 8.4,
+  seconds: Math.round((CO.cierre + 0.55 + 3.9) * 10) / 10,
   async setup() {
     const list = {};
     for (let k = 1; k <= 12; k++) list['c' + k] = `${AS}correa-${String(k).padStart(2, '0')}.svg`;
@@ -1382,21 +1412,22 @@ const correas = {
     this.lh = lh;
     const crack = CO.latigo + CO.dura * CO.crack;
     this.crack = crack;
-    this.golpes = [[CO.tachas, 20, 0.12], [crack, 62, 0.18]].concat(cierreGolpes(CO.cierre).golpes);
+    const c = cierreGolpes(CO.cierre, CO_T);
+    this.golpes = [[CO.tachas, 20, 0.12], [crack, 62, 0.18]].concat(c.golpes);
     // La música se acelera con las franjas, se calla antes del latigazo y cae con el logo.
     const logo = CO.cierre + 0.55;
     this.musica = {
-      bpm: 120,
+      bpm: 60 / CO_T,
       origen: 0,
       logo,
       golpes: [CO.tachas],
       secciones: [[0, CO.frena, 'acelera'], [CO.frena, crack + 0.1, 'pausa'], [crack + 0.1, logo, 'subida'], [logo, this.seconds, 'caida']],
     };
-    this.destellos = [[CO.tachas, 0.18, 0.06], [crack, 0.85, 0.07]].concat(cierreGolpes(CO.cierre).destellos);
+    this.destellos = [[CO.tachas, 0.18, 0.06], [crack, 0.85, 0.07]].concat(c.destellos);
     this.sfx = [
-      [0, 'whoosh', 0.8], [0.25, 'subida', 0.5], [CO.tachas, 'golpe', 1], [1.6, 'subida', 0.9],
+      [0, 'whoosh', 0.8], [0.25, 'subida', 0.5], [CO.tachas, 'golpe', 1], [3 * CO_T, 'subida', 0.9],
       [CO.frena, 'whoosh', 1], [CO.entra, 'whoosh', 0.5], [crack - 0.1, 'latigo', 1],
-    ].concat(cierreGolpes(CO.cierre).sfx.filter((e) => e[1] !== 'subida'));
+    ].concat(c.sfx.filter((e) => e[1] !== 'subida'));
   },
   offset(t) {
     // la velocidad sube como con el scroll del inicio: de 260 a 2.000 px por segundo
@@ -1543,7 +1574,7 @@ const correas = {
   draw(i) {
     const t = i / FPS;
     begin(t);
-    const fin = { tx: 'ceniza', acc: COLORES.leopardo.c, cta: 'Ya en la tienda', q: '¿Cuál es la tuya?', sub: 'Doce correas, ninguna igual · enlace en la bio', sello: 'TACHAS · NINGUNA IGUAL · TACHAS · NINGUNA IGUAL · ' };
+    const fin = { tx: 'ceniza', acc: COLORES.leopardo.c, cta: 'Ya en la tienda', q: '¿Cuál es la tuya?', sub: 'Doce correas, ninguna igual · enlace en la bio', sello: 'TACHAS · NINGUNA IGUAL · TACHAS · NINGUNA IGUAL · ', tiempo: CO_T };
     const split = this.crack + 0.07;
     if (t < CO.frena + 0.2) this.bandas(t);
     else if (t < split) {

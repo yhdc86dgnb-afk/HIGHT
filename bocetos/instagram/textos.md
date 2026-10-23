@@ -230,13 +230,14 @@ Prendas intervenidas a mano y piezas de archivo.
 
 ## Reels
 
-Cuatro videos, en `../reels/`. Cada uno sale el día que dice, a otra hora que el post de ese día. Traen música propia,
-psicodelia de sintetizadores, y efectos (golpes, barridos, el latigazo y las campanas de la marca cuando cae el logo),
-así que se pueden subir tal cual; si se prefiere una canción de Instagram, se baja el volumen del audio original.
+Cuatro videos, en `../reels/`. Cada uno sale el día que dice, a otra hora que el post de ese día, con su canción de
+Tame Impala puesta desde la biblioteca de música de Instagram: se sube la versión sin música (solo con los efectos) y se
+le pone la canción, que va al mismo tempo de los cortes. Cómo ponerla, paso a paso, está en `../reels/README.md`. Si la
+canción no aparece o el reel se va a promocionar, se sube la versión con música propia, que va al mismo tempo.
 
 ### Adelanto · Día −4
 
-`../reels/adelanto.mp4`
+`../reels/adelanto-sin-musica.mp4` con «New Person, Same Old Mistakes» (con música propia: `../reels/adelanto.mp4`)
 
 > Seis colores, seis prendas y un solo drop.
 > Radiactivo, Sangre Fría, Medianoche, Chicle, Asfalto o Fiera: ¿de qué color eres?
@@ -246,7 +247,7 @@ así que se pueden subir tal cual; si se prefiere una canción de Instagram, se 
 
 ### Giro · Día −1
 
-`../reels/giro.mp4`
+`../reels/giro-sin-musica.mp4` con «Feels Like We Only Go Backwards» (con música propia: `../reels/giro.mp4`)
 
 > Chaqueta Smiley Ácido, Jean Flare Costura Neón y Buzo Multitud Térmica, en una vuelta completa.
 > Así se gira cada pieza en la tienda, en 360°.
@@ -256,7 +257,7 @@ así que se pueden subir tal cual; si se prefiere una canción de Instagram, se 
 
 ### Hoy · Día 0
 
-`../reels/hoy.mp4`
+`../reels/hoy-sin-musica.mp4` con «Let It Happen» (con música propia: `../reels/hoy.mp4`)
 
 > Hoy sale el Drop 01: las 20 piezas, máximo 4 por talla.
 > Si es tu talla, es tuya.
@@ -266,7 +267,7 @@ así que se pueden subir tal cual; si se prefiere una canción de Instagram, se 
 
 ### Correas · Día +1
 
-`../reels/correas.mp4`
+`../reels/correas-sin-musica.mp4` con «Dracula» (con música propia: `../reels/correas.mp4`)
 
 > Doce correas de tachas, ninguna igual.
 > Tachas, piedras e incrustaciones, en el inicio de la tienda.

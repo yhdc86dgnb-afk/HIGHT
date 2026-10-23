@@ -20,7 +20,10 @@ Los efectos, encima de la música:
   tic      cada letra, cada pieza que cae y cada punto de color
   pop      el botón del cierre
 
-Uso: python3 sonido.py <sonido.json> <salida.wav>
+Uso: python3 sonido.py <sonido.json> <salida.wav> [--solo-efectos]
+
+Con --solo-efectos sale solo con los efectos, sin la música: es el sonido de la versión que lleva una canción de la
+biblioteca de Instagram encima.
 """
 import json
 import sys
@@ -504,7 +507,7 @@ def main():
             agache[i:j] = np.minimum(agache[i:j], caida[:j - i])
     efectos = efectos[:total]
     izq = der = efectos
-    if datos.get('musica'):
+    if datos.get('musica') and '--solo-efectos' not in sys.argv[3:]:
         mi, md = musica(datos['musica'], total, fin)
         pico = max(np.abs(mi).max(), np.abs(md).max(), 1e-9)
         # la música manda (pico en 0,95) y los efectos quedan encima, más suaves que antes
