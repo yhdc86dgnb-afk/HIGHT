@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Fondo de logos de Hight, como un estampado de perchas: el logo gótico en contorno, repetido en filas corridas,
-cada uno un poco girado y de un color distinto al de sus vecinos. El patrón empalma por los cuatro lados, así que se
-puede repetir sin que se note la unión.
+"""Fondo de logos de Hight, como un estampado de perchas: el logo en plateado sobre negro, repetido en filas
+corridas y cada uno un poco girado. El patrón empalma por los cuatro lados, así que se puede repetir sin que se note
+la unión.
 
-Sale en tres paletas (pastel, marca y carbón) y en dos tamaños: el cuadro de 2400 × 2400 para repetir (web, papel de
-seda, bolsas) y la historia de 1080 × 1920.
+Sale en dos versiones (el logo plateado tal cual, con su brillo de metal, y el logo en contorno plateado, más liviano)
+y en dos tamaños: el cuadro de 2400 × 2400 para repetir (web, papel de seda, bolsas) y la historia de 1080 × 1920.
 
 Uso, desde la raíz del repo: python3 bocetos/fondos/patron.py
 """
@@ -14,75 +14,74 @@ from pathlib import Path
 from PIL import Image, ImageChops, ImageFilter
 
 AQUI = Path(__file__).resolve().parent
-LOGO = AQUI.parent.parent / 'assets' / 'hight-logo-tinta.webp'
-
-PALETAS = {
-    # los colores suaves de la imagen de referencia, sobre blanco
-    'pastel': {'fondo': '#ffffff', 'colores': ['#6cb6d8', '#f2a5d6', '#9edfb5', '#f3e98f', '#b3b3b3']},
-    # los colores de las seis colecciones de la tienda, sobre papel
-    'marca': {'fondo': '#faf6ee', 'colores': ['#dff04a', '#c3142d', '#5b7cfa', '#e0218a', '#c4beb2', '#c08a4e']},
-    # los mismos seis sobre carbón
-    'carbon': {'fondo': '#0d0c0b', 'colores': ['#dff04a', '#c3142d', '#5b7cfa', '#e0218a', '#c4beb2', '#c08a4e']},
-}
-# ancho, alto, columnas, filas (pares, para que las filas corridas empalmen) y grosor del trazo en px
+ASSETS = AQUI.parent.parent / 'assets'
+FONDO = '#0d0c0b'  # el negro carbón de la marca
+# el contorno se pinta con un degradé de plata, como una pieza de metal: claro, brillo, sombra y otra vez claro
+PLATA = [(0.0, (196, 198, 201)), (0.3, (246, 246, 244)), (0.5, (128, 130, 135)), (0.72, (214, 215, 217)), (1.0, (150, 152, 156))]
+# ancho, alto, columnas, filas (pares, para que las filas corridas empalmen) y grosor del trazo del contorno en px
 FORMATOS = {
     'cuadro': (2400, 2400, 6, 8, 3),
     'historia': (1080, 1920, 5, 12, 2),
 }
 
 
-def silueta():
-    """El logo como silueta limpia: se cierran los poros de la textura para que el contorno no salga picado."""
-    alfa = Image.open(LOGO).convert('RGBA').getchannel('A')
-    return alfa.point(lambda v: 255 if v > 90 else 0).filter(ImageFilter.MaxFilter(7)).filter(ImageFilter.MinFilter(7))
+def logo_plata(ancho, plata):
+    """El logo plateado de la marca a `ancho` px."""
+    return plata.resize((ancho, round(ancho * plata.height / plata.width)), Image.LANCZOS)
 
 
-def contorno(sil, ancho, trazo):
-    """El borde del logo a `ancho` px, con un trazo de `trazo` px, suavizado."""
-    alto = round(ancho * sil.height / sil.width)
-    grande = sil.resize((ancho * 3, alto * 3), Image.LANCZOS).point(lambda v: 255 if v > 127 else 0)
-    anillo = ImageChops.subtract(grande.filter(ImageFilter.MaxFilter(6 * trazo + 1)), grande)
-    return anillo.resize((ancho, alto), Image.LANCZOS)
+def logo_contorno(ancho, silueta, trazo):
+    """El borde del logo a `ancho` px, con un trazo de `trazo` px, pintado con el degradé de plata."""
+    alto = round(ancho * silueta.height / silueta.width)
+    grande = silueta.resize((ancho * 3, alto * 3), Image.LANCZOS).point(lambda v: 255 if v > 127 else 0)
+    anillo = ImageChops.subtract(grande.filter(ImageFilter.MaxFilter(6 * trazo + 1)), grande).resize((ancho, alto), Image.LANCZOS)
+    degrade = Image.new('RGB', (1, alto))
+    for y in range(alto):
+        u = y / max(1, alto - 1)
+        for (a, ca), (b, cb) in zip(PLATA, PLATA[1:]):
+            if a <= u <= b:
+                k = (u - a) / (b - a)
+                degrade.putpixel((0, y), tuple(round(x + (z - x) * k) for x, z in zip(ca, cb)))
+                break
+    marca = degrade.resize((ancho, alto)).convert('RGBA')
+    marca.putalpha(anillo)
+    return marca
 
 
-def patron(sil, w, h, cols, filas, trazo, fondo, colores, semilla=7):
+def patron(w, h, cols, filas, dibuja, semilla=7):
     rnd = random.Random(semilla)
-    lienzo = Image.new('RGB', (w, h), fondo)
+    lienzo = Image.new('RGBA', (w, h), FONDO)
     cw, ch = w / cols, h / filas
-    color = {}
     for r in range(filas):
         corrida = 0.5 if r % 2 else 0
         for c in range(cols):
-            # ningún vecino del mismo color, contando los del otro lado de la unión; si con cinco colores no alcanza,
-            # cuentan solo los de al lado y los de arriba
-            lado = 1 if r % 2 else -1
-            cerca = {(r, c - 1), (r - 1, c), (r - 1, c + lado)}
-            union = set()
-            if c == cols - 1:
-                union.add((r, 0))
-            if r == filas - 1:
-                union |= {(0, c), (0, (c - lado) % cols)}
-            usado = lambda celdas: {color.get((vr % filas, vc % cols)) for vr, vc in celdas}
-            libres = [k for k in range(len(colores)) if k not in usado(cerca | union)]
-            libres = libres or [k for k in range(len(colores)) if k not in usado(cerca)]
-            color[(r, c)] = rnd.choice(libres)
             x = (c + 0.5 + corrida) * cw + rnd.uniform(-0.08, 0.08) * cw
             y = (r + 0.5) * ch + rnd.uniform(-0.08, 0.08) * ch
             ancho = round(0.62 * cw * rnd.uniform(0.9, 1.1))
-            marca = contorno(sil, ancho, trazo).rotate(rnd.uniform(-40, 40), resample=Image.BICUBIC, expand=True)
-            tinta = Image.new('RGB', marca.size, colores[color[(r, c)]])
+            marca = dibuja(ancho).rotate(rnd.uniform(-40, 40), resample=Image.BICUBIC, expand=True)
             # se dibuja también del otro lado de cada borde, para que el patrón empalme
             for dx in (-w, 0, w):
                 for dy in (-h, 0, h):
-                    lienzo.paste(tinta, (round(x - marca.width / 2) + dx, round(y - marca.height / 2) + dy), marca)
-    return lienzo
+                    lienzo.paste(marca, (round(x - marca.width / 2) + dx, round(y - marca.height / 2) + dy), marca)
+    return lienzo.convert('RGB')
 
 
 def main():
-    sil = silueta()
-    for nombre, p in PALETAS.items():
-        for formato, (w, h, cols, filas, trazo) in FORMATOS.items():
-            img = patron(sil, w, h, cols, filas, trazo, p['fondo'], p['colores'])
+    # el logo plateado con un poco más de brillo, para que en tamaño chico siga viéndose como metal sobre el negro
+    plata = Image.open(ASSETS / 'hight-logo-plata.webp').convert('RGBA')
+    brillo = [round(255 * (i / 255) ** 0.8) for i in range(256)]
+    r, g, b, a = plata.split()
+    plata = Image.merge('RGBA', (r.point(brillo), g.point(brillo), b.point(brillo), a))
+    # la silueta limpia para el contorno: se cierran los poros de la textura para que el borde no salga picado
+    silueta = (Image.open(ASSETS / 'hight-logo-tinta.webp').convert('RGBA').getchannel('A')
+               .point(lambda v: 255 if v > 90 else 0).filter(ImageFilter.MaxFilter(7)).filter(ImageFilter.MinFilter(7)))
+    for formato, (w, h, cols, filas, trazo) in FORMATOS.items():
+        versiones = {
+            'plata': lambda ancho: logo_plata(ancho, plata),
+            'plata-contorno': lambda ancho: logo_contorno(ancho, silueta, trazo),
+        }
+        for nombre, dibuja in versiones.items():
+            img = patron(w, h, cols, filas, dibuja)
             destino = AQUI / f'{formato}-{nombre}.png'
             img.save(destino, optimize=True)
             print(destino.name, img.size)
