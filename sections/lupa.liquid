@@ -17,16 +17,9 @@
       if front_image == blank
         assign front_image = item_product.featured_media.preview_image
       endif
-      # La espalda es la siguiente foto de la ficha, salvo la de la prenda sobre el fondo de Hight.
       assign back_image = block.settings.image_back
-      if back_image == blank
-        for back_media in item_product.media offset: 1
-          if back_media.alt contains 'sobre el fondo de Hight'
-            continue
-          endif
-          assign back_image = back_media.preview_image
-          break
-        endfor
+      if back_image == blank and item_product.media.size > 1
+        assign back_image = item_product.media[1].preview_image
       endif
       assign spot_offset = forloop.index
       assign front_label = block.settings.label_front

@@ -16,20 +16,20 @@ el 80 % del alto, sin sombras duras y el mismo fondo para toda la colección.
 | --- | --- | --- |
 | `prenda-plata.png` | 1600 × 2000 | El fondo solo, con el logo plateado tal cual. |
 | `prenda-plata-contorno.png` | 1600 × 2000 | El fondo solo, con el logo en contorno plateado. |
-| `prendas/<prenda>.jpg` | 1600 × 2000 | Las 19 prendas del Drop 01 que tienen foto, cada una sobre el fondo plateado, con una sombra suave. |
-| `prendas.jpg` | | Las 19 juntas, para verlas de un vistazo. |
+| `prendas/<prenda>.jpg` | 1600 × 2000 | Las 19 prendas del Drop 01 que tienen foto, cada una sobre el fondo plateado, con una sombra suave, y la espalda de la Chaqueta Trouble Maker (`chaqueta-trouble-maker-espalda.jpg`). |
+| `prendas.jpg` | | Las 20 juntas, para verlas de un vistazo. |
 
-Las prendas salen de copias recortadas de las fotos de la tienda (`../instagram/imagenes/`); las fotos de la tienda no se
-tocan. Las que la foto original corta por un lado (el Jean Wide Patchwork Índigo, el Tejido Anillos Índigo y el Jean
+Las prendas salen de copias recortadas de las fotos originales (`../instagram/imagenes/`); las fotos originales no se
+editan. Las que la foto original corta por un lado (el Jean Wide Patchwork Índigo, el Tejido Anillos Índigo y el Jean
 Flare Dragón Ácido) van con ese lado contra el borde, para que el corte se vea a propósito; el Jean Wide Fleco Índigo,
 que la foto corta arriba y abajo, va de alto completo. La Chaqueta Blood Rose no
 está porque todavía no tiene foto.
 
-Las 19 ya están en la tienda: cada una va en su ficha después de las fotos originales, con el texto alternativo
-«*Prenda*, sobre el fondo de Hight». En el catálogo aparece al pasar el cursor por la tarjeta, porque es la segunda foto
-(en la Chaqueta Trouble Maker la segunda es la espalda, que es la que se ve). La
-Lupa del inicio toma la siguiente foto de la ficha como espalda, pero se salta la que tiene ese texto, así que el Jean
-Flare Patchwork Leopardo y el Tejido Anillos Índigo siguen sin espalda y la Chaqueta Trouble Maker sigue con la suya.
+Son las fotos de la tienda: cada ficha tiene solo su foto sobre el fondo, con el texto alternativo «*Prenda*, sobre el
+fondo de Hight», y la Chaqueta Trouble Maker tiene además su espalda. Las fotos originales se quitaron de las fichas y
+siguen guardadas en Contenido > Archivos de Shopify. La Lupa del inicio toma la segunda foto de la ficha como espalda,
+así que solo la chaqueta tiene espalda; los puntos de la Anatomía y de la Lupa del Jean Flare Patchwork Leopardo están
+medidos sobre su foto con el fondo.
 
 Para una foto nueva, fotografía la prenda sobre un fondo liso, recórtala y ponla encima de `prenda-plata.png` con el
 mismo tamaño y margen que las demás.
