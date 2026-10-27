@@ -9,7 +9,7 @@ colecciones: cada color es una colección y, al abrirla, toda la tienda toma su 
 ![Home en escritorio](docs/preview/home-escritorio.jpg)
 
 > Las capturas de `docs/preview/` se hicieron renderizando el Liquid del tema con las prendas reales de la tienda.
-> La foto de la Chaqueta blood rose es un reemplazo de la vista previa: en la tienda se ve la foto real.
+> La Chaqueta Blood Rose sale con una imagen de reemplazo porque todavía no tenía foto; en la tienda ya tiene la suya.
 
 ## Qué cambió
 

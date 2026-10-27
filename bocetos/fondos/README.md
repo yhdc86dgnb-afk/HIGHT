@@ -16,14 +16,13 @@ el 80 % del alto, sin sombras duras y el mismo fondo para toda la colección.
 | --- | --- | --- |
 | `prenda-plata.png` | 1600 × 2000 | El fondo solo, con el logo plateado tal cual. |
 | `prenda-plata-contorno.png` | 1600 × 2000 | El fondo solo, con el logo en contorno plateado. |
-| `prendas/<prenda>.jpg` | 1600 × 2000 | Las 19 prendas del Drop 01 que tienen foto, cada una sobre el fondo plateado, con una sombra suave, y la espalda de la Chaqueta Trouble Maker (`chaqueta-trouble-maker-espalda.jpg`). |
-| `prendas.jpg` | | Las 20 juntas, para verlas de un vistazo. |
+| `prendas/<prenda>.jpg` | 1600 × 2000 | Las 20 prendas del Drop 01, cada una sobre el fondo plateado, con una sombra suave, y la espalda de la Chaqueta Trouble Maker (`chaqueta-trouble-maker-espalda.jpg`). |
+| `prendas.jpg` | | Las 21 juntas, para verlas de un vistazo. |
 
 Las prendas salen de copias recortadas de las fotos originales (`../instagram/imagenes/`); las fotos originales no se
 editan. Las que la foto original corta por un lado (el Jean Wide Patchwork Índigo, el Tejido Anillos Índigo y el Jean
 Flare Dragón Ácido) van con ese lado contra el borde, para que el corte se vea a propósito; el Jean Wide Fleco Índigo,
-que la foto corta arriba y abajo, va de alto completo. La Chaqueta Blood Rose no
-está porque todavía no tiene foto.
+que la foto corta arriba y abajo, va de alto completo.
 
 Son las fotos de la tienda: cada ficha tiene solo su foto sobre el fondo, con el texto alternativo «*Prenda*, sobre el
 fondo de Hight», y la Chaqueta Trouble Maker tiene además su espalda. Las fotos originales se quitaron de las fichas y
@@ -51,7 +50,7 @@ Requiere Python 3 con Pillow y NumPy. Desde la raíz del repo:
 
 ```bash
 python3 bocetos/fondos/patron.py    # los cuadros y las historias
-python3 bocetos/fondos/prendas.py   # el fondo para las prendas y las 19 prendas encima
+python3 bocetos/fondos/prendas.py   # el fondo para las prendas y las 20 prendas encima
 ```
 
 El logo plateado sale de `assets/hight-logo-plata.webp`, con un poco más de brillo para que en tamaño chico siga

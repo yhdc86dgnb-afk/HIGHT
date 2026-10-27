@@ -7,6 +7,9 @@ que usa el visor 360 del tema. Las fotos de la tienda no se tocan: se trabaja so
 
 1. **Recorte** (`recorte.py`): la máscara de la prenda con un modelo de segmentación (ISNet, el de rembg). En fotos de
    estudio con fondo blanco también usa el blanco que toca el borde, para no perder las partes claras de la prenda.
+   Dos prendas tienen su propio recorte, con GrabCut (OpenCV) y zonas marcadas a mano:
+   `recorte-jean-wide-fleco-indigo.py` parte de la máscara de `recorte.py` y le devuelve los muslos y la entrepierna,
+   y `recorte-chaqueta-blood-rose.py` saca la chaqueta de la mesa, también la que se ve entre las tiras sueltas.
 2. **Dibujo** (`prenda.py`): silueta suave, tintas planas por prenda (k-medias en Lab), limpieza de bordes y motas,
    texturas sacadas del detalle fino de la foto, trama de la tela según el tipo de prenda (sarga, punto, jersey o
    malla), la espalda (de foto, de boceto o de referencia), el canto y el volumen. Escribe los SVG para Illustrator
@@ -16,7 +19,7 @@ que usa el visor 360 del tema. Las fotos de la tienda no se tocan: se trabaja so
    `-lado.png`, `-frente.webp` y `-espalda.webp`) en la carpeta que se le indique, normalmente `assets/` del tema.
 
 `boceto-caras.js` saca el frente y la espalda del boceto plano de una prenda que todavía no tiene foto (así se armó
-la Chaqueta Blood Rose).
+la Chaqueta Blood Rose antes de tener foto).
 
 `armario.py` arma la versión liviana de cada prenda para el clóset del inicio: la misma silueta con una grilla más
 gruesa (paso de 8 px en vez de 4) y texturas de 768 px. Deja `360-<prenda>-armario.json`, `-armario-frente.webp` y
@@ -56,6 +59,7 @@ node poster.js http://127.0.0.1:9292 <tema>   # con `shopify theme dev` andando 
 
 Después se agrega la dirección de la prenda a la lista de `snippets/vista-360.liquid`.
 
-Los ajustes de cada prenda están arriba de `prenda.py`: `FIX` (fotos con la prenda puesta o con piso entre las
-piernas), `BACK` (cómo se arma la espalda de referencia) y `WEAVE_PRODUCT` (una trama propia). La Chaqueta Trouble
-Maker, la única con foto de la espalda, se ajustó a mano antes de este generador y sus archivos quedan como están.
+Los ajustes de cada prenda están arriba de `prenda.py`: `FIX` (fotos con la prenda puesta, con piso entre las
+piernas o con huecos por donde se ve la mesa), `BACK` (cómo se arma la espalda de referencia) y `WEAVE_PRODUCT` (una
+trama propia). La Chaqueta Trouble Maker, la única con foto de la espalda, se ajustó a mano antes de este generador y
+sus archivos quedan como están.

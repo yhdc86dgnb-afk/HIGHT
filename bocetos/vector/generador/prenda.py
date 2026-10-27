@@ -43,10 +43,13 @@ BACK = {
     'top-halftone-carmin': 'lisa', 'top-malla-asimetrico-rojo': 'estampado', 'pantalon-hojas-carbon': 'estampado',
 }
 
-# Arreglos del recorte: fotos con la prenda puesta (torso, botas, pies). Fracciones de la foto.
+# Arreglos del recorte: fotos con la prenda puesta (torso, botas, pies). Fracciones de la foto. Con 'huecos': 'oscuro',
+# lo que se ve por los huecos chicos de la prenda (la mesa entre las tiras sueltas) va del color más oscuro de la
+# prenda, como la tela de adentro.
 FIX = {
     'pantalon-hibrido-carmin': {'cut_top': 0.098, 'rects': [(0.30, 0.875, 0.50, 1.0)]},
     'jean-wide-fleco-indigo': {'rects': [(0.25, 0.94, 0.46, 1.0)], 'exclude_hue': (35, 95, 14)},
+    'chaqueta-blood-rose': {'huecos': 'oscuro'},
 }
 
 # Trama propia de algunas prendas.
@@ -641,6 +644,11 @@ def run(handle, kind):
     else:
         alpha = np.asarray(Image.open(os.path.join(d, 'foto-mascara.png'))).astype(np.float32) / 255
     m = clean_mask(alpha, FIX.get(handle), None if boceto else img)
+    if (FIX.get(handle) or {}).get('huecos') == 'oscuro' and not boceto:
+        tela = alpha > 0.5
+        luz = img.astype(np.float32) @ np.array([0.299, 0.587, 0.114], np.float32)
+        img = img.copy()
+        img[m & ~tela] = np.median(img[tela & (luz <= np.percentile(luz[tela], 8))], axis=0)
     fimg, fm = frame(img, m)
     back_real = None
     back_src = os.path.join(src, 'espalda.jpg')

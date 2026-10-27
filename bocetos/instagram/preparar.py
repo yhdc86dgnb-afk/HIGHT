@@ -7,13 +7,11 @@ Deja en imagenes/:
   <prenda>-espalda-recorte.webp   la espalda, en las prendas que tienen foto de la espalda (ESPALDAS)
   <prenda>-foto.webp      la foto completa, para la anatomía del jean y la lupa de la Chaqueta Smiley Ácido
   detalle-<nombre>.webp   un detalle de cerca, cuadrado, para el post de los seis detalles
-  chaqueta-blood-rose-dibujo.webp   el dibujo de la chaqueta, que todavía no tiene foto
 
-Uso: python3 preparar.py <carpeta de trabajo del 360 (con productos/<prenda>/foto.jpg y foto-mascara.png)> <carpeta del tema>
+Uso: python3 preparar.py <carpeta de trabajo del 360 (con productos/<prenda>/foto.jpg y foto-mascara.png)>
 """
 import os
 import sys
-from collections import deque
 
 import numpy as np
 from PIL import Image, ImageFilter
@@ -24,6 +22,7 @@ PRENDAS = [
     'tejido-deshilado-ceniza', 'buzo-destroyed-ceniza', 'tejido-anillos-indigo', 'jean-patchwork-cuadros',
     'short-camuflado-leopardo-rosa', 'jean-patchwork-estrellas-violeta', 'jean-flare-destroyed-verde',
     'chaqueta-smiley-acido', 'buzo-multitud-termica', 'chaqueta-trouble-maker', 'jean-flare-costura-neon',
+    'chaqueta-blood-rose',
 ]
 MAX = 1500
 
@@ -66,39 +65,12 @@ def defringe(im, r=4):
     return Image.fromarray(out.round().clip(0, 255).astype(np.uint8), 'RGBA')
 
 
-def drawing_alpha(path):
-    """El dibujo del 360 viene sobre blanco: lo blanco que toca el borde se vuelve transparente."""
-    im = Image.open(path).convert('RGB')
-    small = im.resize((im.width // 2, im.height // 2), Image.BILINEAR)
-    w, h = small.size
-    px = small.load()
-    seen = bytearray(w * h)
-    q = deque()
-    for x in range(w):
-        q.extend([(x, 0), (x, h - 1)])
-    for y in range(h):
-        q.extend([(0, y), (w - 1, y)])
-    while q:
-        x, y = q.popleft()
-        if x < 0 or y < 0 or x >= w or y >= h or seen[y * w + x]:
-            continue
-        r, g, b = px[x, y]
-        if r < 236 or g < 236 or b < 236:
-            continue
-        seen[y * w + x] = 1
-        q.extend([(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)])
-    mask = Image.frombytes('L', (w, h), bytes(0 if s else 255 for s in seen))
-    mask = mask.resize(im.size, Image.BILINEAR).filter(ImageFilter.GaussianBlur(1.2))
-    im.putalpha(mask)
-    return crop_alpha(im, 0.01)
-
-
 # Detalles de cerca: (prenda, nombre, centro x, centro y, lado), en fracciones del recorte.
 DETALLES = [
     ('jean-flare-patchwork-leopardo', 'mariposas', 0.67, 0.47, 0.36),
     ('chaqueta-smiley-acido', 'pintura', 0.65, 0.22, 0.36),
     ('top-halftone-carmin', 'semitono', 0.5, 0.36, 0.42),
-    ('jean-wide-fleco-indigo', 'flecos', 0.42, 0.5, 0.5),
+    ('jean-wide-fleco-indigo', 'flecos', 0.46, 0.44, 0.4),
     ('tejido-anillos-indigo', 'argollas', 0.48, 0.36, 0.32),
     ('chaqueta-trouble-maker', 'espiral', 0.82, 0.32, 0.32),
 ]
@@ -128,7 +100,7 @@ def detail(cut, cx, cy, side):
 
 
 def main():
-    work, theme = sys.argv[1], sys.argv[2]
+    work = sys.argv[1]
     out = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'imagenes')
     os.makedirs(out, exist_ok=True)
     for h in PRENDAS:
@@ -148,9 +120,6 @@ def main():
     for h, name, cx, cy, side in DETALLES:
         cut = Image.open(os.path.join(out, f'{h}-recorte.webp')).convert('RGBA')
         detail(cut, cx, cy, side).save(os.path.join(out, f'detalle-{name}.webp'), quality=88)
-    # La Chaqueta blood rose todavía no tiene foto: solo su dibujo, sacado de su boceto.
-    dib = os.path.join(theme, 'assets', '360-chaqueta-blood-rose-frente.webp')
-    drawing_alpha(dib).save(os.path.join(out, 'chaqueta-blood-rose-dibujo.webp'), quality=88)
 
 
 if __name__ == '__main__':

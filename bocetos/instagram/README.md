@@ -14,7 +14,7 @@ correas, el manifiesto y la ficha con los datos de la pieza.
 | `posts/01.jpg` a `20.jpg` | Los posts listos para subir, en el orden de publicación. |
 | `textos.md` | El pie de foto de cada post y de cada reel, el día en que sale y la bio sugerida. |
 | `posts.html` | Los 20 posts armados en una página; de acá salen los JPG. |
-| `imagenes/` | Las prendas recortadas, dos fotos completas, los seis detalles de cerca, el dibujo de la Chaqueta Blood Rose y dos prendas en 3D. |
+| `imagenes/` | Las prendas recortadas, la espalda de la Chaqueta Trouble Maker, dos fotos completas, los seis detalles de cerca y dos prendas en 3D. |
 | `preparar.py` | Arma `imagenes/` a partir de copias de las fotos de la tienda. |
 | `render.js` | Saca los JPG de `posts.html`. |
 
@@ -49,20 +49,20 @@ lanzamiento el jueves 12 de noviembre de 2026 a las 8:00 p. m., están en `texto
 
 Los precios, las unidades, los colores, los cortes y los textos de cada prenda son los de la tienda del 23 de octubre
 de 2026 (máximo 4 por talla; la camiseta, 3 por talla). Si cambian, se cambian en `posts.html` y en `textos.md`, y se
-vuelven a sacar los JPG. La Chaqueta Blood Rose sale con su dibujo porque su foto en la tienda todavía es la imagen de
-relleno.
+vuelven a sacar los JPG.
 
 ## Volver a generar
 
 Requiere Python 3 con Pillow y NumPy, y Node con Playwright (Chromium).
 
 1. Las imágenes salen de la carpeta de trabajo que arma el generador 360 de `bocetos/vector/generador/` (la que tiene
-   `productos/<prenda>/foto.jpg` y `foto-mascara.png`). Las fotos de la tienda no se tocan: se trabaja sobre copias, y
+   `productos/<prenda>/foto.jpg` y `foto-mascara.png`; las máscaras salen de `recorte.py` y, en el Jean Wide Fleco
+   Índigo y la Chaqueta Blood Rose, de su propio recorte). Las fotos de la tienda no se tocan: se trabaja sobre copias, y
    al recortar se le quita al borde el blanco del fondo para que no quede un halo. Las dos prendas en 3D son capturas
    del visor 360 de la tienda.
 
    ```bash
-   python3 bocetos/instagram/preparar.py <carpeta de trabajo del 360> .
+   python3 bocetos/instagram/preparar.py <carpeta de trabajo del 360>
    ```
 
 2. Los JPG salen de `posts.html`, servido desde la raíz del repo (usa las tipografías, el logo, el grano y las correas

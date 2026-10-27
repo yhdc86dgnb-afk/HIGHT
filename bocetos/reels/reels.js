@@ -673,7 +673,7 @@ function paneo(t, t0, d, sale, entra) {
 const PRENDAS = {
   'chaqueta-trouble-maker': { name: 'Chaqueta Trouble Maker', type: 'Chaqueta', cm: 'Crop · Pintada a mano', price: '$580.000', color: 'ceniza', acc: '#9aa356' },
   'chaqueta-smiley-acido': { name: 'Chaqueta Smiley Ácido', type: 'Chaqueta', cm: 'Crop · Pintada a mano', price: '$620.000', color: 'acido', acc: '#dff04a' },
-  'chaqueta-blood-rose': { name: 'Chaqueta Blood Rose', type: 'Chaqueta', cm: 'Chaqueta', price: '$500.000', color: 'magenta', acc: '#b9a2e8', img: 'dibujo' },
+  'chaqueta-blood-rose': { name: 'Chaqueta Blood Rose', type: 'Chaqueta', cm: 'Chaqueta', price: '$500.000', color: 'magenta', acc: '#b9a2e8' },
   'buzo-multitud-termica': { name: 'Buzo Multitud Térmica', type: 'Buzo', cm: 'Crop · Cremallera', price: '$390.000', color: 'ceniza', acc: '#a066ff' },
   'buzo-destroyed-ceniza': { name: 'Buzo Destroyed Ceniza', type: 'Buzo', cm: 'Crop · Capucha', price: '$520.000', color: 'ceniza', acc: '#c4beb2' },
   'tejido-anillos-indigo': { name: 'Tejido Anillos Índigo', type: 'Tejido', cm: 'Crop · Tejido grueso', price: '$460.000', color: 'indigo', acc: '#5b7cfa', corte: 'der' },
