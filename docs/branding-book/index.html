@@ -397,6 +397,11 @@ td:first-child { white-space: nowrap; }
 .mini-franja .franja-grupo { padding-block: 10px; }
 .parentesis { display: grid; gap: 10px; justify-items: start; }
 .patron-demo { width: 100%; height: 230px; background: url("img/patron.jpg") center / 300px; }
+.patron-demo.tres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; background: none; }
+.patron-demo.tres span { background: url("img/patron.jpg") center / 300px; }
+.patron-demo.tres span + span { border-left: 1px dashed var(--linea-c); }
+.patron-demo.tres .colecciones { background-image: url("img/patron-colecciones.jpg"); }
+.patron-demo.tres .tinta { background-image: url("img/patron-tinta.jpg"); }
 .correas-demo { position: absolute; inset: 0; display: grid; align-content: center; gap: 12px; background: var(--acento); transition: background-color 0.6s; }
 .correas-demo img { width: auto; max-width: none; height: 46px; }
 .correas-demo img:nth-child(2) { margin-left: -180px; }
@@ -414,6 +419,7 @@ td:first-child { white-space: nowrap; }
 .receta dt { color: var(--muted); }
 .galeria { display: grid; gap: clamp(22px, 3vw, 36px) clamp(14px, 2.4vw, 28px); grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (min-width: 900px) { .galeria { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 760px) { .galeria.tres { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .galeria figure { display: grid; gap: 12px; min-width: 0; }
 .galeria figcaption { display: flex; gap: 8px; align-items: baseline; }
 .punto { flex: none; width: 0.8em; height: 0.8em; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.22); }
@@ -984,8 +990,8 @@ td:first-child { white-space: nowrap; }
         <div class="motivo-tx"><h3 class="t-h3">Paréntesis y cuentas</h3><p>Todo se cuenta como en un archivo: las etiquetas van en Space Mono, entre paréntesis y con su número. MED/COL firma la esquina.</p></div>
       </article>
       <article class="motivo">
-        <div class="motivo-vista" style="padding:0"><div class="patron-demo" aria-hidden="true"></div></div>
-        <div class="motivo-tx"><h3 class="t-h3">Fondo de logos</h3><p>El logo plateado repetido como un estampado de perchas: filas corridas y cada logo un poco girado. Empalma por los cuatro lados. Va detrás de las prendas, en historias, en papel de seda y en bolsas.</p></div>
+        <div class="motivo-vista" style="padding:0"><div class="patron-demo tres" aria-hidden="true"><span></span><span class="colecciones"></span><span class="tinta"></span></div></div>
+        <div class="motivo-tx"><h3 class="t-h3">Fondo de logos</h3><p>El logo plateado repetido como un estampado de perchas: filas corridas y cada logo un poco girado. Empalma por los cuatro lados. Va detrás de las prendas, en historias, en papel de seda y en bolsas.</p><p>Tiene dos versiones más, con los logos en el mismo lugar: con los colores de las seis colecciones, en diagonal y en el orden en que rota la tienda, y en colores contrarios, el logo en tinta sobre plata.</p></div>
       </article>
       <article class="motivo">
         <div class="motivo-vista"><div class="correas-demo" aria-hidden="true"><img src="img/correas/correa-01.svg" alt="" width="652" height="46" loading="lazy"><img src="img/correas/correa-05.svg" alt="" width="652" height="46" loading="lazy"><img src="img/correas/correa-07.svg" alt="" width="652" height="46" loading="lazy"></div></div>
@@ -1022,7 +1028,7 @@ td:first-child { white-space: nowrap; }
       <dl class="receta">
         <div><dt class="t-label">Formato</dt><dd>Vertical 4:5, de 1.600 × 2.000 px.</dd></div>
         <div><dt class="t-label">Prenda</dt><dd>Centrada, al 80 % del alto, con una sombra suave debajo. Nada de sombras duras.</dd></div>
-        <div><dt class="t-label">Fondo</dt><dd>El fondo de logos plateados sobre carbón, apagado en las orillas y con una luz cálida en el centro. El mismo para toda la colección.</dd></div>
+        <div><dt class="t-label">Fondo</dt><dd>El fondo de logos plateados sobre carbón, apagado en las orillas y con una luz cálida en el centro. El mismo para toda la colección. Los fondos con las colecciones y en colores contrarios siguen la misma receta, por si la colección cambia de fondo.</dd></div>
         <div><dt class="t-label">Corte</dt><dd>Si la foto original corta la prenda por un lado, ese lado va contra el borde, para que el corte se vea a propósito. Si la corta arriba y abajo, va de alto completo.</dd></div>
         <div><dt class="t-label">En la ficha</dt><dd>Solo las fotos sobre el fondo: el frente y, si la prenda tiene, la espalda. Las originales quedan en Contenido &gt; Archivos de Shopify.</dd></div>
         <div><dt class="t-label">Texto alternativo</dt><dd>«Nombre de la prenda, sobre el fondo de Hight»; la espalda, «Nombre de la prenda, espalda, sobre el fondo de Hight».</dd></div>
@@ -1038,6 +1044,15 @@ td:first-child { white-space: nowrap; }
           <li>En cuerpo, de perfil o tres cuartos, para que se vea el volumen.</li>
           <li>Si se puede, en cuerpo, de espalda o en movimiento.</li>
         </ol>
+      </div>
+    </div>
+
+    <div class="sub">
+      <p class="t-label">La misma prenda en los tres fondos</p>
+      <div class="galeria tres">
+        <figure><div class="copia gira-2"><img src="img/prendas/chaqueta-blood-rose.jpg" alt="Chaqueta Blood Rose sobre el fondo de logos plateados" width="640" height="800" loading="lazy"></div><figcaption><span>Plateado · el de la tienda</span></figcaption></figure>
+        <figure><div class="copia gira-1"><img src="img/prendas/chaqueta-blood-rose-colecciones.jpg" alt="Chaqueta Blood Rose sobre el fondo con los colores de las colecciones" width="640" height="800" loading="lazy"></div><figcaption><span>Con las colecciones</span></figcaption></figure>
+        <figure><div class="copia gira-3"><img src="img/prendas/chaqueta-blood-rose-tinta.jpg" alt="Chaqueta Blood Rose sobre el fondo en colores contrarios, tinta sobre plata" width="640" height="800" loading="lazy"></div><figcaption><span>En colores contrarios</span></figcaption></figure>
       </div>
     </div>
 
@@ -1371,7 +1386,7 @@ Prendas intervenidas a mano y piezas de archivo.
           <tr><td>Logo en plata y en tinta</td><td>assets/hight-logo-plata.webp · assets/hight-logo-tinta.webp</td><td>WEBP de 977 × 672, fondo transparente</td></tr>
           <tr><td>Firma corta</td><td>snippets/logo-wordmark.liquid</td><td>SVG</td></tr>
           <tr><td>Tipografías</td><td>assets/anton-latin.woff2 · space-grotesk-latin.woff2 · space-mono-400-latin.woff2 · space-mono-700-latin.woff2</td><td>WOFF2; también en Google Fonts</td></tr>
-          <tr><td>Fondo de logos</td><td>bocetos/fondos/ (cuadro-plata.png, historia-plata.png, prenda-plata.png)</td><td>PNG</td></tr>
+          <tr><td>Fondo de logos</td><td>bocetos/fondos/ (cuadro-plata.png, historia-plata.png, prenda-plata.png; con las colecciones y en colores contrarios, los mismos con -colecciones y -tinta)</td><td>PNG</td></tr>
           <tr><td>Fotos sobre el fondo</td><td>bocetos/fondos/prendas/</td><td>JPG de 1.600 × 2.000</td></tr>
           <tr><td>Fotos originales</td><td>Shopify, Contenido &gt; Archivos (ya no están en las fichas)</td><td>JPG</td></tr>
           <tr><td>Prendas recortadas</td><td>bocetos/instagram/imagenes/</td><td>WEBP con fondo transparente</td></tr>

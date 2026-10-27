@@ -14,7 +14,7 @@ import os
 import sys
 
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter
 
 PRENDAS = [
     'jean-flare-patchwork-leopardo', 'jean-flare-dragon-acido', 'camiseta-celula-carmin', 'top-malla-asimetrico-rojo',
@@ -80,11 +80,30 @@ FOTOS = ['jean-flare-patchwork-leopardo', 'chaqueta-smiley-acido']
 ESPALDAS = ['chaqueta-trouble-maker']
 
 
+def sin_rayas(mask):
+    """Las rayas sueltas pegadas al borde de la foto (un pedazo del perchero o del marco que la máscara toma por
+    prenda) se van: lo que toca el borde, no llega a 7 px de grueso y es menos del 0,5 % de la prenda."""
+    pieza = Image.fromarray(((np.asarray(mask) > 20) * 255).astype(np.uint8)).copy()
+    total = int((np.asarray(pieza) > 0).sum())
+    out = np.array(mask)
+    w, h = pieza.size
+    for x, y in [(x, 0) for x in range(w)] + [(x, h - 1) for x in range(w)] + [(0, y) for y in range(h)] + [(w - 1, y) for y in range(h)]:
+        if pieza.getpixel((x, y)) != 255:
+            continue
+        ImageDraw.floodfill(pieza, (x, y), 128, thresh=0)
+        sola = np.asarray(pieza) == 128
+        ys, xs = np.nonzero(sola)
+        if min(ys.max() - ys.min(), xs.max() - xs.min()) < 7 and sola.sum() < 0.005 * total:
+            out[sola] = 0
+        ImageDraw.floodfill(pieza, (x, y), 100, thresh=0)
+    return Image.fromarray(out)
+
+
 def recorte(d, nombre):
     """La foto `nombre`.jpg de la carpeta `d` y la prenda sola, recortada con `nombre`-mascara.png."""
     foto = Image.open(os.path.join(d, f'{nombre}.jpg')).convert('RGB')
     mask = Image.open(os.path.join(d, f'{nombre}-mascara.png')).convert('L').resize(foto.size, Image.BILINEAR)
-    mask = mask.filter(ImageFilter.GaussianBlur(1.0))
+    mask = sin_rayas(mask).filter(ImageFilter.GaussianBlur(1.0))
     cut = foto.copy()
     cut.putalpha(mask)
     return foto, defringe(crop_alpha(cut))

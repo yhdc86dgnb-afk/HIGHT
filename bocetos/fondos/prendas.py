@@ -4,12 +4,16 @@ centro, como un fondo de estudio, para que la prenda sea lo primero que se ve. S
 manual de marca: vertical 4:5, 2.000 px por el lado largo, la prenda centrada y ocupando el 80 % del alto, sin sombras
 duras y el mismo fondo para toda la colección.
 
-Saca los dos fondos solos (prenda-plata.png y prenda-plata-contorno.png) y las prendas del Drop 01 puestas encima del
-fondo plateado, en prendas/. Las prendas salen de copias recortadas de las fotos de la tienda (bocetos/instagram/
-imagenes/); las fotos de la tienda no se tocan.
+Saca los fondos solos (prenda-<versión>.png, una por cada versión del patrón: plata, plata-contorno, colecciones y
+tinta), las prendas del Drop 01 puestas encima del fondo plateado, en prendas/, y una hoja con todas juntas sobre cada
+fondo que lleva prendas (prendas.jpg sobre el plateado, prendas-colecciones.jpg y prendas-tinta.jpg). Las prendas
+salen de copias recortadas de las fotos de la tienda (bocetos/instagram/imagenes/); las fotos de la tienda no se tocan.
 
-Uso, desde la raíz del repo: python3 bocetos/fondos/prendas.py
+Uso, desde la raíz del repo: python3 bocetos/fondos/prendas.py [colecciones] [tinta]
+Con colecciones o tinta, también deja cada prenda sobre ese fondo, en prendas-colecciones/ o prendas-tinta/.
 """
+import sys
+
 import numpy as np
 from PIL import Image, ImageFilter
 
@@ -23,6 +27,12 @@ RECORTES = AQUI.parent / 'instagram' / 'imagenes'
 CORTES = {'jean-wide-patchwork-indigo': 'der', 'tejido-anillos-indigo': 'der', 'jean-flare-dragon-acido': 'lados',
           'jean-wide-fleco-indigo': 'alto'}
 LUZ = (40, 38, 35)  # el gris cálido del centro, donde cae la luz
+# El estudio de cada versión, si no es el del negro: el color de las orillas, el de la luz del centro y cuánto se ven
+# los logos en la orilla y donde cae la luz. El de colores contrarios es plata, más clara al centro, con los logos en
+# tinta más apagados.
+ESTUDIO = {'tinta': ((178, 180, 184), (226, 227, 229), 0.1, 0.22)}
+# Los fondos que llevan prendas encima, y la hoja de cada uno
+CON_PRENDAS = {'plata': 'prendas.jpg', 'colecciones': 'prendas-colecciones.jpg', 'tinta': 'prendas-tinta.jpg'}
 
 
 def luz():
@@ -32,13 +42,14 @@ def luz():
     return np.clip(1 - d, 0, 1) ** 1.5
 
 
-def fondo(dibuja):
+def fondo(nombre, dibuja):
+    orilla, centro, apagado, con_luz = ESTUDIO.get(nombre, ([int(FONDO[i:i + 2], 16) for i in (1, 3, 5)], LUZ, 0.14, 0.3))
     l = luz()[..., None]
-    base = np.array([int(FONDO[i:i + 2], 16) for i in (1, 3, 5)], float)
-    img = base + (np.array(LUZ, float) - base) * l
+    base = np.array(orilla, float)
+    img = base + (np.array(centro, float) - base) * l
     capa = np.array(patron(W, H, COLS, FILAS, dibuja, fondo=None)).astype(float)
     # los logos apagados: casi no se ven en las orillas y un poco más donde cae la luz
-    a = capa[..., 3:4] / 255 * (0.14 + 0.3 * l)
+    a = capa[..., 3:4] / 255 * (apagado + con_luz * l)
     img = img * (1 - a) + capa[..., :3] * a
     return Image.fromarray(np.clip(img, 0, 255).round().astype(np.uint8))
 
@@ -76,15 +87,24 @@ def con_prenda(fondo_img, prenda):
 def main():
     fondos = {}
     for nombre, dibuja in logos(TRAZO).items():
-        fondos[nombre] = fondo(dibuja)
+        fondos[nombre] = fondo(nombre, dibuja)
         fondos[nombre].save(AQUI / f'prenda-{nombre}.png', optimize=True)
         print(f'prenda-{nombre}.png', fondos[nombre].size)
-    salida = AQUI / 'prendas'
-    salida.mkdir(exist_ok=True)
-    for f in sorted(RECORTES.glob('*-recorte.webp')):
-        prenda = f.name.replace('-recorte.webp', '')
-        con_prenda(fondos['plata'], prenda).save(salida / f'{prenda}.jpg', quality=90, optimize=True)
-        print(f'prendas/{prenda}.jpg')
+    prendas = [f.name.replace('-recorte.webp', '') for f in sorted(RECORTES.glob('*-recorte.webp'))]
+    for nombre, hoja_nombre in CON_PRENDAS.items():
+        salida = AQUI / ('prendas' if nombre == 'plata' else f'prendas-{nombre}')
+        guarda = nombre == 'plata' or nombre in sys.argv[1:]
+        if guarda:
+            salida.mkdir(exist_ok=True)
+        # la hoja: todas juntas, de siete en siete, para verlas de un vistazo
+        hoja = Image.new('RGB', (7 * 240, -(-len(prendas) // 7) * 300))
+        for i, prenda in enumerate(prendas):
+            foto = con_prenda(fondos[nombre], prenda)
+            if guarda:
+                foto.save(salida / f'{prenda}.jpg', quality=90, optimize=True)
+            hoja.paste(foto.resize((240, 300), Image.LANCZOS), ((i % 7) * 240, (i // 7) * 300))
+        hoja.save(AQUI / hoja_nombre, quality=88, optimize=True)
+        print(hoja_nombre, len(prendas), 'prendas', f'(y cada una en {salida.name}/)' if guarda else '')
 
 
 if __name__ == '__main__':

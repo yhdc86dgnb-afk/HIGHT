@@ -33,6 +33,28 @@ medidos sobre su foto con el fondo.
 Para una foto nueva, fotografía la prenda sobre un fondo liso, recórtala y ponla encima de `prenda-plata.png` con el
 mismo tamaño y margen que las demás.
 
+## Fondos alternativos
+
+![Los fondos alternativos, solos y con cuatro prendas](vista-previa-alternativos.jpg)
+
+El mismo estampado, con los logos en el mismo lugar, en otros colores:
+
+- **Colecciones:** cada logo va en el color de una de las seis colecciones de la tienda (Radiactivo, Sangre Fría,
+  Medianoche, Chicle, Asfalto y Fiera), como metal teñido de ese color, sobre el mismo negro carbón. Los seis colores
+  bajan en diagonal, en el orden en que rota la tienda.
+- **Colores contrarios:** el logo en tinta sobre plata, al revés del original. Detrás de las prendas la plata se
+  aclara hacia el centro, como la luz del estudio, y la prenda deja una sombra suave.
+
+| Archivo | Tamaño | Qué es |
+| --- | --- | --- |
+| `prenda-colecciones.png`, `prenda-tinta.png` | 1600 × 2000 | El fondo solo, para poner detrás de las prendas. |
+| `prendas-colecciones.jpg`, `prendas-tinta.jpg` | | Las 21 fotos de las prendas juntas sobre cada fondo, para compararlas con `prendas.jpg`. |
+| `cuadro-colecciones.png`, `cuadro-tinta.png` | 2400 × 2400 | Para repetir, como el cuadro plateado. |
+| `historia-colecciones.png`, `historia-tinta.png` | 1080 × 1920 | Del tamaño de una historia o un fondo de teléfono. |
+
+Las fichas de la tienda siguen con el fondo plateado. Para tener cada prenda sobre uno de estos fondos, en
+`prendas-colecciones/` o `prendas-tinta/`, se corre `python3 bocetos/fondos/prendas.py colecciones` (o `tinta`).
+
 ## Para repetir
 
 | Archivo | Tamaño | Qué es |
@@ -49,11 +71,14 @@ seda o bolsas, e impreso a 300 puntos por pulgada mide 20 × 20 cm. El fondo es 
 Requiere Python 3 con Pillow y NumPy. Desde la raíz del repo:
 
 ```bash
-python3 bocetos/fondos/patron.py    # los cuadros y las historias
-python3 bocetos/fondos/prendas.py   # el fondo para las prendas y las 20 prendas encima
+python3 bocetos/fondos/patron.py    # los cuadros y las historias, en las cuatro versiones
+python3 bocetos/fondos/prendas.py   # el fondo para las prendas en las cuatro versiones, las 20 prendas encima del
+                                    # plateado y las hojas de los tres fondos con prendas
 ```
 
 El logo plateado sale de `assets/hight-logo-plata.webp`, con un poco más de brillo para que en tamaño chico siga
 viéndose como metal; el contorno sale de la silueta de `assets/hight-logo-tinta.webp`, pintado con un degradé de plata.
+El de colecciones es el mismo logo plateado teñido con los colores de las colecciones (`COLECCIONES` en `patron.py`,
+los mismos del tema), y el de colores contrarios es `assets/hight-logo-tinta.webp` tal cual.
 Los tamaños, el número de filas y columnas y el grosor del trazo están arriba en cada programa; con otra semilla
 (`semilla` en `patron.py`) cambian los giros de cada logo.

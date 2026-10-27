@@ -57,9 +57,9 @@ Requiere Python 3 con Pillow y NumPy, y Node con Playwright (Chromium).
 
 1. Las imágenes salen de la carpeta de trabajo que arma el generador 360 de `bocetos/vector/generador/` (la que tiene
    `productos/<prenda>/foto.jpg` y `foto-mascara.png`; las máscaras salen de `recorte.py` y, en el Jean Wide Fleco
-   Índigo y la Chaqueta Blood Rose, de su propio recorte). Las fotos de la tienda no se tocan: se trabaja sobre copias, y
-   al recortar se le quita al borde el blanco del fondo para que no quede un halo. Las dos prendas en 3D son capturas
-   del visor 360 de la tienda.
+   Índigo y la Chaqueta Blood Rose, de su propio recorte). Las fotos de la tienda no se tocan: se trabaja sobre copias.
+   Al recortar se le quita al borde el blanco del fondo, para que no quede un halo, y se borran las rayas sueltas que la
+   máscara deja pegadas al borde de la foto. Las dos prendas en 3D son capturas del visor 360 de la tienda.
 
    ```bash
    python3 bocetos/instagram/preparar.py <carpeta de trabajo del 360>
