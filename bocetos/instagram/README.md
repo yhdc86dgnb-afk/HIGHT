@@ -73,6 +73,7 @@ Requiere Python 3 con Pillow y NumPy, y Node con Playwright (Chromium).
    node bocetos/instagram/render.js http://127.0.0.1:8783/bocetos/instagram/posts.html
    ```
 
-Las prendas que la foto original corta por un lado (el Jean Wide Patchwork Índigo, el Tejido Anillos Índigo, el
-Jean Wide Fleco Índigo y el Jean Flare Dragón Ácido) van con ese lado contra el borde de la foto, para que el corte se
-vea a propósito.
+Las prendas que la foto original corta por un lado (el Jean Wide Patchwork Índigo, el Tejido Anillos Índigo y el Jean
+Flare Dragón Ácido) van con ese lado contra el borde de la foto, para que el corte se vea a propósito. El Jean Wide
+Fleco Índigo está fotografiado puesto sobre otro jean: su recorte deja solo la prenda, sin el jean de quien la lleva,
+el piso ni los zapatos.

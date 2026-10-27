@@ -20,9 +20,9 @@ el 80 % del alto, sin sombras duras y el mismo fondo para toda la colección.
 | `prendas.jpg` | | Las 19 juntas, para verlas de un vistazo. |
 
 Las prendas salen de copias recortadas de las fotos de la tienda (`../instagram/imagenes/`); las fotos de la tienda no se
-tocan. Las que la foto original corta por un lado (el Jean Wide Patchwork Índigo, el Tejido Anillos Índigo, el Jean
-Wide Fleco Índigo y el Jean Flare Dragón Ácido) van con ese lado contra el borde, para que el corte se vea a propósito.
-La Chaqueta Blood Rose no está porque todavía no tiene foto.
+tocan. Las que la foto original corta por un lado (el Jean Wide Patchwork Índigo, el Tejido Anillos Índigo y el Jean
+Flare Dragón Ácido) van con ese lado contra el borde, para que el corte se vea a propósito. La Chaqueta Blood Rose no
+está porque todavía no tiene foto.
 
 Para una foto nueva, fotografía la prenda sobre un fondo liso, recórtala y ponla encima de `prenda-plata.png` con el
 mismo tamaño y margen que las demás.

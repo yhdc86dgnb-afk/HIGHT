@@ -20,7 +20,7 @@ COLS, FILAS, TRAZO = 6, 12, 2
 RECORTES = AQUI.parent / 'instagram' / 'imagenes'
 # Las prendas que la foto original corta por un lado: ese lado va contra el borde de la foto, para que el corte se vea
 # a propósito (igual que en los posts).
-CORTES = {'jean-wide-patchwork-indigo': 'der', 'tejido-anillos-indigo': 'der', 'jean-wide-fleco-indigo': 'abajo', 'jean-flare-dragon-acido': 'lados'}
+CORTES = {'jean-wide-patchwork-indigo': 'der', 'tejido-anillos-indigo': 'der', 'jean-flare-dragon-acido': 'lados'}
 LUZ = (40, 38, 35)  # el gris cálido del centro, donde cae la luz
 
 

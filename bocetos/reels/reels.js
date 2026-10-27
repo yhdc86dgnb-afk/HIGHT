@@ -689,7 +689,7 @@ const PRENDAS = {
   'jean-patchwork-cuadros': { name: 'Jean Patchwork Cuadros', type: 'Jean', cm: 'Recto · Patchwork', price: '$540.000', color: 'leopardo', acc: '#c08a4e' },
   'jean-patchwork-estrellas-violeta': { name: 'Jean Patchwork Estrellas Violeta', type: 'Jean', cm: 'Wide · Patchwork', price: '$650.000', color: 'magenta', acc: '#b06cff' },
   'jean-wide-patchwork-indigo': { name: 'Jean Wide Patchwork Índigo', type: 'Jean', cm: 'Wide · Patchwork', price: '$590.000', color: 'indigo', acc: '#5b7cfa', corte: 'der' },
-  'jean-wide-fleco-indigo': { name: 'Jean Wide Fleco Índigo', type: 'Jean', cm: 'Wide · Patchwork', price: '$620.000', color: 'indigo', acc: '#5b7cfa', corte: 'abajo' },
+  'jean-wide-fleco-indigo': { name: 'Jean Wide Fleco Índigo', type: 'Jean', cm: 'Wide · Patchwork', price: '$620.000', color: 'indigo', acc: '#5b7cfa' },
   'short-camuflado-leopardo-rosa': { name: 'Short Camuflado Leopardo Rosa', type: 'Short', cm: 'Bermuda · Doble pretina', price: '$260.000', color: 'magenta', acc: '#e0218a' },
 };
 async function prendas(handles) {
