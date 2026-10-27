@@ -75,5 +75,6 @@ Requiere Python 3 con Pillow y NumPy, y Node con Playwright (Chromium).
 
 Las prendas que la foto original corta por un lado (el Jean Wide Patchwork Índigo, el Tejido Anillos Índigo y el Jean
 Flare Dragón Ácido) van con ese lado contra el borde de la foto, para que el corte se vea a propósito. La foto del Jean
-Wide Fleco Índigo lo corta arriba, a media pierna, y abajo, donde la pierna cae sobre el zapato: va con los dos bordes
-contra la foto, y su recorte deja el jean sin el piso, los zapatos ni el fondo que se ve entre los muslos.
+Wide Fleco Índigo lo corta arriba, un poco encima de la entrepierna, y abajo, donde la pierna cae sobre el zapato: va
+con los dos bordes contra la foto, y su recorte deja el jean con los muslos y la entrepierna (que la sombra deja casi
+negra), sin el piso, los zapatos ni el fondo que se ve entre las piernas.
