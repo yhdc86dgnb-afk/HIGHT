@@ -1,3 +1,5 @@
+> La marca se renovó con Hight 2.0: el [Branding Book](../docs/branding-book/README.md) reemplaza este manual en color, tipografía, fotografía y motivos. La voz, los lemas y las reglas del logo siguen valiendo.
+
 > Copia de referencia del design system **Hight** (artifact de Claude: https://claude.ai/artifact/QsjvifS9dsprctW9pJxtEJ), traída el 2026-10-08. El tema de Shopify de este repositorio lo aplica en `assets/`, `snippets/` y `sections/`. Las secciones del manual están en `secciones/`.
 
 Hight es streetwear de autor para el uso diario. Vive entre la cultura urbana y el e-commerce, y le habla a quien busca identidad, calidad y prendas que se repiten en el armario, frente al fast fashion genérico y frente al streetwear local sin coherencia. Este sistema existe para que cada pieza (tienda, redes, empaque, campaña) se vea y suene como la misma marca mientras pasa de ventas puntuales a una comunidad reconocible.

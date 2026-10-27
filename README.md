@@ -21,6 +21,8 @@ colecciones: cada color es una colección y, al abrirla, toda la tienda toma su 
 | Home | Hero, catálogo, spread, manifiesto | Hero collage → correas → Lo nuevo → Probador → Elige tu color → clóset → Anatomía de una pieza → Lupa → Desliza → Archivo → Lookbook → Manifiesto |
 
 El logo gótico se mantiene: es la marca. El design system original sigue en [`design-system/`](design-system/README.md) como referencia.
+Toda la marca renovada (logo, color, tipografía, motivos, fotografía, Instagram, tienda, voz y empaque) está en el
+[Branding Book](docs/branding-book/README.md).
 
 ## Lo interactivo
 
@@ -301,6 +303,7 @@ snippets/        product-card, sticker, product-gallery, density-toggle, price, 
 templates/       plantillas JSON + gift_card.liquid
 design-system/   design system HIGHT original (referencia)
 docs/preview/    capturas de la vista previa
+docs/branding-book/  el Branding Book de la marca renovada (index.html con sus imágenes)
 docs/politicas/  las cinco políticas de la tienda para pegar en Shopify
 bocetos/         fichas técnicas para Illustrator (SVG y PDF), su generador, la chaqueta en vector (vector/), el
                  video de campaña (video/), las correas (correas/) y los posts y reels de Instagram (instagram/, reels/)

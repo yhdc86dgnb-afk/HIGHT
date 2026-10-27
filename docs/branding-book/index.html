@@ -1,0 +1,1527 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hight Branding Book</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@300..700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+/* Pliegos que alternan carbón y hueso, como las secciones de la tienda: cada capítulo abre con su número entre
+   paréntesis y MED/COL en la esquina, titular en Anton y fotos como copias impresas con cinta. El acento es el color
+   del turno, que cambia cada minuto igual que en la tienda. */
+:root {
+  --carbon: #0d0c0b;
+  --carbon-2: #181614;
+  --hueso: #ece3d0;
+  --hueso-2: #e1d6c0;
+  --papel: #faf6ee;
+  --gris-c: #9a9184;
+  --gris-h: #5e574d;
+  --linea-c: #3a3631;
+  --linea-h: #b9ad97;
+  --acento: #dff04a;
+  --on-acento: #0d0c0b;
+  --f-display: 'Anton', Impact, 'Arial Narrow Bold', sans-serif;
+  --f-text: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --sombra-copia: 0 1px 0 rgba(0, 0, 0, 0.12), 0 24px 44px -20px rgba(0, 0, 0, 0.7);
+  --ancho: 1240px;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 64px); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--carbon);
+  color: var(--hueso);
+  font: 400 1rem/1.5 var(--f-text);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+/* la franja que tapa el área segura de arriba, del color de la barra fija */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--carbon);
+}
+/* grano de fotocopia sobre toda la página, como en la tienda */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -40px;
+  z-index: 300;
+  pointer-events: none;
+  background: url("img/grano.svg") 0 0 / 320px;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+}
+img, video, svg { display: block; max-width: 100%; }
+img, video { height: auto; }
+a { color: inherit; }
+p, h1, h2, h3, h4, figure, dl, dd, ol, ul, blockquote { margin: 0; }
+ul, ol { padding: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--acento); outline-offset: 3px; }
+::selection { background: var(--acento); color: var(--on-acento); }
+.oculto { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Esquemas de pliego ---------- */
+.carbon { --bg: var(--carbon); --surface: var(--carbon-2); --fg: var(--hueso); --muted: var(--gris-c); --line: var(--linea-c); --print: var(--hueso); }
+.hueso { --bg: var(--hueso); --surface: var(--hueso-2); --fg: var(--carbon); --muted: var(--gris-h); --line: var(--linea-h); --print: var(--papel); }
+.pliego { position: relative; background: var(--bg); color: var(--fg); }
+.hoja {
+  position: relative;
+  max-width: calc(var(--ancho) + 2 * 16px);
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: clamp(56px, 9vw, 120px);
+}
+@media (min-width: 900px) {
+  .hoja { max-width: calc(var(--ancho) + 2 * 48px); padding-left: max(48px, env(safe-area-inset-left, 0px)); padding-right: max(48px, env(safe-area-inset-right, 0px)); }
+}
+
+/* ---------- Tipografía ---------- */
+.t-xxl, .t-xl, .t-l, .t-h1, .t-h2, .t-h3 { font-family: var(--f-display); font-weight: 400; text-transform: uppercase; letter-spacing: -0.005em; overflow-wrap: break-word; text-wrap: balance; }
+.t-xxl { font-size: clamp(3.6rem, 15vw, 13rem); line-height: 0.8; }
+.t-xl { font-size: clamp(2.8rem, 9vw, 8rem); line-height: 0.86; }
+.t-l { font-size: clamp(2.3rem, 6vw, 5.4rem); line-height: 0.9; }
+.t-h1 { font-size: clamp(1.9rem, 4vw, 3.4rem); line-height: 0.94; }
+.t-h2 { font-size: clamp(1.45rem, 2.6vw, 2.2rem); line-height: 0.98; }
+.t-h3 { font-size: 1.3rem; line-height: 1.12; }
+/* titulares en Anton con mayúsculas tildadas que se pueden partir en dos líneas: la regla de la tilde */
+.tildes { line-height: 1.12; }
+.t-label { font: 400 0.75rem/1.45 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.t-label b, .t-label strong { font-weight: 700; }
+.lead { font-size: clamp(1.06rem, 1.3vw, 1.25rem); line-height: 1.5; max-width: 58ch; }
+.muted { color: var(--muted); }
+.medida { max-width: 60ch; }
+.texto > * + * { margin-top: 0.9em; }
+.texto strong { font-weight: 700; }
+a.punteado, .texto a { text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px; }
+
+/* ---------- Franja que corre ---------- */
+.franja { overflow: hidden; background: var(--acento); color: var(--on-acento); font: 700 0.75rem/1 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; transition: background-color 0.6s, color 0.6s; }
+.franja-pista { display: flex; width: max-content; animation: correr 44s linear infinite; }
+.franja-grupo { display: flex; flex-shrink: 0; align-items: center; gap: clamp(18px, 2.2vw, 36px); padding: 12px clamp(18px, 2.2vw, 36px) 12px 0; list-style: none; margin: 0; }
+.franja-grupo li { white-space: nowrap; }
+.franja .estrella { width: 14px; height: 14px; }
+@keyframes correr { to { transform: translateX(-50%); } }
+
+/* ---------- Barra fija ---------- */
+.barra {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: var(--carbon);
+  color: var(--hueso);
+  border-bottom: 1px dashed var(--linea-c);
+}
+.barra-firma { flex: none; color: var(--hueso); }
+.barra-firma svg { width: 84px; height: 21px; }
+.barra-caps { flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.barra-caps::-webkit-scrollbar { display: none; }
+.barra-caps ol { display: flex; gap: 4px; list-style: none; width: max-content; }
+.barra-caps a { display: block; padding: 8px 9px; font: 400 0.6875rem/1 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; color: var(--gris-c); white-space: nowrap; }
+.barra-caps a:hover { color: var(--hueso); text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px; }
+.turno { flex: none; display: flex; align-items: center; gap: 10px; font: 400 0.6875rem/1.2 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.turno-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--acento); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25); transition: background-color 0.6s; }
+.turno-txt b { font-weight: 700; }
+.turno-txt span[data-turno-tiempo] { color: var(--gris-c); }
+.turno-btn { min-height: 32px; padding: 0 10px; border: 1px dashed var(--linea-c); background: transparent; font: 700 0.6875rem/1 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+.turno-btn:hover { border-style: solid; border-color: var(--hueso); }
+@media (max-width: 760px) {
+  .turno-txt [data-turno-estado], .turno-txt [data-turno-tiempo] { display: none; }
+}
+@media (max-width: 420px) {
+  .turno-txt { display: none; }
+}
+
+/* ---------- Encabezado de capítulo ---------- */
+.cap-top { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 14px; margin-bottom: clamp(22px, 3vw, 36px); border-bottom: 1px dashed var(--line); }
+.cap-head { display: grid; gap: 18px; margin-bottom: clamp(36px, 5vw, 64px); }
+.folio { display: flex; justify-content: space-between; gap: 16px; margin-top: clamp(48px, 6vw, 80px); padding-top: 14px; border-top: 1px dashed var(--line); color: var(--muted); }
+.sub { display: grid; gap: 14px; margin-top: clamp(48px, 6vw, 84px); }
+.sub > .t-label { color: var(--muted); }
+
+/* ---------- Copias impresas, cinta y sello ---------- */
+.copia { position: relative; display: block; padding: clamp(5px, 0.6vw, 9px); background: var(--print); box-shadow: var(--sombra-copia); }
+.copia img { width: 100%; }
+.copia.gira-1 { rotate: -1.4deg; }
+.copia.gira-2 { rotate: 1.1deg; }
+.copia.gira-3 { rotate: -0.6deg; }
+.copia.gira-4 { rotate: 0.5deg; }
+.cinta {
+  position: absolute; z-index: 3; top: -13px; left: 50%;
+  width: 44%; max-width: 128px; height: 26px;
+  transform: translateX(-50%) rotate(-4deg);
+  background: linear-gradient(180deg, rgba(243, 236, 210, 0.82), rgba(226, 215, 182, 0.74));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+  clip-path: polygon(3% 8%, 9% 0, 92% 4%, 100% 0, 97% 52%, 100% 100%, 90% 94%, 6% 100%, 0 92%, 3% 50%);
+  pointer-events: none;
+}
+.sello { position: relative; display: inline-grid; place-items: center; width: clamp(104px, 11vw, 156px); aspect-ratio: 1; color: var(--on-acento); }
+.sello-aro { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; background: var(--acento); box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.6); animation: girar 18s linear infinite; transition: background-color 0.6s; }
+.sello-aro text { fill: currentColor; font: 700 15px var(--f-mono); letter-spacing: 0.08em; }
+.sello-centro { position: relative; width: clamp(30px, 3.2vw, 44px); height: auto; }
+@keyframes girar { to { rotate: 360deg; } }
+
+/* ---------- Botones ---------- */
+.btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+  min-height: 44px; padding: 0 1.1rem;
+  border: 2px solid var(--fg); border-radius: 0; background: transparent; color: var(--fg);
+  font: 700 0.75rem/1 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; white-space: nowrap; cursor: pointer;
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out), background-color 0.2s, color 0.2s;
+}
+.btn:hover { transform: translate(-3px, -3px); box-shadow: 3px 3px 0 var(--fg); }
+.btn:active { transform: none; box-shadow: none; }
+.btn-acento { border-color: var(--acento); background: var(--acento); color: var(--on-acento); }
+.btn-punteado { border-style: dashed; }
+
+/* ---------- Texturas de los seis colores (las mismas de la tienda) ---------- */
+.tx { position: absolute; inset: 0; }
+.tx-acido {
+  background-color: #10150b;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='24'%3E%3Cpolyline points='0,18 12,6 24,18 36,6 48,18' fill='none' stroke='%23dff04a' stroke-width='1.6' stroke-dasharray='4 3' opacity='.6'/%3E%3C/svg%3E"),
+    radial-gradient(110% 80% at 85% 10%, rgba(223, 240, 74, 0.38), transparent 60%),
+    radial-gradient(90% 70% at 15% 95%, rgba(98, 240, 124, 0.28), transparent 60%),
+    repeating-linear-gradient(115deg, rgba(223, 240, 74, 0.08) 0 2px, transparent 2px 9px);
+  background-size: 48px 24px, auto, auto, auto;
+}
+.tx-carmin { background: radial-gradient(120% 95% at 78% 28%, #d0182f, #4a050c 68%, #1a0306); }
+.tx-carmin::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(13, 12, 11, 0.92) 0 2.3px, transparent 2.7px);
+  background-size: 9px 9px;
+  -webkit-mask-image: linear-gradient(105deg, rgba(0, 0, 0, 0.15) 5%, #000 80%);
+  mask-image: linear-gradient(105deg, rgba(0, 0, 0, 0.15) 5%, #000 80%);
+}
+.tx-indigo {
+  background-color: #141d45;
+  background-image:
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.075) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.3) 0 1px, transparent 1px 5px),
+    radial-gradient(100% 75% at 72% 22%, rgba(91, 124, 250, 0.5), transparent 70%),
+    linear-gradient(180deg, #1c2b6e, #0b1130);
+}
+.tx-indigo::before, .tx-indigo::after { content: ''; position: absolute; top: 0; bottom: 0; border-left: 2px dashed rgba(236, 227, 208, 0.34); }
+.tx-indigo::before { left: 61%; }
+.tx-indigo::after { left: calc(61% + 9px); border-left-color: rgba(223, 160, 74, 0.38); }
+.tx-magenta {
+  background-color: #2b0b20;
+  background-image:
+    radial-gradient(40px 27px at 20% 30%, #e0218a 97%, transparent),
+    radial-gradient(30px 42px at 62% 22%, #b06cff 97%, transparent),
+    radial-gradient(46px 30px at 82% 72%, #ff7ac0 97%, transparent),
+    radial-gradient(28px 22px at 36% 76%, #8a1660 97%, transparent),
+    radial-gradient(18px 14px at 52% 52%, #f4b8d8 97%, transparent);
+  background-size: 170px 140px;
+}
+.tx-ceniza {
+  background-color: #1c1b19;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(196, 190, 178, 0.11) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(90deg, rgba(196, 190, 178, 0.11) 0 1px, transparent 1px 16px),
+    radial-gradient(120% 90% at 72% 28%, #45423c, #141312 75%);
+}
+.tx-leopardo {
+  background-color: #b98242;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Crect width='140' height='140' fill='%23b98242'/%3E%3Cg fill='%238a5a26' stroke='%2324160a' stroke-width='5' stroke-dasharray='10 5' stroke-linecap='round'%3E%3Cellipse cx='24' cy='22' rx='13' ry='10' transform='rotate(-20 24 22)'/%3E%3Cellipse cx='82' cy='18' rx='11' ry='9' transform='rotate(15 82 18)'/%3E%3Cellipse cx='122' cy='48' rx='12' ry='9' transform='rotate(-35 122 48)'/%3E%3Cellipse cx='52' cy='62' rx='14' ry='11' transform='rotate(25 52 62)'/%3E%3Cellipse cx='100' cy='92' rx='13' ry='10' transform='rotate(-10 100 92)'/%3E%3Cellipse cx='20' cy='104' rx='12' ry='9' transform='rotate(30 20 104)'/%3E%3Cellipse cx='64' cy='122' rx='11' ry='8' transform='rotate(-25 64 122)'/%3E%3C/g%3E%3Cg fill='%2324160a'%3E%3Ccircle cx='44' cy='34' r='3.5'/%3E%3Ccircle cx='108' cy='62' r='3'/%3E%3Ccircle cx='78' cy='70' r='2.5'/%3E%3Ccircle cx='36' cy='86' r='3'/%3E%3Ccircle cx='126' cy='118' r='3.5'/%3E%3Ccircle cx='92' cy='132' r='2.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+/* ---------- Portada ---------- */
+.portada { overflow: hidden; }
+.portada-fondo { position: absolute; inset: 0; opacity: 0.42; transition: opacity 0.8s; }
+.portada-velo { position: absolute; inset: 0; background: radial-gradient(70% 60% at 50% 42%, rgba(13, 12, 11, 0.35), rgba(13, 12, 11, 0.92) 78%); }
+.portada .hoja { padding-block: clamp(28px, 4vw, 48px) clamp(48px, 7vw, 96px); }
+.escena { position: relative; display: grid; place-items: center; min-height: clamp(300px, 52vw, 600px); margin-block: 8px 12px; }
+.escena-logo { position: relative; z-index: 2; width: min(78%, 760px); filter: drop-shadow(0 28px 40px rgba(0, 0, 0, 0.6)); }
+.escena .copia { position: absolute; z-index: 1; width: clamp(110px, 19vw, 250px); }
+.escena .c1 { left: 0; top: 6%; rotate: -6deg; }
+.escena .c2 { right: 1%; top: 0; rotate: 5deg; }
+.escena .c3 { right: 9%; bottom: 0; rotate: -3deg; width: clamp(96px, 15vw, 200px); }
+.escena .sello { position: absolute; z-index: 3; left: 14%; bottom: 4%; }
+.portada h1 { position: relative; z-index: 2; }
+.portada-pie { position: relative; z-index: 2; display: grid; gap: 28px; margin-top: clamp(22px, 3vw, 36px); }
+@media (min-width: 900px) { .portada-pie { grid-template-columns: 1.3fr 1fr; align-items: end; } }
+.datos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
+.datos div { display: grid; gap: 2px; padding-top: 10px; border-top: 1px dashed var(--line); }
+.datos dt { color: var(--muted); }
+.datos dd { font-weight: 700; }
+@media (max-width: 560px) {
+  .escena .c3 { display: none; }
+  .escena .sello { left: auto; right: 4%; bottom: 2%; }
+}
+
+/* ---------- Contenido ---------- */
+.indice { display: grid; gap: 0; list-style: none; counter-reset: cap; }
+.indice li { border-top: 1px dashed var(--line); }
+.indice li:last-child { border-bottom: 1px dashed var(--line); }
+.indice a { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr); gap: 6px 18px; align-items: baseline; padding: 16px 0; text-decoration: none; }
+.indice a:hover .t-h2 { color: var(--muted); }
+.indice .t-label { grid-row: span 2; }
+.indice p { grid-column: 2; color: var(--muted); max-width: 62ch; }
+@media (min-width: 900px) {
+  .indice a { grid-template-columns: 5rem minmax(0, 0.9fr) minmax(0, 1.1fr); }
+  .indice .t-label { grid-row: auto; }
+  .indice p { grid-column: 3; }
+}
+.tabla-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; }
+th, td { padding: 12px 14px 12px 0; text-align: left; vertical-align: top; border-bottom: 1px dashed var(--line); }
+th { font: 400 0.75rem/1.45 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+td:first-child { white-space: nowrap; }
+.cambio td:nth-child(2) { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(94, 87, 77, 0.6); }
+.cambio td:nth-child(3) { font-weight: 600; }
+
+/* ---------- Rejillas ---------- */
+.dos { display: grid; gap: clamp(28px, 4vw, 56px); }
+@media (min-width: 900px) { .dos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.tres { display: grid; gap: clamp(24px, 3vw, 40px); }
+@media (min-width: 760px) { .tres { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.dos > *, .tres > * { min-width: 0; }
+.lista { display: grid; gap: 10px; list-style: none; }
+.lista li { position: relative; padding-left: 22px; }
+.lista li::before { content: '+'; position: absolute; left: 0; font-family: var(--f-mono); color: var(--muted); }
+.lista-num { display: grid; gap: 10px; list-style: none; counter-reset: n; }
+.lista-num li { counter-increment: n; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: 10px; padding-top: 10px; border-top: 1px dashed var(--line); }
+.lista-num li::before { content: '(' counter(n, decimal-leading-zero) ')'; font: 400 0.75rem/1.6 var(--f-mono); color: var(--muted); }
+.bloque { display: grid; gap: 12px; align-content: start; }
+
+/* ---------- Marca ---------- */
+.manifiesto { display: grid; gap: 18px; padding: clamp(26px, 4vw, 56px); background: var(--surface); }
+.manifiesto blockquote { font-size: clamp(1.4rem, 2.8vw, 2.5rem); line-height: 1.18; font-weight: 500; max-width: 30ch; text-wrap: balance; }
+.manifiesto strong { font-weight: 700; background: var(--acento); color: var(--on-acento); padding: 0 0.12em; transition: background-color 0.6s, color 0.6s; }
+.lemas td:first-child { white-space: normal; font-weight: 600; font-size: 1.05rem; width: 48%; }
+
+/* ---------- Logo ---------- */
+.logo-grande { display: grid; place-items: center; padding: clamp(28px, 6vw, 72px) clamp(16px, 4vw, 48px); background: var(--papel); box-shadow: var(--sombra-copia); }
+.logo-grande img { width: min(100%, 720px); }
+.fondos { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.fondo { display: grid; gap: 14px; padding: 18px 16px 14px; min-height: 172px; align-content: space-between; }
+.fondo img { width: 100%; max-width: 200px; margin: 0 auto; }
+.fondo .t-label { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.firma-grande { display: grid; gap: 18px; padding: clamp(22px, 3vw, 36px); background: var(--carbon); color: var(--hueso); }
+.firma-grande svg { width: min(100%, 420px); height: auto; }
+.firma-tamanos { display: flex; align-items: end; gap: 22px; flex-wrap: wrap; }
+.firma-tamanos div { display: grid; gap: 8px; }
+.proteccion { position: relative; display: grid; place-items: center; padding: clamp(18px, 3vw, 34px); background: var(--carbon); }
+.proteccion img { width: min(100%, 380px); outline: 1px dashed rgba(236, 227, 208, 0.55); outline-offset: clamp(12px, 2vw, 22px); }
+.nos { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.no { position: relative; display: grid; gap: 12px; padding: 18px 16px 14px; background: var(--carbon); color: var(--hueso); }
+.no-vista { display: grid; place-items: center; height: 110px; overflow: hidden; }
+.no-vista img { width: 170px; }
+.no .marca-x { position: absolute; top: 10px; right: 12px; font: 700 0.875rem/1 var(--f-mono); color: #ff8a7a; }
+.no-1 img { transform: scaleX(1.55) scaleY(0.8); }
+.no-2 img { filter: sepia(1) saturate(6) hue-rotate(250deg); }
+.no-3 img { filter: drop-shadow(6px 8px 0 #c3142d) drop-shadow(0 0 1px #ece3d0); }
+
+/* ---------- Color ---------- */
+.base { display: grid; gap: 12px; }
+@media (min-width: 760px) { .base { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.muestra { display: grid; gap: 22px; align-content: space-between; min-height: 240px; padding: clamp(20px, 3vw, 32px); border: 1px dashed var(--linea-c); }
+.muestra .t-xl { font-size: clamp(2.6rem, 6vw, 5rem); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px 6px 6px; border: 1px dashed currentColor; font: 400 0.6875rem/1 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.chip i { width: 18px; height: 18px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25); }
+.hex { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 0 10px; border: 1px dashed currentColor; background: transparent; font: 700 0.75rem/1 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; cursor: copy; }
+.hex::after { content: 'COPIAR'; font-weight: 400; opacity: 0.6; }
+.hex.copiado::after { content: 'COPIADO'; opacity: 1; }
+.tonos { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.tono { position: relative; display: grid; grid-template-rows: 1fr auto; min-height: 340px; overflow: hidden; isolation: isolate; color: var(--hueso); }
+.tono .tx { z-index: -1; }
+.tono-cara { display: grid; gap: 10px; align-content: start; padding: 20px; }
+.tono-cara .t-xl { font-size: clamp(2.4rem, 5vw, 3.6rem); color: var(--c); text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45); }
+.tono-pie { display: grid; gap: 12px; padding: 16px 20px 20px; border-top: 10px solid var(--c); background: rgba(13, 12, 11, 0.88); }
+.tono-pie p { font-size: 0.9375rem; }
+.tono-acciones { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.pintar { min-height: 32px; padding: 0 12px; border: 2px solid var(--c); background: transparent; color: var(--hueso); font: 700 0.6875rem/1 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+.pintar[aria-pressed="true"] { background: var(--c); color: var(--on); }
+.pintar[aria-pressed="true"]::before { content: '● '; }
+.esquemas td { white-space: nowrap; }
+.esquemas .sw { display: inline-flex; align-items: center; gap: 8px; font: 400 0.75rem/1 var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; }
+.esquemas .sw i { width: 22px; height: 22px; border: 1px solid rgba(236, 227, 208, 0.25); }
+.reglas { display: grid; gap: 0; list-style: none; }
+.reglas li { display: grid; gap: 4px; padding: 16px 0; border-top: 1px dashed var(--line); }
+.reglas li:last-child { border-bottom: 1px dashed var(--line); }
+.reglas b { font-weight: 700; }
+
+/* ---------- Tipografía ---------- */
+.especimen { display: grid; gap: 16px; padding-block: clamp(26px, 4vw, 44px); border-top: 1px dashed var(--line); }
+.especimen-cabeza { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: baseline; }
+.anton-muestra { font-family: var(--f-display); text-transform: uppercase; font-size: clamp(3rem, 10vw, 8.5rem); line-height: 0.84; letter-spacing: -0.005em; text-wrap: balance; overflow-wrap: break-word; }
+.grotesk-muestra { font-size: clamp(1.25rem, 2.4vw, 2rem); line-height: 1.35; max-width: 36ch; font-weight: 400; }
+.mono-muestra { font: 700 clamp(0.9rem, 1.6vw, 1.15rem)/1.6 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; overflow-wrap: anywhere; }
+.alfabeto { font-family: var(--f-display); font-size: clamp(1.2rem, 2.2vw, 1.7rem); line-height: 1.3; letter-spacing: 0.02em; overflow-wrap: anywhere; color: var(--muted); }
+.tilde { display: grid; gap: 14px; padding: clamp(18px, 3vw, 28px); background: var(--surface); }
+.tilde-demos { display: grid; gap: 14px; }
+@media (min-width: 760px) { .tilde-demos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.tilde-demos div { display: grid; gap: 8px; min-width: 0; }
+.tilde-demos p.t-h1 { font-size: clamp(2rem, 4.4vw, 3.2rem); }
+.tilde-mal { line-height: 0.92 !important; }
+.tilde-bien { line-height: 1.12 !important; }
+.escala td:first-child { font-family: var(--f-mono); font-size: 0.8125rem; }
+
+/* ---------- Motivos ---------- */
+.motivos { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+.motivo { display: grid; grid-template-rows: auto 1fr; gap: 0; border: 1px dashed var(--linea-c); }
+.motivo-vista { position: relative; display: grid; place-items: center; min-height: 230px; padding: 26px 18px; overflow: hidden; background: var(--carbon-2); }
+.motivo-tx { display: grid; gap: 8px; align-content: start; padding: 18px; }
+.motivo-vista .copia { width: 62%; }
+.costuras { display: grid; gap: 16px; width: 100%; }
+.costuras hr { border: 0; border-top: 1px dashed var(--hueso); margin: 0; opacity: 0.7; }
+.grano-demo { position: relative; width: 100%; height: 170px; background: url("img/grano.svg") 0 0 / 220px, url("img/grano.svg") 40px 30px / 140px, url("img/grano.svg") 0 0 / 90px, linear-gradient(90deg, var(--hueso-2) 50%, #c9bea8 50%); }
+.grano-demo span { position: absolute; bottom: 8px; padding: 3px 6px; background: rgba(13, 12, 11, 0.85); color: var(--hueso); }
+.grano-demo span:first-child { left: 8px; }
+.grano-demo span:last-child { right: 8px; }
+.mini-franja { width: 100%; overflow: hidden; background: var(--acento); color: var(--on-acento); font: 700 0.6875rem/1 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; rotate: -3deg; }
+.mini-franja .franja-pista { animation-duration: 22s; }
+.mini-franja .franja-grupo { padding-block: 10px; }
+.parentesis { display: grid; gap: 10px; justify-items: start; }
+.patron-demo { width: 100%; height: 230px; background: url("img/patron.jpg") center / 300px; }
+.correas-demo { position: absolute; inset: 0; display: grid; align-content: center; gap: 12px; background: var(--acento); transition: background-color 0.6s; }
+.correas-demo img { width: auto; max-width: none; height: 46px; }
+.correas-demo img:nth-child(2) { margin-left: -180px; }
+.correas-demo img:nth-child(3) { margin-left: -60px; }
+.motivo-vista .sello { width: 132px; }
+
+/* ---------- Fotografía ---------- */
+.antes-despues { display: grid; gap: clamp(24px, 4vw, 48px); align-items: center; }
+@media (min-width: 760px) { .antes-despues { grid-template-columns: minmax(0, 0.8fr) auto minmax(0, 1fr); } }
+.antes-despues figure { display: grid; gap: 14px; min-width: 0; }
+.flecha { font: 700 1.6rem/1 var(--f-mono); text-align: center; color: var(--muted); }
+.receta { display: grid; gap: 0; }
+.receta div { display: grid; gap: 4px; padding: 14px 0; border-top: 1px dashed var(--line); }
+@media (min-width: 760px) { .receta div { grid-template-columns: 10rem minmax(0, 1fr); gap: 18px; } }
+.receta dt { color: var(--muted); }
+.galeria { display: grid; gap: clamp(22px, 3vw, 36px) clamp(14px, 2.4vw, 28px); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 900px) { .galeria { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.galeria figure { display: grid; gap: 12px; min-width: 0; }
+.galeria figcaption { display: flex; gap: 8px; align-items: baseline; }
+.punto { flex: none; width: 0.8em; height: 0.8em; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.22); }
+.detalles { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 760px) { .detalles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .detalles { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.detalles figure { display: grid; gap: 10px; min-width: 0; }
+
+/* ---------- Instagram ---------- */
+.perfil { display: grid; gap: 18px; padding: clamp(18px, 3vw, 28px); border: 1px dashed var(--line); }
+@media (min-width: 760px) { .perfil { grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 28px; } }
+.perfil img { width: 112px; height: 112px; border-radius: 50%; }
+.perfil pre { margin: 0; white-space: pre-wrap; font: 500 1rem/1.5 var(--f-text); }
+.feed { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; max-width: 720px; }
+.feed figure { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: var(--carbon-2); }
+.feed img { width: 100%; height: 100%; object-fit: cover; }
+.feed figcaption { position: absolute; left: 6px; top: 6px; padding: 3px 5px; background: rgba(13, 12, 11, 0.8); color: var(--hueso); font: 700 0.625rem/1 var(--f-mono); letter-spacing: 0.06em; }
+.pie-foto { display: grid; gap: 4px; padding: clamp(18px, 3vw, 28px); background: var(--surface); font-size: 1.05rem; }
+.pie-foto .t-label { margin-top: 10px; color: var(--muted); }
+.pie-foto .linea { display: grid; grid-template-columns: 7.2rem minmax(0, 1fr); gap: 12px; padding-block: 6px; border-bottom: 1px dashed var(--line); }
+.pie-foto .linea span:first-child { font: 400 0.6875rem/1.9 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.reels { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 900px) { .reels { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.reels figure { display: grid; gap: 10px; min-width: 0; }
+.reels img, .reels video { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; background: var(--carbon-2); }
+.calendario td:nth-child(3), .calendario td:nth-child(4) { font-family: var(--f-mono); font-size: 0.8125rem; }
+.calendario tr.dia-0 td { font-weight: 700; }
+.calendario tr.dia-0 td:first-child::after { content: ' · LANZAMIENTO'; font: 700 0.625rem/1 var(--f-mono); letter-spacing: 0.06em; background: var(--acento); color: var(--on-acento); padding: 2px 4px; margin-left: 6px; transition: background-color 0.6s, color 0.6s; }
+.medidas { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); }
+.medida-caja { display: grid; gap: 10px; align-content: start; }
+.medida-forma { justify-self: start; height: 150px; width: auto; border: 1px dashed var(--line); display: grid; place-items: center; font: 400 0.6875rem/1 var(--f-mono); color: var(--muted); }
+
+/* ---------- Tienda ---------- */
+.pantallas { display: grid; gap: clamp(26px, 4vw, 44px); }
+.pantalla { display: grid; gap: 12px; min-width: 0; }
+.pantalla img { width: 100%; border: 1px solid var(--line); }
+.pantallas-dos { display: grid; gap: clamp(22px, 3vw, 36px); }
+@media (min-width: 760px) { .pantallas-dos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.telefonos { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 560px; }
+.telefono { display: grid; gap: 10px; min-width: 0; }
+.telefono img { width: 100%; border-radius: 22px; border: 6px solid var(--carbon); box-shadow: var(--sombra-copia); }
+
+/* ---------- Voz ---------- */
+.canales { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr)); }
+.canal { display: grid; gap: 12px; align-content: start; padding: 20px; border: 1px dashed var(--line); }
+.ejemplo { padding: 14px 16px; background: var(--surface); font-size: 0.9375rem; }
+.ejemplo p + p { margin-top: 2px; }
+.nunca { display: flex; flex-wrap: wrap; gap: 10px; }
+.nunca span { padding: 8px 12px; border: 1px dashed var(--line); text-decoration: line-through; text-decoration-color: #ff8a7a; text-decoration-thickness: 2px; font-weight: 600; }
+
+/* ---------- Empaque ---------- */
+.mesa { display: grid; gap: clamp(22px, 3vw, 40px); align-items: start; }
+@media (min-width: 900px) { .mesa { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.objetos { position: relative; display: flex; flex-wrap: wrap; gap: 26px; align-items: flex-start; justify-content: center; padding: clamp(22px, 4vw, 44px) 14px; background: var(--hueso-2); }
+.objeto { display: grid; gap: 10px; justify-items: center; text-align: center; }
+.colgante { position: relative; display: grid; gap: 10px; align-content: start; width: 172px; aspect-ratio: 50 / 90; padding: 30px 16px 16px; background: var(--carbon); color: var(--hueso); box-shadow: var(--sombra-copia); rotate: -2deg; }
+.colgante::before { content: ''; position: absolute; top: 12px; left: 50%; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: var(--hueso-2); box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5); }
+.colgante img { width: 100%; }
+.colgante .t-h3 { font-size: 1.05rem; line-height: 1.12; }
+.colgante .t-label { font-size: 0.625rem; line-height: 1.6; }
+.marquilla { display: grid; gap: 4px; justify-items: center; width: 188px; aspect-ratio: 60 / 30; padding: 12px; background: var(--hueso); color: var(--carbon); box-shadow: var(--sombra-copia); border: 1px dashed var(--linea-h); rotate: 1.5deg; align-content: center; }
+.marquilla svg { width: 92px; height: 23px; }
+.marquilla .t-label { font-size: 0.5625rem; line-height: 1.3; }
+.seda { width: 188px; aspect-ratio: 1; background: url("img/patron.jpg") center / 130px; box-shadow: var(--sombra-copia); rotate: -1deg; }
+.tarjeta-gracias { width: 188px; aspect-ratio: 148 / 105; display: grid; align-content: center; gap: 8px; padding: 16px; background: var(--papel); color: var(--carbon); box-shadow: var(--sombra-copia); rotate: 2deg; font-size: 0.8125rem; line-height: 1.35; text-align: left; }
+.ejemplo-marca { color: var(--muted); }
+
+/* ---------- Archivos y cierre ---------- */
+.archivos td:nth-child(2) { font-family: var(--f-mono); font-size: 0.8125rem; white-space: normal; overflow-wrap: anywhere; min-width: 16rem; }
+.cierre { text-align: center; }
+.cierre .hoja { display: grid; gap: 22px; justify-items: center; }
+.cierre img { width: min(80%, 560px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .franja-pista, .sello-aro { animation: none; }
+  .btn, .btn:hover { transform: none; transition: none; }
+}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="estrella" viewBox="0 0 24 24"><path fill="currentColor" d="M12.56 4.41l.26 1.29 .29 1.11 .32 .96 .39 .8 .36 .51 1.46-1.03 1.29-.98 .16-.16-.16 .16-.98 1.29-1.03 1.46 .51 .36 .8 .39 .96 .32 1.11 .29 1.29 .26 3.21 .56-3.21 .56-1.29 .26-1.11 .29-.96 .32-.8 .39-.51 .36 1.03 1.46 .98 1.29 .16 .16-.16-.16-1.29-.98-1.46-1.03-.36 .51-.39 .8-.32 .96-.29 1.11-.26 1.29-.56 3.21-.56-3.21-.26-1.29-.29-1.11-.32-.96-.39-.8-.36-.51-1.46 1.03-1.29 .98-.16 .16 .16-.16 .98-1.29 1.03-1.46-.51-.36-.79-.39-.97-.32-1.11-.29-1.29-.26-3.21-.56 3.21-.56 1.29-.26 1.11-.29 .97-.32 .79-.39 .51-.36-1.03-1.46-.98-1.29-.16-.16 .16 .16 1.29 .98 1.46 1.03 .36-.51 .39-.8 .32-.96 .29-1.11 .26-1.29 .56-3.21z"/></symbol>
+    <symbol id="firma" viewBox="0 0 400 100"><path fill="currentColor" d="M0,0h26v39h32v-39h26v100h-26v-39h-32v39h-26z M92,0h26v100h-26z M126,0H216V26H152V74H190V62H172V42H216V100H126z M224,0h26v39h32v-39h26v100h-26v-39h-32v39h-26z M316,0h84v24h-29v76h-26v-76h-29z"/></symbol>
+  </defs>
+</svg>
+
+<div class="franja" aria-hidden="true">
+  <div class="franja-pista">
+    <ul class="franja-grupo">
+      <li>Streetwear de autor</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+      <li>Hecho en Medellín</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+      <li>Drop 01</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+      <li data-franja-turno>Ahora: Radiactivo</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+      <li>Prendas intervenidas a mano</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+      <li>Piezas de archivo</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+      <li>¿De qué color eres?</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+    </ul>
+    <ul class="franja-grupo">
+      <li>Streetwear de autor</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+      <li>Hecho en Medellín</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+      <li>Drop 01</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+      <li data-franja-turno>Ahora: Radiactivo</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+      <li>Prendas intervenidas a mano</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+      <li>Piezas de archivo</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+      <li>¿De qué color eres?</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li>
+    </ul>
+  </div>
+</div>
+
+<header class="barra">
+  <a class="barra-firma" href="#portada" aria-label="Hight, volver a la portada"><svg aria-hidden="true"><use href="#firma"/></svg></a>
+  <nav class="barra-caps" aria-label="Capítulos">
+    <ol>
+      <li><a href="#marca">01 Marca</a></li>
+      <li><a href="#logo">02 Logo</a></li>
+      <li><a href="#color">03 Color</a></li>
+      <li><a href="#tipografia">04 Tipografía</a></li>
+      <li><a href="#motivos">05 Motivos</a></li>
+      <li><a href="#fotografia">06 Fotografía</a></li>
+      <li><a href="#instagram">07 Instagram</a></li>
+      <li><a href="#tienda">08 Tienda</a></li>
+      <li><a href="#voz">09 Voz</a></li>
+      <li><a href="#empaque">10 Empaque</a></li>
+      <li><a href="#archivos">11 Archivos</a></li>
+    </ol>
+  </nav>
+  <div class="turno" role="group" aria-label="Color del turno">
+    <span class="turno-dot" aria-hidden="true"></span>
+    <span class="turno-txt"><span data-turno-estado>Ahora</span> <b data-turno-nombre>Radiactivo</b> <span data-turno-tiempo></span></span>
+    <button type="button" class="turno-btn" id="turno-btn" data-turno-btn>Pausar</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= Portada ================= -->
+<section id="portada" class="pliego carbon portada">
+  <div class="portada-fondo tx tx-acido" data-tx aria-hidden="true"></div>
+  <div class="portada-velo" aria-hidden="true"></div>
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(Branding book) Hight</span><span>MED/COL</span></div>
+    <div class="escena">
+      <figure class="copia c1" aria-hidden="true"><span class="cinta"></span><img src="img/prendas/chaqueta-smiley-acido.jpg" alt="" width="640" height="800"></figure>
+      <figure class="copia c2" aria-hidden="true"><span class="cinta"></span><img src="img/prendas/jean-flare-patchwork-leopardo.jpg" alt="" width="640" height="800"></figure>
+      <figure class="copia c3" aria-hidden="true"><img src="img/prendas/top-halftone-carmin.jpg" alt="" width="640" height="800"></figure>
+      <img class="escena-logo" src="img/logo-plata.webp" alt="Hight" width="977" height="672">
+      <span class="sello" aria-hidden="true">
+        <svg class="sello-aro" viewBox="0 0 200 200"><defs><path id="aro-portada" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/></defs><text><textPath href="#aro-portada" textLength="476" lengthAdjust="spacing">STREETWEAR DE AUTOR · HECHO EN MEDELLÍN · </textPath></text></svg>
+        <svg class="sello-centro" viewBox="0 0 24 24"><use href="#estrella"/></svg>
+      </span>
+    </div>
+    <h1 class="t-xxl">Branding book</h1>
+    <div class="portada-pie">
+      <p class="lead">Cómo se ve, cómo suena y cómo se arma Hight después de la renovación. Sirve para la tienda, las fotos, Instagram y el empaque, y para cualquiera que haga una pieza nueva de la marca.</p>
+      <dl class="datos t-label">
+        <div><dt>Marca</dt><dd>Hight</dd></div>
+        <div><dt>Lanzamiento</dt><dd>Drop 01</dd></div>
+        <div><dt>Hecho en</dt><dd>Medellín, CO.</dd></div>
+        <div><dt>Versión</dt><dd>27 de octubre de 2026</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Contenido ================= -->
+<section id="contenido" class="pliego hueso">
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(Contenido) 11 capítulos</span><span>MED/COL</span></div>
+    <ol class="indice">
+      <li><a href="#marca"><span class="t-label">(01)</span><span class="t-h2">La marca</span><p>Qué es Hight, el manifiesto, para quién es y los lemas.</p></a></li>
+      <li><a href="#logo"><span class="t-label">(02)</span><span class="t-h2">Logo</span><p>Plata o tinta según el fondo, la firma corta y lo que no se hace.</p></a></li>
+      <li><a href="#color"><span class="t-label">(03)</span><span class="t-h2">Color</span><p>Carbón, hueso y los seis colores de la tienda, con su textura.</p></a></li>
+      <li><a href="#tipografia"><span class="t-label">(04)</span><span class="t-h2">Tipografía</span><p>Anton, Space Grotesk y Space Mono, con su escala.</p></a></li>
+      <li><a href="#motivos"><span class="t-label">(05)</span><span class="t-h2">Motivos</span><p>Copias impresas, cinta, sello, costura, grano, franja y el fondo de logos.</p></a></li>
+      <li><a href="#fotografia"><span class="t-label">(06)</span><span class="t-h2">Fotografía</span><p>La receta de la foto de producto sobre el fondo de logos.</p></a></li>
+      <li><a href="#instagram"><span class="t-label">(07)</span><span class="t-h2">Instagram</span><p>La bio, el feed en tablero, los pies de foto, las fechas y los reels.</p></a></li>
+      <li><a href="#tienda"><span class="t-label">(08)</span><span class="t-h2">La tienda</span><p>El turno de color, el inicio de arriba abajo y la ficha.</p></a></li>
+      <li><a href="#voz"><span class="t-label">(09)</span><span class="t-h2">Voz</span><p>Cómo escribe Hight en cada canal y lo que nunca dice.</p></a></li>
+      <li><a href="#empaque"><span class="t-label">(10)</span><span class="t-h2">Empaque y etiquetas</span><p>El orden al abrir el pedido, las etiquetas y la impresión.</p></a></li>
+      <li><a href="#archivos"><span class="t-label">(11)</span><span class="t-h2">Archivos</span><p>Dónde está cada archivo y qué queda pendiente.</p></a></li>
+    </ol>
+
+    <div class="sub">
+      <p class="t-label">Qué cambió con la renovación</p>
+      <h2 class="t-h1 tildes">De plata y noche a carbón, hueso y seis colores</h2>
+      <div class="tabla-wrap">
+        <table class="cambio">
+          <thead><tr><th scope="col">Parte</th><th scope="col">Antes, manual del 8 de octubre</th><th scope="col">Ahora</th></tr></thead>
+          <tbody>
+            <tr><td>Color</td><td>Plata cepillada y noche azul, con cianotipo y aura</td><td>Carbón y hueso, y encima un color por turno sacado de las prendas</td></tr>
+            <tr><td>Tipografía</td><td>Archivo, IBM Plex Mono, Instrument Serif y Hight Espina</td><td>Anton, Space Grotesk y Space Mono</td></tr>
+            <tr><td>Foto de producto</td><td>Fondo gris claro o plata mate</td><td>Fondo de logos plateados sobre carbón</td></tr>
+            <tr><td>Gráfica</td><td>Metal cepillado, halos y retícula a la vista</td><td>Copias impresas con cinta, sello, costura punteada, grano y franja</td></tr>
+            <tr><td>Tienda</td><td>Sobria, con un solo acento</td><td>Se pinta con el color de una colección y cambia cada minuto</td></tr>
+            <tr><td>Logo</td><td>Gótico de espinas, en plata o tinta</td><td>El mismo; en tamaños chicos, la firma corta HIGHT</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 01 Marca ================= -->
+<section id="marca" class="pliego carbon">
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(01) La marca</span><span>MED/COL</span></div>
+    <div class="cap-head">
+      <h2 class="t-l tildes">Streetwear de autor, hecho en Medellín</h2>
+      <p class="lead">Denim intervenido a mano, prendas de archivo y ediciones cortas. Cada pieza sale en pocas unidades y, cuando se acaba, no vuelve. Hight vende por Instagram y por su tienda, con envíos a toda Colombia.</p>
+    </div>
+
+    <div class="manifiesto">
+      <p class="t-label muted">(Manifiesto) Así dice el inicio de la tienda</p>
+      <blockquote><p>Cada pieza tiene su historia: denim intervenido, parches, tintes ácidos y prendas de archivo. Cada una sale en <strong>pocas unidades</strong> y no se repite. Si la ves y es tu talla, <strong>es tuya</strong>.</p></blockquote>
+    </div>
+
+    <div class="sub">
+      <div class="tres">
+        <div class="bloque">
+          <h3 class="t-h3">Para quién</h3>
+          <ul class="lista">
+            <li>Personas de 18 a 30 años en ciudades de Colombia que siguen la cultura urbana (música, calle, arte) y compran por Instagram.</li>
+            <li>Quieren identidad y calidad sin pagar precio de marca extranjera, y están cansadas del fast fashion genérico.</li>
+            <li>Compran pocas prendas y las repiten. Les importa el corte, la tela y que la prenda dure.</li>
+          </ul>
+        </div>
+        <div class="bloque">
+          <h3 class="t-h3">Lo que Hight no es</h3>
+          <ul class="lista">
+            <li>No es fast fashion: no hay rebajas permanentes ni colecciones cada semana.</li>
+            <li>No es logo gigante por logo gigante. El logo aparece cuando suma, nunca para llenar.</li>
+            <li>No es ruido: un color por turno y una frase por pieza.</li>
+          </ul>
+        </div>
+        <div class="bloque">
+          <h3 class="t-h3">Cómo se cuenta un drop</h3>
+          <ul class="lista">
+            <li>Cada lanzamiento es un drop con número de dos cifras: <b>DROP 01</b> en titulares y Drop 01 dentro del texto.</li>
+            <li>Las piezas se cuentan entre paréntesis, como en un archivo: <span class="t-label">(20) piezas</span>.</li>
+            <li>La escasez se dice con datos: máximo 4 por talla, 4 unidades, una sola talla.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <p class="t-label">Lemas · úsalos tal cual; uno nuevo se agrega aquí antes de usarlo</p>
+      <div class="tabla-wrap">
+        <table class="lemas">
+          <thead><tr><th scope="col">Frase</th><th scope="col">Dónde va</th></tr></thead>
+          <tbody>
+            <tr><td>Streetwear de autor para el uso diario.</td><td>Es la firma: bio de Instagram, pie de página de la tienda y hang tag.</td></tr>
+            <tr><td>¿De qué color eres?</td><td>La pregunta del Drop 01: bio, posts y reels. Invita a buscarse en un color de la tienda.</td></tr>
+            <tr><td>La prenda se siente antes de verse.</td><td>Campaña y lookbook. Va en el post 03 y en la sección En la calle.</td></tr>
+            <tr><td>Si la ves y es tu talla, es tuya.</td><td>Manifiesto, post 13 y reel hoy.</td></tr>
+            <tr><td>Cuando se acaban, no vuelven.</td><td>Escasez: inicio de la tienda, Lo nuevo y posts 01 y 07.</td></tr>
+            <tr><td>Hecho para repetir.</td><td>Producto y empaque.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="folio t-label"><span>Hight · Branding book</span><span>01 / 11</span></div>
+  </div>
+</section>
+
+<!-- ================= 02 Logo ================= -->
+<section id="logo" class="pliego hueso">
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(02) Logo</span><span>MED/COL</span></div>
+    <div class="cap-head">
+      <h2 class="t-l">Plata sobre oscuro, tinta sobre claro</h2>
+      <p class="lead">El logo es el de siempre: la palabra HIGHT en letras góticas de espinas, con una H grande que atraviesa el centro. La renovación no lo toca; decide dónde vive. Sobre un fondo oscuro va en plata y sobre uno claro, en tinta.</p>
+    </div>
+
+    <div class="logo-grande"><img src="img/logo-tinta.webp" alt="Logo de Hight en tinta" width="977" height="672" loading="lazy"></div>
+
+    <div class="sub">
+      <p class="t-label">Sobre cada fondo de la tienda</p>
+      <div class="fondos">
+        <div class="fondo" style="background:#0d0c0b;color:#ece3d0"><img src="img/logo-plata.webp" alt="" width="977" height="672" loading="lazy"><span class="t-label"><span>Carbón</span><b>Plata</b></span></div>
+        <div class="fondo" style="background:#ece3d0;color:#0d0c0b;outline:1px dashed #b9ad97;outline-offset:-1px"><img src="img/logo-tinta.webp" alt="" width="977" height="672" loading="lazy"><span class="t-label"><span>Hueso</span><b>Tinta</b></span></div>
+        <div class="fondo" style="background:#dff04a;color:#0d0c0b"><img src="img/logo-tinta.webp" alt="" width="977" height="672" loading="lazy"><span class="t-label"><span>Ácido</span><b>Tinta</b></span></div>
+        <div class="fondo" style="background:#c3142d;color:#f4ece0"><img src="img/logo-plata.webp" alt="" width="977" height="672" loading="lazy"><span class="t-label"><span>Carmín</span><b>Plata</b></span></div>
+        <div class="fondo" style="background:#1c2a63;color:#ece3d0"><img src="img/logo-plata.webp" alt="" width="977" height="672" loading="lazy"><span class="t-label"><span>Índigo</span><b>Plata</b></span></div>
+        <div class="fondo" style="background:#c08a4e;color:#0d0c0b"><img src="img/logo-tinta.webp" alt="" width="977" height="672" loading="lazy"><span class="t-label"><span>Fiera</span><b>Tinta</b></span></div>
+      </div>
+      <p class="muted medida">La regla es la misma de la tienda: si el fondo es oscuro (brillo por debajo de la mitad), plata; si es claro, tinta. El logo no se pinta de ningún otro color.</p>
+    </div>
+
+    <div class="sub dos">
+      <div class="bloque">
+        <p class="t-label">Firma corta</p>
+        <div class="firma-grande">
+          <svg viewBox="0 0 400 100" aria-label="HIGHT, firma corta" role="img"><use href="#firma"/></svg>
+          <div class="firma-tamanos t-label">
+            <div><svg viewBox="0 0 400 100" width="88" height="22" aria-hidden="true"><use href="#firma"/></svg><span>22 px · encabezado</span></div>
+            <div><svg viewBox="0 0 400 100" width="64" height="16" aria-hidden="true"><use href="#firma"/></svg><span>16 px · mínimo</span></div>
+          </div>
+        </div>
+        <p class="medida">En tamaños chicos va la palabra HIGHT de palo seco: encabezado y pie de página de la tienda, favicon, marquilla bordada y botones. Mide cuatro veces su alto de ancho y nunca menos de 16 px de alto. Es la firma corta del mismo logo, no un segundo logo.</p>
+      </div>
+      <div class="bloque">
+        <p class="t-label">Área de protección y tamaño mínimo</p>
+        <div class="proteccion"><img src="img/logo-plata.webp" alt="Logo de Hight con su área de protección marcada" width="977" height="672" loading="lazy"></div>
+        <ul class="lista">
+          <li>Alrededor del logo queda libre, como mínimo, el ancho de una de las astas de la H grande.</li>
+          <li>El logo gótico mide al menos 240 px de ancho en pantalla y 6 cm impreso. Más chico, las espinas se empastan: usa la firma corta.</li>
+          <li>Sobre fotos con mucho detalle (patchwork, texturas) va sobre un bloque liso de carbón o hueso.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sub">
+      <p class="t-label">Lo que no se hace</p>
+      <div class="nos">
+        <div class="no no-1"><span class="marca-x" aria-hidden="true">×</span><div class="no-vista"><img src="img/logo-plata.webp" alt="" width="977" height="672" loading="lazy"></div><p class="t-label">No se estira ni se aplasta</p></div>
+        <div class="no no-2"><span class="marca-x" aria-hidden="true">×</span><div class="no-vista"><img src="img/logo-plata.webp" alt="" width="977" height="672" loading="lazy"></div><p class="t-label">No se pinta de otro color</p></div>
+        <div class="no no-3"><span class="marca-x" aria-hidden="true">×</span><div class="no-vista"><img src="img/logo-plata.webp" alt="" width="977" height="672" loading="lazy"></div><p class="t-label">Sin sombra ni contorno</p></div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <p class="t-label">Pendiente</p>
+      <p class="medida">Hoy el logo es una imagen de 977 px de ancho. Para serigrafía, bordado grande y el registro en la SIC hay que redibujarlo en vector, y en ese redibujo aclarar la primera letra, que hoy se puede leer como F o T.</p>
+    </div>
+
+    <div class="folio t-label"><span>Hight · Branding book</span><span>02 / 11</span></div>
+  </div>
+</section>
+
+<!-- ================= 03 Color ================= -->
+<section id="color" class="pliego carbon">
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(03) Color</span><span>MED/COL</span></div>
+    <div class="cap-head">
+      <h2 class="t-l">La paleta sale de las prendas</h2>
+      <p class="lead">Carbón y hueso son la base de todo. Encima va un color a la vez, sacado de las prendas: cada color es una colección de la tienda, con su nombre, su frase y su textura. Toca uno y el libro se pinta con él, como la tienda.</p>
+    </div>
+
+    <div class="base">
+      <div class="muestra" style="background:#0d0c0b;color:#ece3d0">
+        <div><p class="t-label muted">Base · fondo</p><p class="t-xl">Carbón</p></div>
+        <div class="bloque">
+          <p>Fondo de la tienda, de los posts, del fondo de logos y del empaque.</p>
+          <div class="chips">
+            <button type="button" class="hex" data-copiar="#0D0C0B">#0D0C0B</button>
+            <span class="chip"><i style="background:#181614"></i>Superficie #181614</span>
+            <span class="chip"><i style="background:#9a9184"></i>Secundario #9A9184</span>
+            <span class="chip"><i style="background:#3a3631"></i>Línea #3A3631</span>
+          </div>
+        </div>
+      </div>
+      <div class="muestra" style="background:#ece3d0;color:#0d0c0b;border-color:#b9ad97">
+        <div><p class="t-label" style="color:#5e574d">Base · texto y pliego claro</p><p class="t-xl">Hueso</p></div>
+        <div class="bloque">
+          <p>Texto sobre carbón, pliegos claros y papel de las copias impresas.</p>
+          <div class="chips">
+            <button type="button" class="hex" data-copiar="#ECE3D0">#ECE3D0</button>
+            <span class="chip"><i style="background:#e1d6c0"></i>Superficie #E1D6C0</span>
+            <span class="chip"><i style="background:#5e574d"></i>Secundario #5E574D</span>
+            <span class="chip"><i style="background:#faf6ee"></i>Papel #FAF6EE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <p class="t-label">Los seis colores · uno por colección, cada uno con su textura</p>
+      <div class="tonos">
+        <article class="tono" style="--c:#dff04a;--on:#0d0c0b">
+          <div class="tx tx-acido" aria-hidden="true"></div>
+          <div class="tono-cara"><p class="t-label">Acento del tema</p><h3 class="t-xl">Radiactivo</h3></div>
+          <div class="tono-pie">
+            <p>Amarillo neón y verdes sobreteñidos que parecen brillar con luz propia.</p>
+            <p class="t-label muted">Textura · costura en zigzag neón</p>
+            <div class="tono-acciones"><button type="button" class="hex" data-copiar="#DFF04A">#DFF04A</button><button type="button" class="pintar" data-pintar="acido" aria-pressed="false">Pintar el libro</button></div>
+          </div>
+        </article>
+        <article class="tono" style="--c:#c3142d;--on:#ece3d0">
+          <div class="tx tx-carmin" aria-hidden="true"></div>
+          <div class="tono-cara"><p class="t-label">Carmín</p><h3 class="t-xl tildes" style="color:#f4ece0">Sangre Fría</h3></div>
+          <div class="tono-pie">
+            <p>Rojo carmín, del que se ve antes que tú.</p>
+            <p class="t-label muted">Textura · semitono de puntos negros</p>
+            <div class="tono-acciones"><button type="button" class="hex" data-copiar="#C3142D">#C3142D</button><button type="button" class="pintar" data-pintar="carmin" aria-pressed="false">Pintar el libro</button></div>
+          </div>
+        </article>
+        <article class="tono" style="--c:#5b7cfa;--on:#0d0c0b">
+          <div class="tx tx-indigo" aria-hidden="true"></div>
+          <div class="tono-cara"><p class="t-label">Índigo</p><h3 class="t-xl">Medianoche</h3></div>
+          <div class="tono-pie">
+            <p>Del índigo profundo al azul de las doce de la noche.</p>
+            <p class="t-label muted">Textura · denim en sarga con costura</p>
+            <div class="tono-acciones"><button type="button" class="hex" data-copiar="#5B7CFA">#5B7CFA</button><button type="button" class="pintar" data-pintar="indigo" aria-pressed="false">Pintar el libro</button></div>
+          </div>
+        </article>
+        <article class="tono" style="--c:#e0218a;--on:#ece3d0">
+          <div class="tx tx-magenta" aria-hidden="true"></div>
+          <div class="tono-cara"><p class="t-label">Magenta</p><h3 class="t-xl" style="color:#ece3d0">Chicle</h3></div>
+          <div class="tono-pie">
+            <p>Rosas, fucsias y violetas que se pegan a la vista.</p>
+            <p class="t-label muted">Textura · camuflado rosa</p>
+            <div class="tono-acciones"><button type="button" class="hex" data-copiar="#E0218A">#E0218A</button><button type="button" class="pintar" data-pintar="magenta" aria-pressed="false">Pintar el libro</button></div>
+          </div>
+        </article>
+        <article class="tono" style="--c:#c4beb2;--on:#0d0c0b">
+          <div class="tx tx-ceniza" aria-hidden="true"></div>
+          <div class="tono-cara"><p class="t-label">Ceniza</p><h3 class="t-xl">Asfalto</h3></div>
+          <div class="tono-pie">
+            <p>Los grises de la calle: lavados, hueso y carbón.</p>
+            <p class="t-label muted">Textura · grano de asfalto y malla abierta</p>
+            <div class="tono-acciones"><button type="button" class="hex" data-copiar="#C4BEB2">#C4BEB2</button><button type="button" class="pintar" data-pintar="ceniza" aria-pressed="false">Pintar el libro</button></div>
+          </div>
+        </article>
+        <article class="tono" style="--c:#c08a4e;--on:#0d0c0b">
+          <div class="tx tx-leopardo" aria-hidden="true"></div>
+          <div class="tono-cara"><p class="t-label" style="color:#0d0c0b">Leopardo</p><h3 class="t-xl" style="color:#0d0c0b;text-shadow:none">Fiera</h3></div>
+          <div class="tono-pie">
+            <p>Animal print y tonos tierra para sacar la fiera.</p>
+            <p class="t-label muted">Textura · leopardo</p>
+            <div class="tono-acciones"><button type="button" class="hex" data-copiar="#C08A4E">#C08A4E</button><button type="button" class="pintar" data-pintar="leopardo" aria-pressed="false">Pintar el libro</button></div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="sub dos">
+      <div class="bloque">
+        <p class="t-label">Reglas del color</p>
+        <ul class="reglas">
+          <li><b>Un color por turno.</b><span>El color del turno pinta los botones, el sello, la franja y los destacados. Todo lo demás sigue en carbón y hueso.</span></li>
+          <li><b>El turno cambia cada minuto.</b><span>En la tienda los seis colores se turnan en este orden: Radiactivo, Sangre Fría, Medianoche, Chicle, Asfalto y Fiera. Todos los que visitan ven el mismo turno. Este libro sigue el mismo reloj (mira la barra de arriba).</span></li>
+          <li><b>Los colores no van en texto chico sobre carbón.</b><span>Úsalos en titulares, rellenos, puntos y sellos. Para el texto corrido, hueso: Sangre Fría y Chicle no alcanzan el contraste en letra chica.</span></li>
+          <li><b>Sobre carmín y ácido el botón se invierte.</b><span>En esos fondos el botón lleva el color del texto de fondo y el color del fondo de letra.</span></li>
+        </ul>
+      </div>
+      <div class="bloque">
+        <p class="t-label">Esquemas de la tienda · cada sección usa uno</p>
+        <div class="tabla-wrap">
+          <table class="esquemas">
+            <thead><tr><th scope="col">Esquema</th><th scope="col">Fondo</th><th scope="col">Superficie</th><th scope="col">Texto</th><th scope="col">Secundario</th><th scope="col">Línea</th></tr></thead>
+            <tbody>
+              <tr><td>Carbón</td><td><span class="sw"><i style="background:#0d0c0b"></i>0D0C0B</span></td><td><span class="sw"><i style="background:#181614"></i>181614</span></td><td><span class="sw"><i style="background:#ece3d0"></i>ECE3D0</span></td><td><span class="sw"><i style="background:#9a9184"></i>9A9184</span></td><td><span class="sw"><i style="background:#3a3631"></i>3A3631</span></td></tr>
+              <tr><td>Hueso</td><td><span class="sw"><i style="background:#ece3d0"></i>ECE3D0</span></td><td><span class="sw"><i style="background:#e1d6c0"></i>E1D6C0</span></td><td><span class="sw"><i style="background:#0d0c0b"></i>0D0C0B</span></td><td><span class="sw"><i style="background:#5e574d"></i>5E574D</span></td><td><span class="sw"><i style="background:#b9ad97"></i>B9AD97</span></td></tr>
+              <tr><td>Carmín</td><td><span class="sw"><i style="background:#c3142d"></i>C3142D</span></td><td><span class="sw"><i style="background:#a8102a"></i>A8102A</span></td><td><span class="sw"><i style="background:#f4ece0"></i>F4ECE0</span></td><td><span class="sw"><i style="background:#f6dcd6"></i>F6DCD6</span></td><td><span class="sw"><i style="background:#e2596b"></i>E2596B</span></td></tr>
+              <tr><td>Índigo</td><td><span class="sw"><i style="background:#1c2a63"></i>1C2A63</span></td><td><span class="sw"><i style="background:#23347a"></i>23347A</span></td><td><span class="sw"><i style="background:#ece3d0"></i>ECE3D0</span></td><td><span class="sw"><i style="background:#aab3d6"></i>AAB3D6</span></td><td><span class="sw"><i style="background:#3c4c94"></i>3C4C94</span></td></tr>
+              <tr><td>Ácido</td><td><span class="sw"><i style="background:#dff04a"></i>DFF04A</span></td><td><span class="sw"><i style="background:#d2e43a"></i>D2E43A</span></td><td><span class="sw"><i style="background:#0d0c0b"></i>0D0C0B</span></td><td><span class="sw"><i style="background:#3d4214"></i>3D4214</span></td><td><span class="sw"><i style="background:#9caa22"></i>9CAA22</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="folio t-label"><span>Hight · Branding book</span><span>03 / 11</span></div>
+  </div>
+</section>
+
+<!-- ================= 04 Tipografía ================= -->
+<section id="tipografia" class="pliego hueso">
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(04) Tipografía</span><span>MED/COL</span></div>
+    <div class="cap-head">
+      <h2 class="t-l">Anton, Space Grotesk y Space Mono</h2>
+      <p class="lead">Tres familias de Google Fonts, cada una con un trabajo: Anton para los titulares, Space Grotesk para el texto y Space Mono para los datos, como en una etiqueta textil. La tienda las carga desde sus propios archivos.</p>
+    </div>
+
+    <div class="especimen">
+      <div class="especimen-cabeza"><p class="t-h2">Anton</p><p class="t-label muted">Titulares y nombres de prenda · siempre en mayúsculas · interlineado de 0,8 a 0,95</p></div>
+      <p class="anton-muestra">Jean Flare Patchwork Leopardo</p>
+      <p class="alfabeto">ABCDEFGHIJKLMNÑOPQRSTUVWXYZ ÁÉÍÓÚÜ 0123456789 ¿? ¡! $ ( ) —</p>
+    </div>
+
+    <div class="tilde">
+      <p class="t-label">La regla de la tilde</p>
+      <p class="medida">En Anton las mayúsculas con tilde suben hasta 1,11 veces el tamaño de la letra. Cuando un nombre con tilde se parte en dos líneas (TÉRMICA, ÍNDIGO, ÁCIDO), el interlineado va en 1,12 o más; si no, la tilde de la segunda línea toca las letras de la primera.</p>
+      <div class="tilde-demos">
+        <div><p class="t-label muted">Interlineado 0,92 · la tilde choca</p><p class="t-h1 tilde-mal">Buzo Multitud<br>Térmica</p></div>
+        <div><p class="t-label muted">Interlineado 1,12 · bien</p><p class="t-h1 tilde-bien">Buzo Multitud<br>Térmica</p></div>
+      </div>
+    </div>
+
+    <div class="especimen">
+      <div class="especimen-cabeza"><p class="t-h2" style="font-family:var(--f-text);text-transform:none;font-weight:700">Space Grotesk</p><p class="t-label muted">Texto corrido · 16 px · interlineado 1,5 · máximo 56 caracteres por línea</p></div>
+      <p class="grotesk-muestra">Del índigo profundo al azul de las doce de la noche. Patchwork de tiras en lavados distintos, flecos de borde crudo y un tejido grueso unido con argollas metálicas.</p>
+      <p class="muted">Pesos de 300 a 700. El cuerpo va en 400 y lo que se destaca, en 700.</p>
+    </div>
+
+    <div class="especimen">
+      <div class="especimen-cabeza"><p class="t-h2" style="font-family:var(--f-mono);text-transform:none;font-weight:700">Space Mono</p><p class="t-label muted">Marquillas, precios y botones · 12 px · mayúsculas · espaciado de 0,06 em</p></div>
+      <p class="mono-muestra">(Recién llegado) · $620.000 · T. 28 · Agregar al carrito</p>
+      <p class="muted">Pesos 400 y 700. Los precios van con punto de miles y sin decimales.</p>
+    </div>
+
+    <div class="sub">
+      <p class="t-label">Escala de la tienda · los tamaños crecen con la pantalla entre el mínimo y el máximo</p>
+      <div class="tabla-wrap">
+        <table class="escala">
+          <thead><tr><th scope="col">Estilo</th><th scope="col">Familia</th><th scope="col">Tamaño</th><th scope="col">Interlineado</th><th scope="col">Uso</th></tr></thead>
+          <tbody>
+            <tr><td>display-xxl</td><td>Anton</td><td>64 a 288 px</td><td>0,8</td><td>Nombre del turno en el inicio</td></tr>
+            <tr><td>display-xl</td><td>Anton</td><td>52 a 176 px</td><td>0,84</td><td>Nombre de la colección</td></tr>
+            <tr><td>display-l</td><td>Anton</td><td>40 a 104 px</td><td>0,88</td><td>Titular de sección: LO NUEVO</td></tr>
+            <tr><td>h1</td><td>Anton</td><td>32 a 64 px</td><td>0,92</td><td>Títulos de página</td></tr>
+            <tr><td>h2</td><td>Anton</td><td>26 a 44 px</td><td>0,95</td><td>Bloques</td></tr>
+            <tr><td>h3</td><td>Anton</td><td>22 px</td><td>1</td><td>Tarjetas de prenda</td></tr>
+            <tr><td>body-l</td><td>Space Grotesk</td><td>17 a 20 px</td><td>1,5</td><td>Introducciones</td></tr>
+            <tr><td>body</td><td>Space Grotesk</td><td>16 px</td><td>1,5</td><td>Texto</td></tr>
+            <tr><td>body-s</td><td>Space Grotesk</td><td>14 px</td><td>1,5</td><td>Ayudas y legales</td></tr>
+            <tr><td>label</td><td>Space Mono</td><td>12 px</td><td>1,45</td><td>Marquillas, precios y botones</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="folio t-label"><span>Hight · Branding book</span><span>04 / 11</span></div>
+  </div>
+</section>
+
+<!-- ================= 05 Motivos ================= -->
+<section id="motivos" class="pliego carbon">
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(05) Motivos</span><span>MED/COL</span></div>
+    <div class="cap-head">
+      <h2 class="t-l">Copias impresas, cinta, sello y costura</h2>
+      <p class="lead">Los elementos gráficos de Hight salen del taller y de la fotocopiadora. Cada uno tiene un trabajo; si un elemento no sostiene nada, se quita.</p>
+    </div>
+
+    <div class="motivos">
+      <article class="motivo">
+        <div class="motivo-vista"><figure class="copia gira-1"><img src="img/prendas/buzo-multitud-termica.jpg" alt="" width="640" height="800" loading="lazy"></figure></div>
+        <div class="motivo-tx"><h3 class="t-h3">Copia impresa</h3><p>Toda foto de prenda va como una copia en papel: borde claro, sombra suave y un giro de menos de un grado y medio. En la ficha, una foto se gira −0,6° y la siguiente 0,5°.</p></div>
+      </article>
+      <article class="motivo">
+        <div class="motivo-vista"><figure class="copia gira-2"><span class="cinta"></span><img src="img/prendas/tejido-anillos-indigo.jpg" alt="" width="640" height="800" loading="lazy"></figure></div>
+        <div class="motivo-tx"><h3 class="t-h3">Cinta</h3><p>Una tira de cinta de papel sostiene la copia por arriba, girada −4°. Una por foto, y no en todas.</p></div>
+      </article>
+      <article class="motivo">
+        <div class="motivo-vista">
+          <span class="sello" aria-hidden="true">
+            <svg class="sello-aro" viewBox="0 0 200 200"><defs><path id="aro-motivo" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/></defs><text><textPath href="#aro-motivo" textLength="476" lengthAdjust="spacing">PIEZA ÚNICA · NO SE REPITE · </textPath></text></svg>
+            <svg class="sello-centro" viewBox="0 0 24 24"><use href="#estrella"/></svg>
+          </span>
+        </div>
+        <div class="motivo-tx"><h3 class="t-h3">Sello</h3><p>Un círculo del color del turno con el texto alrededor y la estrella en el centro. Gira despacio. Es decorativo: lo que dice tiene que estar también en la página.</p></div>
+      </article>
+      <article class="motivo">
+        <div class="motivo-vista"><div class="costuras"><hr><p class="t-label">Datos de la pieza</p><hr><a class="punteado t-label" href="#voz">Ver la guía de voz</a><hr><span class="btn btn-punteado" style="--fg:#ece3d0">Mezclar</span></div></div>
+        <div class="motivo-tx"><h3 class="t-h3">Costura punteada</h3><p>Las líneas que separan son costuras: 1 px punteado. Los enlaces se subrayan punteado y los botones secundarios llevan un borde punteado de 2 px.</p></div>
+      </article>
+      <article class="motivo">
+        <div class="motivo-vista"><div class="grano-demo"><span class="t-label">Hueso</span><span class="t-label">Ampliado</span></div></div>
+        <div class="motivo-tx"><h3 class="t-h3">Grano de fotocopia</h3><p>Un grano fino cubre toda la página en modo superposición, al 55 %. Es el mismo archivo en la tienda, en los posts y en los reels, donde cambia cada dos cuadros.</p></div>
+      </article>
+      <article class="motivo">
+        <div class="motivo-vista">
+          <div class="mini-franja" aria-hidden="true"><div class="franja-pista">
+            <ul class="franja-grupo"><li>Ediciones cortas</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li><li data-franja-turno>Ahora: Radiactivo</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li><li>Denim intervenido</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li><li>Si es tu talla, es tuya</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li></ul>
+            <ul class="franja-grupo"><li>Ediciones cortas</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li><li data-franja-turno>Ahora: Radiactivo</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li><li>Denim intervenido</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li><li>Si es tu talla, es tuya</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li></ul>
+          </div></div>
+        </div>
+        <div class="motivo-tx"><h3 class="t-h3">Franja</h3><p>Texto en Space Mono que corre en una banda del color del turno, separado por la estrella. Arriba de la tienda dice el turno: «Ahora: Asfalto», «Sigue: Fiera».</p></div>
+      </article>
+      <article class="motivo">
+        <div class="motivo-vista"><div class="parentesis t-label"><span>(Recién llegado)</span><span>(20) piezas</span><span>(01) Denim intervenido — MED/COL</span><span>(Turno 5/6)</span></div></div>
+        <div class="motivo-tx"><h3 class="t-h3">Paréntesis y cuentas</h3><p>Todo se cuenta como en un archivo: las etiquetas van en Space Mono, entre paréntesis y con su número. MED/COL firma la esquina.</p></div>
+      </article>
+      <article class="motivo">
+        <div class="motivo-vista" style="padding:0"><div class="patron-demo" aria-hidden="true"></div></div>
+        <div class="motivo-tx"><h3 class="t-h3">Fondo de logos</h3><p>El logo plateado repetido como un estampado de perchas: filas corridas y cada logo un poco girado. Empalma por los cuatro lados. Va detrás de las prendas, en historias, en papel de seda y en bolsas.</p></div>
+      </article>
+      <article class="motivo">
+        <div class="motivo-vista"><div class="correas-demo" aria-hidden="true"><img src="img/correas/correa-01.svg" alt="" width="652" height="46" loading="lazy"><img src="img/correas/correa-05.svg" alt="" width="652" height="46" loading="lazy"><img src="img/correas/correa-07.svg" alt="" width="652" height="46" loading="lazy"></div></div>
+        <div class="motivo-tx"><h3 class="t-h3">Las correas</h3><p>Las doce correas de tachas dibujadas en estilo Illustrator corren por la franja del inicio de la tienda. Ninguna se repite.</p></div>
+      </article>
+    </div>
+
+    <div class="folio t-label"><span>Hight · Branding book</span><span>05 / 11</span></div>
+  </div>
+</section>
+
+<!-- ================= 06 Fotografía ================= -->
+<section id="fotografia" class="pliego hueso">
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(06) Fotografía</span><span>MED/COL</span></div>
+    <div class="cap-head">
+      <h2 class="t-l">La prenda sobre el fondo de logos</h2>
+      <p class="lead">La foto de producto sigue una sola receta para que toda la colección se vea igual. Las fotos de la tienda no se tocan: se trabaja sobre copias recortadas, que van sobre el fondo de logos plateados.</p>
+    </div>
+
+    <div class="antes-despues">
+      <figure>
+        <div class="copia gira-3"><img src="img/prendas/original-jean-flare-patchwork-leopardo.jpg" alt="Foto original del Jean Flare Patchwork Leopardo sobre un piso de cemento" width="533" height="800" loading="lazy"></div>
+        <figcaption class="t-label muted">La foto de la tienda, tal cual · primera en la ficha</figcaption>
+      </figure>
+      <p class="flecha" aria-hidden="true">→</p>
+      <figure>
+        <div class="copia gira-4"><span class="cinta"></span><img src="img/prendas/jean-flare-patchwork-leopardo.jpg" alt="El mismo jean recortado sobre el fondo de logos de Hight" width="640" height="800" loading="lazy"></div>
+        <figcaption class="t-label muted">La copia sobre el fondo · va después de las originales</figcaption>
+      </figure>
+    </div>
+
+    <div class="sub dos">
+      <dl class="receta">
+        <div><dt class="t-label">Formato</dt><dd>Vertical 4:5, de 1.600 × 2.000 px.</dd></div>
+        <div><dt class="t-label">Prenda</dt><dd>Centrada, al 80 % del alto, con una sombra suave debajo. Nada de sombras duras.</dd></div>
+        <div><dt class="t-label">Fondo</dt><dd>El fondo de logos plateados sobre carbón, apagado en las orillas y con una luz cálida en el centro. El mismo para toda la colección.</dd></div>
+        <div><dt class="t-label">Corte</dt><dd>Si la foto original corta la prenda por un lado, ese lado va contra el borde, para que el corte se vea a propósito. Si la corta arriba y abajo, va de alto completo.</dd></div>
+        <div><dt class="t-label">Texto alternativo</dt><dd>«Nombre de la prenda, sobre el fondo de Hight».</dd></div>
+      </dl>
+      <div class="bloque">
+        <p class="t-label">Fotos por prenda, en este orden</p>
+        <ol class="lista-num">
+          <li>Frente completo.</li>
+          <li>Espalda completa.</li>
+          <li>Detalle de la tela a 20 cm, que se vea el tejido.</li>
+          <li>Detalle de marquilla, estampado o costura especial.</li>
+          <li>En cuerpo, de frente.</li>
+          <li>En cuerpo, de perfil o tres cuartos, para que se vea el volumen.</li>
+          <li>Si se puede, en cuerpo, de espalda o en movimiento.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="sub">
+      <p class="t-label">Las prendas del Drop 01 sobre el fondo</p>
+      <div class="galeria">
+        <figure><div class="copia gira-1"><img src="img/prendas/chaqueta-smiley-acido.jpg" alt="Chaqueta Smiley Ácido sobre el fondo de Hight" width="640" height="800" loading="lazy"></div><figcaption><span class="punto" style="--c:#dff04a"></span><span>Chaqueta Smiley Ácido</span></figcaption></figure>
+        <figure><div class="copia gira-2"><img src="img/prendas/top-halftone-carmin.jpg" alt="Top Halftone Carmín sobre el fondo de Hight" width="640" height="800" loading="lazy"></div><figcaption><span class="punto" style="--c:#c3142d"></span><span>Top Halftone Carmín</span></figcaption></figure>
+        <figure><div class="copia gira-3"><img src="img/prendas/jean-wide-fleco-indigo.jpg" alt="Jean Wide Fleco Índigo sobre el fondo de Hight" width="640" height="800" loading="lazy"></div><figcaption><span class="punto" style="--c:#5b7cfa"></span><span>Jean Wide Fleco Índigo</span></figcaption></figure>
+        <figure><div class="copia gira-4"><img src="img/prendas/jean-patchwork-estrellas-violeta.jpg" alt="Jean Patchwork Estrellas Violeta sobre el fondo de Hight" width="640" height="800" loading="lazy"></div><figcaption><span class="punto" style="--c:#e0218a"></span><span>Jean Patchwork Estrellas Violeta</span></figcaption></figure>
+        <figure><div class="copia gira-2"><img src="img/prendas/buzo-destroyed-ceniza.jpg" alt="Buzo Destroyed Ceniza sobre el fondo de Hight" width="640" height="800" loading="lazy"></div><figcaption><span class="punto" style="--c:#c4beb2"></span><span>Buzo Destroyed Ceniza</span></figcaption></figure>
+        <figure><div class="copia gira-1"><img src="img/prendas/chaqueta-trouble-maker.jpg" alt="Chaqueta Trouble Maker sobre el fondo de Hight" width="640" height="800" loading="lazy"></div><figcaption><span class="punto" style="--c:#c4beb2"></span><span>Chaqueta Trouble Maker</span></figcaption></figure>
+        <figure><div class="copia gira-4"><img src="img/prendas/jean-flare-dragon-acido.jpg" alt="Jean Flare Dragón Ácido sobre el fondo de Hight" width="640" height="800" loading="lazy"></div><figcaption><span class="punto" style="--c:#dff04a"></span><span>Jean Flare Dragón Ácido</span></figcaption></figure>
+        <figure><div class="copia gira-3"><img src="img/prendas/tejido-anillos-indigo.jpg" alt="Tejido Anillos Índigo sobre el fondo de Hight" width="640" height="800" loading="lazy"></div><figcaption><span class="punto" style="--c:#5b7cfa"></span><span>Tejido Anillos Índigo</span></figcaption></figure>
+      </div>
+    </div>
+
+    <div class="sub dos">
+      <div class="bloque">
+        <p class="t-label">Cómo tomar la foto</p>
+        <ul class="lista">
+          <li>Celular con la cámara principal (1×) o el tele (2× a 3×). Nunca el gran angular: deforma la prenda.</li>
+          <li>Fondo liso y claro, para recortar fácil. El fondo de logos se pone en edición.</li>
+          <li>Luz de ventana de lado, sin sol directo y sin flash, con una cartulina blanca del otro lado.</li>
+          <li>Prenda planchada, colgada o en plano, con el celular paralelo al piso.</li>
+          <li>Balance de blancos neutro: el color de la prenda tiene que ser el real, porque se compra ese color.</li>
+        </ul>
+      </div>
+      <div class="bloque">
+        <p class="t-label">Detalles de cerca</p>
+        <div class="detalles">
+          <figure><div class="copia"><img src="img/detalles/mariposas.jpg" alt="Mariposas bordadas del Jean Flare Patchwork Leopardo" width="400" height="400" loading="lazy"></div><figcaption class="t-label">Mariposas bordadas</figcaption></figure>
+          <figure><div class="copia"><img src="img/detalles/pintura.jpg" alt="Pintura a mano de la Chaqueta Smiley Ácido" width="400" height="400" loading="lazy"></div><figcaption class="t-label">Pintura a mano</figcaption></figure>
+          <figure><div class="copia"><img src="img/detalles/semitono.jpg" alt="Semitono del Top Halftone Carmín" width="400" height="400" loading="lazy"></div><figcaption class="t-label">Semitono</figcaption></figure>
+          <figure><div class="copia"><img src="img/detalles/flecos.jpg" alt="Flecos del Jean Wide Fleco Índigo" width="400" height="400" loading="lazy"></div><figcaption class="t-label">Flecos</figcaption></figure>
+          <figure><div class="copia"><img src="img/detalles/argollas.jpg" alt="Argollas de metal del Tejido Anillos Índigo" width="400" height="400" loading="lazy"></div><figcaption class="t-label">Argollas de metal</figcaption></figure>
+          <figure><div class="copia"><img src="img/detalles/espiral.jpg" alt="Pintura blanca de la Chaqueta Trouble Maker" width="400" height="400" loading="lazy"></div><figcaption class="t-label">Pintura blanca</figcaption></figure>
+        </div>
+      </div>
+    </div>
+
+    <div class="folio t-label"><span>Hight · Branding book</span><span>06 / 11</span></div>
+  </div>
+</section>
+
+<!-- ================= 07 Instagram ================= -->
+<section id="instagram" class="pliego carbon">
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(07) Instagram</span><span>MED/COL</span></div>
+    <div class="cap-head">
+      <h2 class="t-l">El feed es un tablero</h2>
+      <p class="lead">Veinte posts y cuatro reels para el lanzamiento del Drop 01, con el estilo de la tienda. El feed alterna carbón con hueso o un color, así que en la cuadrícula del perfil queda un tablero.</p>
+    </div>
+
+    <div class="perfil">
+      <img src="img/avatar.jpg" alt="Foto de perfil de Hight" width="320" height="320" loading="lazy">
+      <div class="bloque">
+        <p class="t-label muted">Bio · 3 líneas, 137 caracteres de 150 · en el enlace va la tienda</p>
+        <pre>Streetwear de autor para el uso diario. Hecho en Medellín.
+Prendas intervenidas a mano y piezas de archivo.
+¿De qué color eres? Drop 01 →</pre>
+      </div>
+    </div>
+
+    <div class="sub dos">
+      <div class="bloque">
+        <p class="t-label">Los 20 posts en el orden del perfil · el último publicado queda arriba</p>
+        <div class="feed">
+          <figure><img src="img/posts/20.jpg" alt="Post 20" width="432" height="540" loading="lazy"><figcaption>20</figcaption></figure>
+          <figure><img src="img/posts/19.jpg" alt="Post 19" width="432" height="540" loading="lazy"><figcaption>19</figcaption></figure>
+          <figure><img src="img/posts/18.jpg" alt="Post 18" width="432" height="540" loading="lazy"><figcaption>18</figcaption></figure>
+          <figure><img src="img/posts/17.jpg" alt="Post 17" width="432" height="540" loading="lazy"><figcaption>17</figcaption></figure>
+          <figure><img src="img/posts/16.jpg" alt="Post 16" width="432" height="540" loading="lazy"><figcaption>16</figcaption></figure>
+          <figure><img src="img/posts/15.jpg" alt="Post 15" width="432" height="540" loading="lazy"><figcaption>15</figcaption></figure>
+          <figure><img src="img/posts/14.jpg" alt="Post 14" width="432" height="540" loading="lazy"><figcaption>14</figcaption></figure>
+          <figure><img src="img/posts/13.jpg" alt="Post 13" width="432" height="540" loading="lazy"><figcaption>13</figcaption></figure>
+          <figure><img src="img/posts/12.jpg" alt="Post 12" width="432" height="540" loading="lazy"><figcaption>12</figcaption></figure>
+          <figure><img src="img/posts/11.jpg" alt="Post 11" width="432" height="540" loading="lazy"><figcaption>11</figcaption></figure>
+          <figure><img src="img/posts/10.jpg" alt="Post 10" width="432" height="540" loading="lazy"><figcaption>10</figcaption></figure>
+          <figure><img src="img/posts/09.jpg" alt="Post 09" width="432" height="540" loading="lazy"><figcaption>09</figcaption></figure>
+          <figure><img src="img/posts/08.jpg" alt="Post 08" width="432" height="540" loading="lazy"><figcaption>08</figcaption></figure>
+          <figure><img src="img/posts/07.jpg" alt="Post 07" width="432" height="540" loading="lazy"><figcaption>07</figcaption></figure>
+          <figure><img src="img/posts/06.jpg" alt="Post 06" width="432" height="540" loading="lazy"><figcaption>06</figcaption></figure>
+          <figure><img src="img/posts/05.jpg" alt="Post 05" width="432" height="540" loading="lazy"><figcaption>05</figcaption></figure>
+          <figure><img src="img/posts/04.jpg" alt="Post 04" width="432" height="540" loading="lazy"><figcaption>04</figcaption></figure>
+          <figure><img src="img/posts/03.jpg" alt="Post 03" width="432" height="540" loading="lazy"><figcaption>03</figcaption></figure>
+          <figure><img src="img/posts/02.jpg" alt="Post 02" width="432" height="540" loading="lazy"><figcaption>02</figcaption></figure>
+          <figure><img src="img/posts/01.jpg" alt="Post 01" width="432" height="540" loading="lazy"><figcaption>01</figcaption></figure>
+        </div>
+        <p class="muted medida">La cuadrícula del perfil muestra cada post en 3:4: al post de 1.080 × 1.350 le recorta unos 34 px por lado. Lo importante va al centro.</p>
+      </div>
+      <div class="bloque">
+        <p class="t-label">El pie de foto · tres líneas, sin emojis</p>
+        <div class="pie-foto">
+          <div class="linea"><span>1 · El dato</span><span>Jean Flare Patchwork Leopardo, $690.000, en una sola talla.</span></div>
+          <div class="linea"><span>2 · Sensación</span><span>Llama de serpiente, mariposas bordadas, cargo camuflado, cadenas, cordón cruzado y bota de leopardo.</span></div>
+          <div class="linea"><span>3 · La acción</span><span>4 unidades, en el enlace de la bio.</span></div>
+          <p class="t-label">#HIGHT #Drop01 #Patchwork</p>
+        </div>
+        <ul class="lista">
+          <li>Máximo tres hashtags, al final: <b>#HIGHT</b>, <b>#Drop01</b> y uno del tema (#Medellín, #DenimIntervenido, #PintadaAMano, #Patchwork, #Tachas, #Estampado o #Flare).</li>
+          <li>La acción invita a comentar, etiquetar o elegir un color, para que la gente hable con la marca.</li>
+          <li>Precios y unidades, los de la tienda. Si cambian en la tienda, cambian en el pie de foto.</li>
+        </ul>
+
+        <p class="t-label" style="margin-top:22px">Fechas · los posts a las 12:00 m. y los reels a las 7:00 p. m.</p>
+        <div class="tabla-wrap">
+          <table class="calendario">
+            <thead><tr><th scope="col">Día</th><th scope="col">Fecha</th><th scope="col">12:00 m.</th><th scope="col">7:00 p. m.</th></tr></thead>
+            <tbody>
+              <tr><td>−6</td><td>Viernes 6 de noviembre</td><td>01</td><td></td></tr>
+              <tr><td>−5</td><td>Sábado 7</td><td>02</td><td></td></tr>
+              <tr><td>−4</td><td>Domingo 8</td><td>03</td><td>Reel adelanto</td></tr>
+              <tr><td>−3</td><td>Lunes 9</td><td>04</td><td></td></tr>
+              <tr><td>−2</td><td>Martes 10</td><td>05</td><td></td></tr>
+              <tr><td>−1</td><td>Miércoles 11</td><td>06</td><td>Reel giro</td></tr>
+              <tr class="dia-0"><td>0</td><td>Jueves 12</td><td>07</td><td>Reel hoy · 8:00 p. m. abre la tienda y sale el 08</td></tr>
+              <tr><td>+1</td><td>Viernes 13</td><td>09</td><td>Reel correas</td></tr>
+              <tr><td>+2 a +12</td><td>Sábado 14 a martes 24</td><td>10 a 20</td><td>Uno por día</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <p class="t-label">Reels · 1.080 × 1.920, cortados al tempo de su canción</p>
+      <div class="reels">
+        <figure><video src="img/reels/adelanto.mp4" poster="img/reels/adelanto.jpg" muted loop playsinline preload="metadata" autoplay data-reel width="432" height="768" aria-label="Reel adelanto, sin sonido"></video><figcaption><b class="t-label">Adelanto · día −4</b><br><span class="muted">«New Person, Same Old Mistakes»</span></figcaption></figure>
+        <figure><img src="img/reels/giro.jpg" alt="Portada del reel giro" width="432" height="768" loading="lazy"><figcaption><b class="t-label">Giro · día −1</b><br><span class="muted">«Feels Like We Only Go Backwards»</span></figcaption></figure>
+        <figure><img src="img/reels/hoy.jpg" alt="Portada del reel hoy" width="432" height="768" loading="lazy"><figcaption><b class="t-label">Hoy · día 0</b><br><span class="muted">«Let It Happen»</span></figcaption></figure>
+        <figure><img src="img/reels/correas.jpg" alt="Portada del reel correas" width="432" height="768" loading="lazy"><figcaption><b class="t-label">Correas · día +1</b><br><span class="muted">«Dracula»</span></figcaption></figure>
+      </div>
+      <p class="muted medida">Cada reel tiene dos versiones: sin música, para ponerle la canción de Tame Impala desde la biblioteca de Instagram, y con música propia al mismo tempo, para cuando la canción no aparece o el reel se va a promocionar. En historias y reels deja libres 250 px arriba y abajo para la interfaz de Instagram.</p>
+    </div>
+
+    <div class="sub">
+      <p class="t-label">Medidas</p>
+      <div class="medidas">
+        <div class="medida-caja"><div class="medida-forma" style="aspect-ratio:4/5">4:5</div><p><b>Post</b> · 1.080 × 1.350</p></div>
+        <div class="medida-caja"><div class="medida-forma" style="aspect-ratio:9/16">9:16</div><p><b>Reel e historia</b> · 1.080 × 1.920</p></div>
+        <div class="medida-caja"><div class="medida-forma" style="aspect-ratio:3/4">3:4</div><p><b>Cuadrícula del perfil</b> · cómo se ve el post</p></div>
+      </div>
+    </div>
+
+    <div class="folio t-label"><span>Hight · Branding book</span><span>07 / 11</span></div>
+  </div>
+</section>
+
+<!-- ================= 08 Tienda ================= -->
+<section id="tienda" class="pliego hueso">
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(08) La tienda</span><span>MED/COL</span></div>
+    <div class="cap-head">
+      <h2 class="t-l">La tienda se pinta de un color cada minuto</h2>
+      <p class="lead">El tema de Shopify lleva todo lo de este libro: carbón y hueso, el color del turno, las copias impresas, el sello y la franja. Cada minuto cambia el turno y la tienda se pinta con el color de una colección. Todos los que la visitan ven el mismo.</p>
+    </div>
+
+    <div class="pantallas">
+      <figure class="pantalla"><img src="img/tienda/tienda-inicio.jpg" alt="Inicio de la tienda en el turno de Asfalto: el logo, copias impresas con cinta y el sello" width="1200" height="750" loading="lazy"><figcaption class="t-label muted">Inicio en el turno de Asfalto · el logo, las copias que se pueden arrastrar, el sello que dice cada cuánto cambia y el nombre del color con su frase</figcaption></figure>
+      <div class="pantallas-dos">
+        <figure class="pantalla"><img src="img/tienda/tienda-colores.jpg" alt="Sección Elige tu color: los seis colores con sus piezas" width="1200" height="750" loading="lazy"><figcaption class="t-label muted">Elige tu color · cada color es una colección; al tocarlo, la tienda se pinta con él</figcaption></figure>
+        <figure class="pantalla"><img src="img/tienda/tienda-coleccion.jpg" alt="Colección Sangre Fría con el titular en rojo carmín" width="1200" height="750" loading="lazy"><figcaption class="t-label muted">Una colección · el nombre del color en grande y los botones de los demás colores</figcaption></figure>
+        <figure class="pantalla"><img src="img/tienda/tienda-probador.jpg" alt="Arma tu look: tres prendas sobre la textura de Fiera" width="1200" height="750" loading="lazy"><figcaption class="t-label muted">Arma tu look · una prenda encima, una arriba y una abajo, sobre la textura del turno</figcaption></figure>
+        <figure class="pantalla"><img src="img/tienda/tienda-lupa.jpg" alt="Lupa sobre el Jean Flare Patchwork Leopardo con sus seis detalles numerados" width="1200" height="750" loading="lazy"><figcaption class="t-label muted">Lupa · la tela de cerca, con los detalles numerados</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="sub dos">
+      <div class="bloque">
+        <p class="t-label">El inicio, de arriba abajo</p>
+        <ol class="lista-num">
+          <li>El turno: copias impresas alrededor del logo, el sello y la agenda de turnos.</li>
+          <li>Las correas en la franja.</li>
+          <li>Lo nuevo: las piezas que acaban de entrar.</li>
+          <li>Arma tu look.</li>
+          <li>Elige tu color.</li>
+          <li>El clóset en vivo.</li>
+          <li>Anatomía de una pieza.</li>
+          <li>Lupa: mira la tela de cerca.</li>
+          <li>¿Te la pondrías?: desliza a la derecha o a la izquierda.</li>
+          <li>Archivo: todas las piezas.</li>
+          <li>Lookbook: En la calle.</li>
+          <li>Manifiesto.</li>
+        </ol>
+      </div>
+      <div class="bloque">
+        <p class="t-label">La ficha de la prenda</p>
+        <div class="telefonos">
+          <figure class="telefono"><img src="img/tienda/tienda-inicio-cel.jpg" alt="Inicio de la tienda en el teléfono" width="390" height="844" loading="lazy"><figcaption class="t-label muted">Inicio en el teléfono</figcaption></figure>
+          <figure class="telefono"><img src="img/tienda/tienda-ficha-cel.jpg" alt="Ficha del Jean Flare Patchwork Leopardo en el teléfono" width="390" height="844" loading="lazy"><figcaption class="t-label muted">Ficha en el teléfono</figcaption></figure>
+        </div>
+        <ul class="lista">
+          <li>Las fotos van como copias impresas: la original primero y la de fondo de logos después. En el teléfono se deslizan con contador «01 / 02».</li>
+          <li>Cada pieza se gira en 360°: frente, costado, espalda, desde arriba y desde abajo.</li>
+          <li>Los datos de la pieza, la guía de tallas, «Combínala con» y lo que cuesta cada puesta: «Si la usas 100 veces, cada puesta te sale en $6.900».</li>
+          <li>Los botones dicen lo que pasa, con verbo y en Space Mono: VER LAS PIEZAS, AGREGAR, VER LA COLECCIÓN, MEZCLAR.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="folio t-label"><span>Hight · Branding book</span><span>08 / 11</span></div>
+  </div>
+</section>
+
+<!-- ================= 09 Voz ================= -->
+<section id="voz" class="pliego carbon">
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(09) Voz</span><span>MED/COL</span></div>
+    <div class="cap-head">
+      <h2 class="t-l">Primero el dato</h2>
+      <p class="lead">Hight habla de tú, en frases cortas y en presente. Primero el dato y después la sensación. La voz es la misma en todas partes; lo que cambia es el largo.</p>
+    </div>
+
+    <div class="dos">
+      <ul class="reglas">
+        <li><b>Tuteo.</b><span>Nunca «usted» ni «vos».</span></li>
+        <li><b>Sin emojis ni signos de exclamación dobles.</b><span>La emoción la pone la prenda.</span></li>
+        <li><b>La escasez se dice con datos.</b><span>«4 unidades», «máximo 4 por talla», «cuando se acaban, no vuelven».</span></li>
+        <li><b>Precios en pesos, con punto de miles y sin decimales.</b><span>$690.000.</span></li>
+      </ul>
+      <ul class="reglas">
+        <li><b>Las prendas se nombran por tipo, técnica o corte, y color.</b><span>Jean Flare Patchwork Leopardo, Chaqueta Smiley Ácido, Tejido Anillos Índigo.</span></li>
+        <li><b>Los drops llevan número de dos cifras.</b><span>DROP 01 en titulares; Drop 01 dentro del texto.</span></li>
+        <li><b>Los botones llevan verbo.</b><span>VER LAS PIEZAS, AGREGAR AL CARRITO, VER LA GUÍA DE TALLAS.</span></li>
+        <li><b>Los errores dicen qué pasó y cómo arreglarlo.</b><span>Sin disculpas largas.</span></li>
+      </ul>
+    </div>
+
+    <div class="sub">
+      <p class="t-label">Por canal</p>
+      <div class="canales">
+        <div class="canal"><h3 class="t-h3">Instagram</h3><p>Tres líneas: el dato, una frase de sensación y la acción. Máximo tres hashtags.</p><div class="ejemplo"><p>Chaqueta Smiley Ácido, $620.000.</p><p>Pintada a mano con caras sonrientes, rayos y cuadros: el amarillo se ve desde lejos.</p><p>4 unidades, en el enlace de la bio.</p></div></div>
+        <div class="canal"><h3 class="t-h3">WhatsApp</h3><p>Saludo corto con el nombre, primero lo que preguntaron y datos concretos. Nunca «ya mismo» ni «en un ratico».</p><div class="ejemplo"><p>Hola, Camila. Tu pedido #1048 salió hoy con Servientrega, guía 2034 5567. Llega entre el jueves y el viernes.</p></div></div>
+        <div class="canal"><h3 class="t-h3">Correo</h3><p>Asunto con el dato, sin mayúsculas sostenidas. Máximo 80 palabras, una imagen y un botón.</p><div class="ejemplo"><p>Drop 01: jueves 12 de noviembre, 8 p. m.</p></div></div>
+        <div class="canal"><h3 class="t-h3">Tarjeta de gracias</h3><p>Una frase y el cuidado.</p><div class="ejemplo"><p>Gracias por llevar Hight. Lávala al revés en agua fría y te va a durar años.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <p class="t-label">Lo que Hight nunca dice</p>
+      <div class="nunca"><span>¡¡Últimas unidades!!</span><span>¡Corre!</span><span>Precio de locura</span><span>Outfit</span><span>Must have</span></div>
+    </div>
+
+    <div class="folio t-label"><span>Hight · Branding book</span><span>09 / 11</span></div>
+  </div>
+</section>
+
+<!-- ================= 10 Empaque ================= -->
+<section id="empaque" class="pliego hueso">
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(10) Empaque y etiquetas</span><span>MED/COL</span></div>
+    <div class="cap-head">
+      <h2 class="t-l">Lo que se toca al abrir el pedido</h2>
+      <p class="lead">El empaque usa las mismas piezas que la tienda: el fondo de logos, el sello, el carbón y el hueso. Es lo primero que la persona tiene en la mano.</p>
+    </div>
+
+    <div class="mesa">
+      <div class="objetos">
+        <div class="objeto">
+          <div class="colgante">
+            <img src="img/logo-plata.webp" alt="" width="977" height="672" loading="lazy">
+            <p class="t-h3">Drop 01</p>
+            <p class="t-h3">Camiseta Célula Carmín</p>
+            <p class="t-label">Regular · estampado total<br>Talla M<br>$169.000<br>MED/COL</p>
+          </div>
+          <p class="t-label ejemplo-marca">Hang tag · 50 × 90 mm · ejemplo</p>
+        </div>
+        <div class="objeto">
+          <div class="marquilla"><svg viewBox="0 0 400 100" aria-hidden="true"><use href="#firma"/></svg><p class="t-label">Talla M · Composición<br>MED/COL</p></div>
+          <p class="t-label ejemplo-marca">Marquilla · 60 × 30 mm · ejemplo</p>
+        </div>
+        <div class="objeto">
+          <div class="seda" aria-hidden="true"></div>
+          <p class="t-label ejemplo-marca">Papel de seda · el cuadro de logos</p>
+        </div>
+        <div class="objeto">
+          <div class="tarjeta-gracias"><p>Gracias por llevar Hight. Lávala al revés en agua fría y te va a durar años.</p><p class="t-label" style="font-size:.5625rem">MED/COL</p></div>
+          <p class="t-label ejemplo-marca">Tarjeta de gracias · A6</p>
+        </div>
+      </div>
+      <div class="bloque">
+        <p class="t-label">El orden al abrir</p>
+        <ol class="lista-num">
+          <li><span><b>Bolsa de envío</b>, carbón con el fondo de logos plateados.</span></li>
+          <li><span><b>El sello</b>, el sticker redondo con la estrella, cierra el papel de seda.</span></li>
+          <li><span><b>Papel de seda</b> con el cuadro de logos: a 300 ppp mide 20 × 20 cm y empalma por los cuatro lados.</span></li>
+          <li><span><b>La prenda</b>, doblada en tres, con el hang tag a la vista.</span></li>
+          <li><span><b>Tarjeta de gracias</b>, A6: una frase, el cuidado y cómo escribirnos.</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="sub dos">
+      <div class="bloque">
+        <p class="t-label">Etiquetas</p>
+        <ul class="lista">
+          <li><b>Marquilla interior</b> tejida, 60 × 30 mm, en el cuello: la firma corta, la talla, la composición y MED/COL.</li>
+          <li><b>Etiqueta de cuidado</b> en la costura lateral, con la composición y el origen, que en Colombia son obligatorios.</li>
+          <li><b>Hang tag</b> de 50 × 90 mm: el número del drop, el nombre de la prenda, los datos en Space Mono, la talla y el precio.</li>
+          <li><b>Etiqueta de envío</b> de 100 × 150 mm, el tamaño de las impresoras térmicas: remitente, destinatario, número de pedido y «Contiene ropa. No doblar.»</li>
+        </ul>
+      </div>
+      <div class="bloque">
+        <p class="t-label">Antes de imprimir</p>
+        <ul class="lista">
+          <li>Tarjetas y hang tags en cartulina de 300 g o más. El plateado sale con papel metalizado o foil frío.</li>
+          <li>Textos a contornos, sangrado de 3 mm y los colores en el modo que pida la imprenta.</li>
+          <li>Siempre una prueba física antes de producir, sobre todo del plateado y del carbón.</li>
+          <li>El logo gótico impreso mide al menos 6 cm; en la marquilla va la firma corta.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="folio t-label"><span>Hight · Branding book</span><span>10 / 11</span></div>
+  </div>
+</section>
+
+<!-- ================= 11 Archivos ================= -->
+<section id="archivos" class="pliego carbon">
+  <div class="hoja">
+    <div class="cap-top t-label"><span>(11) Archivos</span><span>MED/COL</span></div>
+    <div class="cap-head">
+      <h2 class="t-l tildes">Dónde está cada cosa</h2>
+      <p class="lead">Todo está en el repositorio de la tienda. Las rutas son desde la raíz.</p>
+    </div>
+    <div class="tabla-wrap">
+      <table class="archivos">
+        <thead><tr><th scope="col">Qué</th><th scope="col">Dónde</th><th scope="col">Formato</th></tr></thead>
+        <tbody>
+          <tr><td>Logo en plata y en tinta</td><td>assets/hight-logo-plata.webp · assets/hight-logo-tinta.webp</td><td>WEBP de 977 × 672, fondo transparente</td></tr>
+          <tr><td>Firma corta</td><td>snippets/logo-wordmark.liquid</td><td>SVG</td></tr>
+          <tr><td>Tipografías</td><td>assets/anton-latin.woff2 · space-grotesk-latin.woff2 · space-mono-400-latin.woff2 · space-mono-700-latin.woff2</td><td>WOFF2; también en Google Fonts</td></tr>
+          <tr><td>Fondo de logos</td><td>bocetos/fondos/ (cuadro-plata.png, historia-plata.png, prenda-plata.png)</td><td>PNG</td></tr>
+          <tr><td>Fotos sobre el fondo</td><td>bocetos/fondos/prendas/</td><td>JPG de 1.600 × 2.000</td></tr>
+          <tr><td>Prendas recortadas</td><td>bocetos/instagram/imagenes/</td><td>WEBP con fondo transparente</td></tr>
+          <tr><td>Posts</td><td>bocetos/instagram/posts/</td><td>JPG de 1.080 × 1.350</td></tr>
+          <tr><td>Bio, pies de foto y fechas</td><td>bocetos/instagram/textos.md</td><td>Texto</td></tr>
+          <tr><td>Reels</td><td>bocetos/reels/</td><td>MP4 de 1.080 × 1.920</td></tr>
+          <tr><td>Correas</td><td>assets/correa-01.svg a correa-12.svg</td><td>SVG</td></tr>
+          <tr><td>Grano</td><td>assets/grano.svg</td><td>SVG</td></tr>
+          <tr><td>Colores, letras y motivos del tema</td><td>config/settings_data.json · snippets/css-variables.liquid · assets/hight.css</td><td>JSON, Liquid y CSS</td></tr>
+          <tr><td>Políticas</td><td>docs/politicas/</td><td>HTML</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub">
+      <p class="t-label">Pendiente en la marca</p>
+      <ul class="lista medida">
+        <li>Redibujar el logo en vector y aclarar la primera letra.</li>
+        <li>Escribir de dónde viene el nombre Hight y cómo se pronuncia, para que todo el equipo lo cuente igual.</li>
+        <li>Aprobar los textos de marca (para quién, lo que no es y los lemas): el manual de octubre los dejó como borrador.</li>
+        <li>El manual de octubre (design-system/ en el repositorio) sigue con la paleta y las letras de antes. Este libro lo reemplaza en color, tipografía, fotografía y motivos.</li>
+        <li>Fotos que faltan: la foto real de la Chaqueta Blood Rose y las espaldas de las prendas.</li>
+      </ul>
+    </div>
+
+    <div class="folio t-label"><span>Hight · Branding book</span><span>11 / 11</span></div>
+  </div>
+</section>
+
+<footer class="pliego carbon cierre">
+  <div class="franja" aria-hidden="true"><div class="franja-pista">
+    <ul class="franja-grupo"><li>Streetwear de autor para el uso diario</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li><li>Hecho en Medellín</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li><li>¿De qué color eres?</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li></ul>
+    <ul class="franja-grupo"><li>Streetwear de autor para el uso diario</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li><li>Hecho en Medellín</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li><li>¿De qué color eres?</li><li><svg class="estrella" viewBox="0 0 24 24"><use href="#estrella"/></svg></li></ul>
+  </div></div>
+  <div class="hoja">
+    <img src="img/logo-plata.webp" alt="Hight" width="977" height="672" loading="lazy">
+    <p class="lead">Streetwear de autor para el uso diario.</p>
+    <p class="t-label muted">Hight · Branding book · MED/COL · 27 de octubre de 2026</p>
+  </div>
+</footer>
+
+</main>
+
+<p class="oculto" aria-live="polite" id="aviso"></p>
+
+<script>
+(function () {
+  var TURNOS = [
+    { id: 'acido', name: 'Radiactivo', c: '#dff04a', on: '#0d0c0b' },
+    { id: 'carmin', name: 'Sangre Fría', c: '#c3142d', on: '#ece3d0' },
+    { id: 'indigo', name: 'Medianoche', c: '#5b7cfa', on: '#0d0c0b' },
+    { id: 'magenta', name: 'Chicle', c: '#e0218a', on: '#ece3d0' },
+    { id: 'ceniza', name: 'Asfalto', c: '#c4beb2', on: '#0d0c0b' },
+    { id: 'leopardo', name: 'Fiera', c: '#c08a4e', on: '#0d0c0b' }
+  ];
+  var MS = 60000;
+  var root = document.documentElement;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var estadoEl = document.querySelector('[data-turno-estado]');
+  var nombreEl = document.querySelector('[data-turno-nombre]');
+  var tiempoEl = document.querySelector('[data-turno-tiempo]');
+  var boton = document.querySelector('[data-turno-btn]');
+  var aviso = document.getElementById('aviso');
+  // el mismo reloj de la tienda: un turno por minuto, igual para todos
+  function deLaHora() { return Math.floor(Date.now() / MS) % TURNOS.length; }
+  var modo = reduce ? 'pausa' : 'auto';
+  var actual = -1;
+
+  function aplicar(i) {
+    if (i === actual) return;
+    actual = i;
+    var t = TURNOS[i];
+    root.style.setProperty('--acento', t.c);
+    root.style.setProperty('--on-acento', t.on);
+    document.querySelectorAll('[data-tx]').forEach(function (el) {
+      el.className = el.className.replace(/\btx-[a-z]+\b/g, '').replace(/\s+/g, ' ').trim() + ' tx-' + t.id;
+    });
+    document.querySelectorAll('[data-franja-turno]').forEach(function (el) { el.textContent = 'Ahora: ' + t.name; });
+    document.querySelectorAll('[data-pintar]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-pintar') === t.id)); });
+    nombreEl.textContent = t.name;
+  }
+
+  function pintarEstado() {
+    estadoEl.textContent = modo === 'auto' ? 'Ahora' : modo === 'pausa' ? 'En pausa' : 'Tu color';
+    boton.textContent = modo === 'auto' ? 'Pausar' : modo === 'pausa' ? 'Seguir' : 'Volver a la hora';
+    boton.setAttribute('aria-label', modo === 'auto' ? 'Pausar el cambio de color' : modo === 'pausa' ? 'Seguir cambiando el color' : 'Volver al turno de la hora, el mismo de la tienda');
+    if (modo !== 'auto') tiempoEl.textContent = '';
+  }
+
+  function tic() {
+    if (modo !== 'auto') return;
+    aplicar(deLaHora());
+    var r = Math.ceil((MS - (Date.now() % MS)) / 1000);
+    tiempoEl.textContent = 'cambia en ' + Math.floor(r / 60) + ':' + String(r % 60).padStart(2, '0');
+  }
+
+  boton.addEventListener('click', function () {
+    if (modo === 'auto') modo = 'pausa';
+    else modo = 'auto';
+    pintarEstado();
+    tic();
+  });
+
+  document.addEventListener('click', function (e) {
+    var p = e.target.closest('[data-pintar]');
+    if (p) {
+      var i = TURNOS.findIndex(function (t) { return t.id === p.getAttribute('data-pintar'); });
+      if (i > -1) {
+        modo = 'tuyo';
+        aplicar(i);
+        pintarEstado();
+        aviso.textContent = 'El libro está pintado de ' + TURNOS[i].name;
+      }
+      return;
+    }
+    var h = e.target.closest('[data-copiar]');
+    if (h) {
+      var valor = h.getAttribute('data-copiar');
+      var listo = function () {
+        h.classList.add('copiado');
+        aviso.textContent = 'Copiado ' + valor;
+        setTimeout(function () { h.classList.remove('copiado'); }, 1600);
+      };
+      var seleccionar = function () {
+        var r = document.createRange();
+        r.selectNodeContents(h);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(r);
+        aviso.textContent = 'Seleccionado ' + valor + '; cópialo con el teclado';
+      };
+      try {
+        navigator.clipboard.writeText(valor).then(listo, seleccionar);
+      } catch (err) {
+        seleccionar();
+      }
+    }
+  });
+
+  aplicar(deLaHora());
+  pintarEstado();
+  tic();
+  setInterval(tic, 1000);
+
+  if (reduce) {
+    document.querySelectorAll('video[data-reel]').forEach(function (v) {
+      v.removeAttribute('autoplay');
+      v.setAttribute('controls', '');
+      try { v.pause(); } catch (err) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>
