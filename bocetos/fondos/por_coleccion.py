@@ -11,6 +11,8 @@ fiera):
   historia-<colección>.jpg  1080 × 1920, la textura y los logos enteros
   cuadro-<colección>.png    2400 × 2400, el color de base de la textura con los logos enteros; empalma por los cuatro
                             lados, para repetir
+  coleccion-<colección>.jpg 1600 × 2000, la imagen de la colección en la tienda (la de la página de colecciones y la
+                            vista del menú): su prenda de una por color sobre su fondo
 y prendas.jpg, una hoja con las prendas de cada colección sobre su fondo, una fila por colección.
 
 Las texturas salen de assets/hight.css con texturas.js (requiere Node con Playwright y Chromium).
@@ -52,6 +54,10 @@ PRENDAS = {
                'tejido-deshilado-ceniza', 'top-crop-rostros'],
     'leopardo': ['jean-flare-patchwork-leopardo', 'jean-patchwork-cuadros'],
 }
+# La prenda de una por color de cada colección, la misma del reel de adelanto, para la imagen de la colección
+UNA_POR_COLOR = {'acido': 'chaqueta-smiley-acido', 'carmin': 'top-halftone-carmin', 'indigo': 'tejido-anillos-indigo',
+                 'magenta': 'jean-patchwork-estrellas-violeta', 'ceniza': 'chaqueta-trouble-maker',
+                 'leopardo': 'jean-flare-patchwork-leopardo'}
 
 
 def texturas(carpeta, w, h, escala, coleccion):
@@ -104,6 +110,8 @@ def main():
                 img = foto.con_prenda(fondo, prenda)
                 if guarda:
                     img.save(SALIDA / 'prendas' / f'{prenda}.jpg', quality=90, optimize=True)
+                if prenda == UNA_POR_COLOR[coleccion]:
+                    img.save(SALIDA / f'coleccion-{nombre}.jpg', quality=90, optimize=True)
                 fila.append(img.resize((240, 300), Image.LANCZOS))
             filas.append(fila)
             print(nombre, len(PRENDAS[coleccion]), 'prendas')

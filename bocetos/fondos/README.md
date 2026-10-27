@@ -71,10 +71,23 @@ Chicle y Fiera la textura va más suave, porque sus manchas compiten con la pren
 | `por-coleccion/historia-<colección>.jpg` | 1080 × 1920 | La textura y los logos enteros, del tamaño de una historia. |
 | `por-coleccion/cuadro-<colección>.png` | 2400 × 2400 | El color de base de la textura con los logos. Empalma por los cuatro lados. |
 | `por-coleccion/prendas.jpg` | | Las prendas publicadas de cada colección sobre su fondo, una fila por colección. |
+| `por-coleccion/coleccion-<colección>.jpg` | 1600 × 2000 | La imagen de la colección en la tienda: su prenda de una por color sobre su fondo. |
 
 Las colecciones van por su nombre: `radiactivo`, `sangre-fria`, `medianoche`, `chicle`, `asfalto` y `fiera`. Las fichas
 de la tienda siguen con el fondo plateado; `python3 bocetos/fondos/por_coleccion.py prendas` deja también cada prenda
 sobre el fondo de su colección, en `por-coleccion/prendas/`.
+
+## Qué fondo va dónde
+
+| Dónde | Fondo | Por qué |
+| --- | --- | --- |
+| Las fotos de las prendas: ficha, tarjetas, Lo nuevo y posts | Plateado (`prendas/`) | Uno solo para toda la colección: la prenda es lo primero que se ve y el fondo combina con el color que tenga la tienda en cada turno. |
+| La imagen de cada colección de color: la página de colecciones y la vista del menú | El de su colección | Ahí la protagonista es la colección. Va con su prenda de una por color: Chaqueta Smiley Ácido, Top Halftone Carmín, Tejido Anillos Índigo, Jean Patchwork Estrellas Violeta, Chaqueta Trouble Maker y Jean Flare Patchwork Leopardo. |
+| Piezas que muestran las seis colecciones juntas | Con las colecciones | Lleva los seis colores sin que ninguno mande. |
+| Impresos sobre papel claro | En colores contrarios | Tinta sobre plata se lee sobre un fondo claro. |
+
+Así está en la tienda desde el 27 de octubre de 2026: las fichas con el plateado y cada colección de color con su
+imagen sobre su propio fondo.
 
 ## Para repetir
 
