@@ -4151,8 +4151,10 @@ a.hi-archive-link:hover .hi-archive-arrow {
   position: relative;
 }
 
+/* Las fotos de distinta proporción quedan centradas en el alto de la más alta. */
 .hi-gallery-track {
   display: flex;
+  align-items: center;
   gap: 14px;
   margin: 0 calc(-1 * var(--gutter));
   padding: 6px var(--gutter) 10px;
