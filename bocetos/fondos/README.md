@@ -55,6 +55,27 @@ El mismo estampado, con los logos en el mismo lugar, en otros colores:
 Las fichas de la tienda siguen con el fondo plateado. Para tener cada prenda sobre uno de estos fondos, en
 `prendas-colecciones/` o `prendas-tinta/`, se corre `python3 bocetos/fondos/prendas.py colecciones` (o `tinta`).
 
+## Un fondo para cada colección
+
+![Las seis colecciones, cada una con su fondo y sus prendas](por-coleccion/prendas.jpg)
+
+Los mismos logos, en el mismo lugar, sobre la textura de cada colección de color, la misma que dibuja la tienda cuando
+le toca el turno: el zigzag de Radiactivo, el semitono de Sangre Fría, el denim de Medianoche, las manchas de Chicle, la
+malla de Asfalto y el leopardo de Fiera. El logo va en el color de la colección; en Sangre Fría y Chicle va en hueso,
+como el texto de la tienda sobre esos colores, y en Fiera en el café oscuro del leopardo, para que no se pierda. En
+Chicle y Fiera la textura va más suave, porque sus manchas compiten con la prenda.
+
+| Archivo | Tamaño | Qué es |
+| --- | --- | --- |
+| `por-coleccion/prenda-<colección>.jpg` | 1600 × 2000 | Para poner detrás de las prendas, con la receta del fondo plateado: la textura apagada en las orillas, una luz suave en el centro y los logos apagados. |
+| `por-coleccion/historia-<colección>.jpg` | 1080 × 1920 | La textura y los logos enteros, del tamaño de una historia. |
+| `por-coleccion/cuadro-<colección>.png` | 2400 × 2400 | El color de base de la textura con los logos. Empalma por los cuatro lados. |
+| `por-coleccion/prendas.jpg` | | Las prendas publicadas de cada colección sobre su fondo, una fila por colección. |
+
+Las colecciones van por su nombre: `radiactivo`, `sangre-fria`, `medianoche`, `chicle`, `asfalto` y `fiera`. Las fichas
+de la tienda siguen con el fondo plateado; `python3 bocetos/fondos/por_coleccion.py prendas` deja también cada prenda
+sobre el fondo de su colección, en `por-coleccion/prendas/`.
+
 ## Para repetir
 
 | Archivo | Tamaño | Qué es |
@@ -68,12 +89,14 @@ seda o bolsas, e impreso a 300 puntos por pulgada mide 20 × 20 cm. El fondo es 
 
 ## Volver a generarlos
 
-Requiere Python 3 con Pillow y NumPy. Desde la raíz del repo:
+Requiere Python 3 con Pillow y NumPy; el de cada colección, también Node con Playwright (Chromium), porque las texturas
+salen del CSS de la tienda (`texturas.js` las dibuja desde `assets/hight.css`). Desde la raíz del repo:
 
 ```bash
 python3 bocetos/fondos/patron.py    # los cuadros y las historias, en las cuatro versiones
 python3 bocetos/fondos/prendas.py   # el fondo para las prendas en las cuatro versiones, las 20 prendas encima del
                                     # plateado y las hojas de los tres fondos con prendas
+python3 bocetos/fondos/por_coleccion.py   # un fondo para cada colección, con sus prendas en la hoja
 ```
 
 El logo plateado sale de `assets/hight-logo-plata.webp`, con un poco más de brillo para que en tamaño chico siga
