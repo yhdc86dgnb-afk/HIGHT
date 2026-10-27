@@ -20,7 +20,8 @@ COLS, FILAS, TRAZO = 6, 12, 2
 RECORTES = AQUI.parent / 'instagram' / 'imagenes'
 # Las prendas que la foto original corta por un lado: ese lado va contra el borde de la foto, para que el corte se vea
 # a propósito (igual que en los posts).
-CORTES = {'jean-wide-patchwork-indigo': 'der', 'tejido-anillos-indigo': 'der', 'jean-flare-dragon-acido': 'lados'}
+CORTES = {'jean-wide-patchwork-indigo': 'der', 'tejido-anillos-indigo': 'der', 'jean-flare-dragon-acido': 'lados',
+          'jean-wide-fleco-indigo': 'alto'}
 LUZ = (40, 38, 35)  # el gris cálido del centro, donde cae la luz
 
 
@@ -47,13 +48,20 @@ def con_prenda(fondo_img, prenda):
     rec = rec.crop(rec.getchannel('A').getbbox())
     corte = CORTES.get(prenda, '')
     w, h = rec.size
-    k = min(W / w, 0.92 * H / h) if corte == 'lados' else min(0.8 * H / h, 0.84 * W / w)
+    if corte == 'lados':
+        k = min(W / w, 0.92 * H / h)
+    elif corte == 'alto':
+        k = min(H / h, 0.92 * W / w)
+    else:
+        k = min(0.8 * H / h, 0.84 * W / w)
     rec = rec.resize((round(w * k), round(h * k)), Image.LANCZOS)
     x, y = (W - rec.width) // 2, (H - rec.height) // 2
     if corte == 'der':
         x = W - rec.width
     if corte == 'abajo':
         y = H - rec.height
+    if corte == 'alto':
+        y = 0
     # una sombra suave debajo, como la de una prenda colgada frente al fondo; nada de sombras duras
     alfa = Image.new('L', (W, H), 0)
     alfa.paste(rec.getchannel('A'), (x, y + round(0.012 * H)))

@@ -422,8 +422,8 @@ function copia(img, cx, cy, w, h, { rot = 0, scale = 1, alpha = 1, tape = true, 
   if (img) {
     const pl = corte.includes('izq') || corte === 'lados' ? 0 : pad * iw;
     const pr = corte.includes('der') || corte === 'lados' ? 0 : pad * iw;
-    const pt = pad * ih;
-    const pb = corte.includes('abajo') ? 0 : pad * ih;
+    const pt = corte.includes('arriba') || corte === 'alto' ? 0 : pad * ih;
+    const pb = corte.includes('abajo') || corte === 'alto' ? 0 : pad * ih;
     const bw = iw - pl - pr;
     const bh = ih - pt - pb;
     const s = Math.min(bw / img.width, bh / img.height);
@@ -689,7 +689,7 @@ const PRENDAS = {
   'jean-patchwork-cuadros': { name: 'Jean Patchwork Cuadros', type: 'Jean', cm: 'Recto · Patchwork', price: '$540.000', color: 'leopardo', acc: '#c08a4e' },
   'jean-patchwork-estrellas-violeta': { name: 'Jean Patchwork Estrellas Violeta', type: 'Jean', cm: 'Wide · Patchwork', price: '$650.000', color: 'magenta', acc: '#b06cff' },
   'jean-wide-patchwork-indigo': { name: 'Jean Wide Patchwork Índigo', type: 'Jean', cm: 'Wide · Patchwork', price: '$590.000', color: 'indigo', acc: '#5b7cfa', corte: 'der' },
-  'jean-wide-fleco-indigo': { name: 'Jean Wide Fleco Índigo', type: 'Jean', cm: 'Wide · Patchwork', price: '$620.000', color: 'indigo', acc: '#5b7cfa' },
+  'jean-wide-fleco-indigo': { name: 'Jean Wide Fleco Índigo', type: 'Jean', cm: 'Wide · Patchwork', price: '$620.000', color: 'indigo', acc: '#5b7cfa', corte: 'alto' },
   'short-camuflado-leopardo-rosa': { name: 'Short Camuflado Leopardo Rosa', type: 'Short', cm: 'Bermuda · Doble pretina', price: '$260.000', color: 'magenta', acc: '#e0218a' },
 };
 async function prendas(handles) {
