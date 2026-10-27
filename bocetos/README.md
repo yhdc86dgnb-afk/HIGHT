@@ -19,7 +19,7 @@ respuestas que cada ficha de la tienda da sin preguntas a la vista.
 | `correas/` | Las 12 correas de tachas en vector (se abren en Illustrator) y el programa que las dibuja. |
 | `instagram/` | Los 20 posts del lanzamiento, sus pies de foto y el orden de publicación. |
 | `reels/` | Los cuatro reels del lanzamiento, en MP4, y cómo se arman. |
-| `fondos/` | El fondo de logos de Hight en plateado sobre negro, como un estampado de perchas. |
+| `fondos/` | El fondo de logos de Hight en plateado sobre negro: para poner detrás de las prendas (con las 19 prendas ya puestas) y para repetir. |
 
 Los números siguen el orden en que las prendas entraron a la tienda.
 

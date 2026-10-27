@@ -48,9 +48,10 @@ def logo_contorno(ancho, silueta, trazo):
     return marca
 
 
-def patron(w, h, cols, filas, dibuja, semilla=7):
+def patron(w, h, cols, filas, dibuja, semilla=7, fondo=FONDO):
+    """El patrón sobre `fondo`; con fondo=None devuelve solo los logos, sobre transparente."""
     rnd = random.Random(semilla)
-    lienzo = Image.new('RGBA', (w, h), FONDO)
+    lienzo = Image.new('RGBA', (w, h), fondo or (0, 0, 0, 0))
     cw, ch = w / cols, h / filas
     for r in range(filas):
         corrida = 0.5 if r % 2 else 0
@@ -62,11 +63,20 @@ def patron(w, h, cols, filas, dibuja, semilla=7):
             # se dibuja también del otro lado de cada borde, para que el patrón empalme
             for dx in (-w, 0, w):
                 for dy in (-h, 0, h):
-                    lienzo.paste(marca, (round(x - marca.width / 2) + dx, round(y - marca.height / 2) + dy), marca)
-    return lienzo.convert('RGB')
+                    pega(lienzo, marca, round(x - marca.width / 2) + dx, round(y - marca.height / 2) + dy)
+    return lienzo.convert('RGB') if fondo else lienzo
 
 
-def main():
+def pega(lienzo, marca, x, y):
+    """Compone `marca` sobre `lienzo` en (x, y), recortando lo que cae afuera."""
+    x0, y0 = max(0, x), max(0, y)
+    x1, y1 = min(lienzo.width, x + marca.width), min(lienzo.height, y + marca.height)
+    if x1 > x0 and y1 > y0:
+        lienzo.alpha_composite(marca, (x0, y0), (x0 - x, y0 - y, x1 - x, y1 - y))
+
+
+def logos(trazo):
+    """Las dos formas de dibujar el logo a un ancho dado: plateado tal cual y en contorno plateado."""
     # el logo plateado con un poco más de brillo, para que en tamaño chico siga viéndose como metal sobre el negro
     plata = Image.open(ASSETS / 'hight-logo-plata.webp').convert('RGBA')
     brillo = [round(255 * (i / 255) ** 0.8) for i in range(256)]
@@ -75,12 +85,15 @@ def main():
     # la silueta limpia para el contorno: se cierran los poros de la textura para que el borde no salga picado
     silueta = (Image.open(ASSETS / 'hight-logo-tinta.webp').convert('RGBA').getchannel('A')
                .point(lambda v: 255 if v > 90 else 0).filter(ImageFilter.MaxFilter(7)).filter(ImageFilter.MinFilter(7)))
+    return {
+        'plata': lambda ancho: logo_plata(ancho, plata),
+        'plata-contorno': lambda ancho: logo_contorno(ancho, silueta, trazo),
+    }
+
+
+def main():
     for formato, (w, h, cols, filas, trazo) in FORMATOS.items():
-        versiones = {
-            'plata': lambda ancho: logo_plata(ancho, plata),
-            'plata-contorno': lambda ancho: logo_contorno(ancho, silueta, trazo),
-        }
-        for nombre, dibuja in versiones.items():
+        for nombre, dibuja in logos(trazo).items():
             img = patron(w, h, cols, filas, dibuja)
             destino = AQUI / f'{formato}-{nombre}.png'
             img.save(destino, optimize=True)
