@@ -25,6 +25,12 @@ Flare Dragón Ácido) van con ese lado contra el borde, para que el corte se vea
 que la foto corta arriba y abajo, va de alto completo. La Chaqueta Blood Rose no
 está porque todavía no tiene foto.
 
+Las 19 ya están en la tienda: cada una va en su ficha después de las fotos originales, con el texto alternativo
+«*Prenda*, sobre el fondo de Hight». En el catálogo aparece al pasar el cursor por la tarjeta, porque es la segunda foto
+(en la Chaqueta Trouble Maker la segunda es la espalda, que es la que se ve). La
+Lupa del inicio toma la siguiente foto de la ficha como espalda, pero se salta la que tiene ese texto, así que el Jean
+Flare Patchwork Leopardo y el Tejido Anillos Índigo siguen sin espalda y la Chaqueta Trouble Maker sigue con la suya.
+
 Para una foto nueva, fotografía la prenda sobre un fondo liso, recórtala y ponla encima de `prenda-plata.png` con el
 mismo tamaño y margen que las demás.
 
