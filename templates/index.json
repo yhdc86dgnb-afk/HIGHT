@@ -89,6 +89,7 @@
     "cinta": {
       "type": "correas",
       "settings": {
+        "product": "correa-de-tachas",
         "speed": 120,
         "direction": "left",
         "scroll_boost": true,

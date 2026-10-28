@@ -26,7 +26,35 @@ Cada `correa-XX.svg` se abre y se edita en Illustrator. Las tachas son símbolos
 domo), cambian todos.
 
 En la tienda van en la sección *Correas* del inicio, que reemplazó a la cinta de texto: dos filas que corren en
-sentidos contrarios.
+sentidos contrarios. Cada una lleva a su opción en la ficha y las que ya se vendieron se ven apagadas.
+
+## A la venta
+
+Las doce se venden en una sola ficha, *Correa de tachas* (`/products/correa-de-tachas`), con una opción por correa
+(*Correa*: 01 a 12, el mismo número de esta tabla):
+
+- $220.000 cada una, entre la camiseta ($169.000) y el short ($260.000).
+- Una unidad de cada una: ninguna se repite, y cuando se vende ya no se puede comprar.
+- Tipo de producto *Correa*: entran en la colección *Correas* (en el menú, debajo de *Tienda*) y no en *Lo nuevo* ni
+  en Desliza.
+- La descripción lista las doce con su cuero y su dibujo, y avisa que las fotos son dibujos hechos a partir de la foto
+  y que a quien quiera ver la suya se le manda una foto.
+
+## Las fotos de la ficha
+
+En `fotos/`, con la receta de las fotos de las prendas (`../fondos/prendas.py`): 1.600 × 2.000, sobre el fondo de
+logos plateados y con una sombra suave.
+
+- `correas.jpg`: las doce de pie, con la hebilla arriba y en el orden de la foto. Es la foto principal de la ficha y
+  la imagen de la colección.
+- `correa-01.jpg` a `correa-12.jpg`: cada una sola, en diagonal. Cada opción de la ficha muestra la suya.
+
+```bash
+python3 bocetos/correas/fotos.py
+```
+
+`fotos.py` pasa cada `correa-XX.svg` a PNG con `dibujos.js` (Node con Playwright y Chromium) y las pone sobre
+`../fondos/prenda-plata.png`. Cuando haya fotos reales de cada correa sola, sobre fondo liso, reemplazan a estas.
 
 ## Cómo se arman
 

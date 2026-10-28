@@ -7,13 +7,24 @@
   assign card_count = 0
 -%}
 
-{%- comment -%} Prendas disponibles con foto y, si tiene, la colección de color a la que pertenece. {%- endcomment -%}
+{%- comment -%}
+  Prendas disponibles con foto y, si tiene, la colección de color a la que pertenece. Solo prendas: lo que no es de
+  arriba, de encima ni de abajo (las correas) no entra, porque sus opciones no son tallas.
+{%- endcomment -%}
 {%- capture desliza_cards -%}
   {%- for candidate in source.products limit: 60 -%}
     {%- if candidate.available == false or candidate.featured_media == blank -%}
       {%- continue -%}
     {%- endif -%}
     {%- liquid
+      capture candidate_group
+        render 'outfit-group', type: candidate.type
+      endcapture
+      assign candidate_group = candidate_group | strip
+      if candidate_group == ''
+        continue
+      endif
+
       assign candidate_image = candidate.featured_media.preview_image
       assign candidate_variant = candidate.selected_or_first_available_variant
       assign candidate_alt = candidate_image.alt | default: candidate.title

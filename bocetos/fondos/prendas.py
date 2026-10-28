@@ -15,7 +15,7 @@ Con colecciones o tinta, también deja cada prenda sobre ese fondo, en prendas-c
 import sys
 
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image, ImageChops, ImageFilter
 
 from patron import AQUI, FONDO, logos, patron
 
@@ -73,14 +73,23 @@ def con_prenda(fondo_img, prenda):
         y = H - rec.height
     if corte == 'alto':
         y = 0
-    # una sombra suave debajo, como la de una prenda colgada frente al fondo; nada de sombras duras
+    return pon(fondo_img, [(rec, x, y)])
+
+
+def pon(fondo_img, piezas):
+    """Las piezas (imagen con transparencia, x, y) sobre el fondo, con una sombra suave debajo, como la de una prenda
+    colgada frente al fondo; nada de sombras duras."""
     alfa = Image.new('L', (W, H), 0)
-    alfa.paste(rec.getchannel('A'), (x, y + round(0.012 * H)))
+    for rec, x, y in piezas:
+        capa = Image.new('L', (W, H), 0)
+        capa.paste(rec.getchannel('A'), (x, y + round(0.012 * H)))
+        alfa = ImageChops.lighter(alfa, capa)
     alfa = alfa.filter(ImageFilter.GaussianBlur(0.018 * W)).point(lambda v: round(v * 0.55))
     sombra = Image.new('RGBA', (W, H), (0, 0, 0, 0))
     sombra.putalpha(alfa)
     out = Image.alpha_composite(fondo_img.convert('RGBA'), sombra)
-    out.alpha_composite(rec, (x, y))
+    for rec, x, y in piezas:
+        out.alpha_composite(rec, (x, y))
     return out.convert('RGB')
 
 

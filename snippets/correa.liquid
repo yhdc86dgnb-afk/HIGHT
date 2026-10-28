@@ -1,0 +1,44 @@
+{%- doc -%}
+  Una correa de la cinta del inicio: su dibujo en vector (assets/correa-XX.svg) y, si la sección tiene la ficha de
+  las correas, el enlace a la opción con su mismo número (la 01 lleva a la opción 01). La que ya se vendió se ve
+  apagada y su enlace lo dice.
+
+  @param {number} number - Número de la correa, de 1 a 12
+  @param {product} [product] - Ficha de las correas
+  @param {boolean} [copy] - Si va en la copia de la fila que da la vuelta: el enlace queda fuera del tabulador
+
+  @example
+  {% render 'correa', number: 7, product: section.settings.product %}
+{%- enddoc -%}
+{%- liquid
+  assign num = number | prepend: '0' | slice: -2, 2
+  assign file = 'correa-' | append: num | append: '.svg'
+  assign belt_variant = nil
+  if product != blank
+    assign belt_variant = product.variants | where: 'title', num | first
+    assign belt_price = belt_variant.price | money_without_trailing_zeros
+  endif
+-%}
+<li class="hi-belt{% if belt_variant and belt_variant.available == false %} is-sold{% endif %}">
+  {%- if belt_variant -%}
+    <a
+      href="{{ belt_variant.url }}"
+      class="hi-belt-link"
+      data-cursor="{{ 'general.cursor_view' | t }}"
+      {% if copy %}
+        tabindex="-1"
+      {% endif %}
+    >
+      <img src="{{ file | asset_url }}" alt="" width="2412" height="170" loading="lazy" decoding="async">
+      <span class="visually-hidden">
+        {%- if belt_variant.available -%}
+          {{ 'products.belt_label' | t: number: num, price: belt_price }}
+        {%- else -%}
+          {{ 'products.belt_sold' | t: number: num }}
+        {%- endif -%}
+      </span>
+    </a>
+  {%- else -%}
+    <img src="{{ file | asset_url }}" alt="" width="2412" height="170" loading="lazy" decoding="async">
+  {%- endif -%}
+</li>

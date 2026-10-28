@@ -12,8 +12,11 @@
       assign option_name = option.name | downcase
       if option_name contains 'talla' or option_name contains 'size'
         assign option_text = 'cart.size_value' | t: value: option.value
-      else
+      elsif option_name == 'color' or option_name == 'colour' or option_name == 'colores'
         assign option_text = option.value
+      else
+        # Las demás opciones llevan su nombre, como la talla: "Correa 07".
+        assign option_text = option.name | append: ' ' | append: option.value
       endif
       if line_meta != ''
         assign line_meta = line_meta | append: ' · '

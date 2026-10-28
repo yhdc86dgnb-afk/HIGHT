@@ -11,38 +11,22 @@
 
 {%- comment -%}
   Las 12 correas de tachas, dibujadas en vector (bocetos/correas/), en dos filas que corren en sentidos contrarios:
-  arriba las seis primeras de la foto, abajo las otras seis.
+  arriba las seis primeras de la foto, abajo las otras seis. Con la ficha de las correas elegida, cada una lleva a su
+  opción. La copia de cada fila, la que da la vuelta, también se puede tocar: queda fuera del lector de pantalla y del
+  tabulador, pero no inerte.
 {%- endcomment -%}
-{%- capture belts_a -%}
-  {%- for i in (1..6) -%}
-    {%- assign num = i | prepend: '0' | slice: -2, 2 -%}
-    {%- assign file = 'correa-' | append: num | append: '.svg' -%}
-    <li class="hi-belt">
-      <img src="{{ file | asset_url }}" alt="" width="2412" height="170" loading="lazy" decoding="async">
-    </li>
-  {%- endfor -%}
-{%- endcapture -%}
-{%- capture belts_b -%}
-  {%- for i in (7..12) -%}
-    {%- assign num = i | prepend: '0' | slice: -2, 2 -%}
-    {%- assign file = 'correa-' | append: num | append: '.svg' -%}
-    <li class="hi-belt">
-      <img src="{{ file | asset_url }}" alt="" width="2412" height="170" loading="lazy" decoding="async">
-    </li>
-  {%- endfor -%}
-{%- endcapture -%}
-
 <div class="hi-band-wrap" style="--tilt: {{ section.settings.tilt }}deg;">
   <div class="hi-band hi-belts {{ band_class }}">
     {%- for row in (1..2) -%}
       {%- liquid
         if row == 1
-          assign row_items = belts_a
+          assign row_first = 1
           assign row_direction = section.settings.direction
         else
-          assign row_items = belts_b
+          assign row_first = 7
           assign row_direction = second
         endif
+        assign row_last = row_first | plus: 5
       -%}
       <hi-marquee
         class="hi-marquee"
@@ -54,10 +38,14 @@
       >
         <div class="hi-marquee-track">
           <ul class="hi-marquee-group" role="list">
-            {{- row_items -}}
+            {%- for i in (row_first..row_last) -%}
+              {%- render 'correa', number: i, product: section.settings.product -%}
+            {%- endfor -%}
           </ul>
-          <ul class="hi-marquee-group" role="list" aria-hidden="true" inert>
-            {{- row_items -}}
+          <ul class="hi-marquee-group" role="list" aria-hidden="true">
+            {%- for i in (row_first..row_last) -%}
+              {%- render 'correa', number: i, product: section.settings.product, copy: true -%}
+            {%- endfor -%}
           </ul>
         </div>
       </hi-marquee>
@@ -74,6 +62,12 @@
     {
       "type": "paragraph",
       "content": "Las correas de tachas, dibujadas en vector, corren de lado a lado en dos filas. Al hacer scroll se aceleran."
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Ficha de las correas",
+      "info": "Cada correa lleva a la opción con su número: la 01 a la opción 01, y así. Las que ya se vendieron se ven apagadas."
     },
     {
       "type": "range",

@@ -95,6 +95,8 @@
     },
     "unique_tag": "PIEZA ÚNICA",
     "unique_note": "Una sola pieza. Cuando se vende, no vuelve.",
+    "belt_label": "Correa {{ number }}, {{ price }}",
+    "belt_sold": "Correa {{ number }}, agotada",
     "photo_placeholder": "FOTO",
     "gallery_label": "Fotos del producto",
     "gallery_count": "{{ index }} / {{ count }}",

@@ -141,8 +141,8 @@ Prendas intervenidas a mano y piezas de archivo.
 `posts/09.jpg`
 
 > Correas con tachas, piedras e incrustaciones.
-> Doce, y ninguna se repite.
-> Míralas moverse en el inicio de la tienda.
+> Doce, y ninguna se repite: hay una sola de cada una.
+> $220.000 cada una, en el enlace de la bio.
 >
 > #HIGHT #Drop01 #Tachas
 
@@ -231,8 +231,8 @@ Prendas intervenidas a mano y piezas de archivo.
 `posts/18.jpg`
 
 > Tachas, piedras, incrustaciones y hebillas plateadas.
-> Doce correas, ninguna igual.
-> Corren en la franja del inicio de la tienda.
+> Doce correas, ninguna igual, a $220.000 cada una.
+> Cuando se vende una, no vuelve.
 >
 > #HIGHT #Tachas #Medellín
 
@@ -300,7 +300,7 @@ canción no aparece o el reel se va a promocionar, se sube la versión con músi
 `../reels/correas-sin-musica.mp4` con «Dracula» (con música propia: `../reels/correas.mp4`)
 
 > Doce correas de tachas, ninguna igual.
-> Tachas, piedras e incrustaciones, en el inicio de la tienda.
+> Una de cada una, a $220.000, en el enlace de la bio.
 > ¿Cuál es la tuya? Cuéntanos en los comentarios.
 >
 > #HIGHT #Tachas #Medellín

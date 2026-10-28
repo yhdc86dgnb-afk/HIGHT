@@ -16,7 +16,7 @@ respuestas que cada ficha de la tienda da sin preguntas a la vista.
 | `vector/` | La Chaqueta Trouble Maker dibujada en vector, de frente y de espalda, plana y con texturas, para el visor 360. |
 | `vector/generador/` | El generador de la vista 360: arma el dibujo y los archivos del visor de cualquier prenda a partir de su foto. |
 | `video/` | El video de campaña: las 26 prendas en 3D colgadas de dos rieles, y cómo se arma. |
-| `correas/` | Las 12 correas de tachas en vector (se abren en Illustrator) y el programa que las dibuja. |
+| `correas/` | Las 12 correas de tachas en vector (se abren en Illustrator), el programa que las dibuja y las fotos de su ficha en la tienda. |
 | `instagram/` | Los 20 posts del lanzamiento, sus pies de foto y el orden de publicación. |
 | `reels/` | Los cuatro reels del lanzamiento, en MP4, y cómo se arman. |
 | `fondos/` | El fondo de logos de Hight en plateado sobre negro: para poner detrás de las prendas (con las 20 prendas ya puestas) y para repetir. También en los colores de las colecciones, en colores contrarios (tinta sobre plata) y uno para cada colección, sobre su textura. |

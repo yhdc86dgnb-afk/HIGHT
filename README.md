@@ -38,7 +38,7 @@ Toda la marca renovada (logo, color, tipografía, motivos, fotografía, Instagra
   si se quiere volver a usar.
 - **Desliza (¿Te la pondrías?):** las prendas salen una por una; a la derecha si te la pondrías, a la izquierda si
   no (arrastrando, con los botones o con las flechas del teclado). Las favoritas se guardan en el navegador, suman su
-  total y se agregan juntas al carrito.
+  total y se agregan juntas al carrito. Solo entran prendas: las correas no.
 - **Vista 360:** cada prenda tiene un botón **360°** en su ficha y en las tarjetas del catálogo. La abre dibujada en
   vector, como sacada de Illustrator, con las texturas de su tela, para girarla en cualquier dirección (más abajo,
   en [Vista 360 de las prendas](#vista-360-de-las-prendas)).
@@ -49,7 +49,8 @@ Toda la marca renovada (logo, color, tipografía, motivos, fotografía, Instagra
 - **Correas:** debajo del hero, las 12 correas de tachas dibujadas en vector (`assets/correa-01.svg` a `-12.svg`,
   hechas con [`bocetos/correas/`](bocetos/correas/README.md)) corren en dos filas en sentidos contrarios sobre una
   franja del color de acento. Se mueven solas, van más lento con el cursor encima y se aceleran con el scroll; si el
-  dispositivo pide menos movimiento, siguen moviéndose, pero despacio.
+  dispositivo pide menos movimiento, siguen moviéndose, pero despacio. Cada correa lleva a su opción en la ficha
+  *Correa de tachas* (se elige en la sección, en *Ficha de las correas*) y las que ya se vendieron se ven apagadas.
 - **Hero collage:** el logo al centro y las prendas como fotos pegadas con cinta. En computador se arrastran y se
   mueven con el cursor; en el teléfono flotan. El botón **MEZCLAR** las reparte de nuevo.
 - **Cintas de texto:** corren de lado a lado y aceleran cuando haces scroll.
@@ -81,10 +82,11 @@ Todo respeta la opción de reducir movimiento del teléfono o del computador, y 
 
 | Colección | Qué entra | Color | Dirección |
 | --- | --- | --- | --- |
-| Lo nuevo | Todas las piezas, de la más nueva a la más vieja (fila del home) | — | `/collections/lo-nuevo` |
+| Lo nuevo | Todas las prendas, de la más nueva a la más vieja (fila del home); las de tipo Correa no | — | `/collections/lo-nuevo` |
 | Pantalones | Tipo de producto Jean, Pantalón o Short | — | `/collections/pantalones` |
 | Tops | Tipo Top o Camiseta | — | `/collections/tops` |
 | Buzos y tejidos | Tipo Buzo, Tejido o Chaqueta | — | `/collections/buzos-y-tejidos` |
+| Correas | Tipo Correa | — | `/collections/correas` |
 | **Radiactivo** | Etiqueta `Color Ácido`: amarillo neón y verdes sobreteñidos | `#dff04a` | `/collections/acido` |
 | **Sangre Fría** | Etiqueta `Color Carmín`: rojo carmín | `#c3142d` | `/collections/carmin` |
 | **Medianoche** | Etiqueta `Color Índigo`: índigo y azul noche | `#5b7cfa` | `/collections/indigo` |
@@ -98,8 +100,14 @@ dirección y la etiqueta, así que los enlaces viejos siguen funcionando y no hu
 Son colecciones automáticas: una prenda nueva entra sola si tiene el tipo o la etiqueta. El color se cambia en
 *Productos > Colecciones > (colección) > Metacampos > Color de la colección*; con ese campo lleno, la colección
 aparece con su punto en el menú, en la fila de colores y en la lista de colecciones, y pinta la tienda al abrirla.
-El menú principal queda así: Tienda, Pantalones, Tops, Buzos y tejidos, Colores (con los 6 colores adentro) y
-Contacto.
+El menú principal queda así: Tienda (con Tops, Pantalones, Buzos y tejidos, Correas y Colores, que tiene los 6
+colores adentro) y Contacto.
+
+Las correas se venden en una sola ficha, *Correa de tachas*: doce opciones (de la 01 a la 12, en el orden de la foto),
+$220.000 cada una y una unidad de cada una. Sus fotos son los dibujos sobre el fondo plateado
+([`bocetos/correas/fotos/`](bocetos/correas/README.md)) y la ficha lo dice. Al elegir una, la ficha muestra su foto;
+en el carrito sale como «Correa 07». No entran en *Lo nuevo* ni en Desliza, y como no tienen tallas, la ficha dice que
+son de talla única en vez de la nota de tallas.
 
 ![Colecciones](docs/preview/colecciones.jpg)
 

@@ -160,7 +160,10 @@
           {%- else -%}
             <div class="hi-variant-block" {{ block.shopify_attributes }}>
               {% render 'variant-picker', product: product, section_id: section.id %}
-              {%- if fit_note != blank -%}
+              {%- comment -%} La nota habla de tallas: sin tallas para elegir (las correas), la pieza es de talla única. {%- endcomment -%}
+              {%- if size_option_position == 0 -%}
+                <p class="hi-product-fit">{{ 'products.size_unique_note' | t }}</p>
+              {%- elsif fit_note != blank -%}
                 <p class="hi-product-fit">{{ fit_note | escape }}</p>
               {%- endif -%}
               {%- if block.settings.show_size_guide and size_option_position > 0 -%}

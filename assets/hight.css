@@ -1495,6 +1495,22 @@ details[open] > .hi-acc-btn .hi-acc-minus {
   height: clamp(54px, 7vw, 104px);
 }
 
+.hi-belt-link {
+  display: block;
+  transition: transform 0.2s var(--ease);
+}
+
+.hi-belt-link:hover,
+.hi-belt-link:focus-visible {
+  transform: translateY(-3px);
+}
+
+/* La que ya se vendió sigue en la cinta, apagada como las tarjetas agotadas */
+.hi-belt.is-sold img {
+  filter: grayscale(1) contrast(0.9);
+  opacity: 0.5;
+}
+
 /* ---------- Header y menú ---------- */
 
 .hi-header-section {
