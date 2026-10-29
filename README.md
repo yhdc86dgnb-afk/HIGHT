@@ -97,6 +97,10 @@ Todo respeta la opción de reducir movimiento del teléfono o del computador, y 
 Cada color tiene nombre propio, descripción y título para buscadores. Al cambiarles el nombre se dejaron igual la
 dirección y la etiqueta, así que los enlaces viejos siguen funcionando y no hubo que volver a etiquetar las prendas.
 
+Cada prenda abre con su foto sobre el fondo plateado de la marca y sigue con la misma prenda sobre el fondo de su
+colección, que es la que sale al pasar el cursor por la tarjeta. Los fondos están en
+[`bocetos/fondos/`](bocetos/fondos/README.md).
+
 Son colecciones automáticas: una prenda nueva entra sola si tiene el tipo o la etiqueta. El color se cambia en
 *Productos > Colecciones > (colección) > Metacampos > Color de la colección*; con ese campo lleno, la colección
 aparece con su punto en el menú, en la fila de colores y en la lista de colecciones, y pinta la tienda al abrirla.

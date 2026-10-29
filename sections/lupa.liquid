@@ -17,9 +17,17 @@
       if front_image == blank
         assign front_image = item_product.featured_media.preview_image
       endif
+      # La espalda es la primera foto que dice "espalda" en su texto alternativo, no la segunda: la segunda es la
+      # prenda sobre el fondo de su colección.
       assign back_image = block.settings.image_back
-      if back_image == blank and item_product.media.size > 1
-        assign back_image = item_product.media[1].preview_image
+      if back_image == blank
+        for item_media in item_product.media
+          assign item_media_alt = item_media.alt | downcase
+          if item_media_alt contains 'espalda'
+            assign back_image = item_media.preview_image
+            break
+          endif
+        endfor
       endif
       assign spot_offset = forloop.index
       assign front_label = block.settings.label_front
@@ -251,7 +259,7 @@
           "type": "image_picker",
           "id": "image_back",
           "label": "Foto de la espalda",
-          "info": "Si queda vacía y la prenda tiene una segunda foto, usa esa."
+          "info": "Si queda vacía, usa la primera foto de la prenda que diga «espalda» en su texto alternativo."
         },
         {
           "type": "text",

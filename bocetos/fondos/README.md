@@ -72,22 +72,26 @@ Chicle y Fiera la textura va más suave, porque sus manchas compiten con la pren
 | `por-coleccion/cuadro-<colección>.png` | 2400 × 2400 | El color de base de la textura con los logos. Empalma por los cuatro lados. |
 | `por-coleccion/prendas.jpg` | | Las prendas publicadas de cada colección sobre su fondo, una fila por colección. |
 | `por-coleccion/coleccion-<colección>.jpg` | 1600 × 2000 | La imagen de la colección en la tienda: su prenda de una por color sobre su fondo. |
+| `por-coleccion/prendas/<prenda>.jpg` | 1600 × 2000 | Cada prenda sobre el fondo de su colección (y la espalda de la Chaqueta Trouble Maker): la segunda foto de su ficha. |
 
-Las colecciones van por su nombre: `radiactivo`, `sangre-fria`, `medianoche`, `chicle`, `asfalto` y `fiera`. Las fichas
-de la tienda siguen con el fondo plateado; `python3 bocetos/fondos/por_coleccion.py prendas` deja también cada prenda
-sobre el fondo de su colección, en `por-coleccion/prendas/`.
+Las colecciones van por su nombre: `radiactivo`, `sangre-fria`, `medianoche`, `chicle`, `asfalto` y `fiera`.
+`python3 bocetos/fondos/por_coleccion.py prendas` deja también cada prenda sobre el fondo de su colección, en
+`por-coleccion/prendas/`; en la tienda, cada ficha las lleva de segunda foto.
 
 ## Qué fondo va dónde
 
 | Dónde | Fondo | Por qué |
 | --- | --- | --- |
-| Las fotos de las prendas: ficha, tarjetas, Lo nuevo y posts | Plateado (`prendas/`) | Uno solo para toda la colección: la prenda es lo primero que se ve y el fondo combina con el color que tenga la tienda en cada turno. |
+| La primera foto de cada prenda: ficha, tarjetas, Lo nuevo y posts | Plateado (`prendas/`) | Uno solo para toda la tienda: la prenda es lo primero que se ve y el fondo combina con el color que tenga la tienda en cada turno. |
+| La segunda foto de cada prenda: la que sale al pasar el cursor por la tarjeta y la segunda de la ficha | El de su colección (`por-coleccion/prendas/`) | Muestra a qué colección pertenece la prenda, sin cambiar la primera foto. La Chaqueta Trouble Maker lleva frente y espalda en los dos fondos. |
 | La imagen de cada colección de color: la página de colecciones y la vista del menú | El de su colección | Ahí la protagonista es la colección. Va con su prenda de una por color: Chaqueta Smiley Ácido, Top Halftone Carmín, Tejido Anillos Índigo, Jean Patchwork Estrellas Violeta, Chaqueta Trouble Maker y Jean Flare Patchwork Leopardo. |
 | Piezas que muestran las seis colecciones juntas | Con las colecciones | Lleva los seis colores sin que ninguno mande. |
 | Impresos sobre papel claro | En colores contrarios | Tinta sobre plata se lee sobre un fondo claro. |
 
-Así está en la tienda desde el 27 de octubre de 2026: las fichas con el plateado y cada colección de color con su
-imagen sobre su propio fondo.
+Así está en la tienda desde el 29 de octubre de 2026: cada ficha abre con la prenda sobre el plateado y sigue con la
+misma prenda sobre el fondo de su colección, y cada colección de color tiene su imagen sobre su propio fondo. Las
+correas no son de ninguna colección de color y se quedan con el plateado. La Lupa del inicio busca la espalda por el
+texto alternativo de la foto («espalda»), así que la segunda foto no se confunde con la espalda.
 
 ## Para repetir
 
