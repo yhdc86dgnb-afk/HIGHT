@@ -19,6 +19,7 @@ respuestas que cada ficha de la tienda da sin preguntas a la vista.
 | `correas/` | Las 12 correas de tachas en vector (se abren en Illustrator), el programa que las dibuja y las fotos de su ficha en la tienda. |
 | `instagram/` | Los 20 posts del lanzamiento, sus pies de foto y el orden de publicación. |
 | `reels/` | Los cuatro reels del lanzamiento, en MP4, y cómo se arman. |
+| `lanzamiento-sin-texto/` | La campaña de lanzamiento sin letras: 15 posts, sus carruseles y tres reels hechos con procesos de copia (negativo, mármol, luz roja, fantasma, cianotipia y escaneo), con su calendario y cómo publicarla. |
 | `fondos/` | El fondo de logos de Hight en plateado sobre negro: para poner detrás de las prendas (con las 20 prendas ya puestas) y para repetir. También en los colores de las colecciones, en colores contrarios (tinta sobre plata) y uno para cada colección, sobre su textura, con sus prendas encima (la segunda foto de cada ficha). |
 
 Los números siguen el orden en que las prendas entraron a la tienda.
