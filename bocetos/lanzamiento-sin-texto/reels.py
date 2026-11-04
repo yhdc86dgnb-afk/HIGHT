@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-"""Los tres reels de la campaña sin texto, en 1080 × 1920 y a 30 cuadros por segundo, sin una sola letra:
+"""Tres reels de la campaña sin texto, en 1080 × 1920 y a 30 cuadros por segundo, sin una sola letra, y lo que usan
+todos los reels (los de reels_diarios.py también): el grano, el cierre de la estrella, el sonido y ffmpeg.
 
   adelanto  día −4  La luz que se cuela por las orillas, el mármol que se revuelve, seis cortes al golpe con los
-                    procesos (negativo, luz roja, fantasma, cianotipia, escaneo, plata) y la estrella que cae.
+                    procesos (negativo, luz roja, fantasma, cianotipia, escaneo, plata) y la estrella que cae. Sale de
+                    la cuadrícula del perfil.
   revelado  día 0   El cuarto oscuro: con la luz roja, las prendas aparecen una por una en el papel, como una copia en
-                    la cubeta; se prende la luz y salen las 20 piezas a color; cae la estrella.
+                    la cubeta; se prende la luz y salen las 20 piezas a color; cae la estrella. Sale de la cuadrícula.
   correas   día +1  Las correas en la luz roja de grano suelto, con destellos en las tachas; un latigazo parte la
-                    pantalla en dos y cae la estrella.
+                    pantalla en dos y cae la estrella. Es el cuadro del día +1.
 
-Los tres cierran igual que los reels anteriores de la marca: la estrella cae de arriba, golpea y suena lo mismo, el
+Todos cierran igual que los reels anteriores de la marca: la estrella cae de arriba, golpea y suena lo mismo, el
 golpe grave y las tres campanas en re mayor. El sonido sale de ../reels/sonido.py (música propia y efectos); cada reel
 viene con música (<reel>.mp4) y solo con los efectos (<reel>-sin-musica.mp4), para ponerle una canción en Instagram.
 
@@ -108,27 +110,42 @@ def ventana_fugas(lienzo_f, t, vel=(0.05, 0.03), escala=1.6):
 
 
 class Cierre:
-    """El cierre de los tres reels: sobre negro, la estrella cae de arriba, golpea en el centro con un destello y se
-    queda encendida, con su resplandor y su cruz de luz, y las luces de colores entrando tenues por las orillas."""
+    """El cierre de los reels: la estrella cae de arriba, golpea en el centro con un destello y se queda encendida, con
+    su resplandor y su cruz de luz. De noche cae sobre negro, con las luces de colores entrando tenues por las orillas;
+    en papel se quema en el hueso, como el post de la estrella, con las luces que se cuelan por las orillas."""
 
-    def __init__(self):
+    def __init__(self, papel=False):
         yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
         self.yy, self.xx = yy, xx
+        self.papel = papel
         self.fugas = np.zeros((H, W, 3), np.float32)
         esquinas = [(0.0, 0.05), (1.0, 0.12), (1.02, 0.55), (0.95, 0.98), (0.05, 0.95), (-0.02, 0.5)]
         for i, (c, (ex, ey)) in enumerate(zip(pr.SEIS.values(), esquinas)):
-            self.fugas += pr.fuga(H, W, ex * W, ey * H, W * 0.22, c, 300 + i)
+            self.fugas += pr.fuga(H, W, ex * W, ey * H, W * (0.26 if papel else 0.22), c, 300 + i)
         self.fugas = np.clip(self.fugas, 0, 1)
         self.tam = int(W * 0.44)
+        if papel:
+            self.hueso = pr.rayas(pr.lienzo(W, H, pr.HUESO), 302, n=6, polvo=140, color=pr.CARBON, fuerza=0.3)
+
+    def fondo(self, aparece):
+        if self.papel:
+            return pr.colar(self.hueso, self.fugas, 0.35 + 0.3 * aparece)
+        return pr.pantalla(np.zeros((H, W, 3), np.float32), self.fugas * (0.12 + 0.13 * aparece))
 
     def pintar(self, t, golpe, cy, tam, aparece):
-        base = pr.pantalla(np.zeros((H, W, 3), np.float32), self.fugas * (0.12 + 0.13 * aparece))
+        img = self.fondo(aparece)
         brillo = 0.55 + 0.45 * aparece
-        img = pr.brillo_estrella(base, W / 2, cy, tam, pr.AZUL_HONDO, halo=pr.AZUL * 0.6 + 0.4, fuerza=brillo)
-        if t >= golpe:
+        if self.papel and t >= golpe:
+            # en el papel la cruz tiñe de azul, como en el post de la estrella
             dx, dy = np.abs(self.xx - W / 2) / W, np.abs(self.yy - cy) / H
-            cruz = (np.exp(-dy * 90) * np.exp(-dx * 2.0) + np.exp(-dx * 90) * np.exp(-dy * 2.4)) * (0.4 + 0.6 * aparece)
-            img = pr.pantalla(img, (pr.AZUL * 0.7 + 0.3) * cruz[..., None] * 0.8)
+            cruz = (np.exp(-dy * 90) * np.exp(-dx * 2.2) + np.exp(-dx * 90) * np.exp(-dy * 2.2)) * (0.4 + 0.6 * aparece)
+            img = img * (1 - 0.5 * cruz[..., None]) + pr.AZUL * 0.5 * cruz[..., None]
+        img = pr.brillo_estrella(img, W / 2, cy, tam, pr.AZUL_HONDO, halo=pr.AZUL * 0.6 + 0.4, fuerza=brillo)
+        if t >= golpe:
+            if not self.papel:
+                dx, dy = np.abs(self.xx - W / 2) / W, np.abs(self.yy - cy) / H
+                cruz = (np.exp(-dy * 90) * np.exp(-dx * 2.0) + np.exp(-dx * 90) * np.exp(-dy * 2.4)) * (0.4 + 0.6 * aparece)
+                img = pr.pantalla(img, (pr.AZUL * 0.7 + 0.3) * cruz[..., None] * 0.8)
             nucleo = np.exp(-((self.xx - W / 2) ** 2 + (self.yy - cy) ** 2) / (2 * (W * 0.04) ** 2))
             nucleo = nucleo * pr.estrella_en(W, H, W / 2, cy, tam)
             img = img + (1 - img) * nucleo[..., None] * 0.95
@@ -137,7 +154,7 @@ class Cierre:
     def __call__(self, t, golpe):
         """t es el segundo del reel; golpe, el segundo en que la estrella toca el centro."""
         if t < golpe - 0.28:
-            return pr.pantalla(np.zeros((H, W, 3), np.float32), self.fugas * 0.12)
+            return self.fondo(0.0)
         aparece = entre(t, golpe, golpe + 0.8)
         cy_fin = H * 0.47
         if t < golpe + 0.18:
@@ -231,7 +248,7 @@ def adelanto():
 
 def copia(nombre, w, h, alto=0.62):
     """La copia en el papel: la prenda en grises sobre papel, para revelar bajo la luz roja (1 = papel)."""
-    pz = posts.recorte(nombre)
+    pz = posts.sin_etiqueta(nombre)
     k = min(alto * h / pz.shape[0], 0.7 * w / pz.shape[1])
     p = pr.escala(pz, k)
     img = pr.lienzo(w, h, (1, 1, 1))
@@ -247,7 +264,7 @@ def grilla_20(w, h):
     cw, ch = (w - 2 * mx) / cols, (h - 2 * my) / filas
     for i, nombre in enumerate(posts.ORDEN_20):
         f, c = divmod(i, cols)
-        pz = posts.recorte(nombre)
+        pz = posts.sin_etiqueta(nombre)
         k = min(ch * 0.84 / pz.shape[0], cw * 0.88 / pz.shape[1])
         p = pr.escala(pz, k)
         x, y = int(mx + c * cw + (cw - p.shape[1]) / 2), int(my + f * ch + (ch - p.shape[0]) / 2)
@@ -408,8 +425,10 @@ def correas():
 REELS = {'adelanto': adelanto, 'revelado': revelado, 'correas': correas}
 
 
-def hacer(nombre):
-    cuadro, fin, sonido = REELS[nombre]()
+def hacer(nombre, fabrica=None):
+    """Saca un reel: sus cuadros, su sonido (con música y solo con los efectos) y los dos MP4. fabrica es la función que
+    lo arma; si no se da, es la de REELS."""
+    cuadro, fin, sonido = (fabrica or REELS[nombre])()
     total = round(fin * FPS)
     SALIDA.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:

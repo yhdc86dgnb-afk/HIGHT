@@ -320,6 +320,17 @@ def torcido(h, w, seed, tam, fuerza):
     return xx + fuerza * 1.6 * rx, yy + fuerza * 1.6 * ry
 
 
+def pagina(w, h, seed=2, margen=0.07):
+    """La página del mármol: 1 adentro y 0 en el papel, con márgenes y el borde de arriba ondulado, como la tinta
+    cuando se escurre (ondas de distinto alto)."""
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    xs = np.linspace(0, 1, w, dtype=np.float32)
+    n1 = ruido(1, w, w * 0.12, seed + 9, 2)[0]
+    borde = h * (margen + 0.07) - h * 0.05 * np.abs(np.sin(xs * 6.5 * math.pi + n1 * 2)) * (0.5 + n1) - h * 0.02 * n1
+    zona = (yy > borde[None, :]) & (yy < h * (1 - margen * 2.2)) & (xx > w * margen) & (xx < w * (1 - margen))
+    return suave(zona.astype(np.float32), 1.0)
+
+
 def marmol(pieza, w, h, seed=2, fuerza=0.32, bandas=5.0, margen=0.07, papel=True):
     """La prenda derretida en mármol blanco y negro (ref. del remolino): la luz de la prenda se revuelve en remolinos y
     queda en vetas negras y blancas de borde nítido. Con papel, la mancha queda sobre papel con el borde de arriba
@@ -338,13 +349,7 @@ def marmol(pieza, w, h, seed=2, fuerza=0.32, bandas=5.0, margen=0.07, papel=True
     v = np.clip(v * (0.75 + 0.5 * curva(Lw, 1.5, 0.35)), 0, 1)
     img = mapa(v, [(0, CARBON * 0.7), (0.45, hexa('#3b3a38')), (0.62, hexa('#bdbab3')), (1, hexa('#f4f2ed'))])
     if papel:
-        yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
-        # el borde de arriba ondulado, como la tinta cuando se escurre: ondas de distinto alto
-        xs = np.linspace(0, 1, w, dtype=np.float32)
-        n1 = ruido(1, w, w * 0.12, seed + 9, 2)[0]
-        borde = h * (margen + 0.07) - h * 0.05 * np.abs(np.sin(xs * 6.5 * math.pi + n1 * 2)) * (0.5 + n1) - h * 0.02 * n1
-        zona = (yy > borde[None, :]) & (yy < h * (1 - margen * 2.2)) & (xx > w * margen) & (xx < w * (1 - margen))
-        zona = suave(zona.astype(np.float32), 1.0)[..., None]
+        zona = pagina(w, h, seed, margen)[..., None]
         img = lienzo(w, h, hexa('#f3f1ec')) * (1 - zona) + img * zona
     img = rayas(img, seed, n=4, polvo=120, color=CARBON, fuerza=0.3)
     return grano(img, 0.05, seed, 0.7)
@@ -475,9 +480,10 @@ def escaneo(piezas, w, h, colores, seed=6, oscuro=False, linea=True, luz_fuerza=
     return grano(img, 0.045, seed, 0.6)
 
 
-def estudio(pieza, w=1600, h=2000, alto=0.8, ancho=0.84, fuera_arriba=0.0):
+def estudio(pieza, w=1600, h=2000, alto=0.8, ancho=0.84, fuera_arriba=0.0, centro=0.5):
     """La prenda limpia, como foto de producto: centrada sobre carbón con la luz suave del centro y una sombra suave,
-    sin el estampado de logos (tiene letras). fuera_arriba deja esa parte de arriba de la prenda fuera de cuadro."""
+    sin el estampado de logos (tiene letras). fuera_arriba deja esa parte de arriba de la prenda fuera de cuadro;
+    centro es la altura del centro de la prenda, en partes del cuadro."""
     y, x = np.mgrid[0:h, 0:w].astype(np.float32)
     d = np.hypot((x - 0.5 * w) / (0.7 * w), (y - 0.46 * h) / (0.7 * h))
     luz = np.clip(1 - d, 0, 1) ** 1.5
@@ -485,7 +491,7 @@ def estudio(pieza, w=1600, h=2000, alto=0.8, ancho=0.84, fuera_arriba=0.0):
     k = min(alto * h / pieza.shape[0], ancho * w / pieza.shape[1]) * (1 + fuera_arriba)
     p = escala(pieza, k)
     px = (w - p.shape[1]) // 2
-    py = (h - p.shape[0]) // 2 if not fuera_arriba else -round(fuera_arriba * p.shape[0])
+    py = int(h * centro - p.shape[0] / 2) if not fuera_arriba else -round(fuera_arriba * p.shape[0])
     a = alfa_en((h, w), p, px, py + round(0.012 * h))
     sombra = suave(a, 0.018 * w) * 0.55
     fondo = fondo * (1 - sombra[..., None])
