@@ -1,0 +1,296 @@
+{
+ "c1-0": {
+  "collage": "blood-rose",
+  "x": 0,
+  "y": 0,
+  "w": 197,
+  "h": 683
+ },
+ "c1-1": {
+  "collage": "blood-rose",
+  "x": 203,
+  "y": 0,
+  "w": 222,
+  "h": 683
+ },
+ "c1-2": {
+  "collage": "blood-rose",
+  "x": 433,
+  "y": 0,
+  "w": 220,
+  "h": 683
+ },
+ "c1-3": {
+  "collage": "blood-rose",
+  "x": 661,
+  "y": 0,
+  "w": 220,
+  "h": 683
+ },
+ "c1-4": {
+  "collage": "blood-rose",
+  "x": 887,
+  "y": 0,
+  "w": 193,
+  "h": 683
+ },
+ "c1-5": {
+  "collage": "blood-rose",
+  "x": 0,
+  "y": 692,
+  "w": 354,
+  "h": 658
+ },
+ "c1-6": {
+  "collage": "blood-rose",
+  "x": 364,
+  "y": 692,
+  "w": 358,
+  "h": 658
+ },
+ "c1-7": {
+  "collage": "blood-rose",
+  "x": 731,
+  "y": 692,
+  "w": 349,
+  "h": 658
+ },
+ "c3-0": {
+  "collage": "trouble-maker-cuadros",
+  "x": 0,
+  "y": 0,
+  "w": 368,
+  "h": 724
+ },
+ "c3-1": {
+  "collage": "trouble-maker-cuadros",
+  "x": 373,
+  "y": 0,
+  "w": 394,
+  "h": 724
+ },
+ "c3-2": {
+  "collage": "trouble-maker-cuadros",
+  "x": 772,
+  "y": 0,
+  "w": 308,
+  "h": 724
+ },
+ "c3-3": {
+  "collage": "trouble-maker-cuadros",
+  "x": 0,
+  "y": 729,
+  "w": 545,
+  "h": 621
+ },
+ "c3-4": {
+  "collage": "trouble-maker-cuadros",
+  "x": 549,
+  "y": 729,
+  "w": 322,
+  "h": 621
+ },
+ "c3-5": {
+  "collage": "trouble-maker-cuadros",
+  "x": 875,
+  "y": 729,
+  "w": 205,
+  "h": 621
+ },
+ "c4-0": {
+  "collage": "blood-rose-estrellas",
+  "x": 0,
+  "y": 0,
+  "w": 304,
+  "h": 653
+ },
+ "c4-1": {
+  "collage": "blood-rose-estrellas",
+  "x": 311,
+  "y": 0,
+  "w": 290,
+  "h": 481
+ },
+ "c4-2": {
+  "collage": "blood-rose-estrellas",
+  "x": 311,
+  "y": 486,
+  "w": 290,
+  "h": 167
+ },
+ "c4-3": {
+  "collage": "blood-rose-estrellas",
+  "x": 608,
+  "y": 0,
+  "w": 250,
+  "h": 653
+ },
+ "c4-4": {
+  "collage": "blood-rose-estrellas",
+  "x": 865,
+  "y": 0,
+  "w": 215,
+  "h": 653
+ },
+ "c4-5": {
+  "collage": "blood-rose-estrellas",
+  "x": 0,
+  "y": 662,
+  "w": 303,
+  "h": 688
+ },
+ "c4-6": {
+  "collage": "blood-rose-estrellas",
+  "x": 310,
+  "y": 662,
+  "w": 248,
+  "h": 688
+ },
+ "c4-7": {
+  "collage": "blood-rose-estrellas",
+  "x": 565,
+  "y": 662,
+  "w": 250,
+  "h": 688
+ },
+ "c4-8": {
+  "collage": "blood-rose-estrellas",
+  "x": 822,
+  "y": 662,
+  "w": 258,
+  "h": 390
+ },
+ "c4-9": {
+  "collage": "blood-rose-estrellas",
+  "x": 822,
+  "y": 1058,
+  "w": 258,
+  "h": 292
+ },
+ "c5-0": {
+  "collage": "trouble-maker-patchwork",
+  "x": 0,
+  "y": 0,
+  "w": 315,
+  "h": 665
+ },
+ "c5-1": {
+  "collage": "trouble-maker-patchwork",
+  "x": 315,
+  "y": 0,
+  "w": 314,
+  "h": 665
+ },
+ "c5-2": {
+  "collage": "trouble-maker-patchwork",
+  "x": 629,
+  "y": 0,
+  "w": 261,
+  "h": 665
+ },
+ "c5-3": {
+  "collage": "trouble-maker-patchwork",
+  "x": 890,
+  "y": 0,
+  "w": 190,
+  "h": 665
+ },
+ "c6-0": {
+  "collage": "multitud-destroyed",
+  "x": 0,
+  "y": 0,
+  "w": 361,
+  "h": 722
+ },
+ "c6-2": {
+  "collage": "multitud-destroyed",
+  "x": 726,
+  "y": 0,
+  "w": 354,
+  "h": 722
+ },
+ "c6-5": {
+  "collage": "multitud-destroyed",
+  "x": 264,
+  "y": 722,
+  "w": 280,
+  "h": 628
+ },
+ "c6-6": {
+  "collage": "multitud-destroyed",
+  "x": 544,
+  "y": 722,
+  "w": 281,
+  "h": 628
+ },
+ "c7-0": {
+  "collage": "anillos-fleco",
+  "x": 0,
+  "y": 0,
+  "w": 242,
+  "h": 682
+ },
+ "c7-1": {
+  "collage": "anillos-fleco",
+  "x": 242,
+  "y": 0,
+  "w": 184,
+  "h": 682
+ },
+ "c7-2": {
+  "collage": "anillos-fleco",
+  "x": 426,
+  "y": 0,
+  "w": 227,
+  "h": 682
+ },
+ "c7-3": {
+  "collage": "anillos-fleco",
+  "x": 653,
+  "y": 0,
+  "w": 185,
+  "h": 682
+ },
+ "c7-4": {
+  "collage": "anillos-fleco",
+  "x": 838,
+  "y": 0,
+  "w": 242,
+  "h": 682
+ },
+ "c7-5": {
+  "collage": "anillos-fleco",
+  "x": 0,
+  "y": 682,
+  "w": 372,
+  "h": 668
+ },
+ "c7-6": {
+  "collage": "anillos-fleco",
+  "x": 372,
+  "y": 682,
+  "w": 338,
+  "h": 668
+ },
+ "c7-7": {
+  "collage": "anillos-fleco",
+  "x": 710,
+  "y": 682,
+  "w": 370,
+  "h": 668
+ },
+ "c8-d1": {
+  "collage": "celula-dragon",
+  "x": 359,
+  "y": 925,
+  "w": 191,
+  "h": 425
+ },
+ "c8-d2": {
+  "collage": "celula-dragon",
+  "x": 550,
+  "y": 925,
+  "w": 167,
+  "h": 425
+ }
+}

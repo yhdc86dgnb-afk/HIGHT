@@ -319,7 +319,7 @@ docs/branding-book/  el Branding Book de la marca renovada (index.html con sus i
 docs/politicas/  las cinco políticas de la tienda para pegar en Shopify
 bocetos/         fichas técnicas para Illustrator (SVG y PDF), su generador, la chaqueta en vector (vector/), el
                  video de campaña (video/), las correas (correas/), los posts y reels de Instagram (instagram/, reels/)
-                 y la campaña sin texto (lanzamiento-sin-texto/)
+                 la campaña sin texto (lanzamiento-sin-texto/) y el desfile (desfile/)
 ```
 
 `shopify theme check` pasa sin observaciones y el workflow `.github/workflows/theme-check.yml` lo corre en cada push.
