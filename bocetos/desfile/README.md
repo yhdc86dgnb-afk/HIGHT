@@ -110,6 +110,7 @@ Anillos Índigo (06), la cinta de la copia cae justo sobre la boca y termina de 
 | `textos.md` | Las descripciones, las etiquetas, la música de cada post y el calendario |
 | `muestra.html` | La muestra del perfil: la cuadrícula y cada post abierto con su descripción y su música |
 | `vista-previa.jpg` | La cuadrícula del perfil con los 20 posts, recortados a 3:4 como los muestra Instagram |
+| `originales/` | Las 42 salidas tal como las generó Canva, sin barras, sin color y sin agrandar, con su índice |
 | `fuentes/pasarela-*.jpg` | Las hojas de salidas que entregó Canva, una por conjunto |
 | `fuentes/tomas.json` | Dónde está cada salida dentro de su hoja |
 | `fuentes/caras.json` | Dónde está cada cara: su caja y los puntos de los ojos, la nariz, la boca y las orejas |
@@ -121,6 +122,7 @@ Anillos Índigo (06), la cinta de la copia cae justo sobre la boca y termina de 
 | `musica.py` | Arma las tres pistas (usa los instrumentos de `../reels/sonido.py`) |
 | `videos.py` | Arma los 20 videos con su música |
 | `muestra.py` y `muestra-plantilla.html` | Arman `muestra.html` con las descripciones de `textos.md` |
+| `originales.py` | Saca las salidas originales a `originales/` |
 | `encuadre.py` | Dibuja el encuadre de referencia |
 
 ## Volver a generarlos
