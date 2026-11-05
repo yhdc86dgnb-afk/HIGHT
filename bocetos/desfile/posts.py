@@ -6,6 +6,11 @@ estaturas y orígenes distintos. Canva las entrega en hojas de varias salidas (f
 dónde está cada una. Aquí no se pasan por ningún proceso que tape la ropa: todas llevan el mismo color de archivo (los
 negros apenas levantados, el color un poco lavado y grano de película) para que el desfile se vea como una sola noche.
 
+Las caras van tapadas, como en las referencias de la campaña: cada una con un rectángulo hecho de un pedazo del fondo
+de la misma foto, tomado al lado de la cabeza y pegado con bordes duros, de las cejas a debajo de la boca. La barbilla
+queda a la vista. fuentes/caras.json dice dónde está cada cara (lo arma caras.py); las espaldas y los detalles no llevan
+barra. Solo cambian las caras: la ropa queda igual.
+
 Los posts alternan, para que la cuadrícula del perfil quede en tablero:
   impares  noche: varias salidas seguidas sobre negro, como se ven en la pasarela.
   pares    papel: una sola salida, o un detalle, como una copia de archivo con su margen.
@@ -35,17 +40,109 @@ PAPEL = pr.hexa('#ece3d0')
 NOCHE = pr.hexa('#0b0a09')
 # en las hojas nuevas las líneas que separan las salidas son más gruesas: se recorta un poco más
 MARGEN = {'trouble-maker-patchwork': 8, 'multitud-destroyed': 5, 'anillos-fleco': 5, 'celula-dragon': 5}
+CARAS = json.loads((FUENTES / 'caras.json').read_text())
+BORDE = 8  # los pedazos de fondo no se toman del borde de la toma, donde queda la línea que separa las salidas
 
 _hojas = {}
 
 
 def toma(nombre):
-    """Una salida de su hoja, como RGB de 0 a 1, sin el borde de la línea que la separa de las otras."""
+    """Una salida de su hoja, como RGB de 0 a 1, sin el borde de la línea que la separa de las otras y con las caras
+    tapadas."""
     t = TOMAS[nombre]
     if t['collage'] not in _hojas:
         _hojas[t['collage']] = np.asarray(Image.open(FUENTES / f"pasarela-{t['collage']}.jpg").convert('RGB'), np.float32) / 255
     m = MARGEN.get(t['collage'], 3)
-    return _hojas[t['collage']][t['y'] + m:t['y'] + t['h'] - m, t['x'] + m:t['x'] + t['w'] - m].copy()
+    img = _hojas[t['collage']][t['y'] + m:t['y'] + t['h'] - m, t['x'] + m:t['x'] + t['w'] - m].copy()
+    caras = [{'x': c['x'] - m, 'y': c['y'] - m, 'w': c['w'], 'h': c['h'], 'puntos': [[x - m, y - m] for x, y in c['puntos']]}
+             for c in CARAS.get(nombre, [])]
+    return tapar(img, caras) if caras else img
+
+
+# ---------- Las caras tapadas ----------
+
+def barras(caras):
+    """La barra de cada cara, puesta por los ojos y la boca para que siga a las cabezas inclinadas y de perfil: de las
+    cejas a debajo de la boca, y 1,75 veces el ancho de la cara."""
+    out = []
+    for c in caras:
+        p = c['puntos']
+        ojos = (p[0][1] + p[1][1]) / 2
+        d = p[3][1] - ojos
+        cx = 0.5 * (c['x'] + c['w'] / 2) + 0.5 * np.mean([p[0][0], p[1][0], p[2][0], p[3][0]])
+        out.append((cx - c['w'] * 0.875, ojos - 0.45 * d, cx + c['w'] * 0.875, p[3][1] + 0.6 * d))
+    return out
+
+
+def sumas(integral, bh, bw):
+    """La suma de cada ventana de bh × bw, para todas sus esquinas a la vez."""
+    I = integral
+    return I[bh:, bw:] - I[:-bh, bw:] - I[bh:, :-bw] + I[:-bh, :-bw]
+
+
+def tapar(img, caras):
+    """Tapa cada cara con un pedazo del fondo de la misma foto, a la altura de la cara y pegado con bordes duros. Se
+    escoge el pedazo más liso que tenga el tono del fondo alrededor de la cabeza y que no pise ninguna cara; si no cabe
+    uno del ancho de la barra, uno más angosto se repite en espejo, y si tampoco, la barra va lisa del tono del fondo."""
+    H, W = img.shape[:2]
+    out = img.copy()
+    gris = img.mean(2)
+    energia = np.hypot(cv2.Sobel(gris, cv2.CV_32F, 1, 0, ksize=3), cv2.Sobel(gris, cv2.CV_32F, 0, 1, ksize=3))
+    E = cv2.integral(energia.astype(np.float64))
+    C, C2 = cv2.integral2(gris.astype(np.float64))[:2]
+    lista = barras(caras)
+    prohibido = np.zeros((H, W), np.uint8)
+    for c, (bx0, by0, bx1, by1) in zip(caras, lista):
+        ex, ey = 0.3 * c['w'], 0.3 * c['h']
+        prohibido[max(0, int(c['y'] - ey)):max(0, int(c['y'] + c['h'] + ey)),
+                  max(0, int(c['x'] - ex)):max(0, int(c['x'] + c['w'] + ex))] = 1
+        prohibido[max(0, int(by0)):max(0, int(by1) + 1), max(0, int(bx0)):max(0, int(bx1) + 1)] = 1
+    prohibido[:BORDE] = prohibido[-BORDE:] = 1
+    prohibido[:, :BORDE] = prohibido[:, -BORDE:] = 1
+    P = cv2.integral(prohibido).astype(np.float64)
+    quieto = energia < 0.06
+    usados = []
+    for bx0, by0, bx1, by1 in lista:
+        x0, y0 = int(round(max(0, bx0))), int(round(max(0, by0)))
+        x1, y1 = int(round(min(W, bx1))), int(round(min(H, by1)))
+        bw, bh = x1 - x0, y1 - y0
+        if bw < 3 or bh < 3:
+            continue
+        # el tono del fondo a la altura de la cara: lo liso que hay a los lados, sin caras
+        zona = np.zeros((H, W), bool)
+        zona[y0:y1, max(0, x0 - 2 * bw):min(W, x1 + 2 * bw)] = True
+        zona &= (prohibido == 0) & quieto
+        tono = np.median(gris[zona]) if zona.sum() > 30 else np.median(gris[y0:y1, x0:x1])
+        # ni una raya de luz: el pedazo no puede tener puntos mucho más claros u oscuros que el fondo
+        R = cv2.integral((np.abs(gris - tono) > 0.15).astype(np.uint8)).astype(np.float64)
+        pedazo = None
+        for partes in (1, 2, 3, 4):
+            pw = max(3, bw // partes)
+            n = pw * bh
+            e = sumas(E, bh, pw) / n
+            media = sumas(C, bh, pw) / n
+            s = np.sqrt(np.maximum(sumas(C2, bh, pw) / n - media * media, 0))
+            pisa = sumas(P, bh, pw)
+            raros = sumas(R, bh, pw)
+            sy, sx = np.mgrid[0:e.shape[0], 0:e.shape[1]]
+            puntaje = e + 1.2 * np.abs(media - tono) + 1.5 * s + 0.05 * np.abs(sx - x0) / W
+            lejos = np.abs(sy - y0) > max(6, 0.5 * bh)
+            malo = (pisa > 0) | lejos | (np.abs(media - tono) > 0.1) | (e > 0.09) | (s > 0.07) | (raros > 0.002 * n)
+            puntaje[malo] = np.inf
+            for ux, uy in usados:  # que dos barras no repitan el mismo pedazo
+                puntaje[max(0, uy - bh // 2):uy + bh // 2 + 1, max(0, ux - pw // 2):ux + pw // 2 + 1] = np.inf
+            i = np.unravel_index(np.argmin(puntaje), puntaje.shape)
+            if np.isfinite(puntaje[i]):
+                base = img[i[0]:i[0] + bh, i[1]:i[1] + pw]
+                pedazo = np.concatenate([base if k % 2 == 0 else base[:, ::-1] for k in range(partes + 1)], 1)[:, :bw]
+                usados.append((i[1], i[0]))
+                break
+        if pedazo is None:
+            ruido = np.random.default_rng(x0 * 31 + y0).normal(0, 0.012, (bh, bw, 1)).astype(np.float32)
+            color = np.median(img[zona], 0) if zona.sum() > 30 else np.full(3, tono, np.float32)
+            pedazo = np.clip(color[None, None] + ruido, 0, 1)
+        out[y0:y1, x0:x1] = pedazo
+    return out
 
 
 def cubrir(img, w, h, foco=(0.5, 0.45)):

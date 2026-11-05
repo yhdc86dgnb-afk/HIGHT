@@ -20,7 +20,7 @@ respuestas que cada ficha de la tienda da sin preguntas a la vista.
 | `instagram/` | Los 20 posts del lanzamiento, sus pies de foto y el orden de publicación. |
 | `reels/` | Los cuatro reels del lanzamiento, en MP4, y cómo se arman. |
 | `lanzamiento-sin-texto/` | La campaña de lanzamiento sin letras, casi toda en reels: 15 reels con sus portadas y 2 posts (uno con un carrusel por colección), hechos con procesos de copia (negativo, mármol, luz roja, fantasma, cianotipia y escaneo), con su calendario y cómo publicarla. |
-| `desfile/` | El desfile del Drop 01: 20 posts con solo la ropa en la pasarela y ninguna letra en las fotos, modelos de rasgos, estaturas y orígenes distintos (fotos hechas con IA a partir de las prendas reales), sus descripciones, un video de cada post con música propia de neo-psicodelia, rock y pop psicodélico, y la muestra del perfil. |
+| `desfile/` | El desfile del Drop 01: 20 posts con solo la ropa en la pasarela y ninguna letra en las fotos, modelos de rasgos, estaturas y orígenes distintos con la cara tapada por un pedazo del fondo (fotos hechas con IA a partir de las prendas reales), sus descripciones, un video de cada post con música propia de neo-psicodelia, rock y pop psicodélico, y la muestra del perfil. |
 | `fondos/` | El fondo de logos de Hight en plateado sobre negro: para poner detrás de las prendas (con las 20 prendas ya puestas) y para repetir. También en los colores de las colecciones, en colores contrarios (tinta sobre plata) y uno para cada colección, sobre su textura, con sus prendas encima (la segunda foto de cada ficha). |
 
 Los números siguen el orden en que las prendas entraron a la tienda.

@@ -3,8 +3,8 @@
 ![Los 20 posts en la cuadrícula del perfil](vista-previa.jpg)
 
 Veinte posts del Drop 01 en la pasarela: solo la ropa, sin una sola letra en las fotos. Las salidas tienen modelos de
-rasgos, estaturas y orígenes distintos, y cada post trae música propia de fondo en tres géneros: neo-psicodelia, rock
-psicodélico y pop psicodélico. El tono es serio, elegante y rebelde.
+rasgos, estaturas y orígenes distintos, con la cara tapada por un pedazo del fondo, y cada post trae música propia de
+fondo en tres géneros: neo-psicodelia, rock psicodélico y pop psicodélico. El tono es serio, elegante y rebelde.
 
 La muestra interactiva (el perfil con la cuadrícula y cada post abierto con su descripción y su música) está en
 `muestra.html`; publicada, se ve en el enlace que va en el informe.
@@ -52,6 +52,22 @@ Se dejaron fuera las salidas en las que la IA cambió la ropa o puso letras:
 Algunas salidas llevan piezas de fondo que no son de Hight: pantalones cargo oscuros o verde oliva, faldas negras y
 botas. En las descripciones solo se nombran y se etiquetan las prendas de la tienda.
 
+## Las caras tapadas
+
+Como en las referencias de la campaña, cada cara va tapada con un rectángulo hecho de un pedazo del fondo de la misma
+foto: se toma al lado de la cabeza, a la misma altura, y se pega con bordes duros, de las cejas a debajo de la boca. La
+barbilla queda a la vista. Sobre los fondos de noche la barra casi se pierde y la cabeza queda flotando; donde el fondo
+es más claro, se nota el rectángulo. Solo cambian las caras: la ropa queda igual.
+
+- `caras.py` busca las caras con el detector de caras de MediaPipe y deja `fuentes/caras.json`: 31 caras en 26 salidas,
+  revisadas a ojo. No se tapan las caras de los estampados, como las del Buzo Multitud Térmica.
+- No llevan barra las espaldas (la tercera salida de los posts 01, 09 y 13, el 16 y la cabeza que se gira de espaldas en
+  el 18), el detalle del Tejido Anillos Índigo (06), que ya corta la cara en la nariz, ni los detalles de la ropa (11 y
+  el jean del 18).
+- `posts.py` pone las barras antes del color de archivo, así llevan el mismo grano que el resto de la foto. Escoge el
+  pedazo de fondo más liso que tenga el tono de alrededor de la cabeza; en las caras grandes, un pedazo más angosto se
+  repite en espejo.
+
 ## Lo que hay que saber de las fotos
 
 - **Son imágenes hechas con IA.** Las modelos no existen y cada prenda es una versión de la IA a partir de la foto real:
@@ -90,8 +106,10 @@ botas. En las descripciones solo se nombran y se etiquetan las prendas de la tie
 | `vista-previa.jpg` | La cuadrícula del perfil con los 20 posts, recortados a 3:4 como los muestra Instagram |
 | `fuentes/pasarela-*.jpg` | Las hojas de salidas que entregó Canva, una por conjunto |
 | `fuentes/tomas.json` | Dónde está cada salida dentro de su hoja |
+| `fuentes/caras.json` | Dónde está cada cara: su caja y los puntos de los ojos, la nariz, la boca y las orejas |
 | `fuentes/encuadre-pasarela.png` | El encuadre de referencia que se probó para pedir una sola salida por foto |
-| `posts.py` | Arma los 20 posts y la vista previa |
+| `posts.py` | Arma los 20 posts, con las caras tapadas, y la vista previa |
+| `caras.py` | Busca las caras de las salidas y arma `fuentes/caras.json` |
 | `musica.py` | Arma las tres pistas (usa los instrumentos de `../reels/sonido.py`) |
 | `videos.py` | Arma los 20 videos con su música |
 | `muestra.py` y `muestra-plantilla.html` | Arman `muestra.html` con las descripciones de `textos.md` |
@@ -109,6 +127,19 @@ python3 bocetos/desfile/muestra.py    # la muestra del perfil
 ```
 
 Los posts tardan unos segundos; la música, menos de un minuto; los videos, unos tres minutos en total.
+
+`fuentes/caras.json` ya está en el repo. Solo hay que volver a sacarlo si cambian las fotos, con `caras.py`, que
+necesita OpenCV 4.8 o más nuevo y los modelos de caras de MediaPipe. Vienen en el paquete face-detection-tflite de PyPI
+y no se guardan en el repo:
+
+```bash
+pip download face-detection-tflite==0.6.0 --no-deps -d /tmp/fd
+unzip -j /tmp/fd/face_detection_tflite-0.6.0-py3-none-any.whl 'fdlite/data/face_detection_*_range.tflite' -d /tmp/fd
+python3 bocetos/desfile/caras.py /tmp/fd     # unos dos minutos; después, posts.py
+```
+
+Si cambian las fotos, hay que revisar a ojo las caras que encuentra: las listas `SIN_CARA` y `GRUPOS` de `caras.py`
+dicen qué salidas no llevan barra y cuáles son de grupo.
 
 ## Lo que falta
 
