@@ -11,10 +11,14 @@ La muestra interactiva (el perfil con la cuadrícula y cada post abierto con su 
 
 ## Lo que hay
 
-- **20 posts** en 1080 × 1350 (`posts/`). Alternan para que la cuadrícula del perfil quede en tablero, como en la campaña
-  sin texto: los impares son de noche, con varias salidas seguidas sobre negro, como se ven en la pasarela; los pares
-  son de papel, con una sola salida o un detalle como copia de archivo con su margen. El último reúne una salida de
-  cada conjunto, como el final de un desfile.
+- **20 posts** en 1080 × 1350 (`posts/`), con el estilo de la tienda, el de la versión final del tema: cada salida va
+  como una copia impresa, con su borde claro, su sombra suave, un giro de menos de un grado y medio y, en algunas, la
+  cinta de papel arriba; el sello de la estrella, sin letras, firma algunos, y el grano de fotocopia cubre todo, como en
+  la página. Alternan para que la cuadrícula del perfil quede en tablero, como el feed del lanzamiento: los impares en
+  carbón, con la textura de la colección de la prenda (la malla de Asfalto, las manchas de Chicle, el leopardo de Fiera,
+  el zigzag de Radiactivo, el semitono de Sangre Fría y la sarga de Medianoche) o liso; los pares en hueso, salvo el 02
+  y el 20, que van en ácido, el acento de la tienda. El último reúne una salida de cada conjunto, como el final de un
+  desfile.
 - **20 videos** (`videos/`), uno por post: la misma imagen con un acercamiento lento que va y vuelve, su pedazo de música
   y la luz que late con cada compás. Duran compases enteros, cerca de 12 segundos.
 - **3 pistas propias** (`musica/`), de unos 37 segundos cada una, hechas aquí con senos, ruido y cuerdas pulsadas, sin
@@ -37,9 +41,10 @@ nada: solo se tomó el tipo de casting, la pose, la luz y el lugar.
 
 Con la IA de Canva, a partir de las fotos reales de las prendas que ya están en el repo (los recortes de
 `../instagram/imagenes/`). Canva entrega cada pedido como una hoja con varias salidas del mismo conjunto
-(`fuentes/pasarela-*.jpg`), y `fuentes/tomas.json` dice dónde está cada salida. `posts.py` las recorta, les pone a todas
-el mismo color de archivo (los negros apenas levantados, el color un poco lavado y grano de película) y arma cada post.
-No se pasan por procesos que tapen la ropa.
+(`fuentes/pasarela-*.jpg`), y `fuentes/tomas.json` dice dónde está cada salida. `posts.py` las recorta, les tapa la cara,
+las agranda al doble con un poco de nitidez y las deja en `imagenes/`; los posts se arman en `posts.html` con las piezas
+de la tienda (los esquemas de color del tema, las texturas de `assets/hight.css`, la copia impresa, la cinta, el sello y
+el grano de `assets/grano.svg`) y `render.js` los saca en JPG. No se pasan por procesos que tapen la ropa.
 
 Se dejaron fuera las salidas en las que la IA cambió la ropa o puso letras:
 
@@ -56,15 +61,16 @@ botas. En las descripciones solo se nombran y se etiquetan las prendas de la tie
 
 Como en las referencias de la campaña, cada cara va tapada con un rectángulo hecho de un pedazo del fondo de la misma
 foto: se toma al lado de la cabeza, a la misma altura, y se pega con bordes duros, de las cejas a debajo de la boca. La
-barbilla queda a la vista. Sobre los fondos de noche la barra casi se pierde y la cabeza queda flotando; donde el fondo
-es más claro, se nota el rectángulo. Solo cambian las caras: la ropa queda igual.
+barbilla queda a la vista. Sobre el fondo oscuro de la pasarela la barra casi se pierde y la cabeza queda flotando;
+donde el fondo es más claro, se nota el rectángulo. Solo cambian las caras: la ropa queda igual. En el detalle del Tejido
+Anillos Índigo (06), la cinta de la copia cae justo sobre la boca y termina de tapar la cara.
 
 - `caras.py` busca las caras con el detector de caras de MediaPipe y deja `fuentes/caras.json`: 31 caras en 26 salidas,
   revisadas a ojo. No se tapan las caras de los estampados, como las del Buzo Multitud Térmica.
 - No llevan barra las espaldas (la tercera salida de los posts 01, 09 y 13, el 16 y la cabeza que se gira de espaldas en
   el 18), el detalle del Tejido Anillos Índigo (06), que ya corta la cara en la nariz, ni los detalles de la ropa (11 y
   el jean del 18).
-- `posts.py` pone las barras antes del color de archivo, así llevan el mismo grano que el resto de la foto. Escoge el
+- `posts.py` pone las barras en la foto antes de agrandarla, así en el post llevan el mismo grano que el resto. Escoge el
   pedazo de fondo más liso que tenga el tono de alrededor de la cabeza; en las caras grandes, un pedazo más angosto se
   repite en espejo.
 
@@ -108,7 +114,9 @@ es más claro, se nota el rectángulo. Solo cambian las caras: la ropa queda igu
 | `fuentes/tomas.json` | Dónde está cada salida dentro de su hoja |
 | `fuentes/caras.json` | Dónde está cada cara: su caja y los puntos de los ojos, la nariz, la boca y las orejas |
 | `fuentes/encuadre-pasarela.png` | El encuadre de referencia que se probó para pedir una sola salida por foto |
-| `posts.py` | Arma los 20 posts, con las caras tapadas, y la vista previa |
+| `posts.html` | Los 20 posts armados con las piezas de la tienda; de acá salen los JPG |
+| `imagenes/` | Cada salida con su cara tapada, al doble de tamaño: las fotos de las copias de `posts.html` |
+| `posts.py` y `render.js` | Sacan las salidas a `imagenes/`, los JPG de `posts.html` y la vista previa |
 | `caras.py` | Busca las caras de las salidas y arma `fuentes/caras.json` |
 | `musica.py` | Arma las tres pistas (usa los instrumentos de `../reels/sonido.py`) |
 | `videos.py` | Arma los 20 videos con su música |
@@ -117,7 +125,7 @@ es más claro, se nota el rectángulo. Solo cambian las caras: la ropa queda igu
 
 ## Volver a generarlos
 
-Requiere Python 3 con NumPy, Pillow y OpenCV, y ffmpeg. Desde la raíz del repo:
+Requiere Python 3 con NumPy, Pillow y OpenCV, Node con Playwright (Chromium) y ffmpeg. Desde la raíz del repo:
 
 ```bash
 python3 bocetos/desfile/posts.py      # los 20 posts y la vista previa (o algunos: posts.py 3 7)

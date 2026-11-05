@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Desfile del Drop 01</title>
+<style>
+/* Los 20 posts del desfile con el estilo de la tienda (la versión final del tema): los esquemas carbón, hueso y ácido de
+   config/settings_data.json, las texturas de las seis colecciones de assets/hight.css, las fotos como copias impresas
+   con cinta, el sello de la estrella y el grano de fotocopia. Sin una sola letra: solo la ropa en la pasarela.
+   Un post mide 1080 × 1350: es la página del teléfono a 2,5 veces su tamaño. posts.py saca los JPG. */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #2b2a28; display: flex; flex-direction: column; align-items: center; gap: 40px; padding: 40px 0; }
+
+.post { position: relative; width: 1080px; height: 1350px; overflow: hidden; isolation: isolate; background: var(--bg); }
+
+/* Esquemas de color del tema */
+.carbon { --bg: #0d0c0b; --print: #ece3d0; }
+.hueso { --bg: #ece3d0; --print: #faf6ee; }
+.acido { --bg: #dff04a; --print: #fbfbe9; }
+
+/* Grano de fotocopia, como en toda la página */
+.grano::after {
+  content: ''; position: absolute; inset: 0; z-index: 60; pointer-events: none;
+  background: url(../../assets/grano.svg) 0 0 / 800px; opacity: .55; mix-blend-mode: overlay;
+}
+
+/* Texturas de cada color, las del collage del inicio: las reglas .hi-tx--<colección> de assets/hight.css, tal cual, a
+   2,5 veces. Encima, la luz del centro, como en los posts del lanzamiento. */
+.tx { position: absolute; inset: 0; z-index: 0; opacity: .62; }
+.tx::after { content: ''; position: absolute; inset: 0; background: radial-gradient(58% 46% at 50% 46%, color-mix(in srgb, var(--bg) 78%, transparent), transparent 78%); }
+.hi-tx { position: absolute; left: 0; top: 0; width: 432px; height: 540px; zoom: 2.5; }
+
+.hi-tx--acido {
+  background-color: #10150b;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='24'%3E%3Cpolyline points='0,18 12,6 24,18 36,6 48,18' fill='none' stroke='%23dff04a' stroke-width='1.6' stroke-dasharray='4 3' opacity='.6'/%3E%3C/svg%3E"),
+    radial-gradient(110% 80% at 85% 10%, rgba(223, 240, 74, 0.38), transparent 60%),
+    radial-gradient(90% 70% at 15% 95%, rgba(98, 240, 124, 0.28), transparent 60%),
+    repeating-linear-gradient(115deg, rgba(223, 240, 74, 0.08) 0 2px, transparent 2px 9px);
+  background-size:
+    48px 24px,
+    auto,
+    auto,
+    auto;
+}
+
+.hi-tx--carmin {
+  background: radial-gradient(120% 95% at 78% 28%, #d0182f, #4a050c 68%, #1a0306);
+}
+
+.hi-tx--carmin::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(13, 12, 11, 0.92) 0 2.3px, transparent 2.7px);
+  background-size: 9px 9px;
+  mask-image: linear-gradient(105deg, rgba(0, 0, 0, 0.15) 5%, #000 80%);
+}
+
+.hi-tx--indigo {
+  background-color: #141d45;
+  background-image:
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.075) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.3) 0 1px, transparent 1px 5px),
+    radial-gradient(100% 75% at 72% 22%, rgba(91, 124, 250, 0.5), transparent 70%),
+    linear-gradient(180deg, #1c2b6e, #0b1130);
+}
+
+.hi-tx--indigo::before,
+.hi-tx--indigo::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 2px dashed rgba(236, 227, 208, 0.34);
+}
+
+.hi-tx--indigo::before {
+  left: 61%;
+}
+
+.hi-tx--indigo::after {
+  left: calc(61% + 9px);
+  border-left-color: rgba(223, 160, 74, 0.38);
+}
+
+.hi-tx--magenta {
+  background-color: #2b0b20;
+  background-image:
+    radial-gradient(40px 27px at 20% 30%, #e0218a 97%, transparent),
+    radial-gradient(30px 42px at 62% 22%, #b06cff 97%, transparent),
+    radial-gradient(46px 30px at 82% 72%, #ff7ac0 97%, transparent),
+    radial-gradient(28px 22px at 36% 76%, #8a1660 97%, transparent),
+    radial-gradient(18px 14px at 52% 52%, #f4b8d8 97%, transparent);
+  background-size: 170px 140px;
+}
+
+.hi-tx--ceniza {
+  background-color: #1c1b19;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(196, 190, 178, 0.11) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(90deg, rgba(196, 190, 178, 0.11) 0 1px, transparent 1px 16px),
+    radial-gradient(120% 90% at 72% 28%, #45423c, #141312 75%);
+}
+
+.hi-tx--leopardo {
+  background-color: #b98242;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Crect width='140' height='140' fill='%23b98242'/%3E%3Cg fill='%238a5a26' stroke='%2324160a' stroke-width='5' stroke-dasharray='10 5' stroke-linecap='round'%3E%3Cellipse cx='24' cy='22' rx='13' ry='10' transform='rotate(-20 24 22)'/%3E%3Cellipse cx='82' cy='18' rx='11' ry='9' transform='rotate(15 82 18)'/%3E%3Cellipse cx='122' cy='48' rx='12' ry='9' transform='rotate(-35 122 48)'/%3E%3Cellipse cx='52' cy='62' rx='14' ry='11' transform='rotate(25 52 62)'/%3E%3Cellipse cx='100' cy='92' rx='13' ry='10' transform='rotate(-10 100 92)'/%3E%3Cellipse cx='20' cy='104' rx='12' ry='9' transform='rotate(30 20 104)'/%3E%3Cellipse cx='64' cy='122' rx='11' ry='8' transform='rotate(-25 64 122)'/%3E%3C/g%3E%3Cg fill='%2324160a'%3E%3Ccircle cx='44' cy='34' r='3.5'/%3E%3Ccircle cx='108' cy='62' r='3'/%3E%3Ccircle cx='78' cy='70' r='2.5'/%3E%3Ccircle cx='36' cy='86' r='3'/%3E%3Ccircle cx='126' cy='118' r='3.5'/%3E%3Ccircle cx='92' cy='132' r='2.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+/* Copias impresas: cada salida sobre papel claro, con su borde, su sombra suave y un giro de menos de un grado y medio.
+   Una fila las pone una al lado de la otra, centradas; con .piso, todas pisan la misma línea. */
+.fila { position: absolute; z-index: 4; left: 0; right: 0; top: 0; bottom: 0; display: flex; justify-content: center; align-items: center; gap: var(--gap, 26px); }
+.fila.piso { align-items: flex-end; bottom: var(--piso, 150px); }
+/* Con --solapa, cada copia pisa un poco a la anterior (gap no acepta números negativos). */
+.fila > .copia + .copia { margin-left: var(--solapa, 0px); }
+.copia {
+  position: relative; flex: none; padding: var(--borde, 18px); background: var(--print);
+  transform: translateY(var(--y, 0px)) rotate(var(--r, 0deg));
+  box-shadow: 0 2px 0 rgba(0, 0, 0, .12), 0 60px 110px -50px rgba(0, 0, 0, .7);
+}
+.copia img { display: block; height: var(--h); width: auto; }
+/* Con --a, la copia es más angosta que la foto: se le recorta el fondo de los lados, nunca la ropa. */
+.copia.recorte img { width: calc(var(--h) * var(--a)); object-fit: cover; object-position: 50% 40%; }
+.tape {
+  position: absolute; z-index: 7; top: -30px; left: 50%; width: 44%; max-width: 300px; height: 62px;
+  transform: translateX(-50%) rotate(-4deg);
+  background: linear-gradient(180deg, rgba(243, 236, 210, .82), rgba(226, 215, 182, .74));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .28);
+  clip-path: polygon(3% 8%, 9% 0, 92% 4%, 100% 0, 97% 52%, 100% 100%, 90% 94%, 6% 100%, 0 92%, 3% 50%);
+}
+.copia.chica .tape { top: -22px; height: 46px; }
+
+/* El sello: el círculo del color de la colección con la estrella en el centro, sin letras */
+.sello {
+  position: absolute; z-index: 9; width: var(--s, 200px); height: var(--s, 200px); border-radius: 50%;
+  display: grid; place-items: center; background: var(--c); color: var(--e, #0d0c0b);
+  transform: rotate(var(--g, -12deg)); box-shadow: 0 30px 40px rgba(0, 0, 0, .45);
+}
+.sello svg { width: 40%; height: 40%; fill: currentColor; }
+</style>
+</head>
+<body>
+
+<!-- La estrella de la marca (snippets/icon.liquid) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="flare" viewBox="0 0 24 24"><path d="M12.56 4.41l.26 1.29 .29 1.11 .32 .96 .39 .8 .36 .51 1.46-1.03 1.29-.98 .16-.16-.16 .16-.98 1.29-1.03 1.46 .51 .36 .8 .39 .96 .32 1.11 .29 1.29 .26 3.21 .56-3.21 .56-1.29 .26-1.11 .29-.96 .32-.8 .39-.51 .36 1.03 1.46 .98 1.29 .16 .16-.16-.16-1.29-.98-1.46-1.03-.36 .51-.39 .8-.32 .96-.29 1.11-.26 1.29-.56 3.21-.56-3.21-.26-1.29-.29-1.11-.32-.96-.39-.8-.36-.51-1.46 1.03-1.29 .98-.16 .16 .16-.16 .98-1.29 1.03-1.46-.51-.36-.79-.39-.97-.32-1.11-.29-1.29-.26-3.21-.56 3.21-.56 1.29-.26 1.11-.29 .97-.32 .79-.39 .51-.36-1.03-1.46-.98-1.29-.16-.16 .16 .16 1.29 .98 1.46 1.03 .36-.51 .39-.8 .32-.96 .29-1.11 .26-1.29 .56-3.21z"/></symbol>
+</svg>
+
+<!-- 01 · carbón, textura de Asfalto · tres salidas de la Chaqueta Trouble Maker -->
+<section class="post carbon grano" id="p01">
+  <div class="tx"><div class="hi-tx hi-tx--ceniza"></div></div>
+  <span class="sello" style="--c:#c4beb2;left:36px;top:34px;--s:190px"><svg><use href="#flare"/></svg></span>
+  <div class="fila" style="--gap:28px">
+    <figure class="copia recorte" style="--h:940px;--a:.31;--r:-1.2deg;--y:-18px"><span class="tape"></span><img src="imagenes/c5-0.jpg" alt=""></figure>
+    <figure class="copia recorte" style="--h:940px;--a:.31;--r:.9deg;--y:22px"><img src="imagenes/c5-2.jpg" alt=""></figure>
+    <figure class="copia recorte" style="--h:940px;--a:.268;--r:-.5deg;--y:-6px"><span class="tape"></span><img src="imagenes/c5-3.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 02 · ácido · el Buzo Multitud Térmica con el Jean Flare Destroyed Verde -->
+<section class="post acido grano" id="p02">
+  <div class="fila">
+    <figure class="copia" style="--h:1150px;--r:-1deg"><span class="tape"></span><img src="imagenes/c6-0.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 03 · carbón, textura de Chicle · tres salidas de la Chaqueta Blood Rose, cada modelo a su estatura -->
+<section class="post carbon grano" id="p03">
+  <div class="tx"><div class="hi-tx hi-tx--magenta"></div></div>
+  <div class="fila piso" style="--gap:24px;--piso:150px">
+    <figure class="copia recorte" style="--h:892px;--a:.315;--r:.8deg"><img src="imagenes/c1-1.jpg" alt=""></figure>
+    <figure class="copia recorte" style="--h:803px;--a:.315;--r:-1.1deg"><span class="tape"></span><img src="imagenes/c1-3.jpg" alt=""></figure>
+    <figure class="copia recorte" style="--h:928px;--a:.315;--r:.6deg"><img src="imagenes/c1-6.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 04 · hueso · el Tejido Anillos Índigo con el Jean Wide Fleco Índigo -->
+<section class="post hueso grano" id="p04">
+  <div class="fila">
+    <figure class="copia" style="--h:1180px;--r:.7deg"><span class="tape"></span><img src="imagenes/c7-4.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 05 · carbón, textura de Fiera · la Chaqueta Trouble Maker con el Jean Patchwork Cuadros, tres salidas -->
+<section class="post carbon grano" id="p05">
+  <div class="tx"><div class="hi-tx hi-tx--leopardo"></div></div>
+  <div class="fila">
+    <figure class="copia recorte" style="--h:900px;--a:.31;--r:-.9deg;--y:10px"><img src="imagenes/c3-0.jpg" alt=""></figure>
+    <figure class="copia recorte" style="--h:900px;--a:.31;--r:.6deg;--y:-24px"><span class="tape"></span><img src="imagenes/c3-1.jpg" alt=""></figure>
+    <figure class="copia recorte" style="--h:900px;--a:.31;--r:1.2deg;--y:16px"><img src="imagenes/c3-2.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 06 · hueso · el Tejido Anillos Índigo de cerca -->
+<section class="post hueso grano" id="p06">
+  <div class="fila">
+    <figure class="copia" style="--h:1080px;--r:-.6deg"><span class="tape"></span><img src="imagenes/c7-5.jpg" alt=""></figure>
+  </div>
+  <span class="sello" style="--c:#5b7cfa;left:800px;top:1060px"><svg><use href="#flare"/></svg></span>
+</section>
+
+<!-- 07 · carbón, textura de Radiactivo · dos salidas del Buzo Multitud Térmica con el Jean Flare Destroyed Verde -->
+<section class="post carbon grano" id="p07">
+  <div class="tx"><div class="hi-tx hi-tx--acido"></div></div>
+  <div class="fila" style="--gap:30px">
+    <figure class="copia" style="--h:960px;--r:-1.3deg;--y:-30px"><span class="tape"></span><img src="imagenes/c6-2.jpg" alt=""></figure>
+    <figure class="copia" style="--h:960px;--r:1deg;--y:40px"><span class="tape"></span><img src="imagenes/c6-6.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 08 · hueso · la Chaqueta Blood Rose con el Jean Patchwork Estrellas Violeta -->
+<section class="post hueso grano" id="p08">
+  <div class="fila">
+    <figure class="copia" style="--h:1180px;--r:-.8deg"><span class="tape"></span><img src="imagenes/c4-4.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 09 · carbón · tres salidas del Jean Patchwork Estrellas Violeta -->
+<section class="post carbon grano" id="p09">
+  <div class="fila">
+    <figure class="copia recorte" style="--h:900px;--a:.31;--r:1deg;--y:-20px"><img src="imagenes/c4-5.jpg" alt=""></figure>
+    <figure class="copia recorte" style="--h:900px;--a:.31;--r:-.7deg;--y:18px"><span class="tape"></span><img src="imagenes/c4-6.jpg" alt=""></figure>
+    <figure class="copia recorte" style="--h:900px;--a:.31;--r:.5deg;--y:-8px"><img src="imagenes/c4-7.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 10 · hueso · la Chaqueta Trouble Maker de cerca -->
+<section class="post hueso grano" id="p10">
+  <div class="fila">
+    <figure class="copia" style="--h:1150px;--r:.9deg"><span class="tape"></span><img src="imagenes/c5-1.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 11 · carbón, textura de Sangre Fría · de cerca, la Camiseta Célula Carmín y el Jean Flare Dragón Ácido -->
+<section class="post carbon grano" id="p11">
+  <div class="tx"><div class="hi-tx hi-tx--carmin"></div></div>
+  <div class="fila" style="--gap:34px">
+    <figure class="copia" style="--h:980px;--r:-1deg;--y:24px"><span class="tape"></span><img src="imagenes/c8-d1.jpg" alt=""></figure>
+    <figure class="copia" style="--h:980px;--r:1.2deg;--y:-24px"><img src="imagenes/c8-d2.jpg" alt=""></figure>
+  </div>
+  <span class="sello" style="--c:#c3142d;--e:#ece3d0;left:44px;top:1124px;--s:180px"><svg><use href="#flare"/></svg></span>
+</section>
+
+<!-- 12 · hueso · la Chaqueta Trouble Maker con el Jean Patchwork Cuadros -->
+<section class="post hueso grano" id="p12">
+  <div class="fila">
+    <figure class="copia" style="--h:1180px;--r:1deg"><span class="tape"></span><img src="imagenes/c3-5.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 13 · carbón, textura de Medianoche · el Tejido Anillos Índigo con el Jean Wide Fleco Índigo: frente, lado y espalda -->
+<section class="post carbon grano" id="p13">
+  <div class="tx"><div class="hi-tx hi-tx--indigo"></div></div>
+  <div class="fila" style="--gap:24px">
+    <figure class="copia" style="--h:900px;--r:-.7deg"><span class="tape"></span><img src="imagenes/c7-0.jpg" alt=""></figure>
+    <figure class="copia" style="--h:900px;--r:.9deg;--y:-26px"><img src="imagenes/c7-1.jpg" alt=""></figure>
+    <figure class="copia" style="--h:900px;--r:-1.1deg;--y:14px"><span class="tape"></span><img src="imagenes/c7-2.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 14 · hueso · la Chaqueta Blood Rose de cerca -->
+<section class="post hueso grano" id="p14">
+  <div class="fila">
+    <figure class="copia" style="--h:1100px;--r:-1.1deg"><span class="tape"></span><img src="imagenes/c1-5.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 15 · carbón · dos salidas de la Chaqueta Blood Rose con el Jean Patchwork Estrellas Violeta -->
+<section class="post carbon grano" id="p15">
+  <div class="fila" style="--gap:34px">
+    <figure class="copia" style="--h:1000px;--r:.8deg;--y:-26px"><img src="imagenes/c4-0.jpg" alt=""></figure>
+    <figure class="copia" style="--h:1000px;--r:-1.2deg;--y:30px"><span class="tape"></span><img src="imagenes/c4-3.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 16 · hueso · el Buzo Multitud Térmica de espalda -->
+<section class="post hueso grano" id="p16">
+  <div class="fila">
+    <figure class="copia" style="--h:1150px;--r:.6deg"><span class="tape"></span><img src="imagenes/c6-5.jpg" alt=""></figure>
+  </div>
+  <span class="sello" style="--c:#c4beb2;left:812px;top:96px"><svg><use href="#flare"/></svg></span>
+</section>
+
+<!-- 17 · carbón, textura de Asfalto · la salida en grupo de la Chaqueta Trouble Maker con el Jean Patchwork Cuadros -->
+<section class="post carbon grano" id="p17">
+  <div class="tx"><div class="hi-tx hi-tx--ceniza"></div></div>
+  <div class="fila">
+    <figure class="copia" style="--h:1050px;--r:-.8deg"><span class="tape"></span><img src="imagenes/c3-3.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 18 · hueso · el Tejido Anillos Índigo de espalda y el Jean Wide Fleco Índigo de cerca -->
+<section class="post hueso grano" id="p18">
+  <div class="fila" style="--gap:30px">
+    <figure class="copia" style="--h:860px;--r:-1.3deg;--y:-46px"><span class="tape"></span><img src="imagenes/c7-7.jpg" alt=""></figure>
+    <figure class="copia" style="--h:860px;--r:1.1deg;--y:50px"><img src="imagenes/c7-6.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 19 · carbón, textura de Chicle · dos salidas de la Chaqueta Blood Rose -->
+<section class="post carbon grano" id="p19">
+  <div class="tx"><div class="hi-tx hi-tx--magenta"></div></div>
+  <div class="fila" style="--gap:44px">
+    <figure class="copia" style="--h:1100px;--r:-1deg;--y:20px"><span class="tape"></span><img src="imagenes/c1-0.jpg" alt=""></figure>
+    <figure class="copia" style="--h:1100px;--r:.8deg;--y:-20px"><span class="tape"></span><img src="imagenes/c1-2.jpg" alt=""></figure>
+  </div>
+</section>
+
+<!-- 20 · ácido · el final: una salida de cada conjunto, todas juntas -->
+<section class="post acido grano" id="p20">
+  <span class="sello" style="--c:#0d0c0b;--e:#dff04a;left:60px;top:60px"><svg><use href="#flare"/></svg></span>
+  <div class="fila" style="--gap:0px;--solapa:-30px">
+    <figure class="copia recorte chica" style="--h:740px;--a:.27;--borde:12px;--r:-1.4deg;--y:30px"><span class="tape"></span><img src="imagenes/c5-2.jpg" alt=""></figure>
+    <figure class="copia recorte chica" style="--h:740px;--a:.27;--borde:12px;--r:1.2deg;--y:-40px"><img src="imagenes/c6-0.jpg" alt=""></figure>
+    <figure class="copia recorte chica" style="--h:740px;--a:.27;--borde:12px;--r:-.8deg;--y:20px"><span class="tape"></span><img src="imagenes/c7-4.jpg" alt=""></figure>
+    <figure class="copia recorte chica" style="--h:740px;--a:.27;--borde:12px;--r:1.4deg;--y:-30px"><img src="imagenes/c4-6.jpg" alt=""></figure>
+    <figure class="copia recorte chica" style="--h:740px;--a:.27;--borde:12px;--r:-1.1deg;--y:40px"><span class="tape"></span><img src="imagenes/c1-4.jpg" alt=""></figure>
+  </div>
+</section>
+
+</body>
+</html>
