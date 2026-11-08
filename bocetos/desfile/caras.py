@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Dónde está cada cara en las salidas del desfile, para que posts.py la tape con una barra.
+"""Dónde está cada cara en las salidas del desfile, para que posts.py y originales.py la tapen con una barra.
 
 Busca las caras con BlazeFace, el detector de caras de MediaPipe, corriéndolo con OpenCV: pasa ventanas cuadradas de
 varios tamaños por cada toma, con el modelo de lejos y el de cerca, y junta lo que encuentran. Después se queda solo con
@@ -29,13 +29,16 @@ from PIL import Image
 AQUI = Path(__file__).resolve().parent
 FUENTES = AQUI / 'fuentes'
 TOMAS = json.loads((FUENTES / 'tomas.json').read_text())
-# las tomas que usan los posts
-USADAS = ['c5-0', 'c5-2', 'c5-3', 'c6-0', 'c1-1', 'c1-3', 'c1-6', 'c7-4', 'c3-0', 'c3-1', 'c3-2', 'c7-5', 'c6-2', 'c6-6',
-          'c4-4', 'c4-5', 'c4-6', 'c4-7', 'c5-1', 'c8-d1', 'c8-d2', 'c3-5', 'c7-0', 'c7-1', 'c7-2', 'c1-5', 'c4-0', 'c4-3',
-          'c6-5', 'c3-3', 'c7-7', 'c7-6', 'c1-0', 'c1-2', 'c1-4']
+# las 42 salidas: las de los posts y las de originales.py
+TODAS = list(TOMAS)
 # espaldas, la cabeza girada de espaldas, el detalle que corta la cara en la nariz y los detalles de la ropa
-SIN_CARA = {'c5-3', 'c7-2', 'c6-5', 'c4-7', 'c7-7', 'c7-5', 'c8-d1', 'c8-d2', 'c7-6'}
+SIN_CARA = {'c5-3', 'c7-2', 'c6-5', 'c4-7', 'c7-7', 'c7-5', 'c8-d1', 'c8-d2', 'c7-6', 'c4-2', 'c4-8', 'c4-9'}
 GRUPOS = {'c3-3'}
+# los primeros planos de la Chaqueta Blood Rose: en la cabeza muy inclinada el detector pone los ojos casi parejos, y en
+# la de las gafas los pone en el borde de abajo de las gafas, así que las cejas quedaban fuera de la barra. Los ojos, la
+# nariz y la boca van medidos a ojo sobre la foto, con los ojos a la altura de las cejas
+A_OJO = {'c1-7': [[213, 109], [268, 129], [258, 163], [253, 203]],
+         'c4-1': [[164.5, 131], [220, 130], [210.5, 178.8], [202.4, 205.7]]}
 
 
 def anclas(s, pasos, por_celda):
@@ -132,7 +135,7 @@ def main():
     mods = modelos(Path(sys.argv[1]))
     hojas = {}
     resultado = {}
-    for nombre in USADAS:
+    for nombre in TODAS:
         if nombre in SIN_CARA:
             continue
         t = TOMAS[nombre]
@@ -143,7 +146,10 @@ def main():
         if nombre in GRUPOS:
             elegidas = [d for d in caras if d[4] >= 0.7 and d[1] + d[3] / 2 < 0.5 * t['h']]
         else:
-            elegidas = [d for d in caras if d[4] >= 0.8 and d[1] + d[3] / 2 < 0.35 * t['h']][:1]
+            elegidas = [d for d in caras if d[4] >= 0.8 and d[1] + d[3] / 2 < 0.4 * t['h']][:1]
+        if nombre in A_OJO:
+            for d in elegidas:
+                d[5] = [tuple(p) for p in A_OJO[nombre]] + list(d[5][4:])
         resultado[nombre] = [{'x': round(d[0], 1), 'y': round(d[1], 1), 'w': round(d[2], 1), 'h': round(d[3], 1),
                               'puntaje': round(d[4], 3), 'puntos': [[round(a, 1), round(b, 1)] for a, b in d[5]]}
                              for d in elegidas]

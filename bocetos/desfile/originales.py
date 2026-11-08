@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-"""Las fotos originales del desfile, sin tocar: cada salida tal como la generó Canva, recortada de su hoja sin la línea que
-la separa de las otras. Sin barras en las caras, sin color, sin agrandar y sin el diseño de los posts.
+"""Las fotos originales del desfile: cada salida tal como la generó Canva, recortada de su hoja sin la línea que la separa
+de las otras, con las caras tapadas con la misma barra de los posts (un pedazo del fondo de la misma foto; la dice
+fuentes/caras.json, que arma caras.py). Fuera de la barra no cambia nada: sin color, sin agrandar y sin el diseño de los
+posts. Las espaldas y los detalles no llevan barra.
 
 Deja originales/salidas/<hoja>-NN.jpg (las 42 salidas, en calidad 95 sin submuestreo de color, para no perder nada más de
 lo que ya trae el JPG de Canva) y originales/vista-previa.jpg, la hoja de contactos con el nombre de cada archivo.
@@ -11,14 +13,15 @@ import json
 import math
 from pathlib import Path
 
+import numpy as np
 from PIL import Image, ImageDraw
+
+import posts  # la barra de las caras, la misma de los posts
 
 AQUI = Path(__file__).resolve().parent
 FUENTES = AQUI / 'fuentes'
 SALIDA = AQUI / 'originales'
 TOMAS = json.loads((FUENTES / 'tomas.json').read_text())
-# el mismo recorte de posts.py: en las hojas nuevas la línea que separa las salidas es más gruesa
-MARGEN = {'trouble-maker-patchwork': 8, 'multitud-destroyed': 5, 'anillos-fleco': 5, 'celula-dragon': 5}
 
 
 # cada archivo lleva el nombre de su hoja; la de la Chaqueta Trouble Maker con cargos y faldas se pidió con un jean
@@ -40,14 +43,11 @@ def main():
     (SALIDA / 'salidas').mkdir(parents=True, exist_ok=True)
     for viejo in (SALIDA / 'salidas').glob('*.jpg'):
         viejo.unlink()
-    hojas = {}
     fotos = []
     nombre = nombres()
     for clave, t in TOMAS.items():
-        if t['collage'] not in hojas:
-            hojas[t['collage']] = Image.open(FUENTES / f"pasarela-{t['collage']}.jpg").convert('RGB')
-        m = MARGEN.get(t['collage'], 3)
-        foto = hojas[t['collage']].crop((t['x'] + m, t['y'] + m, t['x'] + t['w'] - m, t['y'] + t['h'] - m))
+        # el mismo recorte de arriba, ya con la barra en las caras
+        foto = Image.fromarray(np.round(np.clip(posts.toma(clave), 0, 1) * 255).astype(np.uint8))
         ruta = SALIDA / 'salidas' / f'{nombre[clave]}.jpg'
         foto.save(ruta, quality=95, subsampling=0)
         fotos.append((ruta.stem, foto))

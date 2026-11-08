@@ -65,8 +65,9 @@ barbilla queda a la vista. Sobre el fondo oscuro de la pasarela la barra casi se
 donde el fondo es más claro, se nota el rectángulo. Solo cambian las caras: la ropa queda igual. En el detalle del Tejido
 Anillos Índigo (06), la cinta de la copia cae justo sobre la boca y termina de tapar la cara.
 
-- `caras.py` busca las caras con el detector de caras de MediaPipe y deja `fuentes/caras.json`: 31 caras en 26 salidas,
-  revisadas a ojo. No se tapan las caras de los estampados, como las del Buzo Multitud Térmica.
+- `caras.py` busca las caras de las 42 salidas con el detector de caras de MediaPipe y deja `fuentes/caras.json`: 35 caras
+  en 30 salidas (31 en las 26 de los posts), revisadas a ojo. En los dos retratos de la Chaqueta Blood Rose (la cabeza muy
+  inclinada y la de las gafas) los puntos de la cara van medidos a ojo, porque el detector dejaba las cejas fuera. No se tapan las caras de los estampados, como las del Buzo Multitud Térmica.
 - No llevan barra las espaldas (la tercera salida de los posts 01, 09 y 13, el 16 y la cabeza que se gira de espaldas en
   el 18), el detalle del Tejido Anillos Índigo (06), que ya corta la cara en la nariz, ni los detalles de la ropa (11 y
   el jean del 18).
@@ -110,7 +111,7 @@ Anillos Índigo (06), la cinta de la copia cae justo sobre la boca y termina de 
 | `textos.md` | Las descripciones, las etiquetas, la música de cada post y el calendario |
 | `muestra.html` | La muestra del perfil: la cuadrícula y cada post abierto con su descripción y su música |
 | `vista-previa.jpg` | La cuadrícula del perfil con los 20 posts, recortados a 3:4 como los muestra Instagram |
-| `originales/` | Las 42 salidas tal como las generó Canva, sin barras, sin color y sin agrandar, con su índice |
+| `originales/` | Las 42 salidas tal como las generó Canva, con la barra en las caras, sin color y sin agrandar, con su índice |
 | `fuentes/pasarela-*.jpg` | Las hojas de salidas que entregó Canva, una por conjunto |
 | `fuentes/tomas.json` | Dónde está cada salida dentro de su hoja |
 | `fuentes/caras.json` | Dónde está cada cara: su caja y los puntos de los ojos, la nariz, la boca y las orejas |
@@ -149,7 +150,8 @@ python3 bocetos/desfile/caras.py /tmp/fd     # unos dos minutos; después, posts
 ```
 
 Si cambian las fotos, hay que revisar a ojo las caras que encuentra: las listas `SIN_CARA` y `GRUPOS` de `caras.py`
-dicen qué salidas no llevan barra y cuáles son de grupo.
+dicen qué salidas no llevan barra y cuáles son de grupo, y `A_OJO`, qué caras van medidas a mano. Después de `caras.py`
+van `posts.py` y `originales.py`.
 
 ## Lo que falta
 

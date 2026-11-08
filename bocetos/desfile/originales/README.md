@@ -2,12 +2,14 @@
 
 ![Las 42 salidas](vista-previa.jpg)
 
-Las fotos del desfile tal como salieron de la IA de Canva, sin tocar: sin las barras de las caras, sin color, sin
-agrandar y sin el diseño de los posts.
+Las fotos del desfile tal como salieron de la IA de Canva, con las caras tapadas con la misma barra de los posts: un
+pedazo del fondo de la misma foto, de las cejas a debajo de la boca. Fuera de la barra no cambia nada: sin color, sin
+agrandar y sin el diseño de los posts. Las espaldas, la cabeza que se gira de espaldas, el detalle que corta la cara en la
+nariz (`anillos-fleco-06`) y los detalles de la ropa no llevan barra.
 
 - `salidas/`: las 42 salidas, cada una recortada de su hoja sin la línea que la separa de las otras. Van en JPG de calidad
   95, para no perder nada más de lo que ya trae el JPG de Canva.
-- Las 7 hojas completas, como las entregó Canva: en el repo están en `../fuentes/pasarela-*.jpg`, y en el zip, en `hojas/`.
+- Las 7 hojas completas, como las entregó Canva y sin barras: en el repo están en `../fuentes/pasarela-*.jpg`.
 
 **Lo que hay que saber**
 
