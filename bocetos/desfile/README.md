@@ -124,6 +124,7 @@ Anillos Índigo (06), la cinta de la copia cae justo sobre la boca y termina de 
 | `videos.py` | Arma los 20 videos con su música |
 | `muestra.py` y `muestra-plantilla.html` | Arman `muestra.html` con las descripciones de `textos.md` |
 | `originales.py` | Saca las salidas originales a `originales/` |
+| `originales_hd.py` | Agranda las salidas originales 4 veces con Real-ESRGAN, a `originales/salidas-hd/` |
 | `encuadre.py` | Dibuja el encuadre de referencia |
 
 ## Volver a generarlos

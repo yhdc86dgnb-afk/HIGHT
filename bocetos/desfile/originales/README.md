@@ -9,12 +9,15 @@ nariz (`anillos-fleco-06`) y los detalles de la ropa no llevan barra.
 
 - `salidas/`: las 42 salidas, cada una recortada de su hoja sin la línea que la separa de las otras. Van en JPG de calidad
   95, para no perder nada más de lo que ya trae el JPG de Canva.
+- `salidas-hd/`: las mismas 42, agrandadas 4 veces con Real-ESRGAN (de 628 a 2156 px de ancho). El modelo rehace el
+  detalle de la tela, el pelo y la piel, así que en lo muy fino (costuras, letras pequeñas) la prenda puede cambiar un
+  poco: para Instagram sirven; para la ficha de la tienda valen más las fotos reales. Las saca `../originales_hd.py`.
 - Las 7 hojas completas, como las entregó Canva y sin barras: en el repo están en `../fuentes/pasarela-*.jpg`.
 
 **Lo que hay que saber**
 
 - **El tamaño:** Canva entrega varias salidas en una hoja de 1080 × 1350, así que cada salida mide de 157 a 539 px de ancho
-  y de 161 a 718 px de alto. En el teléfono se ven bien; para imprimir o una pantalla grande se quedan cortas.
+  y de 161 a 718 px de alto. Para publicar, usa las de `salidas-hd/`.
 - **Son imágenes hechas con IA:** las modelos no existen y cada prenda es una versión de la IA a partir de la foto real.
   Al publicarlas en Instagram, activa «Etiquetar este contenido como hecho con IA».
 - **Lo que no es de Hight:** algunas salidas llevan piezas de fondo que no son de la tienda, como pantalones cargo, faldas
