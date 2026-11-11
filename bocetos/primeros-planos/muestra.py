@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """La muestra interactiva del perfil con los 12 primeros planos: la cuadrícula (cada foto recortada a 3:4, como la
 muestra Instagram) y, al tocar un post, el post abierto con su descripción, sus productos etiquetados y un pedazo de la
-música propia del desfile sonando de fondo. Usa la plantilla de la muestra del desfile (../desfile/muestra-plantilla.html).
+música propia del desfile sonando de fondo. Tiene el diseño de la tienda (muestra-plantilla.html) y la lógica de la muestra del desfile.
 
 Las descripciones siguen la voz de Hight para Instagram: el dato, una frase de sensación y la acción, sin emojis y con
 tres hashtags como máximo. Los precios son los de la tienda del 23 de octubre de 2026.
-Deja muestra.html, que usa fotos/ y musica/ de esta carpeta. Uso, desde la raíz del repo:
+Deja muestra.html, que usa fotos/, musica/, grano.svg y logo-plata.webp de esta carpeta. Uso, desde la raíz del repo:
 python3 bocetos/primeros-planos/muestra.py
 """
 import json
@@ -92,24 +92,26 @@ def main():
         lista.append({'n': n, 'src': f'fotos/{foto}.jpg', 'alt': alt, 'pista': pista, 'pistaNombre': nombre,
                       'desde': round(compas * bar, 3), 'dura': round(compases * bar, 3), 'lineas': lineas,
                       'hashtags': tags, 'etiquetas': etiqueta, 'fecha': f'Primeros planos · {n:02d} de {len(POSTS)}'})
-    pagina = (DESFILE / 'muestra-plantilla.html').read_text()
-    # la estrella de la marca, la misma de la muestra del desfile
-    estrella = re.search(r'<path d="([^"]+)" fill="#6d8bfb"', (DESFILE / 'muestra.html').read_text()).group(1)
-    cambios = {
+    # la lógica (descripciones, música, deslizar) es la de la muestra del desfile; el diseño, el de la tienda
+    viejo = (DESFILE / 'muestra-plantilla.html').read_text()
+    script = viejo[viejo.index('<script>'):viejo.index('</script>') + len('</script>')]
+    cambios_script = {
         '/*DATOS*/': 'const POSTS = ' + json.dumps(lista, ensure_ascii=False) + ';\nconst PISTAS = '
                      + json.dumps({p: f'musica/{p}.mp3' for p in PISTAS}) + ';',
-        '<!--BIO-->': '<br>'.join(BIO),
-        'ESTRELLA_PATH': estrella,
-        '<title>Desfile del Drop 01</title>': '<title>Primeros planos del Drop 01</title>',
-        'Muestra del perfil · 20 posts del desfile': f'Muestra del perfil · {len(POSTS)} primeros planos',
-        'Perfil de HIGHT con los 20 posts del desfile': f'Perfil de HIGHT con los {len(POSTS)} primeros planos',
-        '<b>20</b><span>publicaciones</span>': f'<b>{len(POSTS)}</b><span>publicaciones</span>',
         'de 20`': f'de {len(POSTS)}`',
         "'desfile-silencio'": "'primeros-planos-silencio'",
+        "b.setAttribute('aria-label',": "b.dataset.n = `(${String(p.n).padStart(2, '0')})`;\n  b.setAttribute('aria-label',",
     }
-    for viejo, nuevo in cambios.items():
-        assert viejo in pagina, viejo
-        pagina = pagina.replace(viejo, nuevo)
+    for a, b in cambios_script.items():
+        assert a in script, a
+        script = script.replace(a, b)
+    pagina = (AQUI / 'muestra-plantilla.html').read_text()
+    # la estrella de la marca, la misma de la muestra del desfile
+    estrella = re.search(r'<path d="([^"]+)" fill="#6d8bfb"', (DESFILE / 'muestra.html').read_text()).group(1)
+    for a, b in {'<!--SCRIPT-->': script, '<!--BIO-->': '<br>'.join(BIO), 'ESTRELLA_PATH': estrella,
+                 'NUM_POSTS': str(len(POSTS))}.items():
+        assert a in pagina, a
+        pagina = pagina.replace(a, b)
     (AQUI / 'muestra.html').write_text(pagina)
     print('bocetos/primeros-planos/muestra.html', len(lista), 'posts')
 

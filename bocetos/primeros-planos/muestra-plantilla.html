@@ -1,0 +1,238 @@
+<title>Primeros planos del Drop 01</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+/* El perfil como una sección de la tienda: carbón con grano de fotocopia, titulares en Anton, etiquetas en Space Mono
+   entre paréntesis, líneas punteadas y el color del turno, que cambia cada minuto igual que en la tienda. */
+:root {
+  --carbon: #0d0c0b;
+  --carbon-2: #181614;
+  --hueso: #ece3d0;
+  --gris: #9a9184;
+  --linea: #3a3631;
+  --acento: #dff04a;
+  --on-acento: #0d0c0b;
+  --f-display: 'Anton', Impact, 'Arial Narrow Bold', sans-serif;
+  --f-text: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+p, h1, h2 { margin: 0; }
+body {
+  background: var(--carbon); color: var(--hueso); font: 400 15px/1.45 var(--f-text);
+  -webkit-font-smoothing: antialiased; overflow-x: clip;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--carbon); }
+/* el grano de fotocopia sobre toda la página */
+body::after {
+  content: ""; position: fixed; inset: -40px; z-index: 50; pointer-events: none;
+  background: url("grano.svg") 0 0 / 320px; opacity: .5; mix-blend-mode: overlay;
+}
+:focus-visible { outline: 2px solid var(--acento); outline-offset: 3px; }
+::selection { background: var(--acento); color: var(--on-acento); }
+.t-label { font: 400 .72rem/1.45 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; }
+
+/* la franja que corre, del color del turno */
+.franja { overflow: hidden; background: var(--acento); color: var(--on-acento); font: 700 .72rem/1 var(--f-mono);
+  letter-spacing: .1em; text-transform: uppercase; transition: background-color .6s, color .6s; }
+.franja-pista { display: flex; width: max-content; animation: correr 40s linear infinite; }
+.franja ul { display: flex; flex-shrink: 0; align-items: center; gap: 22px; padding: 11px 22px 11px 0; margin: 0; list-style: none; }
+.franja li { white-space: nowrap; }
+.franja svg { width: 13px; height: 13px; display: block; }
+@keyframes correr { to { transform: translateX(-50%); } }
+
+.perfil { max-width: 480px; margin: 0 auto; display: grid; gap: 18px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px; }
+.barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--carbon);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 14px;
+  border-bottom: 1px dashed var(--linea); margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
+.barra b { font: 400 1.5rem/1 var(--f-display); text-transform: uppercase; letter-spacing: .01em; }
+.turno { display: flex; align-items: center; gap: 8px; color: var(--hueso); }
+.turno i { width: 13px; height: 13px; border-radius: 50%; background: var(--acento); box-shadow: inset 0 0 0 1px rgba(0,0,0,.25); transition: background-color .6s; }
+.turno span { color: var(--gris); }
+
+.cabeza { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center; }
+.avatar { position: relative; width: 92px; height: 92px; border-radius: 50%; background: var(--carbon-2); display: grid; place-items: center;
+  box-shadow: 0 0 0 3px var(--carbon), 0 0 0 5px var(--acento); transition: box-shadow .6s; }
+.avatar img { width: 74%; height: auto; display: block; }
+.cuentas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.cuentas div { display: grid; gap: 2px; padding-top: 8px; border-top: 1px dashed var(--linea); min-width: 0; }
+.cuentas b { font: 400 1.6rem/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.cuentas span { color: var(--gris); font-size: .56rem; letter-spacing: .02em; overflow-wrap: anywhere; }
+.nombre { font: 400 clamp(2.4rem, 12vw, 3.4rem)/.86 var(--f-display); text-transform: uppercase; letter-spacing: -.005em; }
+.bio { display: grid; gap: 8px; }
+.bio p { max-width: 42ch; }
+.bio a { color: var(--hueso); text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px; justify-self: start; }
+.botones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn { display: grid; place-items: center; min-height: 44px; border: 2px solid var(--hueso); font: 700 .72rem/1 var(--f-mono);
+  letter-spacing: .08em; text-transform: uppercase; }
+.btn-acento { background: var(--acento); border-color: var(--acento); color: var(--on-acento); transition: background-color .6s, border-color .6s; }
+.btn-punteado { border-style: dashed; }
+.pestanas { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px dashed var(--linea); }
+.pestanas span { display: grid; place-items: center; padding-block: 11px; color: var(--gris); }
+.pestanas span:first-child { color: var(--carbon); background: var(--hueso); }
+.cuadricula { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px))); }
+.cuadricula button { all: unset; position: relative; cursor: pointer; display: block; aspect-ratio: 3 / 4; max-width: 100%; overflow: hidden; background: var(--carbon-2); }
+.cuadricula button::after { content: attr(data-n); position: absolute; left: 6px; top: 6px; padding: 3px 5px; background: rgba(13,12,11,.82);
+  color: var(--hueso); font: 700 .58rem/1 var(--f-mono); letter-spacing: .06em; }
+.cuadricula button:focus-visible { outline: 3px solid var(--acento); outline-offset: -3px; }
+.cuadricula img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s cubic-bezier(.16,1,.3,1); }
+.cuadricula button:hover img { transform: scale(1.04); }
+.ayuda { color: var(--gris); text-align: center; text-wrap: balance; }
+
+/* el post abierto: una copia impresa sobre carbón */
+.post { position: fixed; inset: 0; z-index: 40; background: var(--carbon); overflow-y: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: calc(env(safe-area-inset-top, 0px) + 6px) calc(env(safe-area-inset-bottom, 0px) + 32px); }
+.post .columna { max-width: 480px; margin: 0 auto; display: grid; gap: 14px; }
+.arriba { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; text-align: center; padding-bottom: 8px; border-bottom: 1px dashed var(--linea); }
+.arriba b { font: 400 1.25rem/1 var(--f-display); text-transform: uppercase; display: block; }
+.arriba span { color: var(--gris); display: block; margin-top: 4px; }
+.icono { all: unset; cursor: pointer; width: 44px; height: 44px; display: grid; place-items: center; color: var(--hueso); }
+.icono:focus-visible { outline: 2px solid var(--acento); }
+.icono svg { width: 22px; height: 22px; }
+.autor { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; }
+.autor .avatar { width: 40px; height: 40px; box-shadow: 0 0 0 2px var(--carbon), 0 0 0 3px var(--acento); }
+.autor b { font: 400 1.1rem/1 var(--f-display); text-transform: uppercase; }
+.musica { all: unset; font: 400 .7rem/1.4 var(--f-mono); letter-spacing: .04em; text-transform: uppercase; cursor: pointer; display: flex; gap: 6px; align-items: center; color: var(--gris); min-width: 0; margin-top: 4px; }
+.musica:focus-visible { outline: 2px solid var(--acento); }
+.musica svg { width: 12px; height: 12px; flex: none; color: var(--acento); transition: color .6s; }
+.musica span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.copia { position: relative; padding: 7px; background: var(--hueso); box-shadow: 0 1px 0 rgba(0,0,0,.12), 0 24px 44px -20px rgba(0,0,0,.8); rotate: -.6deg; }
+.copia:nth-of-type(even) { rotate: .5deg; }
+.cinta { position: absolute; z-index: 3; top: -12px; left: 50%; width: 120px; height: 24px; transform: translateX(-50%) rotate(-4deg);
+  background: linear-gradient(180deg, rgba(243,236,210,.85), rgba(226,215,182,.78)); box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  clip-path: polygon(3% 8%, 9% 0, 92% 4%, 100% 0, 97% 52%, 100% 100%, 90% 94%, 6% 100%, 0 92%, 3% 50%); pointer-events: none; }
+.foto { position: relative; aspect-ratio: 4 / 5; max-width: 100%; background: var(--carbon-2); overflow: hidden; touch-action: pan-y; }
+.foto img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .25s ease; }
+.foto .flecha { position: absolute; top: 50%; translate: 0 -50%; background: rgba(13,12,11,.6); }
+.foto .izq { left: 6px; } .foto .der { right: 6px; }
+.foto .sonido { position: absolute; right: 8px; bottom: 8px; width: 36px; height: 36px; background: var(--acento); color: var(--on-acento); transition: background-color .6s; }
+.foto .sonido svg { width: 16px; height: 16px; }
+.acciones { display: flex; gap: 16px; align-items: center; color: var(--hueso); padding-top: 4px; }
+.acciones svg { width: 24px; height: 24px; }
+.acciones .guardar { margin-left: auto; }
+.pie { display: grid; gap: 8px; min-width: 0; }
+.pie .texto { font-size: 1rem; line-height: 1.5; }
+.pie .texto b { font-family: var(--f-display); font-weight: 400; text-transform: uppercase; letter-spacing: .01em; margin-right: 4px; }
+.pie .tags { text-transform: none; color: var(--on-acento); background: var(--acento); justify-self: start; padding: 3px 6px; transition: background-color .6s; }
+.pie .etiquetas, .pie .fecha { color: var(--gris); padding-top: 8px; border-top: 1px dashed var(--linea); }
+.solo { all: unset; font: 400 .7rem/1.4 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; justify-self: start; display: grid; place-items: center; min-height: 40px; padding-inline: 14px;
+  border: 1px dashed var(--linea); color: var(--gris); }
+.solo[aria-pressed="true"] { color: var(--on-acento); background: var(--acento); border-color: var(--acento); }
+.solo:focus-visible { outline: 2px solid var(--acento); }
+@media (prefers-reduced-motion: reduce) {
+  .franja-pista { animation: none; }
+  .foto img, .cuadricula img { transition: none; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs><symbol id="estrella" viewBox="0 0 24 24"><path fill="currentColor" d="ESTRELLA_PATH"/></symbol></defs>
+</svg>
+
+<div class="franja" aria-hidden="true">
+  <div class="franja-pista">
+    <ul><li>Streetwear de autor</li><li><svg><use href="#estrella"/></svg></li><li>Hecho en Medellín</li><li><svg><use href="#estrella"/></svg></li><li>Drop 01</li><li><svg><use href="#estrella"/></svg></li><li data-franja-turno>Ahora: Radiactivo</li><li><svg><use href="#estrella"/></svg></li><li>¿De qué color eres?</li><li><svg><use href="#estrella"/></svg></li></ul>
+    <ul><li>Streetwear de autor</li><li><svg><use href="#estrella"/></svg></li><li>Hecho en Medellín</li><li><svg><use href="#estrella"/></svg></li><li>Drop 01</li><li><svg><use href="#estrella"/></svg></li><li data-franja-turno>Ahora: Radiactivo</li><li><svg><use href="#estrella"/></svg></li><li>¿De qué color eres?</li><li><svg><use href="#estrella"/></svg></li></ul>
+  </div>
+</div>
+
+<main class="perfil" aria-label="Perfil de HIGHT con los NUM_POSTS primeros planos">
+  <div class="barra"><b>hight</b><span class="turno t-label"><i></i>Ahora <b data-turno-nombre style="font:inherit">Radiactivo</b></span></div>
+  <div class="cabeza">
+    <div class="avatar" aria-hidden="true"><img src="logo-plata.webp" alt="" width="977" height="672"></div>
+    <div class="cuentas t-label">
+      <div><b>NUM_POSTS</b><span>publicaciones</span></div>
+      <div><b>—</b><span>seguidores</span></div>
+      <div><b>—</b><span>seguidos</span></div>
+    </div>
+  </div>
+  <div class="bio">
+    <h1 class="nombre">Hight</h1>
+    <span class="t-label" style="color:var(--gris)">(Tienda de ropa) MED/COL</span>
+    <p><!--BIO--></p>
+    <a href="https://hight18.myshopify.com" target="_blank" rel="noopener">hight18.myshopify.com</a>
+  </div>
+  <div class="botones" aria-hidden="true"><span class="btn btn-acento">Seguir</span><span class="btn btn-punteado">Mensaje</span></div>
+  <div class="pestanas" aria-hidden="true">
+    <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></span>
+    <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg></span>
+    <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19c1.2-2.6 3.1-4 5.5-4s4.3 1.4 5.5 4"/></svg></span>
+  </div>
+  <div class="cuadricula" id="cuadricula"></div>
+  <p class="ayuda t-label">Toca un post para abrirlo con su descripción y su música.</p>
+</main>
+
+<section class="post" id="post" role="dialog" aria-modal="true" aria-labelledby="post-titulo" hidden>
+  <div class="columna">
+    <div class="arriba">
+      <button class="icono" id="cerrar" aria-label="Volver a la cuadrícula"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div><b id="post-titulo">Publicaciones</b><span id="post-numero" class="t-label"></span></div>
+      <span></span>
+    </div>
+    <div class="autor">
+      <div class="avatar" aria-hidden="true"><img src="logo-plata.webp" alt="" width="977" height="672"></div>
+      <div style="min-width:0"><b>hight</b>
+        <button class="musica t-label" id="musica" aria-label="Activar o silenciar la música">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V6l11-2v12" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>
+          <span id="musica-nombre"></span>
+        </button>
+      </div>
+    </div>
+    <div class="copia">
+      <span class="cinta"></span>
+      <div class="foto" id="foto">
+        <img id="foto-img" alt="">
+        <button class="icono flecha izq" id="anterior" aria-label="Post más nuevo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button class="icono flecha der" id="siguiente" aria-label="Post más viejo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></button>
+        <button class="icono sonido" id="sonido" aria-label="Silenciar la música"></button>
+      </div>
+    </div>
+    <div class="acciones" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 1 1-3.2-6.4L21 4l-1.2 4.2A8 8 0 0 1 20 12z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 3L3 10l7 3 3 7z"/><path d="M10 13l11-10"/></svg>
+      <svg class="guardar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+    </div>
+    <div class="pie">
+      <p class="texto"><b>hight</b> <span id="pie-texto"></span></p>
+      <p class="tags t-label" id="pie-tags"></p>
+      <p class="etiquetas t-label" id="pie-etiquetas"></p>
+      <p class="fecha t-label" id="pie-fecha"></p>
+    </div>
+    <button class="solo t-label" id="solo" aria-pressed="false">Pasar solo al siguiente cuando termine la música</button>
+  </div>
+</section>
+
+<audio id="audio" preload="none"></audio>
+
+<script>
+// el color del turno: el mismo reloj de la tienda, un color por minuto, igual para todos
+(function () {
+  const TURNOS = [
+    { name: 'Radiactivo', c: '#dff04a', on: '#0d0c0b' }, { name: 'Sangre Fría', c: '#c3142d', on: '#ece3d0' },
+    { name: 'Medianoche', c: '#5b7cfa', on: '#0d0c0b' }, { name: 'Chicle', c: '#e0218a', on: '#ece3d0' },
+    { name: 'Asfalto', c: '#c4beb2', on: '#0d0c0b' }, { name: 'Fiera', c: '#c08a4e', on: '#0d0c0b' },
+  ];
+  let actualTurno = -1;
+  function pintar() {
+    const i = Math.floor(Date.now() / 60000) % TURNOS.length;
+    if (i === actualTurno) return;
+    actualTurno = i;
+    const t = TURNOS[i];
+    document.documentElement.style.setProperty('--acento', t.c);
+    document.documentElement.style.setProperty('--on-acento', t.on);
+    document.querySelectorAll('[data-turno-nombre]').forEach((el) => { el.textContent = t.name; });
+    document.querySelectorAll('[data-franja-turno]').forEach((el) => { el.textContent = 'Ahora: ' + t.name; });
+  }
+  pintar();
+  setInterval(pintar, 1000);
+})();
+</script>
+<!--SCRIPT-->

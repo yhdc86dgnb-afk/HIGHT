@@ -1,130 +1,198 @@
-<meta charset="utf-8">
 <title>Primeros planos del Drop 01</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap">
 <style>
-/* Layout: una columna del ancho de un teléfono, como el perfil en la app; el post abierto ocupa toda la pantalla. */
+/* El perfil como una sección de la tienda: carbón con grano de fotocopia, titulares en Anton, etiquetas en Space Mono
+   entre paréntesis, líneas punteadas y el color del turno, que cambia cada minuto igual que en la tienda. */
 :root {
-  --bg: #0b0d11;        /* la noche del perfil */
-  --surface: #171a21;   /* botones y fondos de iconos */
-  --fg: #f2f3f5;
-  --muted: #8f95a0;
-  --line: #262a33;
-  --accent: #6d8bfb;    /* el azul de la marca: la música y los enlaces */
-  --ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --carbon: #0d0c0b;
+  --carbon-2: #181614;
+  --hueso: #ece3d0;
+  --gris: #9a9184;
+  --linea: #3a3631;
+  --acento: #dff04a;
+  --on-acento: #0d0c0b;
+  --f-display: 'Anton', Impact, 'Arial Narrow Bold', sans-serif;
+  --f-text: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+p, h1, h2 { margin: 0; }
 body {
-  background: var(--bg); color: var(--fg); font-family: var(--ui); font-size: 15px; line-height: 1.4;
-  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 8px 40px;
+  background: var(--carbon); color: var(--hueso); font: 400 15px/1.45 var(--f-text);
+  -webkit-font-smoothing: antialiased; overflow-x: clip;
 }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
-.perfil { max-width: 470px; margin: 0 auto; display: grid; gap: 14px; }
-.barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg);
-  display: flex; align-items: center; justify-content: space-between; padding-block: 10px; }
-.barra b { font-size: 20px; letter-spacing: -0.01em; }
-.barra .nota { color: var(--muted); font-size: 12px; }
-.cabeza { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; }
-.avatar { width: 86px; height: 86px; border-radius: 50%; background: #0d0c0b; display: grid; place-items: center;
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--line); }
-.avatar svg { width: 52%; height: 52%; }
-.cuentas { display: flex; gap: 22px; }
-.cuentas div { display: grid; }
-.cuentas b { font-size: 17px; font-variant-numeric: tabular-nums; }
-.cuentas span { color: var(--muted); font-size: 13px; }
-.bio { display: grid; gap: 2px; }
-.bio b { font-size: 15px; }
-.bio a { color: var(--accent); text-decoration: none; }
-.botones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.botones span { background: var(--surface); border-radius: 9px; padding: 8px; text-align: center; font-weight: 600; font-size: 14px; }
-.botones span:first-child { background: var(--accent); color: #0b0d11; }
-.pestanas { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
-.pestanas span { display: grid; place-items: center; padding-block: 10px; color: var(--muted); }
-.pestanas span:first-child { color: var(--fg); box-shadow: inset 0 -1px 0 var(--fg); }
-.pestanas svg { width: 22px; height: 22px; }
-.cuadricula { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
-.cuadricula button { all: unset; cursor: pointer; display: block; aspect-ratio: 3 / 4; max-width: 100%; overflow: hidden; background: var(--surface); }
-.cuadricula button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.cuadricula img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.ayuda { color: var(--muted); font-size: 13px; text-align: center; text-wrap: balance; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--carbon); }
+/* el grano de fotocopia sobre toda la página */
+body::after {
+  content: ""; position: fixed; inset: -40px; z-index: 50; pointer-events: none;
+  background: url("grano.svg") 0 0 / 320px; opacity: .5; mix-blend-mode: overlay;
+}
+:focus-visible { outline: 2px solid var(--acento); outline-offset: 3px; }
+::selection { background: var(--acento); color: var(--on-acento); }
+.t-label { font: 400 .72rem/1.45 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; }
 
-/* El post abierto */
-.post { position: fixed; inset: 0; z-index: 20; background: var(--bg); overflow-y: auto;
+/* la franja que corre, del color del turno */
+.franja { overflow: hidden; background: var(--acento); color: var(--on-acento); font: 700 .72rem/1 var(--f-mono);
+  letter-spacing: .1em; text-transform: uppercase; transition: background-color .6s, color .6s; }
+.franja-pista { display: flex; width: max-content; animation: correr 40s linear infinite; }
+.franja ul { display: flex; flex-shrink: 0; align-items: center; gap: 22px; padding: 11px 22px 11px 0; margin: 0; list-style: none; }
+.franja li { white-space: nowrap; }
+.franja svg { width: 13px; height: 13px; display: block; }
+@keyframes correr { to { transform: translateX(-50%); } }
+
+.perfil { max-width: 480px; margin: 0 auto; display: grid; gap: 18px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: calc(env(safe-area-inset-top, 0px) + 6px) calc(env(safe-area-inset-bottom, 0px) + 28px); }
-.post .columna { max-width: 470px; margin: 0 auto; display: grid; gap: 10px; }
-.arriba { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; text-align: center; }
-.arriba b { font-size: 16px; }
-.arriba span { color: var(--muted); font-size: 12px; display: block; }
-.icono { all: unset; cursor: pointer; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; color: var(--fg); }
-.icono:focus-visible { outline: 2px solid var(--accent); }
-.icono svg { width: 24px; height: 24px; }
-.autor { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; }
-.autor .avatar { width: 34px; height: 34px; box-shadow: 0 0 0 1px var(--line); }
-.autor b { font-size: 14px; }
-.musica { all: unset; cursor: pointer; display: flex; gap: 6px; align-items: center; color: var(--fg); font-size: 13px; min-width: 0; }
-.musica:focus-visible { outline: 2px solid var(--accent); border-radius: 4px; }
-.musica svg { width: 13px; height: 13px; flex: none; color: var(--accent); }
+  padding-block: 0 48px; }
+.barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--carbon);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 14px;
+  border-bottom: 1px dashed var(--linea); margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
+.barra b { font: 400 1.5rem/1 var(--f-display); text-transform: uppercase; letter-spacing: .01em; }
+.turno { display: flex; align-items: center; gap: 8px; color: var(--hueso); }
+.turno i { width: 13px; height: 13px; border-radius: 50%; background: var(--acento); box-shadow: inset 0 0 0 1px rgba(0,0,0,.25); transition: background-color .6s; }
+.turno span { color: var(--gris); }
+
+.cabeza { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center; }
+.avatar { position: relative; width: 92px; height: 92px; border-radius: 50%; background: var(--carbon-2); display: grid; place-items: center;
+  box-shadow: 0 0 0 3px var(--carbon), 0 0 0 5px var(--acento); transition: box-shadow .6s; }
+.avatar img { width: 74%; height: auto; display: block; }
+.cuentas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.cuentas div { display: grid; gap: 2px; padding-top: 8px; border-top: 1px dashed var(--linea); min-width: 0; }
+.cuentas b { font: 400 1.6rem/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.cuentas span { color: var(--gris); font-size: .56rem; letter-spacing: .02em; overflow-wrap: anywhere; }
+.nombre { font: 400 clamp(2.4rem, 12vw, 3.4rem)/.86 var(--f-display); text-transform: uppercase; letter-spacing: -.005em; }
+.bio { display: grid; gap: 8px; }
+.bio p { max-width: 42ch; }
+.bio a { color: var(--hueso); text-decoration: underline; text-decoration-style: dashed; text-underline-offset: 4px; justify-self: start; }
+.botones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn { display: grid; place-items: center; min-height: 44px; border: 2px solid var(--hueso); font: 700 .72rem/1 var(--f-mono);
+  letter-spacing: .08em; text-transform: uppercase; }
+.btn-acento { background: var(--acento); border-color: var(--acento); color: var(--on-acento); transition: background-color .6s, border-color .6s; }
+.btn-punteado { border-style: dashed; }
+.pestanas { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px dashed var(--linea); }
+.pestanas span { display: grid; place-items: center; padding-block: 11px; color: var(--gris); }
+.pestanas span:first-child { color: var(--carbon); background: var(--hueso); }
+.cuadricula { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px))); }
+.cuadricula button { all: unset; position: relative; cursor: pointer; display: block; aspect-ratio: 3 / 4; max-width: 100%; overflow: hidden; background: var(--carbon-2); }
+.cuadricula button::after { content: attr(data-n); position: absolute; left: 6px; top: 6px; padding: 3px 5px; background: rgba(13,12,11,.82);
+  color: var(--hueso); font: 700 .58rem/1 var(--f-mono); letter-spacing: .06em; }
+.cuadricula button:focus-visible { outline: 3px solid var(--acento); outline-offset: -3px; }
+.cuadricula img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s cubic-bezier(.16,1,.3,1); }
+.cuadricula button:hover img { transform: scale(1.04); }
+.ayuda { color: var(--gris); text-align: center; text-wrap: balance; }
+
+/* el post abierto: una copia impresa sobre carbón */
+.post { position: fixed; inset: 0; z-index: 40; background: var(--carbon); overflow-y: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: calc(env(safe-area-inset-top, 0px) + 6px) calc(env(safe-area-inset-bottom, 0px) + 32px); }
+.post .columna { max-width: 480px; margin: 0 auto; display: grid; gap: 14px; }
+.arriba { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; text-align: center; padding-bottom: 8px; border-bottom: 1px dashed var(--linea); }
+.arriba b { font: 400 1.25rem/1 var(--f-display); text-transform: uppercase; display: block; }
+.arriba span { color: var(--gris); display: block; margin-top: 4px; }
+.icono { all: unset; cursor: pointer; width: 44px; height: 44px; display: grid; place-items: center; color: var(--hueso); }
+.icono:focus-visible { outline: 2px solid var(--acento); }
+.icono svg { width: 22px; height: 22px; }
+.autor { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; }
+.autor .avatar { width: 40px; height: 40px; box-shadow: 0 0 0 2px var(--carbon), 0 0 0 3px var(--acento); }
+.autor b { font: 400 1.1rem/1 var(--f-display); text-transform: uppercase; }
+.musica { all: unset; font: 400 .7rem/1.4 var(--f-mono); letter-spacing: .04em; text-transform: uppercase; cursor: pointer; display: flex; gap: 6px; align-items: center; color: var(--gris); min-width: 0; margin-top: 4px; }
+.musica:focus-visible { outline: 2px solid var(--acento); }
+.musica svg { width: 12px; height: 12px; flex: none; color: var(--acento); transition: color .6s; }
 .musica span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.foto { position: relative; aspect-ratio: 4 / 5; max-width: 100%; background: var(--surface); overflow: hidden; touch-action: pan-y; }
+.copia { position: relative; padding: 7px; background: var(--hueso); box-shadow: 0 1px 0 rgba(0,0,0,.12), 0 24px 44px -20px rgba(0,0,0,.8); rotate: -.6deg; }
+.copia:nth-of-type(even) { rotate: .5deg; }
+.cinta { position: absolute; z-index: 3; top: -12px; left: 50%; width: 120px; height: 24px; transform: translateX(-50%) rotate(-4deg);
+  background: linear-gradient(180deg, rgba(243,236,210,.85), rgba(226,215,182,.78)); box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  clip-path: polygon(3% 8%, 9% 0, 92% 4%, 100% 0, 97% 52%, 100% 100%, 90% 94%, 6% 100%, 0 92%, 3% 50%); pointer-events: none; }
+.foto { position: relative; aspect-ratio: 4 / 5; max-width: 100%; background: var(--carbon-2); overflow: hidden; touch-action: pan-y; }
 .foto img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .25s ease; }
-.foto .flecha { position: absolute; top: 50%; translate: 0 -50%; background: rgba(11, 13, 17, .55); }
-.foto .izq { left: 8px; } .foto .der { right: 8px; }
-.foto .sonido { position: absolute; right: 10px; bottom: 10px; width: 32px; height: 32px; background: rgba(11, 13, 17, .7); }
+.foto .flecha { position: absolute; top: 50%; translate: 0 -50%; background: rgba(13,12,11,.6); }
+.foto .izq { left: 6px; } .foto .der { right: 6px; }
+.foto .sonido { position: absolute; right: 8px; bottom: 8px; width: 36px; height: 36px; background: var(--acento); color: var(--on-acento); transition: background-color .6s; }
 .foto .sonido svg { width: 16px; height: 16px; }
-.acciones { display: flex; gap: 14px; align-items: center; color: var(--fg); }
-.acciones svg { width: 25px; height: 25px; }
+.acciones { display: flex; gap: 16px; align-items: center; color: var(--hueso); padding-top: 4px; }
+.acciones svg { width: 24px; height: 24px; }
 .acciones .guardar { margin-left: auto; }
-.pie { display: grid; gap: 4px; min-width: 0; }
-.pie p { margin: 0; }
-.pie .tags { color: var(--accent); }
-.pie .etiquetas, .pie .fecha { color: var(--muted); font-size: 13px; }
-.solo { all: unset; cursor: pointer; color: var(--muted); font-size: 13px; justify-self: start; padding-block: 4px; }
-.solo[aria-pressed="true"] { color: var(--accent); }
-.solo:focus-visible { outline: 2px solid var(--accent); border-radius: 4px; }
-@media (prefers-reduced-motion: reduce) { .foto img { transition: none; } }
+.pie { display: grid; gap: 8px; min-width: 0; }
+.pie .texto { font-size: 1rem; line-height: 1.5; }
+.pie .texto b { font-family: var(--f-display); font-weight: 400; text-transform: uppercase; letter-spacing: .01em; margin-right: 4px; }
+.pie .tags { text-transform: none; color: var(--on-acento); background: var(--acento); justify-self: start; padding: 3px 6px; transition: background-color .6s; }
+.pie .etiquetas, .pie .fecha { color: var(--gris); padding-top: 8px; border-top: 1px dashed var(--linea); }
+.solo { all: unset; font: 400 .7rem/1.4 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; justify-self: start; display: grid; place-items: center; min-height: 40px; padding-inline: 14px;
+  border: 1px dashed var(--linea); color: var(--gris); }
+.solo[aria-pressed="true"] { color: var(--on-acento); background: var(--acento); border-color: var(--acento); }
+.solo:focus-visible { outline: 2px solid var(--acento); }
+@media (prefers-reduced-motion: reduce) {
+  .franja-pista { animation: none; }
+  .foto img, .cuadricula img { transition: none; }
+}
 </style>
 
-<main class="perfil" aria-label="Perfil de HIGHT con los 12 primeros planos">
-  <div class="barra"><b>hight</b><span class="nota">Muestra del perfil · 12 primeros planos</span></div>
-  <div class="cabeza">
-    <div class="avatar" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12.56 4.41l.26 1.29 .29 1.11 .32 .96 .39 .8 .36 .51 1.46-1.03 1.29-.98 .16-.16-.16 .16-.98 1.29-1.03 1.46 .51 .36 .8 .39 .96 .32 1.11 .29 1.29 .26 3.21 .56-3.21 .56-1.29 .26-1.11 .29-.96 .32-.8 .39-.51 .36 1.03 1.46 .98 1.29 .16 .16-.16-.16-1.29-.98-1.46-1.03-.36 .51-.39 .8-.32 .96-.29 1.11-.26 1.29-.56 3.21-.56-3.21-.26-1.29-.29-1.11-.32-.96-.39-.8-.36-.51-1.46 1.03-1.29 .98-.16 .16 .16-.16 .98-1.29 1.03-1.46-.51-.36-.79-.39-.97-.32-1.11-.29-1.29-.26-3.21-.56 3.21-.56 1.29-.26 1.11-.29 .97-.32 .79-.39 .51-.36-1.03-1.46-.98-1.29-.16-.16 .16 .16 1.29 .98 1.46 1.03 .36-.51 .39-.8 .32-.96 .29-1.11 .26-1.29 .56-3.21z" fill="#6d8bfb"/></svg></div>
-    <div class="cuentas"><div><b>12</b><span>publicaciones</span></div></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs><symbol id="estrella" viewBox="0 0 24 24"><path fill="currentColor" d="M12.56 4.41l.26 1.29 .29 1.11 .32 .96 .39 .8 .36 .51 1.46-1.03 1.29-.98 .16-.16-.16 .16-.98 1.29-1.03 1.46 .51 .36 .8 .39 .96 .32 1.11 .29 1.29 .26 3.21 .56-3.21 .56-1.29 .26-1.11 .29-.96 .32-.8 .39-.51 .36 1.03 1.46 .98 1.29 .16 .16-.16-.16-1.29-.98-1.46-1.03-.36 .51-.39 .8-.32 .96-.29 1.11-.26 1.29-.56 3.21-.56-3.21-.26-1.29-.29-1.11-.32-.96-.39-.8-.36-.51-1.46 1.03-1.29 .98-.16 .16 .16-.16 .98-1.29 1.03-1.46-.51-.36-.79-.39-.97-.32-1.11-.29-1.29-.26-3.21-.56 3.21-.56 1.29-.26 1.11-.29 .97-.32 .79-.39 .51-.36-1.03-1.46-.98-1.29-.16-.16 .16 .16 1.29 .98 1.46 1.03 .36-.51 .39-.8 .32-.96 .29-1.11 .26-1.29 .56-3.21z"/></symbol></defs>
+</svg>
+
+<div class="franja" aria-hidden="true">
+  <div class="franja-pista">
+    <ul><li>Streetwear de autor</li><li><svg><use href="#estrella"/></svg></li><li>Hecho en Medellín</li><li><svg><use href="#estrella"/></svg></li><li>Drop 01</li><li><svg><use href="#estrella"/></svg></li><li data-franja-turno>Ahora: Radiactivo</li><li><svg><use href="#estrella"/></svg></li><li>¿De qué color eres?</li><li><svg><use href="#estrella"/></svg></li></ul>
+    <ul><li>Streetwear de autor</li><li><svg><use href="#estrella"/></svg></li><li>Hecho en Medellín</li><li><svg><use href="#estrella"/></svg></li><li>Drop 01</li><li><svg><use href="#estrella"/></svg></li><li data-franja-turno>Ahora: Radiactivo</li><li><svg><use href="#estrella"/></svg></li><li>¿De qué color eres?</li><li><svg><use href="#estrella"/></svg></li></ul>
   </div>
-  <div class="bio"><b>HIGHT</b><span>Streetwear de autor para el uso diario. Hecho en Medellín.<br>Prendas intervenidas a mano y piezas de archivo.<br>¿De qué color eres? Drop 01 →</span><a href="https://hight18.myshopify.com" target="_blank" rel="noopener">hight18.myshopify.com</a></div>
-  <div class="botones" aria-hidden="true"><span>Seguir</span><span>Mensaje</span></div>
+</div>
+
+<main class="perfil" aria-label="Perfil de HIGHT con los 12 primeros planos">
+  <div class="barra"><b>hight</b><span class="turno t-label"><i></i>Ahora <b data-turno-nombre style="font:inherit">Radiactivo</b></span></div>
+  <div class="cabeza">
+    <div class="avatar" aria-hidden="true"><img src="logo-plata.webp" alt="" width="977" height="672"></div>
+    <div class="cuentas t-label">
+      <div><b>12</b><span>publicaciones</span></div>
+      <div><b>—</b><span>seguidores</span></div>
+      <div><b>—</b><span>seguidos</span></div>
+    </div>
+  </div>
+  <div class="bio">
+    <h1 class="nombre">Hight</h1>
+    <span class="t-label" style="color:var(--gris)">(Tienda de ropa) MED/COL</span>
+    <p>Streetwear de autor para el uso diario. Hecho en Medellín.<br>Prendas intervenidas a mano y piezas de archivo.<br>¿De qué color eres? Drop 01 →</p>
+    <a href="https://hight18.myshopify.com" target="_blank" rel="noopener">hight18.myshopify.com</a>
+  </div>
+  <div class="botones" aria-hidden="true"><span class="btn btn-acento">Seguir</span><span class="btn btn-punteado">Mensaje</span></div>
   <div class="pestanas" aria-hidden="true">
-    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></span>
-    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg></span>
-    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19c1.2-2.6 3.1-4 5.5-4s4.3 1.4 5.5 4"/></svg></span>
+    <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></span>
+    <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg></span>
+    <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19c1.2-2.6 3.1-4 5.5-4s4.3 1.4 5.5 4"/></svg></span>
   </div>
   <div class="cuadricula" id="cuadricula"></div>
-  <p class="ayuda">Toca un post para abrirlo con su descripción y su música de fondo.</p>
+  <p class="ayuda t-label">Toca un post para abrirlo con su descripción y su música.</p>
 </main>
 
 <section class="post" id="post" role="dialog" aria-modal="true" aria-labelledby="post-titulo" hidden>
   <div class="columna">
     <div class="arriba">
       <button class="icono" id="cerrar" aria-label="Volver a la cuadrícula"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <div><b id="post-titulo">Publicaciones</b><span id="post-numero"></span></div>
+      <div><b id="post-titulo">Publicaciones</b><span id="post-numero" class="t-label"></span></div>
       <span></span>
     </div>
     <div class="autor">
-      <div class="avatar" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12.56 4.41l.26 1.29 .29 1.11 .32 .96 .39 .8 .36 .51 1.46-1.03 1.29-.98 .16-.16-.16 .16-.98 1.29-1.03 1.46 .51 .36 .8 .39 .96 .32 1.11 .29 1.29 .26 3.21 .56-3.21 .56-1.29 .26-1.11 .29-.96 .32-.8 .39-.51 .36 1.03 1.46 .98 1.29 .16 .16-.16-.16-1.29-.98-1.46-1.03-.36 .51-.39 .8-.32 .96-.29 1.11-.26 1.29-.56 3.21-.56-3.21-.26-1.29-.29-1.11-.32-.96-.39-.8-.36-.51-1.46 1.03-1.29 .98-.16 .16 .16-.16 .98-1.29 1.03-1.46-.51-.36-.79-.39-.97-.32-1.11-.29-1.29-.26-3.21-.56 3.21-.56 1.29-.26 1.11-.29 .97-.32 .79-.39 .51-.36-1.03-1.46-.98-1.29-.16-.16 .16 .16 1.29 .98 1.46 1.03 .36-.51 .39-.8 .32-.96 .29-1.11 .26-1.29 .56-3.21z" fill="#6d8bfb"/></svg></div>
-      <div style="min-width:0"><b>hight</b><br>
-        <button class="musica" id="musica" aria-label="Activar o silenciar la música">
+      <div class="avatar" aria-hidden="true"><img src="logo-plata.webp" alt="" width="977" height="672"></div>
+      <div style="min-width:0"><b>hight</b>
+        <button class="musica t-label" id="musica" aria-label="Activar o silenciar la música">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V6l11-2v12" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>
           <span id="musica-nombre"></span>
         </button>
       </div>
-      <span></span>
     </div>
-    <div class="foto" id="foto">
-      <img id="foto-img" alt="">
-      <button class="icono flecha izq" id="anterior" aria-label="Post más nuevo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <button class="icono flecha der" id="siguiente" aria-label="Post más viejo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></button>
-      <button class="icono sonido" id="sonido" aria-label="Silenciar la música"></button>
+    <div class="copia">
+      <span class="cinta"></span>
+      <div class="foto" id="foto">
+        <img id="foto-img" alt="">
+        <button class="icono flecha izq" id="anterior" aria-label="Post más nuevo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button class="icono flecha der" id="siguiente" aria-label="Post más viejo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></button>
+        <button class="icono sonido" id="sonido" aria-label="Silenciar la música"></button>
+      </div>
     </div>
     <div class="acciones" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
@@ -133,17 +201,40 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <svg class="guardar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
     </div>
     <div class="pie">
-      <p><b>hight</b> <span id="pie-texto"></span></p>
-      <p class="tags" id="pie-tags"></p>
-      <p class="etiquetas" id="pie-etiquetas"></p>
-      <p class="fecha" id="pie-fecha"></p>
+      <p class="texto"><b>hight</b> <span id="pie-texto"></span></p>
+      <p class="tags t-label" id="pie-tags"></p>
+      <p class="etiquetas t-label" id="pie-etiquetas"></p>
+      <p class="fecha t-label" id="pie-fecha"></p>
     </div>
-    <button class="solo" id="solo" aria-pressed="false">Pasar solo al siguiente cuando termine la música</button>
+    <button class="solo t-label" id="solo" aria-pressed="false">Pasar solo al siguiente cuando termine la música</button>
   </div>
 </section>
 
 <audio id="audio" preload="none"></audio>
 
+<script>
+// el color del turno: el mismo reloj de la tienda, un color por minuto, igual para todos
+(function () {
+  const TURNOS = [
+    { name: 'Radiactivo', c: '#dff04a', on: '#0d0c0b' }, { name: 'Sangre Fría', c: '#c3142d', on: '#ece3d0' },
+    { name: 'Medianoche', c: '#5b7cfa', on: '#0d0c0b' }, { name: 'Chicle', c: '#e0218a', on: '#ece3d0' },
+    { name: 'Asfalto', c: '#c4beb2', on: '#0d0c0b' }, { name: 'Fiera', c: '#c08a4e', on: '#0d0c0b' },
+  ];
+  let actualTurno = -1;
+  function pintar() {
+    const i = Math.floor(Date.now() / 60000) % TURNOS.length;
+    if (i === actualTurno) return;
+    actualTurno = i;
+    const t = TURNOS[i];
+    document.documentElement.style.setProperty('--acento', t.c);
+    document.documentElement.style.setProperty('--on-acento', t.on);
+    document.querySelectorAll('[data-turno-nombre]').forEach((el) => { el.textContent = t.name; });
+    document.querySelectorAll('[data-franja-turno]').forEach((el) => { el.textContent = 'Ahora: ' + t.name; });
+  }
+  pintar();
+  setInterval(pintar, 1000);
+})();
+</script>
 <script>
 const POSTS = [{"n": 1, "src": "fotos/jean-patchwork-cuadros.jpg", "alt": "Jean Patchwork Cuadros de cerca: parches de franela, ladrillo y denim con el borde crudo", "pista": "rock-psicodelico", "pistaNombre": "Rock psicodélico", "desde": 4.286, "dura": 12.857, "lineas": ["Jean Patchwork Cuadros: franela a cuadros, ladrillo y denim lavado, cosidos con el borde crudo.", "Cada parche viene de otra prenda; juntos cuentan otra historia.", "$540.000, en el enlace de la bio.", "Fotos creadas con IA a partir de las prendas reales."], "hashtags": "#HIGHT #Drop01 #DenimIntervenido", "etiquetas": "Jean Patchwork Cuadros", "fecha": "Primeros planos · 01 de 12"}, {"n": 2, "src": "fotos/jean-wide-fleco-indigo.jpg", "alt": "Jean Wide Fleco Índigo de cerca: franjas de índigo deshilachadas, cosidas en diagonal", "pista": "neo-psicodelia", "pistaNombre": "Neo-psicodelia", "desde": 0.0, "dura": 12.245, "lineas": ["Jean Wide Fleco Índigo: franjas de índigo cosidas en diagonal, con el borde deshilachado a mano.", "Se mueve antes que tú.", "$620.000. Guarda este post."], "hashtags": "#HIGHT #Drop01 #DenimIntervenido", "etiquetas": "Jean Wide Fleco Índigo", "fecha": "Primeros planos · 02 de 12"}, {"n": 3, "src": "fotos/jean-patchwork-estrellas-violeta-frente.jpg", "alt": "Jean Patchwork Estrellas Violeta de frente: parches violeta y negros con una diana pintada en blanco", "pista": "pop-psicodelico", "pistaNombre": "Pop psicodélico", "desde": 4.615, "dura": 11.538, "lineas": ["Jean Patchwork Estrellas Violeta: parches violeta y negros, costura cruda y una diana pintada a mano.", "Ningún parche está donde debería. Ese es el punto.", "$650.000, en el enlace de la bio."], "hashtags": "#HIGHT #Drop01", "etiquetas": "Jean Patchwork Estrellas Violeta", "fecha": "Primeros planos · 03 de 12"}, {"n": 4, "src": "fotos/jean-flare-destroyed-verde.jpg", "alt": "Jean Flare Destroyed Verde de cerca: rotos grandes rellenos de tela verde clara", "pista": "rock-psicodelico", "pistaNombre": "Rock psicodélico", "desde": 12.857, "dura": 12.857, "lineas": ["Jean Flare Destroyed Verde: rotos grandes rellenos de tela verde clara, cosidos en zigzag.", "Lo gastado también se elige.", "$480.000. Etiqueta a quien lo llevaría."], "hashtags": "#HIGHT #Drop01 #DenimIntervenido", "etiquetas": "Jean Flare Destroyed Verde", "fecha": "Primeros planos · 04 de 12"}, {"n": 5, "src": "fotos/logo-hueso.jpg", "alt": "El logo de HIGHT en tinta sobre hueso", "pista": "neo-psicodelia", "pistaNombre": "Neo-psicodelia", "desde": 9.796, "dura": 12.245, "lineas": ["HIGHT. Drop 01.", "Streetwear de autor, hecho en Medellín.", "Activa las notificaciones del perfil."], "hashtags": "#HIGHT #Drop01 #Medellín", "etiquetas": "ninguno", "fecha": "Primeros planos · 05 de 12"}, {"n": 6, "src": "fotos/buzo-multitud-termica.jpg", "alt": "Buzo Multitud Térmica de cerca: siluetas de colores sobre denim negro deshilachado", "pista": "pop-psicodelico", "pistaNombre": "Pop psicodélico", "desde": 13.846, "dura": 11.538, "lineas": ["Buzo Multitud Térmica: una multitud en colores de cámara térmica sobre denim negro lavado.", "Entre la multitud, nadie se parece.", "$390.000, en el enlace de la bio."], "hashtags": "#HIGHT #Drop01", "etiquetas": "Buzo Multitud Térmica", "fecha": "Primeros planos · 06 de 12"}, {"n": 7, "src": "fotos/jean-patchwork-estrellas-violeta-estrella.jpg", "alt": "Jean Patchwork Estrellas Violeta caminando: la estrella en espiral sobre violeta salpicado", "pista": "rock-psicodelico", "pistaNombre": "Rock psicodélico", "desde": 21.429, "dura": 12.857, "lineas": ["Jean Patchwork Estrellas Violeta: la estrella en espiral, de cerca, sobre violeta salpicado de cloro.", "Camina y el estampado camina contigo.", "¿Violeta o negro? Te leemos."], "hashtags": "#HIGHT #Drop01 #DenimIntervenido", "etiquetas": "Jean Patchwork Estrellas Violeta", "fecha": "Primeros planos · 07 de 12"}, {"n": 8, "src": "fotos/jean-flare-dragon-acido.jpg", "alt": "Jean Flare Dragón Ácido de cerca: hilos oliva sobre negro y el dragón en tinta", "pista": "pop-psicodelico", "pistaNombre": "Pop psicodélico", "desde": 9.231, "dura": 11.538, "lineas": ["Jean Flare Dragón Ácido: hilos oliva sueltos sobre negro y un dragón en tinta en la pierna.", "Lo que se deshace también tiene forma.", "$490.000, en el enlace de la bio."], "hashtags": "#HIGHT #Drop01", "etiquetas": "Jean Flare Dragón Ácido", "fecha": "Primeros planos · 08 de 12"}, {"n": 9, "src": "fotos/tejido-anillos-indigo.jpg", "alt": "Tejido Anillos Índigo de cerca: tiras tejidas en azul noche unidas con argollas metálicas", "pista": "neo-psicodelia", "pistaNombre": "Neo-psicodelia", "desde": 14.694, "dura": 12.245, "lineas": ["Tejido Anillos Índigo: tiras tubulares tejidas en azul noche, unidas con argollas metálicas.", "Un suéter que no se parece a otro.", "$460.000. Mira las argollas en la ficha de la tienda."], "hashtags": "#HIGHT #Drop01 #HechoAMano", "etiquetas": "Tejido Anillos Índigo", "fecha": "Primeros planos · 09 de 12"}, {"n": 10, "src": "fotos/camiseta-celula-carmin.jpg", "alt": "Camiseta Célula Carmín de cerca: estampado de células en carmín y hueso", "pista": "neo-psicodelia", "pistaNombre": "Neo-psicodelia", "desde": 19.592, "dura": 12.245, "lineas": ["Camiseta Célula Carmín: estampado de pintura fluida en carmín y hueso, sobre la tela calada.", "De lejos, una mancha. De cerca, células.", "$169.000, en el enlace de la bio."], "hashtags": "#HIGHT #Drop01", "etiquetas": "Camiseta Célula Carmín", "fecha": "Primeros planos · 10 de 12"}, {"n": 11, "src": "fotos/chaqueta-trouble-maker.jpg", "alt": "Chaqueta Trouble Maker de espalda: espirales pintadas en blanco sobre denim negro", "pista": "rock-psicodelico", "pistaNombre": "Rock psicodélico", "desde": 8.571, "dura": 12.857, "lineas": ["Chaqueta Trouble Maker: denim negro de archivo, espirales pintadas a mano en blanco y parches deshilachados.", "La espalda también habla.", "$580.000. Etiqueta a quien la llevaría."], "hashtags": "#HIGHT #Drop01 #DenimIntervenido", "etiquetas": "Chaqueta Trouble Maker", "fecha": "Primeros planos · 11 de 12"}, {"n": 12, "src": "fotos/chaqueta-blood-rose.jpg", "alt": "Chaqueta Blood Rose de cerca: la capa lavanda calada y la cremallera metálica", "pista": "neo-psicodelia", "pistaNombre": "Neo-psicodelia", "desde": 7.347, "dura": 12.245, "lineas": ["Chaqueta Blood Rose: capa lavanda calada a mano y una cremallera metálica que sube hasta el cuello.", "Elegante no es lo mismo que obediente.", "$500.000, en el enlace de la bio."], "hashtags": "#HIGHT #Drop01 #HechoAMano", "etiquetas": "Chaqueta Blood Rose", "fecha": "Primeros planos · 12 de 12"}];
 const PISTAS = {"neo-psicodelia": "musica/neo-psicodelia.mp3", "rock-psicodelico": "musica/rock-psicodelico.mp3", "pop-psicodelico": "musica/pop-psicodelico.mp3"};
@@ -160,6 +251,7 @@ try { silencio = localStorage.getItem('primeros-planos-silencio') === '1'; } cat
 const orden = [...POSTS].reverse();
 orden.forEach((p, i) => {
   const b = document.createElement('button');
+  b.dataset.n = `(${String(p.n).padStart(2, '0')})`;
   b.setAttribute('aria-label', `Abrir el post ${String(p.n).padStart(2, '0')}: ${p.alt}`);
   const img = document.createElement('img');
   img.src = p.src; img.alt = ''; img.decoding = 'async';
