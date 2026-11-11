@@ -1,0 +1,66 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Muestra del perfil · primeros planos</title>
+<style>
+@font-face { font-family: G; src: url(../../assets/space-grotesk-latin.woff2); font-weight: 300 700; }
+:root { --bg:#0b0b0c; --fg:#f2f2f2; --muted:#9a9a9f; --line:#262628; --surface:#1c1c1f; }
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--bg); color: var(--fg); font: 400 14px/1.35 G, system-ui, sans-serif; width: 430px; }
+.top { display:flex; justify-content:space-between; align-items:center; padding: 14px 16px 10px; }
+.top b { font-size: 21px; font-weight: 700; letter-spacing: -.01em; }
+.top span { display:flex; gap:18px; }
+.top svg { width: 24px; height: 24px; }
+.cabeza { display:grid; grid-template-columns: auto 1fr; gap: 22px; align-items:center; padding: 4px 16px 10px; }
+.avatar { width: 86px; height: 86px; border-radius: 50%; background:#0d0c0b; display:grid; place-items:center; box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px #dff04a; }
+.avatar img { width: 70%; }
+.cuentas { display:flex; justify-content: space-around; text-align:center; }
+.cuentas b { display:block; font-size: 17px; }
+.cuentas span { font-size: 13px; }
+.bio { padding: 0 16px 12px; display:grid; gap: 1px; }
+.bio .cat { color: var(--muted); }
+.bio a { color: #a8b8ff; text-decoration:none; }
+.botones { display:grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 0 16px 14px; }
+.botones span { background: var(--surface); border-radius: 8px; padding: 7px; text-align:center; font-weight: 600; }
+.botones span:first-child { background:#dff04a; color:#0b0b0c; }
+.destacadas { display:flex; gap: 14px; padding: 0 16px 14px; }
+.destacadas div { width: 64px; height: 64px; border-radius: 50%; box-shadow: 0 0 0 1px var(--line); padding: 3px; }
+.destacadas i { display:block; width:100%; height:100%; border-radius:50%; background-size: cover; background-position:center; }
+.pestanas { display:grid; grid-template-columns: repeat(3,1fr); border-bottom: 1px solid var(--line); }
+.pestanas span { display:grid; place-items:center; padding: 10px 0; color: var(--muted); }
+.pestanas span:first-child { color: var(--fg); box-shadow: inset 0 -1.5px 0 var(--fg); }
+.pestanas svg { width: 22px; height: 22px; }
+.grid { display:grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
+.grid img { width:100%; aspect-ratio: 3/4; object-fit: cover; display:block; }
+</style>
+<div class="top"><b>hight</b><span>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span></div>
+<div class="cabeza">
+  <div class="avatar"><img src="../../assets/hight-logo-plata.webp" alt=""></div>
+  <div class="cuentas"><div><b>12</b><span>publicaciones</span></div><div><b>—</b><span>seguidores</span></div><div><b>—</b><span>seguidos</span></div></div>
+</div>
+<div class="bio">
+  <b>HIGHT</b><span class="cat">Tienda de ropa</span>
+  <span>Streetwear de autor para el uso diario. Hecho en Medellín.<br>Prendas intervenidas a mano y piezas de archivo.<br>¿De qué color eres? Drop 01 →</span>
+  <a>hight18.myshopify.com</a>
+</div>
+<div class="botones"><span>Seguir</span><span>Mensaje</span></div>
+<div class="destacadas">
+  <div><i style="background-image:url(fotos/chaqueta-blood-rose.jpg)"></i></div>
+  <div><i style="background-image:url(fotos/tejido-anillos-indigo.jpg)"></i></div>
+  <div><i style="background-image:url(fotos/camiseta-celula-carmin.jpg)"></i></div>
+  <div><i style="background-image:url(fotos/jean-flare-dragon-acido.jpg)"></i></div>
+  <div><i style="background-image:url(fotos/jean-patchwork-estrellas-violeta-estrella.jpg)"></i></div>
+</div>
+<div class="pestanas">
+  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></span>
+  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg></span>
+  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19c1.2-2.6 3.1-4 5.5-4s4.3 1.4 5.5 4"/></svg></span>
+</div>
+<div class="grid">
+  <img src="fotos/chaqueta-blood-rose.jpg"><img src="fotos/chaqueta-trouble-maker.jpg"><img src="fotos/camiseta-celula-carmin.jpg">
+  <img src="fotos/tejido-anillos-indigo.jpg"><img src="fotos/jean-flare-dragon-acido.jpg"><img src="fotos/jean-patchwork-estrellas-violeta-estrella.jpg">
+  <img src="fotos/buzo-multitud-termica.jpg"><img src="fotos/logo-hueso.jpg"><img src="fotos/jean-flare-destroyed-verde.jpg">
+  <img src="fotos/jean-patchwork-estrellas-violeta-frente.jpg"><img src="fotos/jean-wide-fleco-indigo.jpg"><img src="fotos/jean-patchwork-cuadros.jpg">
+</div>
