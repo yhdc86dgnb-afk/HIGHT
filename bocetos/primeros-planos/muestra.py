@@ -125,14 +125,36 @@ POSTS = [
 ]
 
 
+# La cuadrícula, de arriba abajo y de izquierda a derecha, tal como se ve en el perfil: en tablero, los primeros
+# planos de las prendas se alternan con las fotos de calle y las piezas gráficas (logo, grafiti, sticker y afiche), y
+# dos colores parecidos no quedan juntos.
+CUADRICULA = [
+    'tejido-anillos-indigo', 'broken-preventa', 'jean-flare-dragon-acido',
+    'pelea-payasos', 'chaqueta-trouble-maker', 'calle-carmin',
+    'jean-flare-destroyed-verde', 'grafiti-hight', 'jean-patchwork-estrellas-violeta-estrella',
+    'contenedor', 'buzo-multitud-termica', 'pantera-patrulla',
+    'chaqueta-blood-rose', 'logo-hueso', 'jean-wide-fleco-indigo',
+    'mission-failed', 'camiseta-celula-carmin', 'buzo-ceniza-afiches',
+    'jean-patchwork-estrellas-violeta-frente', 'sticker-hello', 'jean-patchwork-cuadros',
+]
+
+
 def main():
+    por_foto = {post[0]: post for post in POSTS}
+    assert sorted(por_foto) == sorted(CUADRICULA), 'cada foto va una vez en la cuadrícula'
+    # se publican al revés de como se leen: el último de la cuadrícula es el post 01
+    orden = [por_foto[f] for f in reversed(CUADRICULA)]
+    # el aviso de las fotos hechas con IA va siempre en el primer post publicado
+    aviso = 'Fotos creadas con IA a partir de las prendas reales.'
+    orden = [(f, e, m, a, [l for l in lineas if l != aviso], t) for f, e, m, a, lineas, t in orden]
+    orden[0][4].append(aviso)
     lista = []
-    for n, (foto, etiqueta, (pista, compas), alt, lineas, tags) in enumerate(POSTS, 1):
+    for n, (foto, etiqueta, (pista, compas), alt, lineas, tags) in enumerate(orden, 1):
         bpm, compases, nombre = PISTAS[pista]
         bar = 4 * 60 / bpm
         lista.append({'n': n, 'src': f'fotos/{foto}.jpg', 'alt': alt, 'pista': pista, 'pistaNombre': nombre,
                       'desde': round(compas * bar, 3), 'dura': round(compases * bar, 3), 'lineas': lineas,
-                      'hashtags': tags, 'etiquetas': etiqueta, 'fecha': f'Primeros planos · {n:02d} de {len(POSTS)}'})
+                      'hashtags': tags, 'etiquetas': etiqueta, 'fecha': f'Sutura · {n:02d} de {len(POSTS)}'})
     # la lógica (descripciones, música, deslizar) es la de la muestra del desfile; el diseño, el de la tienda
     viejo = (DESFILE / 'muestra-plantilla.html').read_text()
     script = viejo[viejo.index('<script>'):viejo.index('</script>') + len('</script>')]
