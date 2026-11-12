@@ -42,10 +42,6 @@ POSTS = [
      ['Jean Flare Destroyed Verde: rotos grandes rellenos de tela verde clara, cosidos en zigzag.',
       'Lo gastado también se elige.', '$480.000. Etiqueta a quien lo llevaría.'],
      '#HIGHT #Sutura #DenimIntervenido'),
-    ('logo-hueso', 'ninguno', ('neo-psicodelia', 4),
-     'El logo de HIGHT en tinta sobre hueso',
-     ['HIGHT. Sutura.', 'Cosido con color, hecho en Medellín.', 'Activa las notificaciones del perfil.'],
-     '#HIGHT #Sutura #Medellín'),
     ('buzo-multitud-termica', 'Buzo Multitud Térmica', ('pop-psicodelico', 6),
      'Buzo Multitud Térmica de cerca: siluetas de colores sobre denim negro deshilachado',
      ['Buzo Multitud Térmica: una multitud en colores de cámara térmica sobre denim negro lavado.',
@@ -126,16 +122,16 @@ POSTS = [
 
 
 # La cuadrícula, de arriba abajo y de izquierda a derecha, tal como se ve en el perfil: en tablero, los primeros
-# planos de las prendas se alternan con las fotos de calle y las piezas gráficas (logo, grafiti, sticker y afiche), y
+# planos de las prendas se alternan con las fotos de calle y las piezas gráficas (grafiti, sticker y afiche), y
 # dos colores parecidos no quedan juntos.
 CUADRICULA = [
     'tejido-anillos-indigo', 'broken-preventa', 'jean-flare-dragon-acido',
     'pelea-payasos', 'chaqueta-trouble-maker', 'calle-carmin',
     'jean-flare-destroyed-verde', 'grafiti-hight', 'jean-patchwork-estrellas-violeta-estrella',
     'contenedor', 'buzo-multitud-termica', 'pantera-patrulla',
-    'chaqueta-blood-rose', 'logo-hueso', 'jean-wide-fleco-indigo',
+    'chaqueta-blood-rose', 'sticker-hello', 'jean-wide-fleco-indigo',
     'mission-failed', 'camiseta-celula-carmin', 'buzo-ceniza-afiches',
-    'jean-patchwork-estrellas-violeta-frente', 'sticker-hello', 'jean-patchwork-cuadros',
+    'jean-patchwork-estrellas-violeta-frente', 'jean-patchwork-cuadros',
 ]
 
 
