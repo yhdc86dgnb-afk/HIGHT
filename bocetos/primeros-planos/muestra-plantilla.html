@@ -122,6 +122,11 @@ body::after {
 .pie .texto b { font-family: var(--f-display); font-weight: 400; text-transform: uppercase; letter-spacing: .01em; margin-right: 4px; }
 .pie .tags { text-transform: none; color: var(--on-acento); background: var(--acento); justify-self: start; padding: 3px 6px; transition: background-color .6s; }
 .pie .etiquetas, .pie .fecha { color: var(--gris); padding-top: 8px; border-top: 1px dashed var(--linea); }
+.copiar { all: unset; font: 700 .72rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
+  display: grid; place-items: center; min-height: 44px; padding-inline: 16px; justify-self: stretch;
+  background: var(--acento); color: var(--on-acento); transition: background-color .6s, color .6s; }
+.copiar:focus-visible { outline: 2px solid var(--hueso); outline-offset: 3px; }
+.copiar[data-estado="listo"] { background: var(--hueso); color: var(--carbon); }
 .solo { all: unset; font: 400 .7rem/1.4 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; justify-self: start; display: grid; place-items: center; min-height: 40px; padding-inline: 14px;
   border: 1px dashed var(--linea); color: var(--gris); }
 .solo[aria-pressed="true"] { color: var(--on-acento); background: var(--acento); border-color: var(--acento); }
@@ -206,6 +211,8 @@ body::after {
       <p class="etiquetas t-label" id="pie-etiquetas"></p>
       <p class="fecha t-label" id="pie-fecha"></p>
     </div>
+    <button class="copiar" id="copiar" type="button">Copiar descripción</button>
+    <p class="aviso-copia t-label" id="aviso-copia" role="status" aria-live="polite" style="color:var(--gris);margin:0"></p>
     <button class="solo t-label" id="solo" aria-pressed="false">Pasar solo al siguiente cuando termine la música</button>
   </div>
 </section>
@@ -236,3 +243,44 @@ body::after {
 })();
 </script>
 <!--SCRIPT-->
+<script>
+// el botón que copia la descripción del post abierto, con sus hashtags, tal como se pega en Instagram
+(function () {
+  const boton = document.getElementById('copiar');
+  const aviso = document.getElementById('aviso-copia');
+  let reloj = null;
+  function texto() {
+    const p = orden[actual];
+    return p.lineas.join('\n') + '\n\n' + p.hashtags;
+  }
+  function listo(msg) {
+    boton.textContent = 'Copiada';
+    boton.dataset.estado = 'listo';
+    aviso.textContent = msg;
+    clearTimeout(reloj);
+    reloj = setTimeout(() => { boton.textContent = 'Copiar descripción'; delete boton.dataset.estado; aviso.textContent = ''; }, 2200);
+  }
+  function aMano() {
+    // si el navegador no deja copiar, se selecciona el texto para copiarlo a mano
+    const sel = window.getSelection();
+    const r = document.createRange();
+    r.selectNodeContents(document.querySelector('.pie'));
+    sel.removeAllRanges();
+    sel.addRange(r);
+    aviso.textContent = 'El texto quedó seleccionado: cópialo con el menú del teléfono.';
+  }
+  boton.addEventListener('click', () => {
+    if (actual < 0) return;
+    const t = texto();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(() => listo('Descripción copiada. Pégala en Instagram.'), aMano);
+    } else {
+      aMano();
+    }
+  });
+  // al cambiar de post (flechas, deslizar o pasar solo), el botón vuelve a su estado
+  new MutationObserver(() => {
+    clearTimeout(reloj); boton.textContent = 'Copiar descripción'; delete boton.dataset.estado; aviso.textContent = '';
+  }).observe(document.getElementById('post-numero'), { childList: true, characterData: true, subtree: true });
+})();
+</script>
