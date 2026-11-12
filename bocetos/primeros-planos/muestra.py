@@ -114,9 +114,9 @@ POSTS = [
      ['Hello, my name is HIGHT.', 'Si lo ves pegado en la calle, ya sabes quién pasó.',
       'Mándanos una foto si encuentras uno.'],
      '#HIGHT #Sutura #Medellín'),
-    ('broken-preventa', 'por confirmar', ('pop-psicodelico', 0),
-     'Afiche de la preventa: alguien con chaqueta de hilos de colores frente a una persiana roja, con HIGHT en grafiti blanco',
-     ['Preventa abierta.', 'Cada pieza se hace por encargo y no se repite.', 'Separa la tuya en el enlace de la bio.'],
+    ('sutura-preventa', 'por confirmar', ('pop-psicodelico', 0),
+     'Afiche de la preventa de Sutura vol. 01: alguien con chaqueta de hilos de colores frente a una persiana roja, con HIGHT en grafiti blanco',
+     ['Sutura vol. 01: preventa abierta.', 'Cada pieza se hace por encargo y no se repite.', 'Separa la tuya en el enlace de la bio.'],
      '#HIGHT #Sutura'),
 ]
 
@@ -125,7 +125,7 @@ POSTS = [
 # planos de las prendas se alternan con las fotos de calle y las piezas gráficas (grafiti, sticker y afiche), y
 # dos colores parecidos no quedan juntos.
 CUADRICULA = [
-    'tejido-anillos-indigo', 'broken-preventa', 'jean-flare-dragon-acido',
+    'tejido-anillos-indigo', 'sutura-preventa', 'jean-flare-dragon-acido',
     'pelea-payasos', 'chaqueta-trouble-maker', 'calle-carmin',
     'jean-flare-destroyed-verde', 'grafiti-hight', 'primera-fila',
     'contenedor', 'buzo-multitud-termica', 'pantera-patrulla',
